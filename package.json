@@ -1,0 +1,43 @@
+{
+  "name": "320-s20-track1",
+  "version": "1.0.0",
+  "description": "Integration Track 1",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config ./webpack.config.js --node development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david-fisher/320-S20-Track1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/david-fisher/320-S20-Track1/issues"
+  },
+  "homepage": "https://github.com/david-fisher/320-S20-Track1#readme",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "mongodb": "^3.5.4",
+    "popper.js": "^1.14.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
