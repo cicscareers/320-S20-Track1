@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// Create a React element assign a name, any attributes
-// and a child element like the text Hello World
-var hW1 = React.createElement('h3', null, 'Hello World')
-var hW2 = React.createElement('h3', null, 'Nice to Meet You')
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
 
-// You can add child elements to another element
-var div1 = React.createElement('div', null, hW1, hW2);
+ReactDOM.render(<App />, document.getElementById('root'));
 
-// Render element in the browser
-// You can only render 1 element at a time
-ReactDOM.render(
-  div1,
-  document.getElementById('app')
-)
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

@@ -288,7 +288,7 @@ class Server {
         this.websocketProxies.push(proxyMiddleware);
       }
 
-      const handle = (req, res, next) => {
+      this.app.use((req, res, next) => {
         if (typeof proxyConfigOrCallback === 'function') {
           const newProxyConfig = proxyConfigOrCallback();
 
@@ -319,11 +319,7 @@ class Server {
         } else {
           next();
         }
-      };
-
-      this.app.use(handle);
-      // Also forward error requests to the proxy so it can handle them.
-      this.app.use((error, req, res, next) => handle(req, res, next));
+      });
     });
   }
 
