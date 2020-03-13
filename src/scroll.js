@@ -65,13 +65,9 @@ export default function ScrollableTabsButtonAuto() {
           scrollButtons="auto"
           aria-label="scrollable auto tabs example"
         >
-          <Tab label="King Codras" {...a11yProps(0)} />
-          <Tab label="Sean Powell" {...a11yProps(1)} />
-          <Tab label="Kyle O'Leary" {...a11yProps(2)} />
-          <Tab label="Rajan Muralidharan" {...a11yProps(3)} />
-          <Tab label="Michael Gadbois" {...a11yProps(4)} />
-          <Tab label="Noah Brinton" {...a11yProps(5)} />
-          <Tab label="Chinmay Patil" {...a11yProps(6)} />
+          <Tab label="Home" {...a11yProps(0)} href="/"/>
+          <Tab label="Log In" {...a11yProps(1)} href="/login"/>
+          <Tab label="Sign Up" {...a11yProps(2)} href="/signup"/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -82,18 +78,6 @@ export default function ScrollableTabsButtonAuto() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         Customer Liaison
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Software Developer
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Secretary
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Team Leader
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Project Manager
       </TabPanel>
     </div>
   );
