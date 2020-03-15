@@ -1,16 +1,11 @@
 import React from "react";
 import LoginUI from "./login.js";
 import Menu from "./scroll.js";
-import resetPass from "./resetPass.js"
-import signUp from "./signup.js"
-import signUpSupporter from "./signUpSupporter.js"
-import tos from "./TOS.js"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import resetPass from "./resetPass.js";
+import signUp from "./signup.js";
+import signUpSupporter from "./signUpSupporter.js";
+import tos from "./TOS.js";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default function App() {
   return (
@@ -23,7 +18,7 @@ export default function App() {
           <Route path="/TOS">
             <TOS />
           </Route>
-           <Route path="/signup/supporter">
+          <Route path="/signup/supporter">
             <SignUpSupporter />
           </Route>
           <Route path="/signup">
@@ -42,7 +37,7 @@ export default function App() {
   );
 }
 
-function Home(){
+function Home() {
   return <h2>Home</h2>;
 }
 
