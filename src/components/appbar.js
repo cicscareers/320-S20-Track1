@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -296,4 +295,3 @@ export default function MenuAppBar() {
     </div>
   );
 }
->>>>>>> e738f95e6ccb82f0e559e5011569fd2e7e569b93

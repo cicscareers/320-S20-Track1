@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -30,4 +30,3 @@ export default function TOS() {
     </Container>
   );
 }
->>>>>>> e738f95e6ccb82f0e559e5011569fd2e7e569b93

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -168,4 +168,4 @@ export default function ScrollableTabsButtonAuto() {
     </div>
   );
 }
->>>>>>> e738f95e6ccb82f0e559e5011569fd2e7e569b93
+
