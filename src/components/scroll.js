@@ -69,6 +69,7 @@ export default function ScrollableTabsButtonAuto() {
           <Tab label="Home" {...a11yProps(0)} href="/" />
           <Tab label="Log In" {...a11yProps(1)} href="/login" />
           <Tab label="Sign Up" {...a11yProps(2)} href="/signup" />
+          <Tab label="Match" {...a11yProps(3)} href="/match" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

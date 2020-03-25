@@ -140,8 +140,10 @@ export default function MenuAppBar() {
                 </MenuItem>
                 <MenuItem onClick={handleClose}>Sign Up</MenuItem>
               </Menu>
+
             </div>
           )}
+
         </Toolbar>
       </AppBar>
     </div>

@@ -7,6 +7,7 @@ import signUpSupporter from "./components/signUpSupporter.js";
 import tos from "./components/TOS.js";
 import appbar from "./components/appbar.js";
 import home from "./components/home.js";
+import matchDemo from "./components/Match.js";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default function App() {
@@ -16,6 +17,9 @@ export default function App() {
         <Switch>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/match">
+            <MatchDemo />
           </Route>
           <Route path="/TOS">
             <TOS />
@@ -58,7 +62,9 @@ function SignUp() {
 function SignUpSupporter() {
   return signUpSupporter();
 }
-
+function MatchDemo(){
+  return matchDemo();
+}
 function TOS() {
   return tos();
 }
