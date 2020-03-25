@@ -16,18 +16,22 @@ export default function App() {
       <div>
         <Switch>
           <Route path="/login">
+            {Menu()}
             <Login />
           </Route>
           <Route path="/match">
+            {Menu()}
             <MatchDemo />
           </Route>
           <Route path="/TOS">
             <TOS />
           </Route>
           <Route path="/signup/supporter">
+            {Menu()}
             <SignUpSupporter />
           </Route>
           <Route path="/signup">
+            {Menu()}
             <SignUp />
           </Route>
           <Route path="/forgot_password">
