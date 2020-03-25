@@ -61,7 +61,7 @@ export default function SimpleSelect() {
   <div>
     <div>
       <FormControl className={classes.formControl}>
-        <TextField id="lastName" label="Last Name"/>
+        <TextField id="firstName" label="First Name"/>
       </FormControl>
       <FormControl className={classes.formControl}>
         <TextField id="lastName" label="Last Name"/>

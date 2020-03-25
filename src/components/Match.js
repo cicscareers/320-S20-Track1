@@ -1,25 +1,18 @@
 import React, { Component } from "react";
+import { Grid, Paper } from "@material-ui/core"
 import Right from './matchRight.js';
 import Left from './matchLeft.js';
-const rightAlligned = {
-  position: 'relative', left: '50%', top: '0%',
-  transform: 'translate(0%, 0%)'
-};
-const leftAlligned = {
-  position: 'relative', left: '0%', top: '0%',
-  transform: 'translate(0%,0%)'
-};
 
 function Match(){
   return (
-    <div>
-      <div style={rightAlligned}>
-        {Right()}
-      </div>
-      <div>
+    <Grid container>
+      <Grid item sm>
         {Left()}
-      </div>
-    </div>
+      </Grid>
+      <Grid item sm>
+        {Right()}
+      </Grid>
+    </Grid>
   );
 }
 export default Match;
