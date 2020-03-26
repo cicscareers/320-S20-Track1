@@ -63,24 +63,24 @@ function Match(){
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
   const onChange = e => {
-    let emp = [];
-    for(let s of list_of_all_supporters){
-      if(s.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1){
-        emp.push(s);
-      }
-    }
-    list_of_supporters = emp;
-    console.log(list_of_supporters);
-    setSearch(e.target.value.toLowerCase());
-    // Not working dont know why?
-    // list_of_supporters = list_of_all_supporters.filter(supporter => 
-    //   supporter.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
+    // let emp = [];
+    // for(let s of list_of_all_supporters){
+    //   if(s.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1){
+    //     emp.push(s);
+    //   }
+    // }
+    // list_of_supporters = emp;
+    // console.log(list_of_supporters);
+    // setSearch(e.target.value.toLowerCase());
+    // // Not working dont know why?
+    list_of_supporters = list_of_all_supporters.filter(supporter => 
+       supporter.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
   };
 
 
   const handleChange = event => {
     setAge(event.target.value);
-    list_of_supporters = list_of_all_supporters.filter(supporter => supporter.type == event.target.value);
+    list_of_supporters = list_of_supporters.filter(supporter => supporter.type == event.target.value);
     console.log(event.target.value);
 
     
