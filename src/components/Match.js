@@ -55,20 +55,28 @@ let list_of_all_supporters = [
 }
 ];
 let list_of_supporters = list_of_all_supporters;
-function filter_list_by_type(type){
-
-  list_of_supporters = list_of_all_supporters.filter(supporter=>supporter.type == type);
-
-}
-
-
 
 
 function Match(){
   const [age, setAge] = React.useState('');
-
+  const [search, setSearch] = React.useState('');
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = React.useState(0);
+  const onChange = e => {
+    let emp = [];
+    for(let s of list_of_all_supporters){
+      if(s.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1){
+        emp.push(s);
+      }
+    }
+    list_of_supporters = emp;
+    console.log(list_of_supporters);
+    setSearch(e.target.value.toLowerCase());
+    // Not working dont know why?
+    // list_of_supporters = list_of_all_supporters.filter(supporter => 
+    //   supporter.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
+  };
+
 
   const handleChange = event => {
     setAge(event.target.value);
@@ -98,10 +106,10 @@ function Match(){
       <Grid item sm>
 
       <FormControl>
-        <TextField id="firstName" label="First Name"/>
+        <TextField id="firstName" label="First Name" value={search} onChange={onChange.bind(this)}/>
       </FormControl>
       <FormControl>
-        <TextField id="lastName" label="Last Name"/>
+        <TextField id="lastName" label="Last Name" value={search} onChange={onChange.bind(this)}/>
       </FormControl>
 
       <FormControl>
