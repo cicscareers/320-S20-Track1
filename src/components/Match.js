@@ -72,6 +72,7 @@ function Match(){
     list_of_supporters = emp;
     console.log(list_of_supporters);
     setSearch(e.target.value.toLowerCase());
+
     // Not working dont know why?
     // list_of_supporters = list_of_all_supporters.filter(supporter => 
     //   supporter.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1);
@@ -80,7 +81,12 @@ function Match(){
 
   const handleChange = event => {
     setAge(event.target.value);
-    list_of_supporters = list_of_all_supporters.filter(supporter => supporter.type == event.target.value);
+    if(search == ""){
+      list_of_supporters = list_of_all_supporters.filter(supporter => supporter.type == event.target.value);
+    }
+    else{
+      list_of_supporters = list_of_supporters.filter(supporter => supporter.type == event.target.value);
+    }
     console.log(event.target.value);
 
     
@@ -107,9 +113,6 @@ function Match(){
 
       <FormControl>
         <TextField id="firstName" label="First Name" value={search} onChange={onChange.bind(this)}/>
-      </FormControl>
-      <FormControl>
-        <TextField id="lastName" label="Last Name" value={search} onChange={onChange.bind(this)}/>
       </FormControl>
 
       <FormControl>
