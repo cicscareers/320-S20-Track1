@@ -115,7 +115,7 @@ function Match(){
         <TextField id="firstName" label="First Name" value={search} onChange={onChange.bind(this)}/>
       </FormControl>
 
-      <FormControl>
+      <FormControl fullWidth>
         <InputLabel id="supporterType">Supporter Type</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -123,7 +123,7 @@ function Match(){
           value={age}
           onChange={handleChange.bind(this)}
         >
-          <MenuItem value={"Alumni"}>Alumni</MenuItem>
+          <MenuItem value={"Alumni"} >Alumni</MenuItem>
           <MenuItem value={"Professor"}>Professor</MenuItem>
           <MenuItem value={"Student"}>Student</MenuItem>
         </Select>
