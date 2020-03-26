@@ -80,7 +80,7 @@ function Match(){
 
   const handleChange = event => {
     setAge(event.target.value);
-    list_of_supporters = list_of_supporters.filter(supporter => supporter.type == event.target.value);
+    list_of_supporters = list_of_all_supporters.filter(supporter => supporter.type == event.target.value);
     console.log(event.target.value);
 
     
