@@ -12,13 +12,17 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Menu, Link } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(6),
+    alignItems: "center",
+    flexGrow: 1
   },
   title: {
     flexGrow: 1
@@ -45,31 +49,32 @@ export default function MenuAppBar() {
 
   return (
     <div className={classes.root}>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? "Logout" : "Login"}
-        />
-      </FormGroup>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
+          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6">
+            <Button
+            size="large"
+            type="submit"
+            href="/login"
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Photos
-          </Typography>
+            Login
+          </Button>
+          <Button
+            size="large"
+            type="submit"
+            href="/signup"
+          >
+            Sign Up
+          </Button>
+           <Button
+            size="large"
+            type="submit"
+            href="/match"
+          >
+
+            Find a Supporter
+          </Button>
+          </ButtonGroup>
           {auth && (
             <div>
               <IconButton
