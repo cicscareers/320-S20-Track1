@@ -51,20 +51,13 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6">
+          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6" >
             <Button
             size="large"
             type="submit"
-            href="/login"
+            href="/"
           >
-            Login
-          </Button>
-          <Button
-            size="large"
-            type="submit"
-            href="/signup"
-          >
-            Sign Up
+            Home
           </Button>
            <Button
             size="large"
@@ -74,7 +67,26 @@ export default function MenuAppBar() {
 
             Find a Supporter
           </Button>
+          <Button
+            size="large"
+            type="submit"
+            href="/ap"
+          >
+            My Appointments
+          </Button>
           </ButtonGroup>
+          <FormGroup align="center">
+        <FormControlLabel
+          control={
+            <Switch
+              checked={auth}
+              onChange={handleChange}
+              aria-label="login switch"
+            />
+          }
+          label={auth ? "Logout" : "Login"}
+        />
+      </FormGroup>
           {auth && (
             <div>
               <IconButton

@@ -8,6 +8,7 @@ import tos from "./components/TOS.js";
 import appbar from "./components/appbar.js";
 import home from "./components/home.js";
 import matchDemo from "./components/Match.js";
+import appts from "./components/appts.js";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default function App() {
@@ -25,6 +26,10 @@ export default function App() {
           </Route>
           <Route path="/TOS">
             <TOS />
+          </Route>
+          <Route path="/ap">
+            {Menu()}
+            <Apts />
           </Route>
           <Route path="/signup/supporter">
             {Menu()}
@@ -71,4 +76,7 @@ function MatchDemo(){
 }
 function TOS() {
   return tos();
+}
+function Apts(){
+  return appts();
 }
