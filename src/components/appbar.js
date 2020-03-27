@@ -101,7 +101,9 @@ export default function MenuAppBar() {
                   <MenuItem
                     onClick={handleClose}
                   >
-                    Log In
+                    <Link href="/">
+                    home
+                  </Link>
                   </MenuItem>
                 </Link>
              
@@ -135,10 +137,14 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem component={Link} to='/login'>
-                    go to my route
+                <MenuItem>
+                  <Link href="/login">
+                  Login
+                  </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>Sign Up</MenuItem>
+                <MenuItem onClick={handleClose}><Link href="/signup">
+                  Sign Up
+                  </Link></MenuItem>
               </Menu>
 
             </div>

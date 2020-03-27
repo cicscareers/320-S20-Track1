@@ -16,6 +16,7 @@ import Select from '@material-ui/core/Select';
 import { styled } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Typography from "@material-ui/core/Typography";
 let list_of_all_supporters = [
 {
   "name": "Jim",
@@ -56,8 +57,14 @@ let list_of_all_supporters = [
 ];
 let list_of_supporters = list_of_all_supporters;
 
+const useStyles = makeStyles(theme => ({
+  title: {
+    margin: theme.spacing(5, 5, 5, 5)
+  }
+}));
 
 function Match(){
+  const classes = useStyles();
   const [age, setAge] = React.useState('');
   const [search, setSearch] = React.useState('');
   const inputLabel = React.useRef(null);
@@ -96,6 +103,11 @@ function Match(){
   }
 
   return (
+    
+    <React.Fragment className={classes.title}>
+      <Typography component="h1" variant="h5" align="center">
+        Search for a Supporter!
+      </Typography>
     <Grid container>
       <Grid item sm>
         <List>
@@ -131,6 +143,7 @@ function Match(){
       </Grid>
 
     </Grid>
+    </React.Fragment>
   );
 }
 
