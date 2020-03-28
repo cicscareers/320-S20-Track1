@@ -51,6 +51,9 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
+          <Typography component="h1" variant="h5" className={classes.title}>
+            ReachOUT
+          </Typography>
           <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6" >
             <Button
             size="large"
