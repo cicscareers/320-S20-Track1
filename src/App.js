@@ -10,6 +10,7 @@ import home from "./components/home.js";
 import matchDemo from "./components/Match.js";
 import appts from "./components/appts.js";
 import accts from "./components/account.js";
+import Matching from "./components/search-appointment.js"
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default function App() {
@@ -23,7 +24,7 @@ export default function App() {
           </Route>
           <Route path="/match">
             {Menu()}
-            <MatchDemo />
+            <Matching />
           </Route>
           <Route path="/TOS">
             <TOS />
