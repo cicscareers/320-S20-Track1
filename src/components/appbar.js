@@ -114,17 +114,18 @@ export default function MenuAppBar() {
                 onClose={handleClose}
               >
                
-               <Link to="/signup">
-                  <MenuItem
-                    onClick={handleClose}
-                  >
-                    <Link href="/">
-                    home
+                <MenuItem onClick={handleClose}>
+                  <Link href="/account">
+                    My Account
                   </Link>
-                  </MenuItem>
-                </Link>
-             
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                </MenuItem>
+      
+                <MenuItem onClick={handleClose}>
+                  <Link href="/login">
+                    Log Out
+                  </Link>
+                </MenuItem>
+
               </Menu>
             </div>
           )}

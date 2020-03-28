@@ -4,11 +4,11 @@ import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-export default function appts() {
+export default function accts() {
   return (
     <Container component="main" maxWidth="xs" align="center">
       <Typography component="h1" variant="h5" align="center">
-        My Appointments Coming Soon!
+        My Account Coming Soon!
       </Typography>
     </Container>
   );
