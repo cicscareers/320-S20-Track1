@@ -21,14 +21,21 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(6),
-    alignItems: "center",
     flexGrow: 1
   },
   title: {
     flexGrow: 1
   }
 }));
-
+const styles = {
+  button: {
+    width: 64, height: 64,
+    padding: 0,
+  },
+  icon: {
+    width: 64, height: 64,
+  },
+};
 export default function MenuAppBar() {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
@@ -51,31 +58,40 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography component="h1" variant="h5" className={classes.title}>
+          <Typography component="h1" variant="h3">
             ReachOUT
           </Typography>
-          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6" >
+          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6" align="center">
             <Button
             size="large"
             type="submit"
             href="/"
+            className={classes.root}
           >
-            Home
+            <Typography component="h6" variant="h6">
+                Home
+            </Typography>
           </Button>
            <Button
             size="large"
             type="submit"
             href="/match"
+            className={classes.root}
           >
 
-            Find a Supporter
+           <Typography component="h6" variant="h6">
+                Find a Supporter
+            </Typography>
           </Button>
           <Button
             size="large"
             type="submit"
             href="/ap"
+            className={classes.root}
           >
-            My Appointments
+            <Typography component="h6" variant="h6">
+                My Appointments
+            </Typography>
           </Button>
           </ButtonGroup>
           <FormGroup align="center">
@@ -98,6 +114,8 @@ export default function MenuAppBar() {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                style={styles.button}
+                iconStyle={styles.icon}
               >
                 <AccountCircle />
               </IconButton>
@@ -119,13 +137,17 @@ export default function MenuAppBar() {
                
                 <MenuItem onClick={handleClose}>
                   <Link href="/account">
-                    My Account
+                    <Typography component="h6" variant="h6">
+                      My Account
+                    </Typography>
                   </Link>
                 </MenuItem>
       
                 <MenuItem onClick={handleClose}>
                   <Link href="/login">
-                    Log Out
+                    <Typography component="h6" variant="h6">
+                      Log Out
+                    </Typography>
                   </Link>
                 </MenuItem>
 
@@ -140,6 +162,9 @@ export default function MenuAppBar() {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                style={styles.button}
+                iconStyle={styles.icon}
+
               >
                 <AccountCircle />
               </IconButton>
@@ -160,12 +185,18 @@ export default function MenuAppBar() {
               >
                 <MenuItem>
                   <Link href="/login">
-                  Login
+                    <Typography component="h6" variant="h6">
+                      Login
+                    </Typography>
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={handleClose}><Link href="/signup">
-                  Sign Up
-                  </Link></MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link href="/signup">
+                    <Typography component="h6" variant="h6">
+                      Sign Up
+                    </Typography>
+                  </Link>
+                </MenuItem>
               </Menu>
 
             </div>
