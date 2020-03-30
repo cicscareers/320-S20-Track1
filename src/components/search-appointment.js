@@ -125,11 +125,13 @@ export default class Example extends React.Component {
       search:"",
       female:"",
       rating:0,
-      start_time:0.00,
-      end_time:23.59,
+      start_time:"0:00",
+      end_time:"23:59",
       date:today,
       modal:false,
-      activeId:'1'
+      activeId:'1', 
+      slot_min:0,
+      slot:""
     };
   }
   handleChange=event=>{
@@ -148,7 +150,9 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:""
     });
     
   };
@@ -168,7 +172,9 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:0
     });
     
   };
@@ -188,9 +194,11 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:""
     });
-    
+
   };
   handleChange3=event=>{
     var femal=this.state.female;
@@ -208,7 +216,9 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:"0"
     });
     
   };
@@ -228,7 +238,9 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:""
     });
     
   }
@@ -374,6 +386,8 @@ export default class Example extends React.Component {
       var start=this.state.start_time;
       var end=this.state.end_time;
       var dat=this.state.date;
+      var sm=this.state.slot_min;
+      var s=this.state.slot;
       this.setState({
         activeTab: tab,
         search:sea,
@@ -382,7 +396,9 @@ export default class Example extends React.Component {
         end_time:end,
         date:dat,
         modal:false,
-        activeId:'1'
+        activeId:'1',
+        slot_min:sm,
+        slot:""
       });
     }
   }
@@ -394,6 +410,8 @@ export default class Example extends React.Component {
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
+    // var sm=this.state.slot_min;
+    // var s=this.state.slot;
     this.setState({
       activeTab: t,
       search:sea,
@@ -402,7 +420,9 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:'1'
+      activeId:'1',
+      slot_min:0,
+      slot:""
     });
     
   };
@@ -410,23 +430,28 @@ export default class Example extends React.Component {
     const search = this.state.search;
     var type = supporter.type.toLowerCase();
     var date= supporter.date.toLowerCase();
-    var start_time_hour=Math.floor(supporter.start_time);
+    var start_time_hm=supporter.start_time.split(/[.:]/);
+    var end_time_hm=supporter.end_time.split(/[.:]/);
     var start_time_ampm="AM";
     var end_time_ampm="AM";
-    if(start_time_hour>12){
-      start_time_hour=start_time_hour-12;
+    var start_hour=start_time_hm[0];
+    var start_min=start_time_hm[1];
+    var end_hour=end_time_hm[0];
+    var end_min=end_time_hm[1];
+    if(parseInt(start_hour)>=12){
+      if(parseInt(start_hour)>12){
+      
+      start_hour=(parseInt(start_hour)-12).toString();
+    }
       start_time_ampm="PM";
     }
-    var start_time_min= (supporter.start_time-Math.floor(supporter.start_time)).toFixed(2).toString();
-    var start_time_min1=start_time_min.slice(start_time_min.indexOf(".")+1,start_time_min.indexOf(".")+2);
-    var end_time_hour=Math.floor(supporter.end_time);
-    if(end_time_hour>12){
-      end_time_hour=end_time_hour-12;
+    
+    if(parseInt(end_hour)>=12){
+      if(parseInt(end_hour)>12){
+      end_hour=(parseInt(end_hour)-12).toString();
+      }
       end_time_ampm="PM";
     }
-    var end_time_min= (supporter.end_time-Math.floor(supporter.end_time)).toFixed(2).toString();
-    var end_time_min1=end_time_min.slice(end_time_min.indexOf(".")+1,end_time_min.indexOf(".")+2);
-
     /*if( search !== "" && country.name.toLowerCase().indexOf( search.toLowerCase() ) === -1 ){
         return null
     }*/
@@ -444,7 +469,7 @@ export default class Example extends React.Component {
                   >
                    <h3>{supporter.name}</h3>
                          <h6>   Date:{supporter.date}</h6>
-                         <h6>   From {start_time_hour}:{start_time_min1}0 {start_time_ampm} to {end_time_hour}:{end_time_min1}0 {end_time_ampm}</h6>
+                         <h6>   From {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
                   </NavLink>
                 </NavItem>
          
@@ -452,67 +477,7 @@ export default class Example extends React.Component {
       </div>
     );
   };
-  // transitionsModal(supporter){
-  //   const classes = useStyles3;
-  //   // const[open,setOpen]=React.useState(false);
-  //   // const handleOpen = e => {
-  //   //   alert(e.target.id);
-  //   //   setOpen(true);
-  //   // };
-  
-  //   // const handleClose = () => {
-  //   //   setOpen(false);
-  //   // };
-  //   var start_time_hour=Math.floor(supporter.start_time);
-  //   var start_time_ampm="AM";
-  //   var end_time_ampm="AM";
-  //   if(start_time_hour>12){
-  //     start_time_hour=start_time_hour-12;
-  //     start_time_ampm="PM";
-  //   }
-  //   var start_time_min= (supporter.start_time-Math.floor(supporter.start_time)).toFixed(2).toString();
-  //   var start_time_min1=start_time_min.slice(start_time_min.indexOf(".")+1,start_time_min.indexOf(".")+2);
-  //   var end_time_hour=Math.floor(supporter.end_time);
-  //   if(end_time_hour>12){
-  //     end_time_hour=end_time_hour-12;
-  //     end_time_ampm="PM";
-  //   }
-  //   var end_time_min= (supporter.end_time-Math.floor(supporter.end_time)).toFixed(2).toString();
-  //   var end_time_min1=end_time_min.slice(end_time_min.indexOf(".")+1,end_time_min.indexOf(".")+2);
-  //   return (
-  //     <div>
-  //       <Button type="button" id={supporter.id} onClick={handleOpen}>
-  //        Create New Appointment
-  //       </Button>
-  //       <Modal
-  //         aria-labelledby="transition-modal-title"
-  //         aria-describedby="transition-modal-description"
-  //         className={classes.modal}
-  //         open={open}
-  //         onClose={handleClose}
-  //         closeAfterTransition
-  //         BackdropComponent={Backdrop}
-  //         BackdropProps={{
-  //           timeout: 500
-  //         }}
-  //       >
-  //         <Fade in={open}>
-  //           <div className={classes.paper}>
-  //       <h2 id="transition-modal-title">Appointment Confirmation</h2>
-  //             <p id="transition-modal-description">
-  //               Supporter-Name:{supporter.name}
-  //               Helps-In:{supporter.type}
-  //               Date:{supporter.date}
-  //               Time:{start_time_hour}:{start_time_min1}0 {start_time_ampm} to {end_time_hour}:{end_time_min1}0 {end_time_ampm}
-  //               Location:{supporter.location}
-  //               <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
-  //             </p>
-  //           </div>
-  //         </Fade>
-  //       </Modal>
-  //     </div>
-  //   );
-  // }
+
   handleOpen=e=>{
     var femal=this.state.female;
     var t=this.state.activeTab;
@@ -521,6 +486,8 @@ export default class Example extends React.Component {
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
+    var sm=this.state.slot_min;
+    var s=this.state.slot;
     this.setState({
       activeTab: t,
       search:sea,
@@ -529,9 +496,11 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:true,
-      activeId:e.target.id
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
     });
-    // alert(e.target.id);
+
   }
   handleClose=e=>{
     var femal=this.state.female;
@@ -541,6 +510,8 @@ export default class Example extends React.Component {
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
+    var sm=this.state.slot_min;
+    var s=this.state.slot;
     this.setState({
       activeTab: t,
       search:sea,
@@ -549,65 +520,416 @@ export default class Example extends React.Component {
       end_time:end,
       date:dat,
       modal:false,
-      activeId:e.target.id
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
     });
+  }
+  handleSlot=e=>{
+    var femal=this.state.female;
+    var t=this.state.activeTab;
+    var sea=this.state.search;
+    var rat=this.state.rating;
+    var start=this.state.start_time;
+    var end=this.state.end_time;
+    var dat=this.state.date;
+    var sm=e.target.value;
+    var s=this.state.slot;
+    let AuthButton;
+    this.setState({
+      activeTab: t,
+      search:sea,
+      female:femal,
+      start_time:start,
+      end_time:end,
+      date:dat,
+      modal:false,
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
+    });
+   
+  }
+  handleSlotTime=e=>{
+    var femal=this.state.female;
+    var t=this.state.activeTab;
+    var sea=this.state.search;
+    var rat=this.state.rating;
+    var start=this.state.start_time;
+    var end=this.state.end_time;
+    var dat=this.state.date;
+    var sm=this.state.slot_min;
+    var s=e.target.value;
+    let AuthButton;
+    this.setState({
+      activeTab: t,
+      search:sea,
+      female:femal,
+      start_time:start,
+      end_time:end,
+      date:dat,
+      modal:false,
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
+    });
+   
   }
   renderSupporterTabContent = supporter => {
     const classes = useStyles3;
-    // const[open,setOpen]=React.useState(false);
-    // // const handleOpen = () => {
-    // //   // alert(e.target.id);
-    // //   setOpen(true);
-    // // };
-  
-    // // const handleClose = () => {
-    // //   setOpen(false);
-    // // };
     const fil=supporters.filter(supporter => {
       return supporter.id==this.state.activeId;
     });
-    var fil_start_time=fil.map(supporter=>{return supporter.start_time});
-    var fil_end_time=fil.map(supporter=>{return supporter.end_time});
-    var fil_start_time_hour=Math.floor(fil_start_time);
+    let AuthButton;
+    
+    var fil_start_time_hm=fil.map(supporter=>{return supporter.start_time.split(/[.:]/);});
+    var fil_end_time_hm=fil.map(supporter=>{return supporter.end_time.split(/[.:]/);});
     var fil_start_time_ampm="AM";
     var fil_end_time_ampm="AM";
-    if(fil_start_time_hour>12){
-      fil_start_time_hour=fil_start_time_hour-12;
+    var fil_start_hour=fil_start_time_hm[0];
+    // alert(fil_start_hour);
+    
+    var fil_start_min=fil_start_time_hm[1];
+    // alert(fil_start_min);
+    var fil_end_hour=fil_end_time_hm[0];
+    var fil_end_min=fil_end_time_hm[1];
+    if(parseInt(fil_start_hour)>=12){
+      if(parseInt(fil_start_hour)>12){
+      fil_start_hour=(parseInt(fil_start_hour)-12).toString();
+      }
       fil_start_time_ampm="PM";
+      
     }
-    var fil_start_time_min= (fil_start_time-Math.floor(fil_start_time)).toFixed(2).toString();
-    var fil_start_time_min1=fil_start_time_min.slice(fil_start_time_min.indexOf(".")+1,fil_start_time_min.indexOf(".")+2);
-    var fil_end_time_hour=Math.floor(fil_end_time);
-    if(fil_end_time_hour>12){
-      fil_end_time_hour=fil_end_time_hour-12;
+    if(parseInt(fil_end_hour)>=12){
+      if(parseInt(fil_end_hour)>12){
+      fil_end_hour=(parseInt(fil_end_hour)-12).toString();
+      }
       fil_end_time_ampm="PM";
     }
-    var fil_end_time_min= (fil_end_time-Math.floor(fil_end_time)).toFixed(2).toString();
-    var fil_end_time_min1=fil_end_time_min.slice(fil_end_time_min.indexOf(".")+1,fil_end_time_min.indexOf(".")+2);
     const search = this.state.search;
     var type = supporter.type.toLowerCase();
     var date= supporter.date.toLowerCase();
-    var start_time_hour=Math.floor(supporter.start_time);
+    var start_time_hm=supporter.start_time.split(/[.:]/);
+    var end_time_hm=supporter.end_time.split(/[.:]/);
     var start_time_ampm="AM";
     var end_time_ampm="AM";
-    if(start_time_hour>12){
-      start_time_hour=start_time_hour-12;
+    var start_hour=start_time_hm[0];
+    var start_min=start_time_hm[1];
+    var end_hour=end_time_hm[0];
+    var end_min=end_time_hm[1];
+    if(parseInt(start_hour)>=12){
+      if(parseInt(start_hour)>12){
+      start_hour=(parseInt(start_hour)-12).toString();
+      }
       start_time_ampm="PM";
     }
-    var start_time_min= (supporter.start_time-Math.floor(supporter.start_time)).toFixed(2).toString();
-    var start_time_min1=start_time_min.slice(start_time_min.indexOf(".")+1,start_time_min.indexOf(".")+2);
-    var end_time_hour=Math.floor(supporter.end_time);
-    if(end_time_hour>12){
-      end_time_hour=end_time_hour-12;
+    if(parseInt(end_hour)>=12){
+      if(parseInt(end_hour)>12){
+      end_hour=(parseInt(end_hour)-12).toString();
+      }
       end_time_ampm="PM";
     }
-    var end_time_min= (supporter.end_time-Math.floor(supporter.end_time)).toFixed(2).toString();
-    var end_time_min1=end_time_min.slice(end_time_min.indexOf(".")+1,end_time_min.indexOf(".")+2);
-    
+    if(this.state.slot_min!=0){
+      const slot_filter=supporters.filter(supporter => {
+        return supporter.id==this.state.activeTab;
+      });
+      var slot_filter_start=slot_filter.map(supporter=>{return supporter.start_time.split(":");});
+      let j1=slot_filter_start[0].toString().split(",");
+      var slot_filter_end=slot_filter.map(supporter=>{return supporter.end_time.split(":");});
+      let j2=slot_filter_end[0].toString().split(",");
+      var as_hour=parseInt(j1[0]);
+      var as_min=0;
+      if(slot_filter_start[1]!="00"){
+        as_min=parseInt(j1[1]);
+      }
+      var ae_hour=parseInt(j2[0]);
+      var ae_min=0;
+      if(slot_filter_end[1]!="00"){
+        ae_min=parseInt(j2[1]);
+      }
+      var min=this.state.slot_min;
+      var sl_start_hour=as_hour;
+      var sl_start_min=as_min;
+      var sl_start_time_ampm="AM";
+      var sl_end_time_ampm="AM";
+      if(sl_start_hour>=12){
+        if(sl_start_hour>12){
+        sl_start_hour=sl_start_hour-12;
+        }
+        sl_start_time_ampm="PM";
+        
+      }
+      // if(sl_end_hour>12){
+      //   sl_end_hour=sl_start_hour-12;
+      //   sl_end_time_ampm="AM";
+      // }
+      let AuthRadio=[];
+      let AuthRadio1=[];
+      let AuthRadio2=[];
+      let AuthRadio3=[];
+      let AuthRadio4=[];
+      let i=0;
+      // alert(sl_start_hour!=ae_hour&&sl_start_min!=ae_min);
+      
+      while(!(sl_start_hour==ae_hour&&sl_start_min==ae_min)){
+        if(sl_start_hour>=12){
+          if(sl_start_hour>12){
+          sl_start_hour=sl_start_hour-12;
+          }
+          sl_start_time_ampm="PM";
+          
+        }
+        let sl_end_hour;
+        let sl_end_min;
+        let sl_end_ampm="AM";
+        var zero1=sl_start_min.toString();
+        if(sl_start_min==0){
+          zero1="00";
+        }
+        let yo=parseInt(sl_start_min)+parseInt(min);
+        // alert(sl_start_min.toString()+ae_min.toString());
+        if(min==30){
+          // alert(sl_start_hour.toString()+":"+sl_start_min.toString());
+          
+          // if()
+          if(yo<60){
+            // alert("hi");
+            sl_end_hour=sl_start_hour;
+            sl_end_min=sl_start_min+30;
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+sl_end_hour.toString()+":"+zero2+" "+sl_start_time_ampm;
+            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_min=sl_start_min+30;
+            i++;
+            continue;
+          }
+          else if(yo==60){
+            
+            
+            
+            sl_end_hour=sl_start_hour+1;
+            sl_end_min=0;
+            if(sl_end_hour>=12){
+              if(sl_end_hour>12){
+              sl_end_hour=sl_start_hour-12;
+              }
+              sl_end_time_ampm="PM";
+            }
+            
+            
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
+            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_hour=sl_start_hour+1;
+            sl_start_min=0;
+            i++;
+            continue;
+          }
+          else if(yo>60){
+            // alert("hi");
+         
+            
+            sl_end_hour=sl_start_hour+1;
+            sl_end_min=sl_start_min+30-60;
+            if(sl_end_hour>=12){
+              if(sl_end_hour>12){
+              sl_end_hour=sl_start_hour-12;
+              }
+              sl_end_time_ampm="PM";
+            }
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2.toString()+" "+sl_end_time_ampm;
+            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_hour=sl_start_hour+1;
+            sl_start_min=sl_start_min+30-60;
+            i++;
+            continue;
+          }
+        }
+//yo
+        if(min==60){
+          sl_end_hour=sl_start_hour+1;
+            sl_end_min=sl_start_min;
+            if(sl_end_hour>=12){
+              if(sl_end_hour>12){
+              sl_end_hour=sl_start_hour-12;
+              }
+              sl_end_time_ampm="PM";
+            }
+            
+            
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
+            AuthRadio2[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_hour=sl_start_hour+1;
+            sl_start_min=0;
+            i++;
+            continue;
+        }
+        if(min==90){
+          // alert(sl_start_hour.toString()+":"+sl_start_min.toString());
+          
+          // if()
+          // if(yo<60){
+          //   // alert("hi");
+          //   sl_end_hour=sl_start_hour;
+          //   sl_end_min=sl_start_min+30;
+          //   var zero2=sl_end_min.toString();
+          //   if(sl_end_min==0){
+          //     zero2="00";
+          //   }
+          //   var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+sl_end_hour.toString()+":"+zero2+" "+sl_start_time_ampm;
+          //   AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+          //   sl_start_min=sl_start_min+30;
+          //   i++;
+          //   continue;
+          // }
+          // else if(yo==60){
+            
+            
+            
+          //   sl_end_hour=sl_start_hour+1;
+          //   sl_end_min=0;
+          //   if(sl_end_hour>=12){
+          //     if(sl_end_hour>12){
+          //     sl_end_hour=sl_start_hour-12;
+          //     }
+          //     sl_end_time_ampm="PM";
+          //   }
+            
+            
+          //   var zero2=sl_end_min.toString();
+          //   if(sl_end_min==0){
+          //     zero2="00";
+          //   }
+          //   var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
+          //   AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+          //   sl_start_hour=sl_start_hour+1;
+          //   sl_start_min=0;
+          //   i++;
+          //   continue;
+          // }
+          // else if(yo>60){
+            // alert("hi");
+         
+            
+            sl_end_hour=sl_start_hour+1;
+            sl_end_min=sl_start_min+90-60;
+            if(sl_end_hour>=12){
+              if(sl_end_hour>12){
+              sl_end_hour=sl_start_hour-12;
+              }
+              sl_end_time_ampm="PM";
+            }
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2.toString()+" "+sl_end_time_ampm;
+            AuthRadio3[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_hour=sl_start_hour+1;
+            sl_start_min=sl_start_min+90-60;
+            i++;
+            continue;
+          
+        }
+         if(min==120){
+          sl_end_hour=sl_start_hour+2;
+            sl_end_min=sl_start_min;
+            if(sl_end_hour>=12){
+              if(sl_end_hour>12){
+              sl_end_hour=sl_start_hour-12;
+              }
+              sl_end_time_ampm="PM";
+            }
+            
+            
+            var zero2=sl_end_min.toString();
+            if(sl_end_min==0){
+              zero2="00";
+            }
+            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
+            AuthRadio4[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+            sl_start_hour=sl_start_hour+2;
+            sl_start_min=0;
+            i++;
+            continue;
+        }
+      }
+      if(min==30){
+        AuthRadio=AuthRadio1;
+      }
+      else if (min==60){
+        AuthRadio=AuthRadio2;
+      }
+      else if (min==90){
+        AuthRadio=AuthRadio3;
+      }
+      else if (min==120){
+        AuthRadio=AuthRadio4;
+      }
+      AuthButton=(<FormControl component="fieldset">
+      <FormLabel component="legend">Slots open</FormLabel>
+      <RadioGroup aria-label="gender" name="gender1" value={this.state.slot} onChange={this.handleSlotTime}>
+        {/* <FormControlLabel value="female" control={<Radio />} label="Female" />
+        <FormControlLabel value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="other" control={<Radio />} label="Other" />
+        <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" /> */}
+        {AuthRadio}
+      </RadioGroup>
+    </FormControl>); 
+    }
     /*if( search !== "" && country.name.toLowerCase().indexOf( search.toLowerCase() ) === -1 ){
         return null
     }*/
-  
+  let ModalToBeShown;
+  if(this.state.slot!=""){
+    ModalToBeShown=( <div className={classes.paper} style={{textAlign:'center'}}>
+    <br/>
+<h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
+    <p id="transition-modal-description">
+      <h6>Supporter-Name:{fil.map(supporter => {
+      return supporter.name;
+    })}</h6>
+      <h6>Helps-In:{fil.map(supporter => {
+      return supporter.type;
+    })}</h6>
+      <h6>Date:{fil.map(supporter => {
+      return supporter.date;
+    })}</h6>
+      <h6>Time: {this.state.slot}</h6>
+      <h6>Location:{fil.map(supporter => {
+      return supporter.location;
+    })}</h6>
+     <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+     <br/>
+      <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
+      &nbsp;
+    </p>
+    <br/>
+    
+  </div>);
+  }
+  else{
+    ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+      <br/>
+      <p id="transition-modal-description">
+        Please Select a Slot.
+      </p>
+    </div>)
+  }
     return (
       
               
@@ -620,10 +942,32 @@ export default class Example extends React.Component {
     
     <h6>Helps in: {supporter.type}</h6>
                   <h6>Date: {date}</h6>
-                  <h6>Available from {start_time_hour}:{start_time_min1}0 {start_time_ampm} to {end_time_hour}:{end_time_min1}0 {end_time_ampm}</h6>
+                  <h6>Available from {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
     <h6>Rating: {supporter.rating}</h6>
                   <br/>
+                  <InputLabel htmlFor="type">Type</InputLabel>
+        <Select
+          native
+          value={this.state.slot_min}
+          onChange={this.handleSlot}
+          inputProps={{
+            name: 'age',
+            id: 'slot',
+          }}
+        >
+          <option aria-label="None" value="" />
+          <option value={30}>30 minutes</option>
+          <option value={60}>1 hour</option>
+          <option value={90}>1.5 hour</option>
+          <option value={120}>2 hour</option>
+        </Select>
+        <br/>
+        <br/>
+        {AuthButton}
+        <br/>
+        <br/>
                   <Button type="button" id={supporter.id} onClick={this.handleOpen}>
+          
          Create New Appointment
         </Button>
         <Modal
@@ -639,32 +983,8 @@ export default class Example extends React.Component {
           }}
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
-            <div className={classes.paper} style={{textAlign:'center'}}>
-              <br/>
-        <h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
-              <p id="transition-modal-description">
-                <h6>Supporter-Name:{fil.map(supporter => {
-                return supporter.name;
-              })}</h6>
-                <h6>Helps-In:{fil.map(supporter => {
-                return supporter.type;
-              })}</h6>
-                <h6>Date:{fil.map(supporter => {
-                return supporter.date;
-              })}</h6>
-                <h6>Time:{fil_start_time_hour}:{fil_start_time_min1}0 {fil_start_time_ampm} to {fil_end_time_hour}:{fil_end_time_min1}0 {fil_end_time_ampm}</h6>
-                <h6>Location:{fil.map(supporter => {
-                return supporter.location;
-              })}</h6>
-               <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-               <br/>
-                <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
-                &nbsp;
-              </p>
-              <br/>
-              
-            </div>
-            
+           
+            {ModalToBeShown}
           </Fade>
         </Modal>
                   <br/>
@@ -683,7 +1003,7 @@ export default class Example extends React.Component {
         const  female  = this.state.female;
         const  rating  = this.state.rating;
         const  date = this.state.date;
-        // alert(date);
+     
         const start_time=this.state.start_time;
         var start_hoursMinutes = start_time.toString().split(/[.:]/);
         var start_hours = parseInt(start_hoursMinutes[0], 10);
@@ -694,8 +1014,6 @@ export default class Example extends React.Component {
         var end_hours = parseInt(end_hoursMinutes[0], 10);
         var end_minutes = end_hoursMinutes[1] ? parseInt(end_hoursMinutes[1], 10) : 0;
         const end_exact_time= end_hours + (end_minutes/100);
-        // alert(parseInt(end_time.toString()));
-        // alert(end_exact_time);
         const filteredSupportersByRating = supporters.filter(supporter => {
           return supporter.rating>=rating;
         });
@@ -705,10 +1023,23 @@ export default class Example extends React.Component {
         const filteredSupportersByDate = filteredSupportersByType.filter(supporter => {
           return !(supporter.date.localeCompare(date.toString()));
         });
+       
+      
         const filteredSupportersByTime = filteredSupportersByDate.filter(supporter => {
-          // alert(supporter.end_time);
-          return (supporter.start_time>=start_exact_time)&&(supporter.end_time<=end_exact_time);
+          const s_start_time=supporter.start_time;
+        var s_start_hoursMinutes = s_start_time.toString().split(/[.:]/);
+
+        var s_start_hours = parseInt(s_start_hoursMinutes[0], 10);
+        var s_start_minutes = s_start_hoursMinutes[1] ? parseInt(s_start_hoursMinutes[1], 10) : 0;
+        const s_start_exact_time= s_start_hours + (s_start_minutes/100);
+        const s_end_time=supporter.end_time;
+        var s_end_hoursMinutes = s_end_time.toString().split(/[.:]/);
+        var s_end_hours = parseInt(s_end_hoursMinutes[0], 10);
+        var s_end_minutes = s_end_hoursMinutes[1] ? parseInt(s_end_hoursMinutes[1], 10) : 0;
+        const s_end_exact_time= s_end_hours + (s_end_minutes/100);
+          return (s_start_exact_time>=start_exact_time)&&(s_end_exact_time<=end_exact_time);
         });
+        
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
           return supporter.name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
         });
@@ -741,12 +1072,14 @@ export default class Example extends React.Component {
               
           <Row>
             <Col xs="6" sm="4" md="4">
-              <Nav tabs vertical pills style={{borderRight:'solid 1px black',overflowY:'auto'}}>
+              <div style={{borderRight:'solid 1px black',overflowY:'scroll'}}>
+              <Nav tabs vertical pills >
                
               {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTab(supporter);
               })}
               </Nav>
+              </div>
             </Col>
             <Col xs="6" sm="6" md="6">
               <TabContent activeTab={this.state.activeTab}>
@@ -773,3 +1106,4 @@ export default class Example extends React.Component {
         )
       }
 }
+// export default Example;
