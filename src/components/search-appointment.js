@@ -79,10 +79,12 @@ export default class Example extends React.Component {
   }
   
   handleChange = (event) => {
-		const { id } = event.target;
+    const { id } = event.target;
+  
 		switch (id) {
 			case 'type_select':
-			    var femal=event.target.value;
+          var femal=event.target.value;
+          
 				var t=this.state.activeTab;
 				var rat=this.state.rating;
 				var start=this.state.start_time;
@@ -214,7 +216,7 @@ export default class Example extends React.Component {
           onChange={this.handleChange}
           inputProps={{
             name: 'age',
-            id: 'type',
+            id: 'type_select',
           }}
         >
           <option aria-label="None" value="" />
@@ -233,7 +235,7 @@ export default class Example extends React.Component {
           onChange={this.handleChange}
           inputProps={{
             name: 'age',
-            id: 'rating',
+            id: 'rating_opt',
           }}
         >
           <option aria-label="None" value={0} />
@@ -450,7 +452,7 @@ export default class Example extends React.Component {
       modal:false,
       activeId:e.target.id,
       slot_min:sm,
-      slot:s
+      slot:""
     });
    
   }
@@ -462,7 +464,7 @@ export default class Example extends React.Component {
     var end=this.state.end_time;
     var dat=this.state.date;
     var sm=this.state.slot_min;
-    var s=e.target_value;
+    var s=e.target.value;
     this.setState({
       activeTab: t,
       search:sea,
@@ -553,6 +555,9 @@ export default class Example extends React.Component {
       var slot_start_time_ampm="AM";
 	 
       var AuthRadio=[];
+      var AuthRadio2=[];
+      var AuthRadio3=[];
+      var AuthRadio4=[];
 	  
       var i=0;
 	  var slot_end_hour = slot_start_hour;
@@ -601,8 +606,9 @@ export default class Example extends React.Component {
 			console.log(slot_end_hour+":"+slot_end_min);
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
 			
-			slot_start_min = slot_end_min;
-			slot_start_hour = slot_end_hour;
+			slot_start_min = slot_start_min+15;
+			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+			slot_start_min = slot_start_min%60;
 			
         }
 		
@@ -629,8 +635,9 @@ export default class Example extends React.Component {
 			
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
 			
-			slot_start_min = slot_end_min;
-			slot_start_hour = slot_end_hour;
+      slot_start_min = slot_start_min+15;
+			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+			slot_start_min = slot_start_min%60;
 			
         }
 		
@@ -655,9 +662,9 @@ export default class Example extends React.Component {
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-			
-			slot_start_min = slot_end_min;
-			slot_start_hour = slot_end_hour;
+      slot_start_min = slot_start_min+15;
+			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+			slot_start_min = slot_start_min%60;
 			
           
         }
@@ -685,8 +692,9 @@ export default class Example extends React.Component {
 			
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
 			
-			slot_start_min = slot_end_min;
-			slot_start_hour = slot_end_hour;
+			slot_start_min = slot_start_min+15;
+			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+			slot_start_min = slot_start_min%60;
           
         }
       }
@@ -749,7 +757,7 @@ export default class Example extends React.Component {
                   <h6>Available from {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
     <h6>Rating: {supporter.rating}</h6>
                   <br/>
-                  <InputLabel htmlFor="type">Type</InputLabel>
+                  <InputLabel htmlFor="type">Slot Duration</InputLabel>
         <Select
           native
           value={this.state.slot_min}
@@ -787,31 +795,6 @@ export default class Example extends React.Component {
           }}
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
-            {/* <div className={classes.paper} style={{textAlign:'center'}}>
-              <br/>
-        <h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
-              <p id="transition-modal-description">
-                <h6>Supporter-Name:{fil.map(supporter => {
-                return supporter.name;
-              })}</h6>
-                <h6>Helps-In:{fil.map(supporter => {
-                return supporter.type;
-              })}</h6>
-                <h6>Date:{fil.map(supporter => {
-                return supporter.date;
-              })}</h6>
-                <h6>Time: {fil_start_hour}:{fil_start_min} {fil_start_time_ampm} to {fil_end_hour}:{fil_end_min} {fil_end_time_ampm}</h6>
-                <h6>Location:{fil.map(supporter => {
-                return supporter.location;
-              })}</h6>
-               <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-               <br/>
-                <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
-                &nbsp;
-              </p>
-              <br/>
-              
-            </div> */}
             {ModalToBeShown}
             
           </Fade>
@@ -866,7 +849,11 @@ export default class Example extends React.Component {
         var s_end_hours = parseInt(s_end_hoursMinutes[0], 10);
         var s_end_minutes = s_end_hoursMinutes[1] ? parseInt(s_end_hoursMinutes[1], 10) : 0;
         const s_end_exact_time= s_end_hours + (s_end_minutes/100);
-          return (s_start_exact_time>=start_exact_time)&&(s_end_exact_time<=end_exact_time);
+        var two_three=false;
+        if(end_exact_time==23.59){
+          two_three=true;
+        }
+          return (s_end_exact_time>start_exact_time)&&((s_end_exact_time<=end_exact_time)||(s_end_exact_time>end_exact_time))&&(start_exact_time<=end_exact_time);
         });
         
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
