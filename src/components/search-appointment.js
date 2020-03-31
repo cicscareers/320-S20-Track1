@@ -887,18 +887,15 @@ export default class Example extends React.Component {
       </InputGroup>
               
           <Row>
-            <Col xs="6" sm="4" md="4">
-              <div style={{borderRight:'solid 1px black',overflowY:'scroll'}}>
+            <Col xs="6" sm="4" md="4" style={{overflowY:'scroll',height:'561px'}}>
               <Nav tabs vertical pills >
-               
               {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTab(supporter);
               })}
               </Nav>
-              </div>
             </Col>
-            <Col xs="6" sm="6" md="6">
-              <TabContent activeTab={this.state.activeTab}>
+            <Col xs="6" sm="6" md="6" style={{overflowY:'scroll',height:'431px'}}>
+              <TabContent activeTab={this.state.activeTab} >
                 {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTabContent(supporter);
               })}
