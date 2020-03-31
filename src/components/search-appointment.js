@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,17 +14,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-// import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-// import TextField from '@material-ui/core/TextField';
-
-// import supporters from "C:\Program Files\nodejs\my-app\src\supporters.json";
 const divStyle = {
   
 };
@@ -33,27 +27,6 @@ const rootStyle={
   width: '100%',
 };
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
-const useStyles1 = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-}));
 const useStyles3 = makeStyles(theme => ({
   modal: {
     display: 'flex',
@@ -68,43 +41,13 @@ const useStyles3 = makeStyles(theme => ({
   },
 }));
 
-// const hdStyle={
-//   fontSize: theme.typography.pxToRem(15),
-//   fontWeight: theme.typography.fontWeightRegular,
-// };
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     width: '100%',
-//   },
-//   heading: {
-//     fontSize: theme.typography.pxToRem(15),
-//     fontWeight: theme.typography.fontWeightRegular,
-//   },
-// }));
-// export var RadioButtonsGroup=function(){
-//   const [value, setValue] = React.useState('female');
 
-//   const handleChange = event => {
-//     setValue(event.target.value);
-//   };
-
-//   return (
-//     <FormControl component="fieldset">
-//       <FormLabel component="legend">Gender</FormLabel>
-//       <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-//         <FormControlLabel value="female" control={<Radio />} label="Female" />
-//         <FormControlLabel value="male" control={<Radio />} label="Male" />
-//         <FormControlLabel value="other" control={<Radio />} label="Other" />
-//         <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
-//       </RadioGroup>
-//     </FormControl>
-//   );
-// }
 var today = new Date();
 var dd = today.getDate();
 
 var mm = today.getMonth()+1; 
 var yyyy = today.getFullYear();
+
 if(dd<10) 
 {
     dd='0'+dd;
@@ -134,137 +77,129 @@ export default class Example extends React.Component {
       slot:""
     };
   }
-  handleChange=event=>{
-    var femal=event.target.value;
-    var t=this.state.activeTab;
-    var rat=this.state.rating;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    this.setState({
-      activeTab: t,
-      search:"",
-      female:femal,
-      rating:rat,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:'1',
-      slot_min:0,
-      slot:""
-    });
-    
-  };
-  handleChange1=event=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var rat=event.target.value;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    this.setState({
-      activeTab: t,
-      search:"",
-      female:femal,
-      rating:rat,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:'1',
-      slot_min:0,
-      slot:0
-    });
-    
-  };
-  handleChange2=event=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var rat=this.state.rating;
-    var start=event.target.value;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    this.setState({
-      activeTab: t,
-      search:"",
-      female:femal,
-      rating:rat,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:'1',
-      slot_min:0,
-      slot:""
-    });
-
-  };
-  handleChange3=event=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var rat=this.state.rating;
-    var start=this.state.start_time;
-    var end=event.target.value;
-    var dat=this.state.date;
-    this.setState({
-      activeTab: t,
-      search:"",
-      female:femal,
-      rating:rat,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:'1',
-      slot_min:0,
-      slot:"0"
-    });
-    
-  };
-  handleChange4=event=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var rat=this.state.rating;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=event.target.value.toString();
-    this.setState({
-      activeTab: t,
-      search:"",
-      female:femal,
-      rating:rat,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:'1',
-      slot_min:0,
-      slot:""
-    });
-    
-  }
-  RadioButtonsGroup(){
-    // const [value, setValue] = React.useState('female');
   
-    // const handleChange = event => {
-    //   setValue(event.target.value);
-    // };
-//     var today = new Date();
-// var dd = today.getDate();
+  handleChange = (event) => {
+		const { id } = event.target;
+		switch (id) {
+			case 'type_select':
+			    var femal=event.target.value;
+				var t=this.state.activeTab;
+				var rat=this.state.rating;
+				var start=this.state.start_time;
+				var end=this.state.end_time;
+				var dat=this.state.date;
+				this.setState({
+					activeTab: t,
+					search:"",
+					female:femal,
+					rating:rat,
+					start_time:start,
+					end_time:end,
+					date:dat,
+					modal:false,
+					activeId:'1',
+					slot_min:0,
+					slot:""
+				});
+			break;
+			
+			case 'rating_opt':
+				femal=this.state.female;
+				t=this.state.activeTab;
+				rat=event.target.value;
+				start=this.state.start_time;
+				end=this.state.end_time;
+				dat=this.state.date;
+				this.setState({
+					activeTab: t,
+					search:"",
+					female:femal,
+					rating:rat,
+					start_time:start,
+					end_time:end,
+					date:dat,
+					modal:false,
+					activeId:'1',
+					slot_min:0,
+					slot:0
+				});
+			break;
+			
+			case 'time_start':
+				console.log('time start');
+				femal=this.state.female;
+				t=this.state.activeTab;
+				rat=this.state.rating;
+				start=event.target.value;
+				end=this.state.end_time;
+				dat=this.state.date;
+				this.setState({
+					activeTab: t,
+					search:"",
+					female:femal,
+					rating:rat,
+					start_time:start,
+					end_time:end,
+					date:dat,
+					modal:false,
+					activeId:'1',
+					slot_min:0,
+					slot:""
+				});
+			break;
+			case 'time_end':
+				console.log('time end');
+				femal=this.state.female;
+				t=this.state.activeTab;
+				rat=this.state.rating;
+				start=this.state.start_time;
+				end=event.target.value;
+				dat=this.state.date;
+				this.setState({
+					activeTab: t,
+					search:"",
+					female:femal,
+					rating:rat,
+					start_time:start,
+					end_time:end,
+					date:dat,
+					modal:false,
+					activeId:'1',
+					slot_min:0,
+					slot:"0"
+				});
+			break;
+			
+			case 'date_select':
+				console.log('date select');
+				femal=this.state.female;
+				t=this.state.activeTab;
+				rat=this.state.rating;
+				start=this.state.start_time;
+				end=this.state.end_time;
+				dat=event.target.value.toString();
+				this.setState({
+					activeTab: t,
+					search:"",
+					female:femal,
+					rating:rat,
+					start_time:start,
+					end_time:end,
+					date:dat,
+					modal:false,
+					activeId:'1',
+					slot_min:0,
+					slot:""
+				});
+			break;
+			
+			default:
+			break;
+		}
+	}
 
-// var mm = today.getMonth()+1; 
-// var yyyy = today.getFullYear();
-// if(dd<10) 
-// {
-//     dd='0'+dd;
-// } 
-
-// if(mm<10) 
-// {
-//     mm='0'+mm;
-// } 
-// today = mm+'-'+dd+'-'+yyyy;
+  RadioButtonsGroup(){
+	  
     return (
       
       <div>
@@ -275,6 +210,7 @@ export default class Example extends React.Component {
         <Select
           native
           value={this.state.female}
+		  id="type_select"
           onChange={this.handleChange}
           inputProps={{
             name: 'age',
@@ -293,7 +229,8 @@ export default class Example extends React.Component {
         <Select
           native
           value={this.state.rating}
-          onChange={this.handleChange1}
+		  id="rating_opt"
+          onChange={this.handleChange}
           inputProps={{
             name: 'age',
             id: 'rating',
@@ -309,7 +246,7 @@ export default class Example extends React.Component {
         </Select>
         <br/>
         <TextField
-        id="time"
+        id="time_start"
         label="Start Time"
         type="time"
         defaultValue="00:00"
@@ -322,11 +259,11 @@ export default class Example extends React.Component {
         inputProps={{
           step: 300, // 5 min
         }}
-        onChange={this.handleChange2}
+        onChange={this.handleChange}
       />
       <br/>
       <TextField
-        id="time"
+        id="time_end"
         label="End Time"
         type="time"
         defaultValue="23:59"
@@ -339,11 +276,11 @@ export default class Example extends React.Component {
         inputProps={{
           step: 300, // 5 min
         }}
-        onChange={this.handleChange3}
+        onChange={this.handleChange}
       />
      <br/>
      <TextField
-        id="date"
+        id="date_select"
         label="Date"
         type="date"
         defaultValue={today.toString()}
@@ -351,26 +288,9 @@ export default class Example extends React.Component {
         InputLabelProps={{
           shrink: true,
         }}
-        onChange={this.handleChange4}
+        onChange={this.handleChange}
       />
-        {/* <InputLabel htmlFor="Rating"> <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-        Start-Time</InputLabel>
-        <Select
-          native
-          value={this.state.rating}
-          onChange={this.handleChange1}
-          inputProps={{
-            name: 'age',
-            id: 'start-time',
-          }}
-        >
-          <option aria-label="None" value={0} />
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option>
-        </Select> */}
+        
 
       </FormControl>
       </div>
@@ -380,14 +300,11 @@ export default class Example extends React.Component {
   toggle(tab) {
     if (this.state.activeTab !== tab) {
       var femal=this.state.female;
-      var t=this.state.activeTab;
       var sea=this.state.search;
-      var rat=this.state.rating;
       var start=this.state.start_time;
       var end=this.state.end_time;
       var dat=this.state.date;
       var sm=this.state.slot_min;
-      var s=this.state.slot;
       this.setState({
         activeTab: tab,
         search:sea,
@@ -406,12 +323,9 @@ export default class Example extends React.Component {
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=e.target.value;
-    var rat=this.state.rating;
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
-    // var sm=this.state.slot_min;
-    // var s=this.state.slot;
     this.setState({
       activeTab: t,
       search:sea,
@@ -427,9 +341,6 @@ export default class Example extends React.Component {
     
   };
   renderSupporterTab = supporter => {
-    const search = this.state.search;
-    var type = supporter.type.toLowerCase();
-    var date= supporter.date.toLowerCase();
     var start_time_hm=supporter.start_time.split(/[.:]/);
     var end_time_hm=supporter.end_time.split(/[.:]/);
     var start_time_ampm="AM";
@@ -452,9 +363,6 @@ export default class Example extends React.Component {
       }
       end_time_ampm="PM";
     }
-    /*if( search !== "" && country.name.toLowerCase().indexOf( search.toLowerCase() ) === -1 ){
-        return null
-    }*/
 
     return (
       <div>
@@ -482,7 +390,6 @@ export default class Example extends React.Component {
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=this.state.search;
-    var rat=this.state.rating;
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
@@ -506,7 +413,6 @@ export default class Example extends React.Component {
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=this.state.search;
-    var rat=this.state.rating;
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
@@ -529,13 +435,11 @@ export default class Example extends React.Component {
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=this.state.search;
-    var rat=this.state.rating;
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
     var sm=e.target.value;
     var s=this.state.slot;
-    let AuthButton;
     this.setState({
       activeTab: t,
       search:sea,
@@ -554,13 +458,11 @@ export default class Example extends React.Component {
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=this.state.search;
-    var rat=this.state.rating;
     var start=this.state.start_time;
     var end=this.state.end_time;
     var dat=this.state.date;
     var sm=this.state.slot_min;
-    var s=e.target.value;
-    let AuthButton;
+    var s=e.target_value;
     this.setState({
       activeTab: t,
       search:sea,
@@ -578,7 +480,7 @@ export default class Example extends React.Component {
   renderSupporterTabContent = supporter => {
     const classes = useStyles3;
     const fil=supporters.filter(supporter => {
-      return supporter.id==this.state.activeId;
+      return supporter.id===this.state.activeId;
     });
     let AuthButton;
     
@@ -606,8 +508,6 @@ export default class Example extends React.Component {
       }
       fil_end_time_ampm="PM";
     }
-    const search = this.state.search;
-    var type = supporter.type.toLowerCase();
     var date= supporter.date.toLowerCase();
     var start_time_hm=supporter.start_time.split(/[.:]/);
     var end_time_hm=supporter.end_time.split(/[.:]/);
@@ -629,9 +529,9 @@ export default class Example extends React.Component {
       }
       end_time_ampm="PM";
     }
-    if(this.state.slot_min!=0){
+    if(this.state.slot_min!==0){
       const slot_filter=supporters.filter(supporter => {
-        return supporter.id==this.state.activeTab;
+        return supporter.id===this.state.activeTab;
       });
       var slot_filter_start=slot_filter.map(supporter=>{return supporter.start_time.split(":");});
       let j1=slot_filter_start[0].toString().split(",");
@@ -639,297 +539,201 @@ export default class Example extends React.Component {
       let j2=slot_filter_end[0].toString().split(",");
       var as_hour=parseInt(j1[0]);
       var as_min=0;
-      if(slot_filter_start[1]!="00"){
+      if(slot_filter_start[1]!=="00"){
         as_min=parseInt(j1[1]);
       }
       var ae_hour=parseInt(j2[0]);
       var ae_min=0;
-      if(slot_filter_end[1]!="00"){
+      if(slot_filter_end[1]!=="00"){
         ae_min=parseInt(j2[1]);
       }
-      var min=this.state.slot_min;
-      var sl_start_hour=as_hour;
-      var sl_start_min=as_min;
-      var sl_start_time_ampm="AM";
-      var sl_end_time_ampm="AM";
-      if(sl_start_hour>=12){
-        if(sl_start_hour>12){
-        sl_start_hour=sl_start_hour-12;
+      var min=parseInt(this.state.slot_min);
+      var slot_start_hour=as_hour;
+      var slot_start_min=as_min;
+      var slot_start_time_ampm="AM";
+	 
+      var AuthRadio=[];
+	  
+      var i=0;
+	  var slot_end_hour = slot_start_hour;
+      var slot_end_min = slot_start_min;
+	  var slot_end_time_ampm="AM";
+	  var adj_start_hour;
+	  
+	  
+      while(slot_end_min/60 + slot_end_hour < ae_min/60 + ae_hour)
+	  {
+		  adj_start_hour = slot_start_hour;
+		  if(slot_start_hour>=12){
+			if(slot_start_hour>12){
+				adj_start_hour=slot_start_hour-12;
+			}
+          slot_start_time_ampm="PM";
+		  }
+		
+		var padded_start_min = slot_start_min.toString();
+			if(padded_start_min.length === 1)
+				padded_start_min = "0"+padded_start_min;
+		if(min===0)
+			break;
+        if(min===30){	
+			slot_end_min = slot_start_min+30;
+			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
+			slot_end_min = slot_end_min%60;
+			
+			var adj_end_hour = slot_end_hour;
+			if(slot_end_hour>=12)
+			{
+				if(slot_end_hour>12)
+					adj_end_hour = slot_end_hour - 12;
+				slot_end_time_ampm = "PM";
+			}
+			
+			var padded_end_min = slot_end_min.toString();
+			if(padded_end_min.length === 1)
+				padded_end_min = "0"+padded_end_min;
+			
+			var string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+			
+			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+				break;
+			
+			console.log(slot_end_hour+":"+slot_end_min);
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			
+			slot_start_min = slot_end_min;
+			slot_start_hour = slot_end_hour;
+			
         }
-        sl_start_time_ampm="PM";
-        
-      }
-      // if(sl_end_hour>12){
-      //   sl_end_hour=sl_start_hour-12;
-      //   sl_end_time_ampm="AM";
-      // }
-      let AuthRadio=[];
-      let AuthRadio1=[];
-      let AuthRadio2=[];
-      let AuthRadio3=[];
-      let AuthRadio4=[];
-      let i=0;
-      // alert(sl_start_hour!=ae_hour&&sl_start_min!=ae_min);
-      
-      while(!(sl_start_hour==ae_hour&&sl_start_min==ae_min)){
-        if(sl_start_hour>=12){
-          if(sl_start_hour>12){
-          sl_start_hour=sl_start_hour-12;
-          }
-          sl_start_time_ampm="PM";
+		
+        if(min===60){
+			slot_end_min = slot_start_min;
+			slot_end_hour = slot_start_hour +1;
+			
+			adj_end_hour = slot_end_hour;
+			if(slot_end_hour>=12)
+			{
+				if(slot_end_hour>12)
+					adj_end_hour = slot_end_hour - 12;
+				slot_end_time_ampm = "PM";
+			}
+			
+			padded_end_min = slot_end_min.toString();
+			if(padded_end_min.length === 1)
+				padded_end_min = "0" + padded_end_min;
+			
+			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+			
+			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+				break;
+			
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			
+			slot_start_min = slot_end_min;
+			slot_start_hour = slot_end_hour;
+			
+        }
+		
+        if(min===90){
+			slot_end_min = slot_start_min+90;
+			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
+			slot_end_min = slot_end_min%60;
+			
+			adj_end_hour = slot_end_hour;
+			if(slot_end_hour>=12)
+			{
+				if(slot_end_hour>12)
+					adj_end_hour = slot_end_hour - 12;
+				slot_end_time_ampm = "PM";
+			}
+			
+			padded_end_min = slot_end_min.toString();
+			if(padded_end_min.length === 1)
+				padded_end_min = "0" + padded_end_min;
+			
+			string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+				break;
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			
+			slot_start_min = slot_end_min;
+			slot_start_hour = slot_end_hour;
+			
           
         }
-        let sl_end_hour;
-        let sl_end_min;
-        let sl_end_ampm="AM";
-        var zero1=sl_start_min.toString();
-        if(sl_start_min==0){
-          zero1="00";
-        }
-        let yo=parseInt(sl_start_min)+parseInt(min);
-        // alert(sl_start_min.toString()+ae_min.toString());
-        if(min==30){
-          // alert(sl_start_hour.toString()+":"+sl_start_min.toString());
-          
-          // if()
-          if(yo<60){
-            // alert("hi");
-            sl_end_hour=sl_start_hour;
-            sl_end_min=sl_start_min+30;
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+sl_end_hour.toString()+":"+zero2+" "+sl_start_time_ampm;
-            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_min=sl_start_min+30;
-            i++;
-            continue;
-          }
-          else if(yo==60){
-            
-            
-            
-            sl_end_hour=sl_start_hour+1;
-            sl_end_min=0;
-            if(sl_end_hour>=12){
-              if(sl_end_hour>12){
-              sl_end_hour=sl_start_hour-12;
-              }
-              sl_end_time_ampm="PM";
-            }
-            
-            
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
-            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_hour=sl_start_hour+1;
-            sl_start_min=0;
-            i++;
-            continue;
-          }
-          else if(yo>60){
-            // alert("hi");
-         
-            
-            sl_end_hour=sl_start_hour+1;
-            sl_end_min=sl_start_min+30-60;
-            if(sl_end_hour>=12){
-              if(sl_end_hour>12){
-              sl_end_hour=sl_start_hour-12;
-              }
-              sl_end_time_ampm="PM";
-            }
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2.toString()+" "+sl_end_time_ampm;
-            AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_hour=sl_start_hour+1;
-            sl_start_min=sl_start_min+30-60;
-            i++;
-            continue;
-          }
-        }
-//yo
-        if(min==60){
-          sl_end_hour=sl_start_hour+1;
-            sl_end_min=sl_start_min;
-            if(sl_end_hour>=12){
-              if(sl_end_hour>12){
-              sl_end_hour=sl_start_hour-12;
-              }
-              sl_end_time_ampm="PM";
-            }
-            
-            
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
-            AuthRadio2[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_hour=sl_start_hour+1;
-            sl_start_min=0;
-            i++;
-            continue;
-        }
-        if(min==90){
-          // alert(sl_start_hour.toString()+":"+sl_start_min.toString());
-          
-          // if()
-          // if(yo<60){
-          //   // alert("hi");
-          //   sl_end_hour=sl_start_hour;
-          //   sl_end_min=sl_start_min+30;
-          //   var zero2=sl_end_min.toString();
-          //   if(sl_end_min==0){
-          //     zero2="00";
-          //   }
-          //   var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+sl_end_hour.toString()+":"+zero2+" "+sl_start_time_ampm;
-          //   AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-          //   sl_start_min=sl_start_min+30;
-          //   i++;
-          //   continue;
-          // }
-          // else if(yo==60){
-            
-            
-            
-          //   sl_end_hour=sl_start_hour+1;
-          //   sl_end_min=0;
-          //   if(sl_end_hour>=12){
-          //     if(sl_end_hour>12){
-          //     sl_end_hour=sl_start_hour-12;
-          //     }
-          //     sl_end_time_ampm="PM";
-          //   }
-            
-            
-          //   var zero2=sl_end_min.toString();
-          //   if(sl_end_min==0){
-          //     zero2="00";
-          //   }
-          //   var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
-          //   AuthRadio1[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-          //   sl_start_hour=sl_start_hour+1;
-          //   sl_start_min=0;
-          //   i++;
-          //   continue;
-          // }
-          // else if(yo>60){
-            // alert("hi");
-         
-            
-            sl_end_hour=sl_start_hour+1;
-            sl_end_min=sl_start_min+90-60;
-            if(sl_end_hour>=12){
-              if(sl_end_hour>12){
-              sl_end_hour=sl_start_hour-12;
-              }
-              sl_end_time_ampm="PM";
-            }
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2.toString()+" "+sl_end_time_ampm;
-            AuthRadio3[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_hour=sl_start_hour+1;
-            sl_start_min=sl_start_min+90-60;
-            i++;
-            continue;
+		
+        if(min===120){
+			slot_end_min = slot_start_min;
+			slot_end_hour = slot_start_hour + 2;
+			
+			adj_end_hour = slot_end_hour;
+			if(slot_end_hour>=12)
+			{
+				if(slot_end_hour>12)
+					adj_end_hour = slot_end_hour - 12;
+				slot_end_time_ampm = "PM";
+			}
+			
+			padded_end_min = slot_end_min.toString();
+			if(padded_end_min.length === 1)
+				padded_end_min = "0" + padded_end_min;
+			
+			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+			
+			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+				break;
+			
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			
+			slot_start_min = slot_end_min;
+			slot_start_hour = slot_end_hour;
           
         }
-         if(min==120){
-          sl_end_hour=sl_start_hour+2;
-            sl_end_min=sl_start_min;
-            if(sl_end_hour>=12){
-              if(sl_end_hour>12){
-              sl_end_hour=sl_start_hour-12;
-              }
-              sl_end_time_ampm="PM";
-            }
-            
-            
-            var zero2=sl_end_min.toString();
-            if(sl_end_min==0){
-              zero2="00";
-            }
-            var string=sl_start_hour.toString()+":"+zero1+" "+sl_start_time_ampm+" to "+(sl_end_hour).toString()+":"+zero2+" "+sl_end_time_ampm;
-            AuthRadio4[i]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-            sl_start_hour=sl_start_hour+2;
-            sl_start_min=0;
-            i++;
-            continue;
-        }
       }
-      if(min==30){
-        AuthRadio=AuthRadio1;
-      }
-      else if (min==60){
-        AuthRadio=AuthRadio2;
-      }
-      else if (min==90){
-        AuthRadio=AuthRadio3;
-      }
-      else if (min==120){
-        AuthRadio=AuthRadio4;
-      }
+	  
       AuthButton=(<FormControl component="fieldset">
       <FormLabel component="legend">Slots open</FormLabel>
       <RadioGroup aria-label="gender" name="gender1" value={this.state.slot} onChange={this.handleSlotTime}>
-        {/* <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="other" control={<Radio />} label="Other" />
-        <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" /> */}
         {AuthRadio}
       </RadioGroup>
     </FormControl>); 
     }
-    /*if( search !== "" && country.name.toLowerCase().indexOf( search.toLowerCase() ) === -1 ){
-        return null
-    }*/
-  let ModalToBeShown;
-  if(this.state.slot!=""){
-    ModalToBeShown=( <div className={classes.paper} style={{textAlign:'center'}}>
-    <br/>
-<h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
-    <p id="transition-modal-description">
-      <h6>Supporter-Name:{fil.map(supporter => {
-      return supporter.name;
-    })}</h6>
-      <h6>Helps-In:{fil.map(supporter => {
-      return supporter.type;
-    })}</h6>
-      <h6>Date:{fil.map(supporter => {
-      return supporter.date;
-    })}</h6>
-      <h6>Time: {this.state.slot}</h6>
-      <h6>Location:{fil.map(supporter => {
-      return supporter.location;
-    })}</h6>
-     <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-     <br/>
-      <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
-      &nbsp;
-    </p>
-    <br/>
-    
-  </div>);
-  }
-  else{
-    ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+    let ModalToBeShown;
+    if(this.state.slot!=""){
+      ModalToBeShown=( <div className={classes.paper} style={{textAlign:'center'}}>
       <br/>
+  <h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
       <p id="transition-modal-description">
-        Please Select a Slot.
+        <h6>Supporter-Name:{fil.map(supporter => {
+        return supporter.name;
+      })}</h6>
+        <h6>Helps-In:{fil.map(supporter => {
+        return supporter.type;
+      })}</h6>
+        <h6>Date:{fil.map(supporter => {
+        return supporter.date;
+      })}</h6>
+        <h6>Time: {this.state.slot}</h6>
+        <h6>Location:{fil.map(supporter => {
+        return supporter.location;
+      })}</h6>
+       <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+       <br/>
+        <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
+        &nbsp;
       </p>
-    </div>)
-  }
+      <br/>
+      
+    </div>);
+    }
+    else{
+      ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+        <br/>
+        <p id="transition-modal-description">
+          Please Select a Slot.
+        </p>
+      </div>)
+    }
     return (
       
               
@@ -955,7 +759,7 @@ export default class Example extends React.Component {
             id: 'slot',
           }}
         >
-          <option aria-label="None" value="" />
+          <option aria-label="None" value={0} />
           <option value={30}>30 minutes</option>
           <option value={60}>1 hour</option>
           <option value={90}>1.5 hour</option>
@@ -983,8 +787,33 @@ export default class Example extends React.Component {
           }}
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
-           
+            {/* <div className={classes.paper} style={{textAlign:'center'}}>
+              <br/>
+        <h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
+              <p id="transition-modal-description">
+                <h6>Supporter-Name:{fil.map(supporter => {
+                return supporter.name;
+              })}</h6>
+                <h6>Helps-In:{fil.map(supporter => {
+                return supporter.type;
+              })}</h6>
+                <h6>Date:{fil.map(supporter => {
+                return supporter.date;
+              })}</h6>
+                <h6>Time: {fil_start_hour}:{fil_start_min} {fil_start_time_ampm} to {fil_end_hour}:{fil_end_min} {fil_end_time_ampm}</h6>
+                <h6>Location:{fil.map(supporter => {
+                return supporter.location;
+              })}</h6>
+               <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+               <br/>
+                <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
+                &nbsp;
+              </p>
+              <br/>
+              
+            </div> */}
             {ModalToBeShown}
+            
           </Fade>
         </Modal>
                   <br/>
@@ -1083,18 +912,6 @@ export default class Example extends React.Component {
             </Col>
             <Col xs="6" sm="6" md="6">
               <TabContent activeTab={this.state.activeTab}>
-                {/* <TabPane tabId="1">
-                  <h4>Chinmay Patil</h4>
-                  <h6>Available from 11:30 to 12</h6>
-                  <h6>Date: ......</h6>
-                  <Button>Create appointment</Button>
-                </TabPane>
-                <TabPane tabId="2">
-                <h4>Dhruvil Gala</h4>
-                  <h6>Available from 12 to 1</h6>
-                  <h6>Date: ......</h6>
-                  <Button>Create appointment</Button>
-                </TabPane> */}
                 {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTabContent(supporter);
               })}
@@ -1106,4 +923,3 @@ export default class Example extends React.Component {
         )
       }
 }
-// export default Example;
