@@ -863,7 +863,7 @@ export default class Example extends React.Component {
         return (
           <div style={{overflow:'hidden'}}>
           <div style={rootStyle}>
-      <ExpansionPanel>
+      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right'}}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -881,7 +881,7 @@ export default class Example extends React.Component {
       
     </div>
           <div style={divStyle}> 
-          <InputGroup style={{width:'31.75%',borderRight:'solid 1px black'}}onChange={this.onchange}>
+          <InputGroup style={{width:'25.8%',borderRight:'solid 1px black'}}onChange={this.onchange}>
               
         <Input placeholder="Search Supporter" />
       </InputGroup>
