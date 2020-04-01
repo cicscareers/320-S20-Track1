@@ -58,11 +58,11 @@ def generate_email(attributes, template_id):
     htmlpart = MIMEText(body.encode(CHARSET), 'html', CHARSET)
     msg_body.attach(htmlpart)
     msg.attach(msg_body)
-    if(attributes['attachments'] != None):
-        att = MIMEApplication(open(attributes('attachments'), 'rb').read())
-        att.add_header('Content-Disposition','attachment',filename=os.path.basename(attributes['attachments']))
+    if(attributes['ATTACHMENTS'] != None):
+        att = MIMEApplication(open(attributes('ATTACHMENTS'), 'rb').read())
+        att.add_header('Content-Disposition','ATTACHMENTS',filename=os.path.basename(attributes['ATTACHMENTS']))
     msg.attach(att)
-    return tuple(str(SENDER), str(attributes['RECIPIENT']), str(msg.as_string()))
+    return tuple(str('SENDER'), str(attributes['RECIPIENT']), str(msg.as_string()))
 
 # params: tuple(recipient, subject, body, attachments)
 # returns: boolean
@@ -88,5 +88,8 @@ def send_email(contentTuple):
         print(response['MessageId'])
 
 # Testing function calls
-attributeTESTmap = {'name':'David Cincotta', 'subject':'SENDING'}
-send_email(generate_email(attributeTESTmap, 999))
+
+def email_handler(event, context):
+    attributeTESTmap = {'SENDER':SENDER, 'RECIPIENT':'umassreachout.dev@gmail.com', 'ATTACHMENTS':None}
+    send_email(generate_email(attributeTESTmap, 999))
+    return ('HELLO FRONT END', True)
