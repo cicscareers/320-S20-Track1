@@ -1,4 +1,4 @@
-def lambda():
+lsdef lambda():
     print("Hello")
 
 def lambda2():
