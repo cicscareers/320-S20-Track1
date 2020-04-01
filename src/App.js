@@ -19,18 +19,10 @@ export default function App() {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const name = cookies.get("firstName");
-
-  function logout() {
-    cookies.remove("email");
-    cookies.remove("firstName");
-    cookies.remove("lastName");
-    cookies.remove("role");
-    cookies.remove("token");
-    window.location.reload();
-  }
+  const [auth, setAuth] = React.useState(token !== undefined);
   return (
   <div>
-    <Menu />
+    {auth && ( <Menu /> )}
     <Routes />
   </div>
   );
