@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = createMuiTheme({
   typography: {
@@ -20,8 +21,10 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <App />
-  </MuiThemeProvider>,
+  <Router>
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+  </Router>,
   document.getElementById("root")
 );

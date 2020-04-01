@@ -1,4 +1,3 @@
-
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -14,6 +13,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Menu, Link } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Cookies from "universal-cookie";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,8 +37,11 @@ const styles = {
   },
 };
 export default function MenuAppBar() {
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const name = cookies.get("firstName");
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
+  const [auth, setAuth] = React.useState(token !== undefined);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -53,6 +56,15 @@ export default function MenuAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function logout() {
+    cookies.remove("email");
+    cookies.remove("firstName");
+    cookies.remove("lastName");
+    cookies.remove("role");
+    cookies.remove("token");
+    window.location.reload();
+  }
 
   return (
     <div className={classes.root}>
@@ -95,16 +107,6 @@ export default function MenuAppBar() {
           </Button>
           </ButtonGroup>
           <FormGroup align="center">
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? "Logout" : "Login"}
-        />
       </FormGroup>
           {auth && (
             <div>
@@ -143,7 +145,7 @@ export default function MenuAppBar() {
                   </Link>
                 </MenuItem>
       
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={logout}>
                   <Link href="/login">
                     <Typography component="h6" variant="h6">
                       Log Out

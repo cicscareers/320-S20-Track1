@@ -1,0 +1,11 @@
+[
+  {
+    "email":"example@umass.edu",
+    "password": "password1"
+  },
+  {
+    "email":"example2@umass.edu",
+    "password": "password2"
+  }
+ 
+]

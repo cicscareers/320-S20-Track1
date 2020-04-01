@@ -14,6 +14,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from '@material-ui/core/FormHelperText';
+import users from "./users.json"
+import Cookies from "universal-cookie";
 
 function Copyright() {
   return (
@@ -57,16 +59,44 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
 
   function handleSubmit(event) {
-    return (
-      <FormGroup>
-        {email=="example@umass.edu" && password=="password" && (
-          <Typography>Sucessful Login!</Typography>
-        )}
-        {(email!="example@umass.edu" || password!="password") && (
-          <Typography>Sucessful Login!</Typography>
-        )}
-      </FormGroup>
-    );
+    var count=0;
+    for (var i = 0; i < users.length; i++){
+      if (users[i].email == email){
+        if (users[i].password == password){
+          alert("User authenticated");
+          count++;
+          console.log("hooray! we have json!");
+          const cookies = new Cookies();
+          cookies.remove("email");
+          cookies.remove("firstName");
+          cookies.remove("lastName");
+          cookies.remove("role");
+          cookies.remove("token");
+          cookies.set("email", email, {
+            path: "/"
+          });
+          cookies.set("firstName", "user1", {
+            path: "/"
+          });
+          cookies.set("lastName", "lname", {
+          path: "/"
+          });
+          cookies.set("role", "student", { path: "/" });
+          cookies.set("token", "token", { path: "/" });
+          }
+        else{
+          alert("wrong password");
+          count++;
+        }
+      }
+    }
+    if(count==0){
+      alert("user not found");
+    }
+  }
+
+  function validateForm() {
+    return email.length > 0 && password.length > 0;
   }
 
   return (
