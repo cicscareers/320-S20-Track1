@@ -32,8 +32,7 @@ const useStyles = makeStyles(theme => ({
 function App() {
   const classes = useStyles();
   return (
-  	//<html>
-  	<Container component="main" maxWidth="xs" align="center">
+  	<html>
       <Grid container  lg={12} className={classes.selection}>
       <Grid container lg={4} justify='center'>
         <Button variant="contained">Search Supporters</Button>
@@ -70,8 +69,7 @@ function App() {
           </Grid>
         
       </Grid>
-     </Container>
-     //</html>
+     </html>
     
     
     

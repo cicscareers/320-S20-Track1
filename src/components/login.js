@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState, handleClick } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 function Copyright() {
   return (
@@ -52,6 +53,21 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(event) {
+    return (
+      <FormGroup>
+        {email=="example@umass.edu" && password=="password" && (
+          <Typography>Sucessful Login!</Typography>
+        )}
+        {(email!="example@umass.edu" || password!="password") && (
+          <Typography>Sucessful Login!</Typography>
+        )}
+      </FormGroup>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -71,7 +87,13 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={e => setEmail(e.target.value)}
           />
+          <FormGroup>
+          {email!="example@umass.edu" && (
+            <FormHelperText error>Not the correct email</FormHelperText>
+            )}
+          </FormGroup>
           <TextField
             variant="outlined"
             margin="normal"
@@ -82,6 +104,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -93,7 +116,8 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            href="/match"
+            onClick={handleSubmit}
+            //href="/match"
           >
             Sign In
           </Button>
