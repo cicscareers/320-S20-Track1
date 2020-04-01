@@ -119,11 +119,6 @@ export default function SignIn() {
             autoFocus
             onChange={e => setEmail(e.target.value)}
           />
-          <FormGroup>
-          {email!="example@umass.edu" && (
-            <FormHelperText error>Not the correct email</FormHelperText>
-            )}
-          </FormGroup>
           <TextField
             variant="outlined"
             margin="normal"

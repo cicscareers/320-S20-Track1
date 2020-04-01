@@ -20,7 +20,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 const divStyle = {
-  
+
 };
 
 const rootStyle={
@@ -45,18 +45,18 @@ const useStyles3 = makeStyles(theme => ({
 var today = new Date();
 var dd = today.getDate();
 
-var mm = today.getMonth()+1; 
+var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
 
-if(dd<10) 
+if(dd<10)
 {
     dd='0'+dd;
-} 
+}
 
-if(mm<10) 
+if(mm<10)
 {
     mm='0'+mm;
-} 
+}
 today =yyyy+'-'+mm+'-'+dd;
 export default class Example extends React.Component {
   constructor(props) {
@@ -72,19 +72,19 @@ export default class Example extends React.Component {
       end_time:"23:59",
       date:today,
       modal:false,
-      activeId:'1', 
+      activeId:'1',
       slot_min:0,
       slot:""
     };
   }
-  
+
   handleChange = (event) => {
     const { id } = event.target;
-  
+
 		switch (id) {
 			case 'type_select':
           var femal=event.target.value;
-          
+
 				var t=this.state.activeTab;
 				var rat=this.state.rating;
 				var start=this.state.start_time;
@@ -104,7 +104,7 @@ export default class Example extends React.Component {
 					slot:""
 				});
 			break;
-			
+
 			case 'rating_opt':
 				femal=this.state.female;
 				t=this.state.activeTab;
@@ -126,7 +126,7 @@ export default class Example extends React.Component {
 					slot:0
 				});
 			break;
-			
+
 			case 'time_start':
 				console.log('time start');
 				femal=this.state.female;
@@ -171,7 +171,7 @@ export default class Example extends React.Component {
 					slot:"0"
 				});
 			break;
-			
+
 			case 'date_select':
 				console.log('date select');
 				femal=this.state.female;
@@ -194,18 +194,18 @@ export default class Example extends React.Component {
 					slot:""
 				});
 			break;
-			
+
 			default:
 			break;
 		}
 	}
 
   RadioButtonsGroup(){
-	  
+
     return (
-      
+
       <div>
-        
+
         <br />
         <FormControl>
         <InputLabel htmlFor="type">Type</InputLabel>
@@ -244,7 +244,7 @@ export default class Example extends React.Component {
           <option value={3}>3</option>
           <option value={4}>4</option>
           <option value={5}>5</option>
-         
+
         </Select>
         <br/>
         <TextField
@@ -286,19 +286,19 @@ export default class Example extends React.Component {
         label="Date"
         type="date"
         defaultValue={today.toString()}
-       
+
         InputLabelProps={{
           shrink: true,
         }}
         onChange={this.handleChange}
       />
-        
+
 
       </FormControl>
       </div>
     );
   }
-  
+
   toggle(tab) {
     if (this.state.activeTab !== tab) {
       var femal=this.state.female;
@@ -340,7 +340,7 @@ export default class Example extends React.Component {
       slot_min:0,
       slot:""
     });
-    
+
   };
   renderSupporterTab = supporter => {
     var start_time_hm=supporter.start_time.split(/[.:]/);
@@ -353,12 +353,12 @@ export default class Example extends React.Component {
     var end_min=end_time_hm[1];
     if(parseInt(start_hour)>=12){
       if(parseInt(start_hour)>12){
-      
+
       start_hour=(parseInt(start_hour)-12).toString();
     }
       start_time_ampm="PM";
     }
-    
+
     if(parseInt(end_hour)>=12){
       if(parseInt(end_hour)>12){
       end_hour=(parseInt(end_hour)-12).toString();
@@ -368,8 +368,8 @@ export default class Example extends React.Component {
 
     return (
       <div>
-          
-              
+
+
                 <NavItem>
                   <NavLink
                     className={classnames({active: this.state.activeTab === supporter.id})}
@@ -382,8 +382,8 @@ export default class Example extends React.Component {
                          <h6>   From {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
                   </NavLink>
                 </NavItem>
-         
-         
+
+
       </div>
     );
   };
@@ -454,7 +454,7 @@ export default class Example extends React.Component {
       slot_min:sm,
       slot:""
     });
-   
+
   }
   handleSlotTime=e=>{
     var femal=this.state.female;
@@ -477,7 +477,7 @@ export default class Example extends React.Component {
       slot_min:sm,
       slot:s
     });
-   
+
   }
   renderSupporterTabContent = supporter => {
     const classes = useStyles3;
@@ -485,14 +485,14 @@ export default class Example extends React.Component {
       return supporter.id===this.state.activeId;
     });
     let AuthButton;
-    
+
     var fil_start_time_hm=fil.map(supporter=>{return supporter.start_time.split(/[.:]/);});
     var fil_end_time_hm=fil.map(supporter=>{return supporter.end_time.split(/[.:]/);});
     var fil_start_time_ampm="AM";
     var fil_end_time_ampm="AM";
     var fil_start_hour=fil_start_time_hm[0];
     // alert(fil_start_hour);
-    
+
     var fil_start_min=fil_start_time_hm[1];
     // alert(fil_start_min);
     var fil_end_hour=fil_end_time_hm[0];
@@ -502,7 +502,7 @@ export default class Example extends React.Component {
       fil_start_hour=(parseInt(fil_start_hour)-12).toString();
       }
       fil_start_time_ampm="PM";
-      
+
     }
     if(parseInt(fil_end_hour)>=12){
       if(parseInt(fil_end_hour)>12){
@@ -553,19 +553,19 @@ export default class Example extends React.Component {
       var slot_start_hour=as_hour;
       var slot_start_min=as_min;
       var slot_start_time_ampm="AM";
-	 
+
       var AuthRadio=[];
       var AuthRadio2=[];
       var AuthRadio3=[];
       var AuthRadio4=[];
-	  
+
       var i=0;
 	  var slot_end_hour = slot_start_hour;
       var slot_end_min = slot_start_min;
 	  var slot_end_time_ampm="AM";
 	  var adj_start_hour;
-	  
-	  
+
+
       while(slot_end_min/60 + slot_end_hour < ae_min/60 + ae_hour)
 	  {
 		  adj_start_hour = slot_start_hour;
@@ -575,17 +575,17 @@ export default class Example extends React.Component {
 			}
           slot_start_time_ampm="PM";
 		  }
-		
+
 		var padded_start_min = slot_start_min.toString();
 			if(padded_start_min.length === 1)
 				padded_start_min = "0"+padded_start_min;
 		if(min===0)
 			break;
-        if(min===30){	
+        if(min===30){
 			slot_end_min = slot_start_min+30;
 			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
 			slot_end_min = slot_end_min%60;
-			
+
 			var adj_end_hour = slot_end_hour;
 			if(slot_end_hour>=12)
 			{
@@ -593,29 +593,29 @@ export default class Example extends React.Component {
 					adj_end_hour = slot_end_hour - 12;
 				slot_end_time_ampm = "PM";
 			}
-			
+
 			var padded_end_min = slot_end_min.toString();
 			if(padded_end_min.length === 1)
 				padded_end_min = "0"+padded_end_min;
-			
+
 			var string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
-			
+
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
-			
+
 			console.log(slot_end_hour+":"+slot_end_min);
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-			
+
 			slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
 			slot_start_min = slot_start_min%60;
-			
+
         }
-		
+
         if(min===60){
 			slot_end_min = slot_start_min;
 			slot_end_hour = slot_start_hour +1;
-			
+
 			adj_end_hour = slot_end_hour;
 			if(slot_end_hour>=12)
 			{
@@ -623,29 +623,29 @@ export default class Example extends React.Component {
 					adj_end_hour = slot_end_hour - 12;
 				slot_end_time_ampm = "PM";
 			}
-			
+
 			padded_end_min = slot_end_min.toString();
 			if(padded_end_min.length === 1)
 				padded_end_min = "0" + padded_end_min;
-			
+
 			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
-			
+
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
-			
+
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-			
+
       slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
 			slot_start_min = slot_start_min%60;
-			
+
         }
-		
+
         if(min===90){
 			slot_end_min = slot_start_min+90;
 			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
 			slot_end_min = slot_end_min%60;
-			
+
 			adj_end_hour = slot_end_hour;
 			if(slot_end_hour>=12)
 			{
@@ -653,11 +653,11 @@ export default class Example extends React.Component {
 					adj_end_hour = slot_end_hour - 12;
 				slot_end_time_ampm = "PM";
 			}
-			
+
 			padded_end_min = slot_end_min.toString();
 			if(padded_end_min.length === 1)
 				padded_end_min = "0" + padded_end_min;
-			
+
 			string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
@@ -665,14 +665,14 @@ export default class Example extends React.Component {
       slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
 			slot_start_min = slot_start_min%60;
-			
-          
+
+
         }
-		
+
         if(min===120){
 			slot_end_min = slot_start_min;
 			slot_end_hour = slot_start_hour + 2;
-			
+
 			adj_end_hour = slot_end_hour;
 			if(slot_end_hour>=12)
 			{
@@ -680,31 +680,37 @@ export default class Example extends React.Component {
 					adj_end_hour = slot_end_hour - 12;
 				slot_end_time_ampm = "PM";
 			}
-			
+
 			padded_end_min = slot_end_min.toString();
 			if(padded_end_min.length === 1)
 				padded_end_min = "0" + padded_end_min;
-			
+
 			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
-			
+
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
-			
+
 			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
-			
+
 			slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
 			slot_start_min = slot_start_min%60;
-          
+
         }
       }
-	  
-      AuthButton=(<FormControl component="fieldset">
+
+      AuthButton=(
+      <div style={{textAlign:'center'}}>
+      <FormControl component="fieldset">
       <FormLabel component="legend">Slots open</FormLabel>
       <RadioGroup aria-label="gender" name="gender1" value={this.state.slot} onChange={this.handleSlotTime}>
         {AuthRadio}
       </RadioGroup>
-    </FormControl>); 
+    </FormControl>
+    </div>);
+    }
+    if(this.state.slot_min==0){
+      AuthButton=[];
     }
     let ModalToBeShown;
     if(this.state.slot!=""){
@@ -731,7 +737,7 @@ export default class Example extends React.Component {
         &nbsp;
       </p>
       <br/>
-      
+
     </div>);
     }
     else{
@@ -742,22 +748,51 @@ export default class Example extends React.Component {
         </p>
       </div>)
     }
+
+      let arr=[];
+    if (supporter.name == "Chinmay Patil"){
+   arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP' style = {{width: '175px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
+    }
+    else if (supporter.name == "Dhruvil Gala"){
+   arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq' style = {{width: '150px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
+    }
+
+    else if (supporter.name == "Adithya Parmar"){
+   arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/aditya_professional_sq.jpg?itok=ReP2qjJx' style = {{width: '150px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
+    }
+
+    else if (supporter.name == "Brian Krusell"){
+   arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/krusell.jpg?itok=tjD9O0Rp' style = {{width: '150px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
+    }
     return (
-      
-              
-            
-             
-                <TabPane tabId={supporter.id} style={{border:'solid 3px black',textAlign:'center'}}>
-                  
+
+
+
+
+                <TabPane tabId={supporter.id} style={{border:'solid 2px black'}}>
+
+                {arr}
+                <div style = {{float: 'left', marginLeft: '10px'}}>
+
                   <br/>
                   <h4>{supporter.name.substring(0, 60)}</h4>
-    
+
     <h6>Helps in: {supporter.type}</h6>
                   <h6>Date: {date}</h6>
                   <h6>Available from {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
     <h6>Rating: {supporter.rating}</h6>
                   <br/>
-                  <InputLabel htmlFor="type">Slot Duration</InputLabel>
+                  </div>
+                  <div>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <div style={{marginTop: '20px'}}>
+                   <InputLabel htmlFor="type">Slot Duration</InputLabel>
+
         <Select
           native
           value={this.state.slot_min}
@@ -773,13 +808,15 @@ export default class Example extends React.Component {
           <option value={90}>1.5 hour</option>
           <option value={120}>2 hour</option>
         </Select>
+        </div>
+        </div>
         <br/>
         <br/>
         {AuthButton}
         <br/>
         <br/>
-                  <Button type="button" id={supporter.id} onClick={this.handleOpen}>
-          
+                  <Button type="button" id={supporter.id} style = {{float: 'right', marginRight: '10px'}} onClick={this.handleOpen}>
+
          Create New Appointment
         </Button>
         <Modal
@@ -796,17 +833,17 @@ export default class Example extends React.Component {
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
             {ModalToBeShown}
-            
+
           </Fade>
         </Modal>
                   <br/>
                   <br/>
                   <br/>
                 </TabPane>
-              
-         
-         
-      
+
+
+
+
 
     );
   };
@@ -815,7 +852,7 @@ export default class Example extends React.Component {
         const  female  = this.state.female;
         const  rating  = this.state.rating;
         const  date = this.state.date;
-     
+
         const start_time=this.state.start_time;
         var start_hoursMinutes = start_time.toString().split(/[.:]/);
         var start_hours = parseInt(start_hoursMinutes[0], 10);
@@ -835,8 +872,8 @@ export default class Example extends React.Component {
         const filteredSupportersByDate = filteredSupportersByType.filter(supporter => {
           return !(supporter.date.localeCompare(date.toString()));
         });
-       
-      
+
+
         const filteredSupportersByTime = filteredSupportersByDate.filter(supporter => {
           const s_start_time=supporter.start_time;
         var s_start_hoursMinutes = s_start_time.toString().split(/[.:]/);
@@ -855,7 +892,7 @@ export default class Example extends React.Component {
         }
           return (s_end_exact_time>start_exact_time)&&((s_end_exact_time<=end_exact_time)||(s_end_exact_time>end_exact_time))&&(start_exact_time<=end_exact_time);
         });
-        
+
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
           return supporter.name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
         });
@@ -873,21 +910,21 @@ export default class Example extends React.Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
-           
+
            {this.RadioButtonsGroup()}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      
+
     </div>
-          <div style={divStyle}> 
-          <InputGroup style={{width:'25.8%',borderRight:'solid 1px black'}}onChange={this.onchange}>
-              
+          <div style={divStyle}>
+          <InputGroup style={{width:'26.7%'}}onChange={this.onchange}>
+
         <Input placeholder="Search Supporter" />
       </InputGroup>
-              
+
           <Row>
-            <Col xs="6" sm="4" md="4" style={{overflowY:'scroll',height:'561px',borderRight:'solid 1px black'}}>
+            <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'400px'}}>
               <Nav tabs vertical pills >
               {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTab(supporter);
