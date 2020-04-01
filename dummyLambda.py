@@ -1,0 +1,2 @@
+def lambda():
+    print("Hello")
