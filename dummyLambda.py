@@ -1,5 +1,5 @@
-def lambda():
+lsdef lambda():
     print("Hello")
 
-def lambda():
+def lambda2():
     print("test")
