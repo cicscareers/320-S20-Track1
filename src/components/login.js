@@ -75,13 +75,13 @@ export default function SignIn() {
           cookies.set("email", email, {
             path: "/"
           });
-          cookies.set("firstName", "user1", {
+          cookies.set("firstName", users[i].fname, {
             path: "/"
           });
-          cookies.set("lastName", "lname", {
+          cookies.set("lastName", users[i].lname, {
           path: "/"
           });
-          cookies.set("role", "student", { path: "/" });
+          cookies.set("role", users[i].role, { path: "/" });
           cookies.set("token", "token", { path: "/" });
           }
         else{

@@ -19,7 +19,7 @@ export default function Routes() {
   return (
         <Switch>
           <Redirect exact from="/" to="/home" />
-          <Route path="/home" exact component={Home} />
+          <AuthenticatedRoute path="/home" exact component={Home} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />
