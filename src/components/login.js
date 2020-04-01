@@ -69,6 +69,10 @@ export default function SignIn() {
         else if (users[i].password == password){
           alert("User authenticated");
           console.log("hooray! we have json!");
+          const timestamp = new Date().getTime();
+          const expire = timestamp + (60 * 30 * 1000);
+          const expireDate = new Date(expire);
+
           const cookies = new Cookies();
           cookies.remove("email");
           cookies.remove("firstName");
@@ -76,16 +80,25 @@ export default function SignIn() {
           cookies.remove("role");
           cookies.remove("token");
           cookies.set("email", email, {
-            path: "/"
+            path: "/",
+            expires: expireDate
           });
           cookies.set("firstName", users[i].fname, {
-            path: "/"
+            path: "/",
+            expires: expireDate
           });
           cookies.set("lastName", users[i].lname, {
-          path: "/"
+            path: "/",
+            expires: expireDate
           });
-          cookies.set("role", users[i].role, { path: "/" });
-          cookies.set("token", "token", { path: "/" });
+          cookies.set("role", users[i].role, { 
+            path: "/" ,
+            expires: expireDate
+          });
+          cookies.set("token", "token", { 
+            path: "/" ,
+            expires: expireDate
+          });
         }
         break;
       
