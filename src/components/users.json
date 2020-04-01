@@ -1,14 +1,14 @@
 [
   {
-    "email":"example@umass.edu",
-    "password": "password1",
+    "email":"johndoe@umass.edu",
+    "password": "johnpass",
     "fname": "John",
     "lname": "Doe",
     "role": "Student"
   },
   {
-    "email":"example2@umass.edu",
-    "password": "password2",
+    "email":"johndoe@umass.edu",
+    "password": "janepass",
     "fname": "Jane",
     "lname": "Doe",
     "role": "Student"

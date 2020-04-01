@@ -62,9 +62,12 @@ export default function SignIn() {
     var count=0;
     for (var i = 0; i < users.length; i++){
       if (users[i].email == email){
-        if (users[i].password == password){
+        count++;
+        if (users[i].password != password){
+          alert("wrong password");
+        }
+        else if (users[i].password == password){
           alert("User authenticated");
-          count++;
           console.log("hooray! we have json!");
           const cookies = new Cookies();
           cookies.remove("email");
@@ -83,11 +86,9 @@ export default function SignIn() {
           });
           cookies.set("role", users[i].role, { path: "/" });
           cookies.set("token", "token", { path: "/" });
-          }
-        else{
-          alert("wrong password");
-          count++;
         }
+        break;
+      
       }
     }
     if(count==0){
