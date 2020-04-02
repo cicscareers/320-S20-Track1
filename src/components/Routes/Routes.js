@@ -15,7 +15,7 @@ import AuthenticatedRoute from "./AuthenticatedRoute";
 export default function Routes() {
   return (
         <Switch>
-          <Redirect exact from="/" to="/home" />
+          <Redirect exact from="/" to="/match" />
           <AuthenticatedRoute path="/home" exact component={Home} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
