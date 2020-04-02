@@ -953,7 +953,7 @@ export default class Example extends React.Component {
         if(end_exact_time==23.59){
           two_three=true;
         }
-          return (s_end_exact_time>start_exact_time)&&((s_end_exact_time<=end_exact_time)||(s_end_exact_time>end_exact_time))&&(start_exact_time<=end_exact_time);
+          return (s_start_exact_time>=start_exact_time)&&((s_end_exact_time<=end_exact_time));
         });
 
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
