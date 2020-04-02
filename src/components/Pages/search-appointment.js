@@ -65,7 +65,7 @@ export default class Example extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      activeTab: '1',
+      activeTab: '6',
       search:"",
       female:"",
       rating:0,
