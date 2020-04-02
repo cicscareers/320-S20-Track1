@@ -7,6 +7,7 @@ import boto3
 def get_appointment_students(event, context):
     # TODO implement
 
+    """
     student_id_want = event['student_id']
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
@@ -19,7 +20,7 @@ def get_appointment_students(event, context):
 
     )
 
-    """
+    
     if appointment_info['student_id'] == '': 
         print("The user does not exist")
         return {
@@ -31,27 +32,24 @@ def get_appointment_students(event, context):
             "statusCode": 200
         }
     """
-
-
-   return{
-        "statusCode": 200,
-        "body": {
-            [
-                {
-                "advisor":"Ada Lovelace",
-                "subject": "Mock Interview",
-                "date": "10/10/2020",
-                "time": "10:00 - 10:30",
-                "actions": "Cancel"
-                },
-                {
-                "advisor":"Grace Hopper",
-                "subject": "Resume",
-                "date": "10/10/2020",
-                "time": "12:00 - 1:00",
-                "actions": "Cancel"
-                }
-            ]
-
-        }
+    app_1 = {
+            "advisor":"Ada Lovelace",
+            "subject": "Mock Interview",
+            "date": "10/10/2020",
+            "time": "10:00 - 10:30",
+            "actions": "Cancel"
+    }
+    
+    app_2 = {
+            "advisor":"Grace Hopper",
+            "subject": "Resume",
+            "date": "10/10/2020",
+            "time": "12:00 - 1:00",
+            "actions": "Cancel"
+    }
+    
+    list = [app_1, app_2]
+    return {
+        'statusCode': 200,
+        'body': json.dumps(list)
     }
