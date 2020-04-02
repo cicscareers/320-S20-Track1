@@ -100,6 +100,6 @@ def send_email(contentTuple):
 # Testing function calls
 
 def email_handler(event, context):
-    attributeTESTmap = {'SENDER':'umassreachout.dev@gmail.com', 'RECIPIENT':'dcincotta@umass.edu', 'ATTACHMENTS':None}
+    attributeTESTmap = {'NAME':'   DAVID CINCOTTA(TEST)   ','SENDER':'umassreachout.dev@gmail.com', 'RECIPIENT':'dcincotta@umass.edu', 'ATTACHMENTS':None}
     send_email(generate_email(attributeTESTmap, 999))
     return ('HELLO FRONT END', True)
