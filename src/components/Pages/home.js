@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import { Grid, Typography, Button, makeStyles, Box} from '@material-ui/core';
 import 'react-calendar/dist/Calendar.css';
 import Container from "@material-ui/core/Container";
+import Appointments from './appts';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles(theme => ({
   selection: {
     //width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(10)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
@@ -51,19 +53,12 @@ function App() {
           <Calendar className = {classes.selection} />
         </Grid>
         <Grid container lg={4}></Grid>
-        
-          <Grid contains lg={4}>
+        <Grid contains lg={4} justify='center'>
           
-            <Typography primary>Scheduled Appointments:</Typography>
-            <Box border={1} borderColor='#881c1c'>
-              <Typography >Dhru Gala     CS207    March 5    2:30PM</Typography>
-            </Box>
-            <Box border = {1} borderColor='#881c1c'>
-              <Typography >Chinmay Patil CS201    March 6    10:00AM</Typography>
-            </Box>
+          {Appointments()}
             
-            <Button variant='contained' className = {classes.selection}>Schedule New Appointment</Button>
-          </Grid>
+          <Button variant='contained' className = {classes.selection}>Schedule New Appointment</Button>
+        </Grid>
           <Grid container lg={12} justify='center'>
             <Button variant='contained'>Community News</Button>
           </Grid>
