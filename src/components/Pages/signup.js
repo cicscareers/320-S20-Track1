@@ -116,6 +116,12 @@ export default function SignIn() {
     }
   }
 
+  function handleKeyPress(event){
+    if(event.key === 'Enter'){
+      handleSubmit(event)
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

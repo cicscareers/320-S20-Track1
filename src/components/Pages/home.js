@@ -35,6 +35,9 @@ function App() {
   const classes = useStyles();
   return (
   	<Container component='main'>
+      <Typography component="h1" variant="h5" align="center">
+        Welcome to ReachOUT!
+      </Typography>
       <Grid container  lg={12} className={classes.selection}>
       <Grid container lg={4} justify='center'>
         <Button variant="contained">Search Supporters</Button>
