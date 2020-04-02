@@ -78,7 +78,9 @@ export default function SignIn() {
       const cookies = new Cookies();
       var bcrypt = require('bcryptjs');
       var salt = bcrypt.genSaltSync(10);
+      alert(salt);
       var hash = bcrypt.hashSync(password, salt);
+      alert(hash);
       setPassword(hash)
       cookies.remove("email");
       cookies.remove("firstName");

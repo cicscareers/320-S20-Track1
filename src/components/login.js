@@ -58,8 +58,6 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   var bcrypt = require('bcryptjs');
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync("B4c0/\/", salt);
 
   function handleSubmit(event) {
     var count=0;
