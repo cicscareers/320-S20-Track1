@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {FormHelperText, FormControl} from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -35,6 +35,11 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center"
   },
+  error: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
@@ -61,6 +66,10 @@ export default function SignIn() {
     && password.length > 0 && password2.length > 0 
     && fname.length > 0 && lname.length > 0
     && validEmail(email);
+  }
+
+  function samePass(pass, pass2){
+    return password===password2;
   }
 
   function validEmail(address) {
@@ -103,6 +112,7 @@ export default function SignIn() {
       cookies.set("role", "Student", { path: "/" });
       cookies.set("token", "token", { path: "/" });
       alert("User Created! (if we had a database)");
+      window.location.reload();
     }
   }
 
@@ -148,6 +158,13 @@ export default function SignIn() {
             autoComplete="email"
             onChange={e => setEmail(e.target.value)}
           />
+          {!validEmail(email) && email.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Please enter a valid email
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -172,6 +189,13 @@ export default function SignIn() {
             autoComplete="current-password"
             onChange={e => setPassword2(e.target.value)}
           />
+          {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Passwords do not match
+              </FormHelperText>
+            </FormControl>
+          )}
           <Typography align="center" variant="body2">
             By requesing an account you agree to ReachOut's
           </Typography>
