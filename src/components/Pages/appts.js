@@ -8,10 +8,19 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import appointments from '../Data/appointments.json'
+import appointments from '../Data/appointments.json';
+import Cookies from 'universal-cookie';
 
 
 const MyApp = () => {
+  const cookies = new Cookies();
+  const eml = cookies.get("email");
+  for(var i = 0; i < appointments.length; i++){
+    if (appointments[i].email == eml)
+      break;
+  }
+
+  const aptmnt = appointments[i].appointments;
 
   
   return (
@@ -29,7 +38,7 @@ const MyApp = () => {
             </TableRow>
           </TableHead>
           <TableBody >
-            {appointments.map((row) => (
+            {aptmnt.map((row) => (
               <TableRow key={row.time} >
                 <TableCell component="th" scope="row">
                   {row.advisor}
