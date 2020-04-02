@@ -4,6 +4,7 @@ import json
 def get_appointment_supporters(event, context):
 
     return{
+        "statusCode": 200,
         [
             {
             "advisor":"Ada Lovelace",
