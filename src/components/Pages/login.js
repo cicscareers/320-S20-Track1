@@ -31,10 +31,7 @@ const useStyles = makeStyles(theme => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(2)
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
-}));
+ }));
 
 export default function SignIn() {
   const classes = useStyles();
@@ -50,7 +47,7 @@ export default function SignIn() {
         var dbpass=users[i].password
         var verify = bcrypt.compareSync(password, dbpass);
         if (!verify){
-          alert("wrong password");
+          alert("Invalid Password");
         }
         else if (verify){
           alert("User authenticated");
@@ -92,7 +89,7 @@ export default function SignIn() {
       }
     }
     if(count===0){
-      alert("user not found");
+      alert("User not found");
     }
   }
 
@@ -140,6 +137,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            disabled={!validateForm()}
             //href="/match"
           >
             Sign In

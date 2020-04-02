@@ -56,6 +56,16 @@ export default function SignIn() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
 
+  function validateForm() {
+    return password===password2 && email.length > 0 
+    && password.length > 0 && password2.length > 0 
+    && fname.length > 0 && lname.length > 0
+    && validEmail(email);
+  }
+
+  function validEmail(address) {
+    return !! address.match(/.+@.+/);
+  }
 
   function handleSubmit(event) {
     var error = false;
@@ -173,12 +183,12 @@ export default function SignIn() {
             </Grid>
           </Grid>
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             onClick={handleSubmit}
+            disabled={!validateForm()}
           >
             Create Account
           </Button>
