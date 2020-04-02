@@ -1,6 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
-import { Grid, AppBar, Toolbar, Typography,TextField, Button, createMuiTheme, makeStyles, Box} from '@material-ui/core';
+import { Grid, Typography, Button, makeStyles, Box} from '@material-ui/core';
 import 'react-calendar/dist/Calendar.css';
 import Container from "@material-ui/core/Container";
 
@@ -77,21 +77,5 @@ function App() {
     
   );
 }
-
-const style = {
-  
-};
-
-const btn = {
-  alignItems: 'center',
-}
-
-const theme = createMuiTheme({
-  typography: {
-    // Tell Material-UI what's the font-size on the html element is.
-    htmlFontSize: 10,
-  },
-  
-});
 
 export default App;

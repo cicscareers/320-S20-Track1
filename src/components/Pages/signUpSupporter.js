@@ -1,20 +1,14 @@
-import React, { useState, handleClick } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { createMuiTheme } from "@material-ui/core/styles";
-import users from "./users.json"
-import Cookies from "universal-cookie";
 
 function Copyright() {
   return (
@@ -54,60 +48,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-
-
-  function handleSubmit(event) {
-    var error = false;
-    if(password != password2){
-      alert("Passwords must match!");
-      error=true;
-    }
-    for (var i = 0; i < users.length; i++){
-      if (users[i].email == email){
-        alert("User already exists!");
-        error=true;
-        break;
-      }
-    }
-    if (!error){
-      const cookies = new Cookies();
-      var bcrypt = require('bcryptjs');
-      var salt = bcrypt.genSaltSync(10);
-      alert(salt);
-      var hash = bcrypt.hashSync(password, salt);
-      alert(hash);
-      setPassword(hash)
-      cookies.remove("email");
-      cookies.remove("firstName");
-      cookies.remove("lastName");
-      cookies.remove("role");
-      cookies.remove("token");
-      cookies.set("email", email, {
-        path: "/"
-      });
-      cookies.set("firstName", fname, {
-        path: "/"
-      });
-      cookies.set("lastName", lname, {
-      path: "/"
-      });
-      cookies.set("role", "Student", { path: "/" });
-      cookies.set("token", "token", { path: "/" });
-      alert("User Created! (if we had a database)");
-    }
-  }
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Create a student account
+          Request a supporter account
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -120,7 +67,6 @@ export default function SignIn() {
             name="fname"
             autoComplete="fname"
             autoFocus
-            onChange={e => setFname(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -131,7 +77,6 @@ export default function SignIn() {
             label="Last Name"
             name="lname"
             autoComplete="lname"
-            onChange={e => setLname(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -142,7 +87,6 @@ export default function SignIn() {
             label="Email Address"
             name="email"
             autoComplete="email"
-            onChange={e => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -154,7 +98,6 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={e => setPassword(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -166,7 +109,6 @@ export default function SignIn() {
             type="password"
             id="Confirmpassword"
             autoComplete="current-password"
-            onChange={e => setPassword2(e.target.value)}
           />
           <Typography align="center" variant="body2">
             By requesing an account you agree to ReachOut's
@@ -184,7 +126,6 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
           >
             Create Account
           </Button>
@@ -192,11 +133,6 @@ export default function SignIn() {
             <Grid item xs>
               <Link href="/login" variant="body2">
                 Back to sign in
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signup/supporter" variant="body2">
-                Want to request a supporter account? Sign Up
               </Link>
             </Grid>
           </Grid>
