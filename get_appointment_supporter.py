@@ -7,6 +7,7 @@ import constants
 def get_appointment_supporters(event, context):
     # TODO implement
 
+    """
     supporter_id_want = event['supporter_id']
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
@@ -18,7 +19,7 @@ def get_appointment_supporters(event, context):
 
     )
 
-    """
+    
     if appointment_info['supporter_id'] == '': 
         print("The user does not exist")
         return {
@@ -34,5 +35,12 @@ def get_appointment_supporters(event, context):
 
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello from get_appointment_supporters Lambda!')
+        'body': {
+            "supporter_name": "supporterName"
+            "student_name": "studentName"
+            "appointment_id": appointment_id,
+            "type": "type",
+            "location": "location",
+            "method": "method"
+        }
     }
