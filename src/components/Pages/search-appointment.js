@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import supporters from "../Data/supporters.json";
+import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -96,9 +96,9 @@ export default class Example extends React.Component {
     // var ele=AuthRadioYo.getElementByValue(filledSlot);
     // alert(AuthRadioYo[0]);
     this.handleClose();
-    
-    
-   
+
+
+
   }
   handleChange = (event) => {
     const { id } = event.target;
@@ -389,10 +389,10 @@ export default class Example extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{fontFamily:'Futiger'}}>
 
 
-                <NavItem>
+                <NavItem style={{borderBottom:'solid 1px maroon'}}>
                   <NavLink
                     className={classnames({active: this.state.activeTab === supporter.id})}
                     onClick={() => {
@@ -431,9 +431,9 @@ export default class Example extends React.Component {
       slot_min:sm,
       slot:s
     });
-   
+
     }
-   
+
     handleClose=e=>{
     var femal=this.state.female;
     var t=this.state.activeTab;
@@ -502,7 +502,7 @@ export default class Example extends React.Component {
     });
 
   }
-  
+
   renderSupporterTabContent = supporter => {
     const classes = useStyles3;
     const fil=supporters.filter(supporter => {
@@ -596,7 +596,7 @@ export default class Example extends React.Component {
       if(filledSlot!=""){
         alert("hi");
         break;
-      } 
+      }
 		  adj_start_hour = slot_start_hour;
 		  if(slot_start_hour>=12){
 			if(slot_start_hour>12){
@@ -747,10 +747,10 @@ export default class Example extends React.Component {
     }
 //     let ModalToBeShown;
 //     let ModalBind;
- 
+
 //     if(this.state.slot!=""){
 //       ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
-//         <form onSubmit={confirmRefresh()}> 
+//         <form onSubmit={confirmRefresh()}>
 //       <br/>
 //   <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
 //       <p id="transition-modal-description">
@@ -775,7 +775,7 @@ export default class Example extends React.Component {
 //       <br/>
 //  </form>
 //     </div>
-   
+
 //     );
 //     }
 //     else{
@@ -810,15 +810,16 @@ export default class Example extends React.Component {
                 <TabPane tabId={supporter.id} style={{border:'solid 2px black'}}>
 
                 {arr}
-                <div style = {{float: 'left', marginLeft: '10px'}}>
+                <div style = {{float: 'left', marginLeft: '10px', fontFamily:'Serif', fontWeight:'bold'}}>
 
                   <br/>
-                  <h4>{supporter.name.substring(0, 60)}</h4>
 
-    <h6>Helps in: {supporter.type}</h6>
-                  <h6>Date: {date}</h6>
-                  <h6>Available from {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
-    <h6>Rating: {supporter.rating}</h6>
+                  <h4 style={{fontFamily:'Serif', fontWeight:'bold'}}>{supporter.name.substring(0, 60)}</h4>
+
+    <h6 style={{fontFamily:'Frutiger'}}>Helps in: {supporter.type}</h6>
+                  <h6 style={{fontFamily:'Frutiger'}}>Date: {date}</h6>
+                  <h6 style={{fontFamily:'Frutiger'}}>Available from {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
+    <h6 style={{fontFamily:'Frutiger'}}>Rating: {supporter.rating}</h6>
                   <br/>
                   </div>
                   <div>
@@ -853,7 +854,7 @@ export default class Example extends React.Component {
         {AuthButton}
         <br/>
         <br/>
-                  <Button type="button" id={supporter.id} style = {{float: 'right', marginRight: '241px'}} onClick={this.handleOpen}>
+                  <Button type="button" id={supporter.id} style = {{float: 'right', marginRight: '221px'}} onClick={this.handleOpen}>
 
          Create New Appointment
         </Button>
@@ -871,7 +872,7 @@ export default class Example extends React.Component {
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
           <div className={classes.paper} style={{textAlign:'center'}}>
-        <form onSubmit={this.confirmRefresh.bind(this)}> 
+        <form onSubmit={this.confirmRefresh.bind(this)}>
       <br/>
   <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
       <p id="transition-modal-description">
@@ -960,10 +961,28 @@ export default class Example extends React.Component {
           return supporter.name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
         });
         // const classes = useStyles();
+
+        var nav_tabs= '';
+        if(filteredSupportersBySearch.length!=0){
+          nav_tabs=filteredSupportersBySearch.map(supporter => {
+                return this.renderSupporterTab(supporter);
+              });
+
+
+        }
+
+        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> No Supporters Available </b> </p> </h3> </div>);
+        if(filteredSupportersBySearch.length!=0){
+          nav_content=filteredSupportersBySearch.map(supporter => {
+                return this.renderSupporterTabContent(supporter);
+              });
+
+
+        }
         return (
           <div style={{overflow:'hidden'}}>
           <div style={rootStyle}>
-      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}}>
+      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}} defaultExpanded='true'>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -989,16 +1008,12 @@ export default class Example extends React.Component {
           <Row>
             <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'600px'}}>
               <Nav tabs vertical pills >
-              {filteredSupportersBySearch.map(supporter => {
-                return this.renderSupporterTab(supporter);
-              })}
+            {nav_tabs}
               </Nav>
             </Col>
             <Col xs="6" sm="6" md="8" style={{overflowY:'auto',height:'431px',width:'60%'}}>
               <TabContent activeTab={this.state.activeTab} >
-                {filteredSupportersBySearch.map(supporter => {
-                return this.renderSupporterTabContent(supporter);
-              })}
+              {nav_content}
               </TabContent>
             </Col>
           </Row>
