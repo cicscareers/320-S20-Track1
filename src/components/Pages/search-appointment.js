@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import supporters from "../Data/supporters.json";
+import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -953,7 +953,7 @@ export default class Example extends React.Component {
         if(end_exact_time==23.59){
           two_three=true;
         }
-          return (s_start_exact_time>=start_exact_time)&&((s_end_exact_time<=end_exact_time));
+          return (s_end_exact_time>start_exact_time)&&((s_end_exact_time<=end_exact_time));
         });
 
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
