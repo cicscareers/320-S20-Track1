@@ -33,14 +33,25 @@ def get_appointment_supporters(event, context):
     """
 
 
+    #Hard coded JSON object to return for demo 
     return {
         'statusCode': 200,
         'body': {
-            "supporter_name": "supporterName"
-            "student_name": "studentName"
-            "appointment_id": appointment_id,
-            "type": "type",
-            "location": "location",
-            "method": "method"
+                    [
+                        {
+                        "student":"Ada Student",
+                        "subject": "Mock Interview",
+                        "date": "10/10/2020",
+                        "time": "10:00 - 10:30",
+                        "actions": "Cancel"
+                        },
+                        {
+                        "student":"Grace Student",
+                        "subject": "Resume",
+                        "date": "10/10/2020",
+                        "time": "12:00 - 1:00",
+                        "actions": "Cancel"
+                        }
+                    ]
+                }
         }
-    }
