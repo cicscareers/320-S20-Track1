@@ -634,7 +634,7 @@ export default class Example extends React.Component {
 				break;
 
 			console.log(slot_end_hour+":"+slot_end_min);
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
 			slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
@@ -663,7 +663,7 @@ export default class Example extends React.Component {
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
 
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
       slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
@@ -691,7 +691,7 @@ export default class Example extends React.Component {
 			string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
       slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
 			slot_start_min = slot_start_min%60;
@@ -720,7 +720,7 @@ export default class Example extends React.Component {
 			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
 				break;
 
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio />} label={string} />);
+			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
 			slot_start_min = slot_start_min+15;
 			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
