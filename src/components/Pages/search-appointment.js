@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import supporters from "../Data/supporters.json";
+import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -41,10 +41,11 @@ const useStyles3 = makeStyles(theme => ({
   },
 }));
 
-
+var filledSlot="";
+var filledID="";
 var today = new Date();
 var dd = today.getDate();
-
+var AuthRadioYo=[];
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
 
@@ -77,7 +78,28 @@ export default class Example extends React.Component {
       slot:""
     };
   }
+  confirmRefresh=()=>{
 
+    filledID=this.state.activeId;
+    filledSlot=this.state.slot;
+    // var filledSlotArr=filledSlot.split("to");
+    // var filled_slot_start=filledSlotArr[0].substring(0,4);
+    // var filled_slot_start_hm=filled_slot_start.split(":");
+    // var filled_slot_start_hour=parseInt(filled_slot_start_hm[0]);
+
+    // var filled_slot_start_ampm=filledSlotArr[0].substring(5,7);
+
+    // if(fil_slot_start_ampm){
+
+    // }
+    // alert();
+    // var ele=AuthRadioYo.getElementByValue(filledSlot);
+    // alert(AuthRadioYo[0]);
+    this.handleClose();
+    
+    
+   
+  }
   handleChange = (event) => {
     const { id } = event.target;
 
@@ -409,9 +431,10 @@ export default class Example extends React.Component {
       slot_min:sm,
       slot:s
     });
-
-  }
-  handleClose=e=>{
+   
+    }
+   
+    handleClose=e=>{
     var femal=this.state.female;
     var t=this.state.activeTab;
     var sea=this.state.search;
@@ -479,6 +502,7 @@ export default class Example extends React.Component {
     });
 
   }
+  
   renderSupporterTabContent = supporter => {
     const classes = useStyles3;
     const fil=supporters.filter(supporter => {
@@ -568,6 +592,11 @@ export default class Example extends React.Component {
 
       while(slot_end_min/60 + slot_end_hour < ae_min/60 + ae_hour)
 	  {
+      // alert(filledSlot);
+      if(filledSlot!=""){
+        alert("hi");
+        break;
+      } 
 		  adj_start_hour = slot_start_hour;
 		  if(slot_start_hour>=12){
 			if(slot_start_hour>12){
@@ -582,6 +611,7 @@ export default class Example extends React.Component {
 		if(min===0)
 			break;
         if(min===30){
+          // alert("hi");
 			slot_end_min = slot_start_min+30;
 			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
 			slot_end_min = slot_end_min%60;
@@ -698,13 +728,16 @@ export default class Example extends React.Component {
 
         }
       }
-
+      // if(filledID!=""){
+      //   AuthRadio=[];
+      // }
+      AuthRadioYo=AuthRadio;
       AuthButton=(
       <div style={{textAlign:'center'}}>
       <FormControl component="fieldset">
       <FormLabel component="legend">Slots open</FormLabel>
       <RadioGroup aria-label="gender" name="gender1" value={this.state.slot} onChange={this.handleSlotTime}>
-        {AuthRadio}
+        {AuthRadioYo}
       </RadioGroup>
     </FormControl>
     </div>);
@@ -712,43 +745,48 @@ export default class Example extends React.Component {
     if(this.state.slot_min==0){
       AuthButton=[];
     }
-    let ModalToBeShown;
-    if(this.state.slot!=""){
-      ModalToBeShown=( <div className={classes.paper} style={{textAlign:'center'}}>
-      <br/>
-  <h4 id="transition-modal-title" style={{borderBottom:'solid 1px,black'}}>Appointment Confirmation</h4>
-      <p id="transition-modal-description">
-        <h6>Supporter-Name:{fil.map(supporter => {
-        return supporter.name;
-      })}</h6>
-        <h6>Helps-In:{fil.map(supporter => {
-        return supporter.type;
-      })}</h6>
-        <h6>Date:{fil.map(supporter => {
-        return supporter.date;
-      })}</h6>
-        <h6>Time: {this.state.slot}</h6>
-        <h6>Location:{fil.map(supporter => {
-        return supporter.location;
-      })}</h6>
-       <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-       <br/>
-        <Button style={{float:'right',marginRight:'10px'}}>Confirm appointment</Button>
-        &nbsp;
-      </p>
-      <br/>
-
-    </div>);
-    }
-    else{
-      ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
-        <br/>
-        <p id="transition-modal-description">
-          Please Select a Slot.
-        </p>
-      </div>)
-    }
-
+//     let ModalToBeShown;
+//     let ModalBind;
+ 
+//     if(this.state.slot!=""){
+//       ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+//         <form onSubmit={confirmRefresh()}> 
+//       <br/>
+//   <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
+//       <p id="transition-modal-description">
+//         <h6>Supporter-Name:{fil.map(supporter => {
+//         return supporter.name;
+//       })}</h6>
+//         <h6>Helps-In:{fil.map(supporter => {
+//         return supporter.type;
+//       })}</h6>
+//         <h6>Date:{fil.map(supporter => {
+//         return supporter.date;
+//       })}</h6>
+//         <h6>Time: {this.state.slot}</h6>
+//         <h6>Location:{fil.map(supporter => {
+//         return supporter.location;
+//       })}</h6>
+//        <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+//        <br/>
+//         <Button type="submit" style={{float:'right',marginRight:'10px'}} >Confirm appointment</Button>
+//         &nbsp;
+//       </p>
+//       <br/>
+//  </form>
+//     </div>
+   
+//     );
+//     }
+//     else{
+//       ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+//         <br/>
+//         <p id="transition-modal-description">
+//           Please Select a Slot.
+//         </p>
+//       </div>)
+//     }
+    // ModalBind=({ModalToBeShown}</form>);
       let arr=[];
     if (supporter.name == "Chinmay Patil"){
    arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP' style = {{width: '175px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
@@ -815,7 +853,7 @@ export default class Example extends React.Component {
         {AuthButton}
         <br/>
         <br/>
-                  <Button type="button" id={supporter.id} style = {{float: 'right', marginRight: '10px'}} onClick={this.handleOpen}>
+                  <Button type="button" id={supporter.id} style = {{float: 'right', marginRight: '241px'}} onClick={this.handleOpen}>
 
          Create New Appointment
         </Button>
@@ -832,7 +870,32 @@ export default class Example extends React.Component {
           }}
         >
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
-            {ModalToBeShown}
+          <div className={classes.paper} style={{textAlign:'center'}}>
+        <form onSubmit={this.confirmRefresh.bind(this)}> 
+      <br/>
+  <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
+      <p id="transition-modal-description">
+        <h6>Supporter-Name:{fil.map(supporter => {
+        return supporter.name;
+      })}</h6>
+        <h6>Helps-In:{fil.map(supporter => {
+        return supporter.type;
+      })}</h6>
+        <h6>Date:{fil.map(supporter => {
+        return supporter.date;
+      })}</h6>
+        <h6>Time: {this.state.slot}</h6>
+        <h6>Location:{fil.map(supporter => {
+        return supporter.location;
+      })}</h6>
+       <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+       <br/>
+        <Button type="submit" style={{float:'right',marginRight:'10px'}} >Confirm appointment</Button>
+        &nbsp;
+      </p>
+      <br/>
+ </form>
+    </div>
 
           </Fade>
         </Modal>
@@ -900,7 +963,7 @@ export default class Example extends React.Component {
         return (
           <div style={{overflow:'hidden'}}>
           <div style={rootStyle}>
-      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right'}}>
+      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -924,14 +987,14 @@ export default class Example extends React.Component {
       </InputGroup>
 
           <Row>
-            <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'100%'}}>
+            <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'600px'}}>
               <Nav tabs vertical pills >
               {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTab(supporter);
               })}
               </Nav>
             </Col>
-            <Col xs="6" sm="6" md="8" style={{overflowY:'auto',height:'100%',width:'60%'}}>
+            <Col xs="6" sm="6" md="8" style={{overflowY:'auto',height:'431px',width:'60%'}}>
               <TabContent activeTab={this.state.activeTab} >
                 {filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTabContent(supporter);
