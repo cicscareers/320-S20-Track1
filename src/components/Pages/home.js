@@ -36,30 +36,22 @@ function App() {
   return (
   	<Container component='main'>
       <Grid container  lg={12} className={classes.selection}>
-      <Grid container lg={4} justify='center'>
-        <Button variant="contained">Search Supporters</Button>
-      </Grid>
-      <Grid container  lg={4} justify='center'>
-        <Button variant="contained">My Profile</Button>
-      </Grid>
-      <Grid container  lg={4} justify='center'>
-        <Button variant="contained">Settings</Button>
-      </Grid>
+      
       </Grid>
       
       <Grid container lg={12} className={classes.selection}>
         <Grid container lg={4}>
-          <Typography >Upcoming Appointments: </Typography>
+          
           <Calendar className = {classes.selection} />
         </Grid>
-        <Grid container lg={4}></Grid>
-        <Grid contains lg={4} justify='center'>
+        <Grid container lg={2}></Grid>
+        <Grid contains lg={6} justify='center'>
           
           {Appointments()}
             
-          <Button variant='contained' className = {classes.selection}>Schedule New Appointment</Button>
+          
         </Grid>
-          <Grid container lg={12} justify='center'>
+          <Grid container lg={10} justify='center'>
             <Button variant='contained'>Community News</Button>
           </Grid>
         
