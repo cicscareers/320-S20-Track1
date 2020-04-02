@@ -1,14 +1,14 @@
 [
   {
     "email":"johndoe@umass.edu",
-    "password": "johnpass",
+    "password": "$2a$10$h5nGGhW7Rw3RG.uHi332X.rK/2DxpLsaDQrYrOMeNrM7cmj.Ubroa",
     "fname": "John",
     "lname": "Doe",
     "role": "Student"
   },
   {
     "email":"janedoe@umass.edu",
-    "password": "janepass",
+    "password": "$2a$10$HQtEvylY/NDYAGzTYZQDf.Zbz3wKj0s7BPhPIPbYGA9G1Gb4CE3UW",
     "fname": "Jane",
     "lname": "Doe",
     "role": "Student"

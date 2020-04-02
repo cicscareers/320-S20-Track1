@@ -14,7 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from '@material-ui/core/FormHelperText';
-import users from "./users.json"
+import users from "./users.json";
 import Cookies from "universal-cookie";
 
 function Copyright() {
@@ -57,16 +57,21 @@ export default function SignIn() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  var bcrypt = require('bcryptjs');
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync("B4c0/\/", salt);
 
   function handleSubmit(event) {
     var count=0;
     for (var i = 0; i < users.length; i++){
       if (users[i].email == email){
         count++;
-        if (users[i].password != password){
+        var dbpass=users[i].password
+        var verify = bcrypt.compareSync(password, dbpass);
+        if (!verify){
           alert("wrong password");
         }
-        else if (users[i].password == password){
+        else if (verify){
           alert("User authenticated");
           console.log("hooray! we have json!");
           const timestamp = new Date().getTime();
@@ -150,7 +155,6 @@ export default function SignIn() {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
             onClick={handleSubmit}
             //href="/match"
           >
