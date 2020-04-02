@@ -4,10 +4,11 @@ import { Grid, Typography, Button, makeStyles, Box} from '@material-ui/core';
 import 'react-calendar/dist/Calendar.css';
 import Container from "@material-ui/core/Container";
 import Appointments from './appts';
+import Cookies from "universal-cookie";
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
@@ -32,11 +33,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App() {
+  const cookies = new Cookies();
+  const fname = cookies.get("firstName");
+  const lname = cookies.get("lastName");
   const classes = useStyles();
   return (
   	<Container component='main'>
-      <Typography component="h1" variant="h5" align="center">
-        Welcome to ReachOUT!
+      <Typography component="h1" variant="h4" align="center" className={classes.paper}>
+        Welcome to ReachOUT {fname} {lname}!
       </Typography>
       <Grid container  lg={12} className={classes.selection}>
       
