@@ -100,6 +100,12 @@ export default function SignIn() {
     return email.length > 0 && password.length > 0;
   }
 
+  function handleKeyPress(event){
+    if(event.key === 'Enter'){
+      handleSubmit(event)
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -132,6 +138,7 @@ export default function SignIn() {
             form className={classes.form}
             autoComplete="current-password"
             onChange={e => setPassword(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           <Button
             margin="normal"
