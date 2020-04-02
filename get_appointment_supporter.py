@@ -1,6 +1,6 @@
 import json
 import boto3
-import constants
+#import constants
 
 #Input: supporter_id
 #Output: JSON object of current supporter appointments
