@@ -8,7 +8,7 @@ def get_supporters_before_match(event, context):
 
     #client = boto3.client('rds-data') #Connecting to the database
     
-    #Hard-coded JSON object for the demo
+    #Hard-coded JSON object for the demoo
     
     
     app_1 =  {
