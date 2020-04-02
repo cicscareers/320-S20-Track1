@@ -44,9 +44,11 @@ def generate_email(attributes, template_id):
 
     # attributes is a hashmap
     for attribute in attributes.keys():
-        body.replace('$'+str(attribute)+'$', attributes[attribute])
-        subject.replace('$'+str(attribute)+'$', attributes[attribute])
-
+        try:
+            body.replace('$'+str(attribute)+'$', attributes[attribute])
+            subject.replace('$'+str(attribute)+'$', attributes[attribute])
+        except TypeError as t:
+            pass
     msg = MIMEMultipart('mixed')
     # Add subject, from and to lines.
     msg['Subject'] = subject 
@@ -61,14 +63,21 @@ def generate_email(attributes, template_id):
     if(attributes['ATTACHMENTS'] != None):
         att = MIMEApplication(open(attributes('ATTACHMENTS'), 'rb').read())
         att.add_header('Content-Disposition','ATTACHMENTS',filename=os.path.basename(attributes['ATTACHMENTS']))
-    msg.attach(att)
-    return tuple(str('SENDER'), str(attributes['RECIPIENT']), str(msg.as_string()))
+        msg.attach(att)
+    return (str(attributes['SENDER']), str(attributes['RECIPIENT']), str(msg.as_string()))
 
 # params: tuple(recipient, subject, body, attachments)
 # returns: boolean
 def send_email(contentTuple):
 # Try to send the email.
     try:
+        print('BEGIN DEBUG\n')
+        print(contentTuple[0])
+        print()
+        print(contentTuple[1])
+        print()
+        print(contentTuple[2])
+        print('\nEND DEBUG')
         #Provide the contents of the email.
         response = client.send_raw_email(
             Source=contentTuple[0],
@@ -78,8 +87,9 @@ def send_email(contentTuple):
             RawMessage={
                 'Data':contentTuple[2],
             },
-            ConfigurationSetName=CONFIGURATION_SET
+            #ConfigurationSetName=CONFIGURATION_SET
         )
+        print('NO ERROR IN SENDING EMAIL')
     # Display an error if something goes wrong.	
     except ClientError as e:
         print(e.response['Error']['Message'])
@@ -90,6 +100,6 @@ def send_email(contentTuple):
 # Testing function calls
 
 def email_handler(event, context):
-    attributeTESTmap = {'SENDER':SENDER, 'RECIPIENT':'umassreachout.dev@gmail.com', 'ATTACHMENTS':None}
+    attributeTESTmap = {'SENDER':'umassreachout.dev@gmail.com', 'RECIPIENT':'dcincotta@umass.edu', 'ATTACHMENTS':None}
     send_email(generate_email(attributeTESTmap, 999))
     return ('HELLO FRONT END', True)
