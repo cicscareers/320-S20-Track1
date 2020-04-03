@@ -29,6 +29,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "resolutions": {
+    "@babel/preset-env": "7.5.5"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
