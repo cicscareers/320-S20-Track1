@@ -223,37 +223,35 @@ export default class Example extends React.Component {
 	}
 
   RadioButtonsGroup(){
-
     return (
-
       <div>
-
         <br />
         <FormControl>
-        <InputLabel htmlFor="type">Type</InputLabel>
-        <Select
-          native
-          value={this.state.female}
-		  id="type_select"
-          onChange={this.handleChange}
-          inputProps={{
-            name: 'age',
-            id: 'type_select',
-          }}
-        >
-          <option aria-label="None" value="" />
-          <option value={"Interview Coaching"}>Interview Coaching</option>
-          <option value={"Salary Negotiation"}>Salary Negotiation</option>
-          <option value={"Job Search"}>Job Search</option>
-          <option value={"Resume/CV"}>Resume/CV</option>
-        </Select>
-       <br/>
+          <InputLabel htmlFor="type">Type</InputLabel>
+          <Select
+            native
+            value={this.state.female}
+		        id="type_select"
+            onChange={this.handleChange}
+            inputProps={{
+                name: 'age',
+                id: 'type_select',
+            }}
+          >
+            <option aria-label="None" value="" />
+            <option value={"Interview Coaching"}>Interview Coaching</option>
+            <option value={"Salary Negotiation"}>Salary Negotiation</option>
+            <option value={"Job Search"}>Job Search</option>
+            <option value={"Resume/CV"}>Resume/CV</option>
+          </Select>
+        <br/>
         <InputLabel htmlFor="Rating"> <br/><br/><br/><br/><br/>
-        Minimum Rating</InputLabel>
+          Minimum Rating
+        </InputLabel>
         <Select
           native
           value={this.state.rating}
-		  id="rating_opt"
+		      id="rating_opt"
           onChange={this.handleChange}
           inputProps={{
             name: 'age',

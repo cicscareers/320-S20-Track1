@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   menuButton: {
-    marginRight: theme.spacing(6),
+    //marginRight: theme.spacing(6),
     flexGrow: 1
   },
   title: {
@@ -40,6 +40,7 @@ export default function MenuAppBar() {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const name = cookies.get("firstName");
+  const role = cookies.get("role");
   const classes = useStyles();
   const [auth, setAuth] = React.useState(token !== undefined);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -70,44 +71,16 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography component="h1" variant="h3">
-            ReachOUT
-          </Typography>
-          <ButtonGroup variant="text" color="secondary" aria-label="text primary button group" className={classes.menuButton} spacing="6" align="center">
-            <Button
-            size="large"
-            type="submit"
-            href="/"
-            className={classes.root}
-          >
-            <Typography component="h6" variant="h6">
-                Home
-            </Typography>
-          </Button>
-           <Button
-            size="large"
+          <Button
             type="submit"
             href="/match"
-            className={classes.root}
+            className={classes.menuButton}
+            align = "left"
           >
-
-           <Typography component="h6" variant="h6">
-                Find a Supporter
-            </Typography>
+          <Typography component="h1" variant="h3" color="secondary">
+            ReachOUT
+          </Typography>
           </Button>
-          <Button
-            size="large"
-            type="submit"
-            href="/ap"
-            className={classes.root}
-          >
-            <Typography component="h6" variant="h6">
-                My Appointments
-            </Typography>
-          </Button>
-          </ButtonGroup>
-          <FormGroup align="center">
-      </FormGroup>
           {auth && (
             <div>
               <IconButton
@@ -136,11 +109,39 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-               
+                
                 <MenuItem onClick={handleClose}>
                   <Link href="/account">
                     <Typography component="h6" variant="h6">
                       My Account
+                    </Typography>
+                  </Link>
+                </MenuItem>
+
+                {role==="Admin" && (
+                  <MenuItem onClick={handleClose}>
+                    <Link href="/admin/settings">
+                      <Typography component="h6" variant="h6">
+                        Admin Settings
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                )}
+
+                {role==="Supporter" && (
+                  <MenuItem onClick={handleClose}>
+                    <Link href="/supporter/settings">
+                      <Typography component="h6" variant="h6">
+                        Supporter Settings
+                      </Typography>
+                    </Link>
+                  </MenuItem>
+                )}
+
+                <MenuItem onClick={handleClose}>
+                  <Link href="/appointments">
+                    <Typography component="h6" variant="h6">
+                      Upcoming Appointments
                     </Typography>
                   </Link>
                 </MenuItem>
@@ -156,54 +157,6 @@ export default function MenuAppBar() {
               </Menu>
             </div>
           )}
-          {!auth && (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-                style={styles.button}
-                iconStyle={styles.icon}
-
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right"
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem>
-                  <Link href="/login">
-                    <Typography component="h6" variant="h6">
-                      Login
-                    </Typography>
-                  </Link>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link href="/signup">
-                    <Typography component="h6" variant="h6">
-                      Sign Up
-                    </Typography>
-                  </Link>
-                </MenuItem>
-              </Menu>
-
-            </div>
-          )}
-
         </Toolbar>
       </AppBar>
     </div>
