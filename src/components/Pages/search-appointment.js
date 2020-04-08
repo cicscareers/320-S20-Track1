@@ -227,7 +227,7 @@ export default class Example extends React.Component {
       <div>
         <br />
         <FormControl>
-          <InputLabel htmlFor="type">Type</InputLabel>
+          <InputLabel htmlFor="type">Topic</InputLabel>
           <Select
             native
             value={this.state.female}
