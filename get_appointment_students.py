@@ -1,34 +1,30 @@
 import json
 import boto3
-#import constants
+import constants
 
 #Input: supporter_id
 #Output: JSON object of current supporter appointments
 def get_appointment_students(event, context):
     # TODO implement
-
-    """
-    student_id_want = event['student_id']
+    
+    given_id = event['student_id']
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
         secretArn = constants.SECRET_ARN,
         database = constants.DB_NAME,
-        resourceArn = constants.Arn,
-        sql = 'SELECT U.first_name, U.last_name, S.student_id, APP.appointment_id, APP.time, APP.type, APP.duration, APP.method, APP.location FROM users U, students S, student_appointment_relation R, \
-            scheduled_appointments APP WHERE U.id = S.user_id AND S.student_id = R.student_id AND R.appointment_id = APP.appointment_id AND S.student_id = %s;' % (student_id_want)
-            
-
+        resourceArn = constants.ARN,
+        sql = "SELECT A.appointment_id, A.supporter_id, A.time, A.type, A.duration, A.method, A.cancelled, A.cancel_reason, A.location FROM students S, student_appointment_relation R, scheduled_appointments A \
+             WHERE S.student_id = R.student_id and R.appointment_id = A.appointment_id and A.student_id = '%s';" % (given_id)
     )
 
-    
-    if appointment_info['student_id'] == '': 
-        print("The user does not exist")
+    if appointment_info['records'] == '': 
+        print("The user has no appointments")
         return {
             "statusCode": 404
         }
     else:
         return{
-            json_output = json.dumps(sql) #outputs the query in JSON format
+            json_output = json.dumps(appointment_info['records']) #outputs the query in JSON format
             "statusCode": 200
         }
     """
