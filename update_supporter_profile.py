@@ -1,12 +1,10 @@
 import json
+import boto3
 
 def lambda_handler(event, context):
-    # TODO implement
     
     first_name = event['first_name']
     last_name = event['last_name']
-    spire_id = event['spire_id']
-    gender = event['gender']
     prefered_name = event['prefered_name']
     picture = event['picture']
     bio = event['bio']
@@ -19,6 +17,14 @@ def lambda_handler(event, context):
     resume = event['resume']
     job_search = event['job_search']
     grad_student = event['grad_student']
+
+    client = boto3.client('rds-data') #Connecting to the database
+    appointment_info = client.execute_statement(
+        secretArn = constants.SECRET_ARN,
+        database = constants.DB_NAME,
+        resourceArn = constants.ARN,
+        sql = "INSERT INTO" #query that updates supporter profile settings
+    )
     
     
     return {

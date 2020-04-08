@@ -1,5 +1,5 @@
 DB_CLUSTER = ""
-DB_NAME = ""
+DB_NAME = "postgres"
 MASTER_USERNAME = "postgres"
 MASTER_PASSWORD = ""
 ARN = "arn:aws:rds:us-east-2:500514381816:cluster:postgres"
