@@ -1,26 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import MenuItem from "@material-ui/core/MenuItem";
-import { Menu, Link } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import {AppBar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Menu, Link} from "@material-ui/core";
 import Cookies from "universal-cookie";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
   menuButton: {
-    //marginRight: theme.spacing(6),
     flexGrow: 1
   },
   title: {
@@ -37,18 +25,22 @@ const styles = {
   },
 };
 export default function MenuAppBar() {
+
+  //Gets info from the cookies
   const cookies = new Cookies();
   const token = cookies.get("token");
   const name = cookies.get("firstName");
   const role = cookies.get("role");
+
+  //Sets the styling
   const classes = useStyles();
+
+  //In order to only show the toolbar when authorized
   const [auth, setAuth] = React.useState(token !== undefined);
+
+  //To handle the drop down menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  const handleChange = event => {
-    setAuth(event.target.checked);
-  };
 
   const handleMenu = event => {
     setAnchorEl(event.currentTarget);
@@ -58,6 +50,7 @@ export default function MenuAppBar() {
     setAnchorEl(null);
   };
 
+  //Function that handles log out by deleting the cookie and reloading
   function logout() {
     cookies.remove("email");
     cookies.remove("firstName");
@@ -67,20 +60,23 @@ export default function MenuAppBar() {
     window.location.reload();
   }
 
+  //First button is to link back to home. The rest is the drop down menu from the user icon, and handles the routing.
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
+
           <Button
             type="submit"
             href="/match"
             className={classes.menuButton}
             align = "left"
           >
-          <Typography component="h1" variant="h3" color="secondary">
-            ReachOUT
-          </Typography>
+            <Typography component="h1" variant="h3" color="secondary">
+              ReachOUT
+            </Typography>
           </Button>
+
           {auth && (
             <div>
               <IconButton
