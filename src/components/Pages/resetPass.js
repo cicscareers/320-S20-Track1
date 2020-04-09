@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -53,7 +53,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const classes = useStyles();
+
+  function handleSubmit(event) {
+    alert("password changed");
+  }
+
+  function validateForm() {
+    return password===password2 && email.length > 0 
+    && password.length > 0 && password2.length > 0 
+    && validEmail(email);
+  }
+
+  function samePass(pass, pass2){
+    return password===password2;
+  }
+
+  function validEmail(address) {
+    return !! address.match(/.+@.+/);
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -76,6 +97,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={e => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -87,6 +109,7 @@ export default function SignIn() {
             type="password"
             id="New_password"
             autoComplete="current-password"
+            onChange={e => setPassword(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -98,13 +121,15 @@ export default function SignIn() {
             type="password"
             id="Confirmpassword"
             autoComplete="current-password"
+            onChange={e => setPassword2(e.target.value)}
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
+            disabled={!validateForm()}
           >
             Reset My Password
           </Button>
