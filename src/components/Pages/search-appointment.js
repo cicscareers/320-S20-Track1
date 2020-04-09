@@ -988,19 +988,16 @@ export default class Example extends React.Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
-
+            <InputGroup style={{width:'100%'}}onChange={this.onchange}>
+              <Input placeholder="Search Supporter" />
+            </InputGroup>
            {this.RadioButtonsGroup()}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
     </div>
-          <div style={divStyle}>
-          <InputGroup style={{width:'26.7%'}}onChange={this.onchange}>
-
-        <Input placeholder="Search Supporter" />
-      </InputGroup>
-
+      <div style={divStyle}>
           <Row>
             <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'600px'}}>
               <Nav tabs vertical pills >
@@ -1013,8 +1010,8 @@ export default class Example extends React.Component {
               </TabContent>
             </Col>
           </Row>
-          </div>
-          </div>
+      </div>
+    </div>
         )
       }
 }
