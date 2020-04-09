@@ -1,4 +1,4 @@
 
-def create_supporter():
+def create_supporter(event, context):
 
     print('OOF')
