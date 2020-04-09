@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Menu, Link} from "@material-ui/core";
 import Cookies from "universal-cookie";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -116,7 +117,7 @@ export default function MenuAppBar() {
 
                 {role==="Admin" && (
                   <MenuItem onClick={handleClose}>
-                    <Link href="/admin/settings">
+                    <Link href="/admin-settings">
                       <Typography component="h6" variant="h6">
                         Admin Settings
                       </Typography>
@@ -126,7 +127,7 @@ export default function MenuAppBar() {
 
                 {role==="Supporter" && (
                   <MenuItem onClick={handleClose}>
-                    <Link href="/supporter/settings">
+                    <Link href="/supporter-settings">
                       <Typography component="h6" variant="h6">
                         Supporter Settings
                       </Typography>

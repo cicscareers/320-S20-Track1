@@ -177,7 +177,7 @@ export default function SignIn() {
           </Button>
           <Grid container form className={classes.form}>
             <Grid item xs>
-              <Link href="/forgot_password" variant="body2">
+              <Link href="/forgot-password" variant="body2">
                 Forgot password?
               </Link>
             </Grid>

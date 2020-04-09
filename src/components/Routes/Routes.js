@@ -23,16 +23,16 @@ export default function Routes() {
         <Switch>
           <Redirect exact from="/" to="/match" />
           <AuthenticatedRoute path="/home" exact component={Home} />
-          <AdminRoute path="/admin/settings" exact component={AdminSettings} />
-          <SupporterRoute path="/supporter/settings" exact component={SupporterSettings} />
+          <AdminRoute path="/admin-settings" exact component={AdminSettings} />
+          <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />
           <AuthenticatedRoute path="/appointments" exact component={appts} />
           <AuthenticatedRoute path="/account" exact component={Account} />
-          <UnauthenticatedRoute path="/signup/supporter" exact component={SignUpSupporter} />
+          <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
           <UnauthenticatedRoute path="/signup" exact component={SignUp} />
-          <UnauthenticatedRoute path="/forgot_password" exact component={ForgotPassword} />
+          <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
           <Route path="/index.html" to="/" />
           <Route component={NotFound} />
         </Switch>

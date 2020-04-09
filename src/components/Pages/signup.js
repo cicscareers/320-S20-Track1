@@ -230,7 +230,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup/supporter" variant="body2">
+              <Link href="/signup-supporter" variant="body2">
                 Want to request a supporter account? Sign Up
               </Link>
             </Grid>
