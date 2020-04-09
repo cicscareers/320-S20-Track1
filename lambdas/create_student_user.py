@@ -15,7 +15,11 @@ def create_student_user(event, context):
         sql = "INSERT INTO students VALUES ('%s','%s');" % (email,password)
     )
 
+<<<<<<< Updated upstream:lambdas/create_student_user.py
     if create['records'] == '': 
+=======
+    if(create['numberOfRecordsUpdated'] == 0): 
+>>>>>>> Stashed changes:create_student_user.py
         print("Student user not created")
         return {
             "statusCode": 404
@@ -23,6 +27,5 @@ def create_student_user(event, context):
     else:
         print("Student user created")
         return{
-            'statusCode': 200,
-            'body': json.dumps(create['records']) #outputs the query in JSON format 
+            'statusCode': 201
         }
