@@ -243,28 +243,6 @@ export default class Example extends React.Component {
           renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" id = "topic"/> }
           />
         <br/>
-        <InputLabel htmlFor="Rating"> <br/><br/><br/><br/><br/>
-          Minimum Rating
-        </InputLabel>
-        <Select
-          native
-          value={this.state.rating}
-		      id="rating_opt"
-          onChange={this.handleChange}
-          inputProps={{
-            name: 'age',
-            id: 'rating_opt',
-          }}
-        >
-          <option aria-label="None" value={0} />
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option>
-
-        </Select>
-        <br/>
         <TextField
         id="time_start"
         label="Start Time"
@@ -311,7 +289,27 @@ export default class Example extends React.Component {
         onChange={this.handleChange}
       />
 
-
+      <br/>
+      <FormControl>
+        <InputLabel> Minimum Rating </InputLabel>
+        <Select
+          native
+          value={this.state.rating}
+          id="rating_opt"
+          onChange={this.handleChange}
+          inputProps={{
+            name: 'age',
+            id: 'rating_opt',
+          }}
+        >
+          <option aria-label="None" value={0} />
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+        </Select>
+        </FormControl>
       </FormControl>
       </div>
     );
