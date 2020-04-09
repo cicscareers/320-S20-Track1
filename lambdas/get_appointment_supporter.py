@@ -1,21 +1,22 @@
 import json
 import boto3
-import constants
 
 #Input: supporter_id
 #Output: JSON object of current supporter appointments
-def get_appointment_supporters(event, context):
+def get_appointment_supporter(event, context):
 
-    given_id = event['supporter_id']
+    given_id = 999 #event['supporter_id']
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
-        secretArn = constants.SECRET_ARN,
-        database = constants.DB_NAME,
-        resourceArn = constants.Arn,
-        sql = "SELECT * FROM scheduled_appointments WHERE supporter_id = '%s';" % (given_id)
+        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+        database = "postgres",
+        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+        sql = "SELECT U1.first_name as supporterFN, U1.last_name as supporterLN, U2.first_name as studentFN, U2.last_name as studentLN, SA.type, SA.duration, SA.method, SA.location \
+            FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
+             WHERE S.supporter_id = SR.supporter_id and SR.appointment_id = SA.appointment_id and S.supporter_id = U1.id and SR.student_id = U2.id and S.supporter_id = '%s';" % (given_id)
     )
     
-    if appointment_info['records'] == '': 
+    if (appointment_info['records'] == []): 
         print("The supporter does not have any appointments")
         return {
             'statusCode': 404
@@ -23,5 +24,5 @@ def get_appointment_supporters(event, context):
     else:
         return{
             'statusCode': 200,
-            'body': json.dumps(appointment_info['records']) #outputs the query in JSON format 
+            'body': json.dumps(appointment_info['records'][0][0]['arrayValue']) #outputs the query in JSON format 
         }
