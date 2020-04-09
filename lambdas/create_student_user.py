@@ -7,8 +7,8 @@ import boto3
 #Output: 
 def create_student_user(event, context):
     
-    email = "testEmail"     #event['student_id']
-    password = "testPassword"           #event['password']
+    email = event['student_id']
+    password = event['hashed_password']
     client = boto3.client('rds-data') #Connecting to the database
 
     #Need to check if email is already in DB
