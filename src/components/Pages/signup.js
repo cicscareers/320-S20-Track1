@@ -94,6 +94,7 @@ export default function SignIn() {
       var bcrypt = require('bcryptjs');
       var salt = bcrypt.genSaltSync(10);
       var hash = bcrypt.hashSync(password, salt);
+      alert(hash);
       setPassword(hash)
       cookies.remove("email");
       cookies.remove("firstName");

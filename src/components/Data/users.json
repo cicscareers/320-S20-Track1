@@ -12,6 +12,20 @@
     "fname": "Jane",
     "lname": "Doe",
     "role": "Student"
+  },
+  {
+    "email":"supporter@umass.edu",
+    "password": "$2a$10$Bwql.fginBCY6zpS9rcVw.Q7Dfrw2KaTiKyuj/KKO.NzGKWItQ67C",
+    "fname": "Example",
+    "lname": "Supporter",
+    "role": "Supporter"
+  },
+  {
+    "email":"admin@umass.edu",
+    "password": "$2a$10$GYuIVxCYeQrbL6aXOJfUSOGyj5ma/oZeWBjBdSuOrwp334eH6UCL6",
+    "fname": "Example",
+    "lname": "Admin",
+    "role": "Admin"
   }
  
 ]

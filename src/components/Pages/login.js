@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import users from "../Data/users.json";
 import Cookies from "universal-cookie";
 
+//Function that shows the copyright (will get updated to the appropiate one later)
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -28,34 +29,53 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(2)
   },
  }));
 
+
 export default function SignIn() {
+
+  //sets styling
   const classes = useStyles();
+
+  //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //sets up the encryption library
   var bcrypt = require('bcryptjs');
 
+  //Gets run when submit is pressed and handles authentication.
   function handleSubmit(event) {
+
+    //count tracks if the user has been found
     var count=0;
     for (var i = 0; i < users.length; i++){
       if (users[i].email === email){
         count++;
+
+        //gets the password in the database (json file for now) and compares it to the inputted password
         var dbpass=users[i].password
         var verify = bcrypt.compareSync(password, dbpass);
+
+        //If they put in the wrong password
         if (!verify){
           alert("Invalid Password");
         }
+
+        //If the password is correct
         else if (verify){
+
           alert("User authenticated");
-          console.log("hooray! we have json!");
+
+          //cookie gets set to 30 minutes
           const timestamp = new Date().getTime();
           const expire = timestamp + (60 * 30 * 1000);
           const expireDate = new Date(expire);
 
+          //Sets all of the appropriate cookies
           const cookies = new Cookies();
           cookies.remove("email");
           cookies.remove("firstName");
@@ -82,27 +102,34 @@ export default function SignIn() {
             path: "/" ,
             expires: expireDate
           });
+
+          //reloads the window now that they are authenticated 
           window.location.reload();
         }
         break;
       
       }
     }
+
+    //If the user wasnt in the database
     if(count===0){
       alert("User not found");
     }
   }
 
+  //checks if they put in an email and password
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
+  //So the user can press enter rather than click the button
   function handleKeyPress(event){
-    if(event.key === 'Enter'){
+    if(event.key === 'Enter' && validateForm()){
       handleSubmit(event)
     }
   }
 
+  //Notably here the button is disabled if the form isn't validated
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -145,7 +172,6 @@ export default function SignIn() {
             color="primary"
             onClick={handleSubmit}
             disabled={!validateForm()}
-            //href="/match"
           >
             Sign In
           </Button>
