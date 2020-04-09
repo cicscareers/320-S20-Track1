@@ -10,9 +10,9 @@ def cancel_appointment(event, context):
 
     #Check if appointment exists
     existing_user = client.execute_statement(
-        secretArn = constants.SECRET_ARN, 
-        database = constants.DB_NAME,
-        resourceArn = constants.ARN,
+        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7", 
+        database = "postgres",
+        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
         sql = "SELECT appointment_id FROM scheduled_appointments WHERE appointment_id = '%d';" % (appointment_id_to_delete)
     )
 
@@ -22,15 +22,18 @@ def cancel_appointment(event, context):
         }
 
     cancel_bool = 'True'
+    #This is the query that we need to execute
     updateQuery = "UPDATE scheduled_appointments SET cancel = '%s', cancel_reason = '%s' WHERE appointment_id = '%d';" % (cancel_bool, cancel_reason, appointment_id_to_delete)
 
+    #Accessing database and executing query
     client.execute_statement(
-        secretArn = constants.SECRET_ARN, 
-        database = constants.DB_NAME,
-        resourceArn = constants.ARN,
+        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7", 
+        database = "postgres",
+        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
         sql = updateQuery
     )
 
+    #Return success code if appointment has been deleted
     return{
         statusCode: "200"
     }
