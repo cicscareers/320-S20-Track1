@@ -89,7 +89,7 @@ export default function SignUp() {
 
     //POST the user info to the database
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register/students",
       {
         method: "POST",
         headers: {
@@ -99,7 +99,7 @@ export default function SignUp() {
         body: JSON.stringify({
           first_name: fname,
           last_name: lname,
-          student_id: email,
+          email: email,
           hashed_password: hash
         })
       }

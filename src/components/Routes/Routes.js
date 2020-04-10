@@ -17,6 +17,7 @@ import AuthenticatedRoute from "./AuthenticatedRoute";
 import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import Feedback from '../Pages/feedback';
+import FAQ from '../Pages/faq';
 
 
 export default function Routes() {
@@ -24,6 +25,8 @@ export default function Routes() {
         <Switch>
           <Redirect exact from="/" to="/match" />
           <AuthenticatedRoute path="/home" exact component={Home} />
+          <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
+          <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AdminRoute path="/admin-settings" exact component={AdminSettings} />
           <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />

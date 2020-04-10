@@ -142,6 +142,22 @@ export default function MenuAppBar() {
                     </Typography>
                   </Link>
                 </MenuItem>
+
+                <MenuItem onClick={handleClose}>
+                  <Link href="/feedback">
+                    <Typography component="h6" variant="h6">
+                      Feedback
+                    </Typography>
+                  </Link>
+                </MenuItem>
+
+                <MenuItem onClick={handleClose}>
+                  <Link href="/FAQ">
+                    <Typography component="h6" variant="h6">
+                      FAQ
+                    </Typography>
+                  </Link>
+                </MenuItem>
       
                 <MenuItem onClick={logout}>
                   <Link href="/login">

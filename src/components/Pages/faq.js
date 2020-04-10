@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 // import { Grid, AppBar, Toolbar, Typography } from "@material-ui/core";
-import Faqs from "./components/Faqs";
-import Header from "./components/Header";
-import "./App.css";
+import Faqs from "../Faqs";
+import Header from "../Navigation/appbar.js";
 
 class App extends Component {
   state = {
@@ -44,7 +43,6 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container">
-          <Header />
           <Faqs faqs={this.state.faqs} />
         </div>
       </div>
