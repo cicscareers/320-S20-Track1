@@ -5,7 +5,7 @@ import boto3
 #Output: JSON object of current supporter appointments
 def get_appointment_supporter(event, context):
 
-    given_id = 999 #event['supporter_id']
+    given_id = event['supporter_id']
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
         secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
@@ -24,5 +24,5 @@ def get_appointment_supporter(event, context):
     else:
         return{
             'statusCode': 200,
-            'body': json.dumps(appointment_info['records'][0][0]['arrayValue']) #outputs the query in JSON format 
+            'body': json.dumps(appointment_info['records']) #outputs the query in JSON format 
         }
