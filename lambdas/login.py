@@ -74,9 +74,9 @@ def login(event, context):
     response_body = {
         'token': token, 
         'email' : given_email,
-        'f_name':,
-        'l_name':,
-        'role':
+        'f_name': f_name,
+        'l_name': l_name,
+        'role': role
         }
     return response_body
 
