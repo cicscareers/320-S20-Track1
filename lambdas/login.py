@@ -6,20 +6,29 @@ JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS265'
 JWT_EXP_DELTA_SECONDS = 86400
 
-def login(http_body):
+def login(event, context):
     
-    print("Attempting to login:");
-    print(http_body)
-
-    if 'email' not in http_body:
+    print("Attempting to login:")
+    print(event)
+    if "UserEmail" not in event:
         print("no email")
         raise LambdaException("Invalid input: no email")
-    if 'pass' not in http_body:
+    if 'Password' not in event:
         print("no password")
         raise LambdaException("Invalid input: no password")
 
-    given_email = http_body['email']
-    given_password = http_body['pass']
+    # if 'email' not in http_body:
+    #     print("no email")
+    #     raise LambdaException("Invalid input: no email")
+    # if 'pass' not in http_body:
+    #     print("no password")
+    #     raise LambdaException("Invalid input: no password")
+
+    # given_email = http_body['email']
+    # given_password = http_body['pass']
+
+    given_email = event['UserEmail']
+    given_password = event['Password']
 
     sql = "SELECT email FROM users WHERE email = '%s';" % (given_email)
     existing_user = query(sql)
@@ -70,9 +79,8 @@ def login(http_body):
     return response_body
 
 def login_handler(event, context):
-    http_body = ""
     try:
-        response_body = login(http_body)
+        response_body = login(event, context)
         return response_body
     except Exception as e:
         exception_type = e.__class__.__name__
