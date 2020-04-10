@@ -19,8 +19,10 @@ const MyApp = () => {
     if (appointments[i].email == eml)
       break;
   }
-
-  const aptmnt = appointments[i].appointments;
+  const aptmnt = []
+  if(i != appointments.length){
+    aptmnt = appointments[i].appointments;
+  }
 
   
   return (
