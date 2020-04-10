@@ -1,4 +1,4 @@
-from package import lambda_exception
+from package.lambda_exception import LambdaException
 from package.query_db import query
 from package import jwt
 from datetime import timedelta

@@ -1,4 +1,4 @@
-from package import lambda_exception
+from package.lambda_exception import LambdaException
 from package import db_config
 import boto3
 
