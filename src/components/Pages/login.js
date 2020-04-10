@@ -51,70 +51,59 @@ export default function SignIn() {
   function handleSubmit(event) {
 
     //count tracks if the user has been found
-    var count=0;
-    for (var i = 0; i < users.length; i++){
-      if (users[i].email === email){
-        count++;
+    event.preventDefault();
 
-        //gets the password in the database (json file for now) and compares it to the inputted password
-        var dbpass=users[i].password
-        var verify = bcrypt.compareSync(password, dbpass);
-
-        //If they put in the wrong password
-        if (!verify){
-          alert("Invalid Password");
-        }
-
-        //If the password is correct
-        else if (verify){
-
-          alert("User authenticated");
-
-          //cookie gets set to 30 minutes
-          const timestamp = new Date().getTime();
-          const expire = timestamp + (60 * 30 * 1000);
-          const expireDate = new Date(expire);
-
-          //Sets all of the appropriate cookies
-          const cookies = new Cookies();
-          cookies.remove("email");
-          cookies.remove("firstName");
-          cookies.remove("lastName");
-          cookies.remove("role");
-          cookies.remove("token");
-          cookies.set("email", email, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("firstName", users[i].fname, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("lastName", users[i].lname, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("role", users[i].role, { 
-            path: "/" ,
-            expires: expireDate
-          });
-          cookies.set("token", "token", { 
-            path: "/" ,
-            expires: expireDate
-          });
-
-          //reloads the window now that they are authenticated 
-          window.location.reload();
-        }
-        break;
-      
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          time: "morning"
+        },
+        body: JSON.stringify({
+          Email: email,
+          Password: password
+        })
       }
-    }
-
-    //If the user wasnt in the database
-    if(count===0){
-      alert("User not found");
-    }
+    )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          alert("test");
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        console.log("hooray! we have json!");
+        console.log(json);
+        const cookies = new Cookies();
+        cookies.remove("email");
+        cookies.remove("firstName");
+        cookies.remove("lastName");
+        cookies.remove("role");
+        cookies.remove("token");
+        cookies.set("email", json["body"]["userinfo"]["EMail"], {
+          path: "/"
+        });
+        cookies.set("firstName", json["body"]["userinfo"]["FName"], {
+          path: "/"
+        });
+        cookies.set("lastName", json["body"]["userinfo"]["LName"], {
+          path: "/"
+        });
+        cookies.set("role", json["body"]["userinfo"]["Role"], { path: "/" });
+        cookies.set("token", json["body"]["token"], { path: "/" });
+      })
+      .then(() => {
+        alert("authenticated");
+      })
+      .catch(error => {
+        alert("Invalid credentials");
+        console.log(error);
+      });
   }
 
   //checks if they put in an email and password

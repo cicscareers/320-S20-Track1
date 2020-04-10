@@ -77,44 +77,36 @@ export default function SignIn() {
   }
 
   function handleSubmit(event) {
-    var error = false;
-    if(password !== password2){
-      alert("Passwords must match!");
-      error=true;
-    }
-    for (var i = 0; i < users.length; i++){
-      if (users[i].email === email){
-        alert("User already exists!");
-        error=true;
-        break;
+    event.preventDefault();
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          Email: email,
+          FirstName: fname,
+          LastName: lname,
+          Password: password
+        })
       }
-    }
-    if (!error){
-      const cookies = new Cookies();
-      var bcrypt = require('bcryptjs');
-      var salt = bcrypt.genSaltSync(10);
-      var hash = bcrypt.hashSync(password, salt);
-      alert(hash);
-      setPassword(hash)
-      cookies.remove("email");
-      cookies.remove("firstName");
-      cookies.remove("lastName");
-      cookies.remove("role");
-      cookies.remove("token");
-      cookies.set("email", email, {
-        path: "/"
+    )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw new Error();
+        }
+      })
+      .then(json => {
+        console.log(json);
+      })
+      .catch(error => {
+        alert("Credentials exist in system, please try again.");
       });
-      cookies.set("firstName", fname, {
-        path: "/"
-      });
-      cookies.set("lastName", lname, {
-      path: "/"
-      });
-      cookies.set("role", "Student", { path: "/" });
-      cookies.set("token", "token", { path: "/" });
-      alert("User Created! (if we had a database)");
-      window.location.reload();
-    }
   }
 
   function handleKeyPress(event){

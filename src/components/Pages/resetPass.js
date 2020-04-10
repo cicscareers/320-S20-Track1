@@ -15,6 +15,7 @@ import Container from "@material-ui/core/Container";
 import { createMuiTheme } from "@material-ui/core/styles";
 import purple from "@material-ui/core/colors/purple";
 import red from "@material-ui/core/colors/red";
+import {FormHelperText, FormControl} from "@material-ui/core";
 
 function Copyright() {
   return (
@@ -99,6 +100,13 @@ export default function SignIn() {
             autoFocus
             onChange={e => setEmail(e.target.value)}
           />
+          {!validEmail(email) && email.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Please enter a valid email
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -123,6 +131,13 @@ export default function SignIn() {
             autoComplete="current-password"
             onChange={e => setPassword2(e.target.value)}
           />
+          {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Passwords do not match
+              </FormHelperText>
+            </FormControl>
+          )}
           <Button
             fullWidth
             variant="contained"
