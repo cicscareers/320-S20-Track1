@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 const divStyle = {
 
 };
@@ -26,7 +27,7 @@ const divStyle = {
 const rootStyle={
   width: '100%',
 };
-
+const optionsForTopic = ["","Interview Coaching","Salary Negotiation","Job Search","Resume/CV"]
 const useStyles3 = makeStyles(theme => ({
   modal: {
     display: 'flex',
@@ -100,32 +101,39 @@ export default class Example extends React.Component {
 
 
   }
+  handeAutoCompleteChange= (event, values) => {
+        if(values == null){
+          values = "";
+        }
+        var femal=values;
+        var t=this.state.activeTab;
+        var rat=this.state.rating;
+        var start=this.state.start_time;
+        var end=this.state.end_time;
+        var dat=this.state.date;
+        this.setState({
+          activeTab: t,
+          search:"",
+          female:femal,
+          rating:rat,
+          start_time:start,
+          end_time:end,
+          date:dat,
+          modal:false,
+          activeId:'1',
+          slot_min:0,
+          slot:""
+        });
+   }
   handleChange = (event) => {
     const { id } = event.target;
-
+    var femal;    
+    var t;
+    var rat;
+    var start;
+    var end;
+    var dat;
 		switch (id) {
-			case 'type_select':
-          var femal=event.target.value;
-
-				var t=this.state.activeTab;
-				var rat=this.state.rating;
-				var start=this.state.start_time;
-				var end=this.state.end_time;
-				var dat=this.state.date;
-				this.setState({
-					activeTab: t,
-					search:"",
-					female:femal,
-					rating:rat,
-					start_time:start,
-					end_time:end,
-					date:dat,
-					modal:false,
-					activeId:'1',
-					slot_min:0,
-					slot:""
-				});
-			break;
 
 			case 'rating_opt':
 				femal=this.state.female;
@@ -227,45 +235,13 @@ export default class Example extends React.Component {
       <div>
         <br />
         <FormControl>
-          <InputLabel htmlFor="type">Topic</InputLabel>
-          <Select
-            native
-            value={this.state.female}
-		        id="type_select"
-            onChange={this.handleChange}
-            inputProps={{
-                name: 'age',
-                id: 'type_select',
-            }}
-          >
-            <option aria-label="None" value="" />
-            <option value={"Interview Coaching"}>Interview Coaching</option>
-            <option value={"Salary Negotiation"}>Salary Negotiation</option>
-            <option value={"Job Search"}>Job Search</option>
-            <option value={"Resume/CV"}>Resume/CV</option>
-          </Select>
-        <br/>
-        <InputLabel htmlFor="Rating"> <br/><br/><br/><br/><br/>
-          Minimum Rating
-        </InputLabel>
-        <Select
-          native
-          value={this.state.rating}
-		      id="rating_opt"
-          onChange={this.handleChange}
-          inputProps={{
-            name: 'age',
-            id: 'rating_opt',
-          }}
-        >
-          <option aria-label="None" value={0} />
-          <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option>
-
-        </Select>
+         <Autocomplete
+          id="topic"
+          options={optionsForTopic}
+          style={{ width: 300 }}
+          onChange={this.handeAutoCompleteChange}
+          renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" id = "topic"/> }
+          />
         <br/>
         <TextField
         id="time_start"
@@ -313,7 +289,27 @@ export default class Example extends React.Component {
         onChange={this.handleChange}
       />
 
-
+      <br/>
+      <FormControl>
+        <InputLabel> Minimum Rating </InputLabel>
+        <Select
+          native
+          value={this.state.rating}
+          id="rating_opt"
+          onChange={this.handleChange}
+          inputProps={{
+            name: 'age',
+            id: 'rating_opt',
+          }}
+        >
+          <option aria-label="None" value={0} />
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+        </Select>
+        </FormControl>
       </FormControl>
       </div>
     );
@@ -990,19 +986,16 @@ export default class Example extends React.Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>
-
+            <InputGroup style={{width:'100%'}}onChange={this.onchange}>
+              <Input placeholder="Search Supporter" />
+            </InputGroup>
            {this.RadioButtonsGroup()}
           </Typography>
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
     </div>
-          <div style={divStyle}>
-          <InputGroup style={{width:'26.7%'}}onChange={this.onchange}>
-
-        <Input placeholder="Search Supporter" />
-      </InputGroup>
-
+      <div style={divStyle}>
           <Row>
             <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'600px'}}>
               <Nav tabs vertical pills >
@@ -1015,8 +1008,8 @@ export default class Example extends React.Component {
               </TabContent>
             </Col>
           </Row>
-          </div>
-          </div>
+      </div>
+    </div>
         )
       }
 }

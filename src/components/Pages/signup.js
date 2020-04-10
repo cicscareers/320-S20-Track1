@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignIn() {
+export default function SignUp() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -187,6 +187,7 @@ export default function SignIn() {
             id="Confirmpassword"
             autoComplete="current-password"
             onChange={e => setPassword2(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
             <FormControl className={classes.error} error>
