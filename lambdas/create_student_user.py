@@ -7,6 +7,8 @@ import boto3
 #Output: 
 def create_student_user(event, context):
     
+    first_name = "testfirstname" #event['first_name']
+    last_name = "testlastname" #event['last_name']
     email = "test2email" #event['student_id']
     password = "test2pass" #event['hashed_password']
     client = boto3.client('rds-data') #Connecting to the database
@@ -30,7 +32,7 @@ def create_student_user(event, context):
         database = "postgres",
         resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
         sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key) \
-        VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'fn','ln','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (email,password)
+        VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (first_name,last_name,email,password)
     )
 
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
