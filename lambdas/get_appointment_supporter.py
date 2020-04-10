@@ -2,7 +2,9 @@ import json
 import boto3
 
 #Input: supporter_id
-#Output: JSON object of current supporter appointments
+#Output: JSON object of current supporter appointments in the format: 
+# "supporter first name", "supporter last name", "student first name", "student last name", "type", "duration","method","location"
+
 def get_appointment_supporter(event, context):
 
     given_id = event['supporter_id']
@@ -18,8 +20,8 @@ def get_appointment_supporter(event, context):
     
     if (appointment_info['records'] == []): 
         return {
-            'body': ("The supporter does not have any appointments"),
-            'statusCode': 404
+            'body': json.dumps("The supporter does not have any appointments or does not exist"),
+            'statusCode': 409
         }
     else:
         return{
