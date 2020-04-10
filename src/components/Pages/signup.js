@@ -60,7 +60,9 @@ export default function SignUp() {
   const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-
+  var bcrypt = require('bcryptjs');
+  var salt = bcrypt.genSaltSync(10);
+  var saltE = bcrypt.genSaltSync(10);
   function validateForm() {
     return password===password2 && email.length > 0 
     && password.length > 0 && password2.length > 0 
@@ -77,6 +79,7 @@ export default function SignUp() {
   }
 
   function handleSubmit(event) {
+    var hash=bcrypt.hashSync(password, salt);
     event.preventDefault();
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register",
@@ -87,25 +90,66 @@ export default function SignUp() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          Email: email,
-          FirstName: fname,
-          LastName: lname,
-          Password: password
+          first_name: fname,
+          last_name: lname,
+          student_id: email,
+          hashed_password: hash
         })
       }
     )
-      .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw new Error();
-        }
+      .then(function(response) {
+        console.log(response);
+        return response.json();
       })
       .then(json => {
-        console.log(json);
-      })
+          console.log(json.statusCode);
+
+          console.log(json);
+
+          if (json.statusCode >= 200 && json.statusCode < 300) {
+            alert("Account Successfully Created!");
+
+          //cookie gets set to 30 minutes
+          const timestamp = new Date().getTime();
+          const expire = timestamp + (60 * 30 * 1000);
+          const expireDate = new Date(expire);
+
+          //Sets all of the appropriate cookies
+          const cookies = new Cookies();
+          cookies.remove("email");
+          cookies.remove("firstName");
+          cookies.remove("lastName");
+          cookies.remove("role");
+          cookies.remove("token");
+          cookies.set("email", email, {
+            path: "/",
+            expires: expireDate
+          });
+          cookies.set("firstName", fname, {
+            path: "/",
+            expires: expireDate
+          });
+          cookies.set("lastName", lname, {
+            path: "/",
+            expires: expireDate
+          });
+          cookies.set("role", "Student", { 
+            path: "/" ,
+            expires: expireDate
+          });
+          cookies.set("token", bcrypt.hashSync(email, saltE) , { 
+            path: "/" ,
+            expires: expireDate
+          });
+
+          //reloads the window now that they are authenticated 
+          window.location.reload();
+          } else {
+            throw new Error();
+          }
+       })
       .catch(error => {
-        alert("Credentials exist in system, please try again.");
+        alert("There is already a user with that email address. Please try again!");
       });
   }
 
