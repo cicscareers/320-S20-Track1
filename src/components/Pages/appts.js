@@ -32,7 +32,7 @@ const MyApp = () => {
         <Table  aria-label="simple table">
           <TableHead>
             <TableRow style={{backgroundColor: '#D3D3D3' }}>
-              <TableCell ><strong>Advisor</strong></TableCell>
+              <TableCell ><strong>Supporter</strong></TableCell>
               <TableCell align="left"><strong>Subject</strong></TableCell>
               <TableCell align="left"><strong>Date</strong></TableCell>
               <TableCell align="left"><strong>Time</strong></TableCell>
