@@ -13,7 +13,7 @@ def query(sql_query):
         raise LambdaException("Cannot connect to Database")
 
     try:
-        result = client.execute_statement(secretArn, dbName, arn, sql_query)
+        result = client.execute_statement(secretArn=secretArn, database=dbName, resourceArn=arn, sql=sql_query)
     except:
         raise LambdaException("Invalid query")
 
