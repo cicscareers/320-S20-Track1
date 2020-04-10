@@ -1,6 +1,5 @@
 import json
 import boto3
-import constants
 
 # This lambda fetches a JSON list of available appointments blocks from the database. 
 # the list is then filtered down by the front end. 
@@ -13,9 +12,9 @@ def get_supporters_before_match(event, context):
 
     client = boto3.client('rds-data') #Connecting to the database
     appointment_info = client.execute_statement(
-        secretArn = constants.SECRET_ARN,
-        database = constants.DB_NAME,
-        resourceArn = constants.ARN,
+        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+        database = "postgres",
+        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
         sql = "SELECT U.first_name, U.last_name, U.picture, S.rating, AB.start_date, AB.end_date, ST.specialization, SS.duration, AB.number_of_students, SS.max_students\
                 FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
                 specialization_type ST, supporter_specializations SS\
