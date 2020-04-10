@@ -54,15 +54,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
+
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+
+  //to encrypt the password and token
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
   var saltE = bcrypt.genSaltSync(10);
+
   function validateForm() {
     return password===password2 && email.length > 0 
     && password.length > 0 && password2.length > 0 
@@ -80,7 +84,10 @@ export default function SignUp() {
 
   function handleSubmit(event) {
     var hash=bcrypt.hashSync(password, salt);
+
     event.preventDefault();
+
+    //POST the user info to the database
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register",
       {
@@ -97,10 +104,13 @@ export default function SignUp() {
         })
       }
     )
+    //not sure why this is needed but it is
       .then(function(response) {
         console.log(response);
         return response.json();
       })
+
+      //if the status code is good, set the cookies and authenicate
       .then(json => {
           console.log(json.statusCode);
 
