@@ -2,6 +2,7 @@ import React from 'react';
 import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
 import classnames from 'classnames';
 import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,14 +23,35 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-const divStyle = {
+import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
+function get_supporters(){
+    //POST the user info to the database
+    var request = new XMLHttpRequest()
+    var data = 0;
+    request.open('GET', "7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/{id}", true)
+    request.onload = function() {
+      console.log('p');
+        // Begin accessing JSON data here
+    data = JSON.parse(this.response)
 
-};
-
+    if (request.status >= 200 && request.status < 400) {
+      data.forEach(movie => {
+        console.log(movie.title)
+        })
+      } else {
+      console.log('error')
+      }
+    }
+    request.send()
+    return data;
+}
+console.log(get_supporters());
 const rootStyle={
   width: '100%',
 };
 const optionsForTopic = ["","Interview Coaching","Salary Negotiation","Job Search","Resume/CV"]
+
 const useStyles3 = makeStyles(theme => ({
   modal: {
     display: 'flex',
@@ -41,6 +63,17 @@ const useStyles3 = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+}));
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: 'flex',
+    height: 224,
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -63,6 +96,7 @@ if(mm<10)
 }
 today =yyyy+'-'+mm+'-'+dd;
 export default class Example extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -78,22 +112,63 @@ export default class Example extends React.Component {
       modal:false,
       activeId:'1',
       slot_min:0,
-      slot:""
+      slot:"",
+      selected_supporter: null
     };
   }
   confirmRefresh=()=>{
-
     filledID=this.state.activeId;
     filledSlot=this.state.slot;
     this.handleClose();
-
-
+  }
+  handleSlot=e=>{
+    this.setState({
+      modal:false,
+      activeId:e.target.id,
+      slot_min:e.target.value,
+      slot:""
+    });
 
   }
-  handeAutoCompleteChange= (event, values) => {
+  handleClose=e=>{
+    var femal=this.state.female;
+    var t=this.state.activeTab;
+    var sea=this.state.search;
+    var start=this.state.start_time;
+    var end=this.state.end_time;
+    var dat=this.state.date;
+    var sm=this.state.slot_min;
+    var s=this.state.slot;
+    this.setState({
+      activeTab: t,
+      search:sea,
+      female:femal,
+      start_time:start,
+      end_time:end,
+      date:dat,
+      modal:false,
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
+    });
+  }
+  handleSlotTime=e=>{
+    this.setState({
+      slot:e.target.value
+    });
+
+  }
+  handleSupporterSelected = (event, value) => {
+      console.log(value);
+      this.setState({
+          selected_supporter:supporters[value]
+      });
+  }
+  handleAutoCompleteChange= (event, values) => {
         if(values == null){
           values = "";
         }
+        var femal=values;
         this.setState({
           female:values
         });
@@ -106,36 +181,39 @@ export default class Example extends React.Component {
     var start;
     var end;
     var dat;
-		switch (id) {
+    switch (id) {
+      case 'rating_opt':
+        rat=event.target.value;
+        this.setState({
+          rating:rat
+        });
+      break;
 
-			case 'rating_opt':
-				this.setState({
-					rating:event.target.value
-				});
-			break;
+      case 'time_start':
+        start=event.target.value;
+        this.setState({
+          start_time:start
+        });
+      break;
+      case 'time_end':
+        end=event.target.value;
+        this.setState({
+          end_time:end
+        });
+      break;
 
-			case 'time_start':
-				this.setState({
-					start_time:event.target.value
-				});
-			break;
-			case 'time_end':
-				this.setState({
-					end_time:event.target.value
-				});
-			break;
+      case 'date_select':
+        console.log('date select');
+        dat=event.target.value.toString();
+        this.setState({
+          date:dat,
+        });
+      break;
 
-			case 'date_select':
-				dat=event.target.value.toString();
-				this.setState({
-					date:event.target.value.toString()
-				});
-			break;
-
-			default:
-			break;
-		}
-	}
+      default:
+      break;
+    }
+  }
 
   RadioButtonsGroup(){
     return (
@@ -146,7 +224,7 @@ export default class Example extends React.Component {
           id="topic"
           options={optionsForTopic}
           style={{ width: 300 }}
-          onChange={this.handeAutoCompleteChange}
+          onChange={this.handleAutoCompleteChange}
           renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" id = "topic"/> }
           />
           <br/>
@@ -265,115 +343,27 @@ export default class Example extends React.Component {
     });
 
   };
-  renderSupporterTab = supporter => {
-    var start_time_hm=supporter.start_time.split(/[.:]/);
-    var end_time_hm=supporter.end_time.split(/[.:]/);
-    var start_time_ampm="AM";
-    var end_time_ampm="AM";
-    var start_hour=start_time_hm[0];
-    var start_min=start_time_hm[1];
-    var end_hour=end_time_hm[0];
-    var end_min=end_time_hm[1];
-    if(parseInt(start_hour)>=12){
-      if(parseInt(start_hour)>12){
-
-      start_hour=(parseInt(start_hour)-12).toString();
-    }
-      start_time_ampm="PM";
-    }
-
-    if(parseInt(end_hour)>=12){
-      if(parseInt(end_hour)>12){
-      end_hour=(parseInt(end_hour)-12).toString();
-      }
-      end_time_ampm="PM";
-    }
-
-    return (
+  renderSupporterTab(filtered_supporters) {
+    let i = -1; 
+    let other_i = -1;
+    return(
       <div style={{fontFamily:'Futiger'}}>
-
-
-                <NavItem style={{borderBottom:'solid 1px maroon'}}>
-                  <NavLink
-                    className={classnames({active: this.state.activeTab === supporter.id})}
-                    onClick={() => {
-                      this.toggle(supporter.id);
-                    }}
-                  >
-                   <h3>{supporter.name}</h3>
-                         <h6>   Date:{supporter.date}</h6>
-                         <h6>   From {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6>
-                  </NavLink>
-                </NavItem>
-
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          onChange={this.handleSupporterSelected}
+          value = {0}
+        >
+        {filtered_supporters.map((supporter) => (
+                <Tab label = {supporter.name} {...supporter.name}/>
+                ))}
+        </Tabs>
 
       </div>
     );
   };
-
-  handleOpen=e=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var sea=this.state.search;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    var sm=this.state.slot_min;
-    var s=this.state.slot;
-    this.setState({
-      activeTab: t,
-      search:sea,
-      female:femal,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:true,
-      activeId:e.target.id,
-      slot_min:sm,
-      slot:s
-    });
-
-    }
-
-    handleClose=e=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var sea=this.state.search;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    var sm=this.state.slot_min;
-    var s=this.state.slot;
-    this.setState({
-      activeTab: t,
-      search:sea,
-      female:femal,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:e.target.id,
-      slot_min:sm,
-      slot:s
-    });
-  }
-  handleSlot=e=>{
-    this.setState({
-      modal:false,
-      activeId:e.target.id,
-      slot_min:e.target.value,
-      slot:""
-    });
-
-  }
-  handleSlotTime=e=>{
-    this.setState({
-      slot:e.target.value
-    });
-
-  }
-
-  renderSupporterTabContent = supporter => {
+  renderSupporterTabContent(supporter) {
+    if(supporter != null){
     const classes = useStyles3;
     const fil=supporters.filter(supporter => {
       return supporter.id===this.state.activeId;
@@ -453,147 +443,147 @@ export default class Example extends React.Component {
       var AuthRadio4=[];
 
       var i=0;
-	    var slot_end_hour = slot_start_hour;
+      var slot_end_hour = slot_start_hour;
       var slot_end_min = slot_start_min;
-	    var slot_end_time_ampm="AM";
-	    var adj_start_hour;
+      var slot_end_time_ampm="AM";
+      var adj_start_hour;
 
 
       while(slot_end_min/60 + slot_end_hour < ae_min/60 + ae_hour)
-	    {
+      {
       // alert(filledSlot);
       if(filledSlot!=""){
         alert("hi");
         break;
       }
-		  adj_start_hour = slot_start_hour;
-		  if(slot_start_hour>=12){
-			if(slot_start_hour>12){
-				adj_start_hour=slot_start_hour-12;
-			}
+      adj_start_hour = slot_start_hour;
+      if(slot_start_hour>=12){
+      if(slot_start_hour>12){
+        adj_start_hour=slot_start_hour-12;
+      }
           slot_start_time_ampm="PM";
-		  }
+      }
 
-		var padded_start_min = slot_start_min.toString();
-			if(padded_start_min.length === 1)
-				padded_start_min = "0"+padded_start_min;
-		if(min===0)
-			break;
+    var padded_start_min = slot_start_min.toString();
+      if(padded_start_min.length === 1)
+        padded_start_min = "0"+padded_start_min;
+    if(min===0)
+      break;
         if(min===30){
           // alert("hi");
-			slot_end_min = slot_start_min+30;
-			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
-			slot_end_min = slot_end_min%60;
+      slot_end_min = slot_start_min+30;
+      slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
+      slot_end_min = slot_end_min%60;
 
-			var adj_end_hour = slot_end_hour;
-			if(slot_end_hour>=12)
-			{
-				if(slot_end_hour>12)
-					adj_end_hour = slot_end_hour - 12;
-				slot_end_time_ampm = "PM";
-			}
+      var adj_end_hour = slot_end_hour;
+      if(slot_end_hour>=12)
+      {
+        if(slot_end_hour>12)
+          adj_end_hour = slot_end_hour - 12;
+        slot_end_time_ampm = "PM";
+      }
 
-			var padded_end_min = slot_end_min.toString();
-			if(padded_end_min.length === 1)
-				padded_end_min = "0"+padded_end_min;
+      var padded_end_min = slot_end_min.toString();
+      if(padded_end_min.length === 1)
+        padded_end_min = "0"+padded_end_min;
 
-			var string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+      var string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
 
-			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
-				break;
+      if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+        break;
 
-			console.log(slot_end_hour+":"+slot_end_min);
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
+      console.log(slot_end_hour+":"+slot_end_min);
+      AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
-			slot_start_min = slot_start_min+15;
-			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
-			slot_start_min = slot_start_min%60;
+      slot_start_min = slot_start_min+15;
+      slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+      slot_start_min = slot_start_min%60;
 
         }
 
         if(min===60){
-			slot_end_min = slot_start_min;
-			slot_end_hour = slot_start_hour +1;
+      slot_end_min = slot_start_min;
+      slot_end_hour = slot_start_hour +1;
 
-			adj_end_hour = slot_end_hour;
-			if(slot_end_hour>=12)
-			{
-				if(slot_end_hour>12)
-					adj_end_hour = slot_end_hour - 12;
-				slot_end_time_ampm = "PM";
-			}
+      adj_end_hour = slot_end_hour;
+      if(slot_end_hour>=12)
+      {
+        if(slot_end_hour>12)
+          adj_end_hour = slot_end_hour - 12;
+        slot_end_time_ampm = "PM";
+      }
 
-			padded_end_min = slot_end_min.toString();
-			if(padded_end_min.length === 1)
-				padded_end_min = "0" + padded_end_min;
+      padded_end_min = slot_end_min.toString();
+      if(padded_end_min.length === 1)
+        padded_end_min = "0" + padded_end_min;
 
-			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+      string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
 
-			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
-				break;
+      if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+        break;
 
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
+      AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
       slot_start_min = slot_start_min+15;
-			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
-			slot_start_min = slot_start_min%60;
+      slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+      slot_start_min = slot_start_min%60;
 
         }
 
         if(min===90){
-			slot_end_min = slot_start_min+90;
-			slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
-			slot_end_min = slot_end_min%60;
+      slot_end_min = slot_start_min+90;
+      slot_end_hour = slot_start_hour+parseInt(slot_end_min/60);
+      slot_end_min = slot_end_min%60;
 
-			adj_end_hour = slot_end_hour;
-			if(slot_end_hour>=12)
-			{
-				if(slot_end_hour>12)
-					adj_end_hour = slot_end_hour - 12;
-				slot_end_time_ampm = "PM";
-			}
+      adj_end_hour = slot_end_hour;
+      if(slot_end_hour>=12)
+      {
+        if(slot_end_hour>12)
+          adj_end_hour = slot_end_hour - 12;
+        slot_end_time_ampm = "PM";
+      }
 
-			padded_end_min = slot_end_min.toString();
-			if(padded_end_min.length === 1)
-				padded_end_min = "0" + padded_end_min;
+      padded_end_min = slot_end_min.toString();
+      if(padded_end_min.length === 1)
+        padded_end_min = "0" + padded_end_min;
 
-			string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
-			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
-				break;
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
+      string = adj_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+      if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+        break;
+      AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
       slot_start_min = slot_start_min+15;
-			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
-			slot_start_min = slot_start_min%60;
+      slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+      slot_start_min = slot_start_min%60;
 
 
         }
 
         if(min===120){
-			slot_end_min = slot_start_min;
-			slot_end_hour = slot_start_hour + 2;
+      slot_end_min = slot_start_min;
+      slot_end_hour = slot_start_hour + 2;
 
-			adj_end_hour = slot_end_hour;
-			if(slot_end_hour>=12)
-			{
-				if(slot_end_hour>12)
-					adj_end_hour = slot_end_hour - 12;
-				slot_end_time_ampm = "PM";
-			}
+      adj_end_hour = slot_end_hour;
+      if(slot_end_hour>=12)
+      {
+        if(slot_end_hour>12)
+          adj_end_hour = slot_end_hour - 12;
+        slot_end_time_ampm = "PM";
+      }
 
-			padded_end_min = slot_end_min.toString();
-			if(padded_end_min.length === 1)
-				padded_end_min = "0" + padded_end_min;
+      padded_end_min = slot_end_min.toString();
+      if(padded_end_min.length === 1)
+        padded_end_min = "0" + padded_end_min;
 
-			string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
+      string = slot_start_hour.toString()+":"+padded_start_min+" "+slot_start_time_ampm+" to "+(adj_end_hour).toString()+":"+padded_end_min+" "+slot_end_time_ampm;
 
-			if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
-				break;
+      if (slot_end_hour + slot_end_min/60 > ae_hour + ae_min/60)
+        break;
 
-			AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
+      AuthRadio[i++]=(<FormControlLabel value={string} control={<Radio color='blue'/>} label={string} />);
 
-			slot_start_min = slot_start_min+15;
-			slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
-			slot_start_min = slot_start_min%60;
+      slot_start_min = slot_start_min+15;
+      slot_start_hour = slot_start_hour+parseInt(slot_start_min/60);
+      slot_start_min = slot_start_min%60;
 
         }
       }
@@ -631,7 +621,7 @@ export default class Example extends React.Component {
 
 
 
-                <TabPane tabId={supporter.id} style={{border:'solid 2px black'}}>
+                <Grid item>
 
                 {arr}
                 <div style = {{float: 'left', marginLeft: '10px', fontFamily:'Serif', fontWeight:'bold'}}>
@@ -727,15 +717,14 @@ export default class Example extends React.Component {
                   <br/>
                   <br/>
                   <br/>
-                </TabPane>
+                </Grid>
+                    );
+  }
+}
 
 
 
-
-
-    );
-  };
-      render() {
+  render() {
         const  search  = this.state.search;
         const  female  = this.state.female;
         const  rating  = this.state.rating;
@@ -760,8 +749,6 @@ export default class Example extends React.Component {
         const filteredSupportersByDate = filteredSupportersByType.filter(supporter => {
           return !(supporter.date.localeCompare(date.toString()));
         });
-
-
         const filteredSupportersByTime = filteredSupportersByDate.filter(supporter => {
           const s_start_time=supporter.start_time;
         var s_start_hoursMinutes = s_start_time.toString().split(/[.:]/);
@@ -784,62 +771,43 @@ export default class Example extends React.Component {
         const filteredSupportersBySearch = filteredSupportersByTime.filter(supporter => {
           return supporter.name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
         });
-        // const classes = useStyles();
 
         var nav_tabs= '';
-        if(filteredSupportersBySearch.length!=0){
-          nav_tabs=filteredSupportersBySearch.map(supporter => {
-                return this.renderSupporterTab(supporter);
-              });
 
+        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> No Supporters Available </b> </p> </h3> </div>);
+      return (
 
-        }
+      <Grid container
+            direction="row-reverse"
+            justify="space-around"
+            alignItems="flex-start">
 
-        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> Please use the filters to search! </b> </p> </h3> </div>);
-        if(filteredSupportersBySearch.length!=0){
-          nav_content=filteredSupportersBySearch.map(supporter => {
-                return this.renderSupporterTabContent(supporter);
-              });
-
-
-        }
-        return (
-          <div style={{overflow:'hidden'}}>
-          <div style={rootStyle}>
-      <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}} defaultExpanded='true'>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
+        <Grid item>
+        {this.renderSupporterTab(filteredSupportersBySearch)}
+        </Grid>
+        <Grid item>
+        {this.renderSupporterTabContent(this.state.selected_supporter)}
+        </Grid>
+        <Grid item>
+          <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}} defaultExpanded='true'>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
           <Typography>Filters</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            <InputGroup style={{width:'100%'}}onChange={this.onchange}>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Typography>
+             <InputGroup style={{width:'100%'}}onChange={this.onchange}>
               <Input placeholder="Search Supporter" />
             </InputGroup>
            {this.RadioButtonsGroup()}
           </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-
-    </div>
-      <div style={divStyle}>
-          <Row>
-            <Col xs="6" sm="4" md="4" style={{overflowY:'auto',height:'600px'}}>
-              <Nav tabs vertical pills >
-            {nav_tabs}
-              </Nav>
-            </Col>
-            <Col xs="6" sm="6" md="8" style={{overflowY:'auto',height:'431px',width:'60%'}}>
-              <TabContent activeTab={this.state.activeTab} >
-              {nav_content}
-              </TabContent>
-            </Col>
-          </Row>
-      </div>
-    </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </Grid>
+      </Grid>
         )
       }
 }
