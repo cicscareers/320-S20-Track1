@@ -23,7 +23,7 @@ def cancel_appointment(event, context):
 
     cancel_bool = 'True'
     #This is the query that we need to execute
-    updateQuery = "UPDATE scheduled_appointments SET cancel = '%s', cancel_reason = '%s' WHERE appointment_id = '%d';" % (cancel_bool, cancel_reason, appointment_id_to_delete)
+    updateQuery = "UPDATE scheduled_appointments SET cancelled = '%s', cancel_reason = '%s' WHERE appointment_id = '%d';" % (cancel_bool, cancel_reason, appointment_id_to_delete)
 
     #Accessing database and executing query
     client.execute_statement(
