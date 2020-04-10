@@ -1,3 +1,5 @@
+#Written by Nhan Le
+
 import json
 import boto3
 import constants
@@ -19,7 +21,7 @@ def update_supporter_appointment_settings(event, context):
         secretArn = constants.SECRET_ARN, 
         database = constants.DB_NAME,
         resourceArn = constants.ARN,
-        sql = "SELECT supporter_id FROM supporters WHERE supporter_id = '%s';" % (supporter_id)
+        sql = "SELECT supporter_id FROM supporters WHERE supporter_id = '%d';" % (supporter_id)
     )
     if(existing_user['records'] == []):
         return{
@@ -48,9 +50,9 @@ def update_supporter_appointment_settings(event, context):
 
     #Put the values into a dictionary to make the query easier to make but there's multiple tables so it's probably not needed
 
-    preferences_table = "UPDATE supporter_preferences_for_student SET job_search = '%s', grad_student = '%s' WHERE supporter_id = '%s';" % (job_search, grad_student, supporter_id)
-    specialization_table = "UPDATE supporter_specializations SET max_students = '%s', duration = '%s', specialization_type_id = '%s' WHERE supporter_id = '%s';" % (max_students, duration, specialization_type_id, supporter_id)
-    major_preferences_table = "INSERT INTO supporter_major_preferences (supporter_id, major_id) VALUES ('%s', '%s');" % (supporter_id, major_id)
+    preferences_table = "UPDATE supporter_preferences_for_students SET job_search = '%s', grad_student = '%s' WHERE supporter_id = '%d';" % (job_search, grad_student, supporter_id)
+    specialization_table = "UPDATE supporter_specializations SET max_students = '%d', duration = '%d', specialization_type_id = '%d' WHERE supporter_id = '%d';" % (max_students, duration, specialization_type_id, supporter_id)
+    major_preferences_table = "INSERT INTO supporter_major_preferences (supporter_id, major_id) VALUES ('%d', '%d');" % (supporter_id, major_id)
 
     query = preferences_table + " " + specialization_table + " " + major_preferences_table
 
