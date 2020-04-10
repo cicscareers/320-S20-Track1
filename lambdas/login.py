@@ -1,3 +1,4 @@
+from package import db_config
 from package.query_db import query
 from package import jwt
 from datetime import timedelta
