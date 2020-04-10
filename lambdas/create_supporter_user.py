@@ -10,6 +10,8 @@ def create_supporter(event, context):
 
     print('OOF')
 
+    first_name = event['first_name']
+    last_name = event['last_name']
     email = event['email']
     password = event['hashed_password']
 
@@ -35,7 +37,7 @@ def create_supporter(event, context):
         database="postgres",
         resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
         sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key) \
-        VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'fn','ln','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (email, password)
+        VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (first_name, last_name, email, password)
     )
 
     # check if user data successfully loaded
