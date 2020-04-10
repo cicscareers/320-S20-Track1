@@ -1,5 +1,6 @@
 import query from query_db
 import datetime
+import json
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS265'
@@ -12,8 +13,10 @@ def login(http_body):
 
     if 'email' not in http_body:
         print("no email")
+        raise LambdaException("Invalid input: no email")
     if 'pass' not in http_body:
         print("no password")
+        raise LambdaException("Invalid input: no password")
 
     given_email = http_body['email']
     given_password = http_body['pass']
@@ -24,9 +27,7 @@ def login(http_body):
     print("Checking if user exists...")
     if(existing_user['records'] == []):
         print("User DNE")
-        # constants.ERR = "User DNE"
-        # constants.STATUS_CODE = 404
-        return
+        raise LambdaException("Invalid input: Invalid email, user does not exist")
 
     print("User exists! Fetching name...") 
     sql = "SELECT first_name FROM users WHERE email = '%s';" % (given_email)
@@ -42,15 +43,14 @@ def login(http_body):
 
     print("Checking password...")
     if not given_password == existing_password:
-        # constants.ERR = "Password DNE"
-        # constants.STATUS_CODE = 404
-        return
+        raise LambdaException("Invalid input: Incorrect password")
 
     #Get user type from Database
     print("Password verified. Checking role...")
-    sql = "SELECT user_id FROM users WHERE email = '%s';" % (given_email)
-    
-   
+    sql = "SELECT id FROM users WHERE email = '%s';" % (given_email)
+    user_id = query(sql)     
+
+    role = 'student'
 
     token_payload = {
         'email' : given_email,
@@ -70,13 +70,23 @@ def login(http_body):
     return response_body
 
 def login_handler(event, context):
-    return {
-        'headers': {
-            'Content-Type': 'application/json',
-            'X-Content-Type-Options': 'nosniff',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-            'Access-Control-Allow-Methods': '*'
-        },
-    }
+    http_body = ""
+    try:
+        response_body = login(http_body)
+        return response_body
+    except Exception as e:
+        exception_type = e.__class__.__name__
+        exception_message = str(e)
+
+        api_exception = {
+            "isError" : True,
+            "type" : exception_type,
+            "message" : exception_message
+        }
+
+        json_exception = json.dumps(api_exception)
+        raise LambdaException(json_exception)
+
+class LambdaException(Exception):
+    pass
 
