@@ -16,6 +16,7 @@ import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
 import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
+import Feedback from '../Pages/feedback';
 
 
 export default function Routes() {
