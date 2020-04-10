@@ -10,11 +10,11 @@ def query(sql_query):
     try:
         client = boto3.client("rds-data")
     except:
-        raise lambda_exception("Cannot connect to Database")
+        raise LambdaException("Cannot connect to Database")
 
     try:
         result = client.execute_statement(secretArn, dbName, arn, sql_query)
     except:
-        raise lambda_exception("Invalid query")
+        raise LambdaException("Invalid query")
 
     return result
