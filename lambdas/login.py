@@ -2,6 +2,7 @@ from package.lambda_exception import LambdaException
 from package.query_db import query
 from package import jwt
 from datetime import timedelta
+from package.pytz import timezone
 import datetime
 import json
 
@@ -67,9 +68,9 @@ def login(event, context):
     token_payload = {
         'email' : given_email,
         'role' : role,
-        'exp' : datetime.utcnow() + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
+        'exp' : datetime.datetime.utcnow(timezone('US/Eastern')) + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
     }
-    token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    token = jwt.encode(token_payload, JWT_SECRET, JWT_ALGORITHM)
 
     print("Done!")
     response_body = {
