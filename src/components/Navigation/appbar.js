@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   menuButton: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   title: {
     flexGrow: 1
@@ -66,15 +66,17 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-
+          <Typography component="h1" variant="h3" color="secondary">
+              ReachOUT
+          </Typography>
           <Button
             type="submit"
             href="/match"
             className={classes.menuButton}
             align = "left"
           >
-            <Typography component="h1" variant="h3" color="secondary">
-              ReachOUT
+            <Typography component="h1" variant="h4" color="secondary">
+              Find a Supporter!
             </Typography>
           </Button>
 
