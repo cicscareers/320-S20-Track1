@@ -1,5 +1,7 @@
 import React from 'react';
 import { Input,InputGroup,TabContent, TabPane, Nav, NavItem, NavLink, Button, Row, Col } from 'reactstrap';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import classnames from 'classnames';
 import supporters from "./supporters.json";
 import { makeStyles } from '@material-ui/core/styles';
@@ -242,24 +244,24 @@ export default class Example extends React.Component {
           onChange={this.handeAutoCompleteChange}
           renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" id = "topic"/> }
           />
-        <br/>
-        <TextField
-        id="time_start"
-        label="Start Time"
-        type="time"
-        defaultValue="00:00"
-        style={{ marginLeft:'3px',
-          marginRight:'3px',
-          width: 200}}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 min
-        }}
-        onChange={this.handleChange}
-      />
-      <br/>
+          <br/>
+          <TextField
+          id="time_start"
+          label="Start Time"
+          type="time"
+          defaultValue="00:00"
+          style={{ marginLeft:'3px',
+            marginRight:'3px',
+            width: 200}}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, // 5 min
+          }}
+          onChange={this.handleChange}
+          />
+          <br/>
       <TextField
         id="time_end"
         label="End Time"
@@ -503,7 +505,6 @@ export default class Example extends React.Component {
       return supporter.id===this.state.activeId;
     });
     let AuthButton;
-
     var fil_start_time_hm=fil.map(supporter=>{return supporter.start_time.split(/[.:]/);});
     var fil_end_time_hm=fil.map(supporter=>{return supporter.end_time.split(/[.:]/);});
     var fil_start_time_ampm="AM";
@@ -578,14 +579,14 @@ export default class Example extends React.Component {
       var AuthRadio4=[];
 
       var i=0;
-	  var slot_end_hour = slot_start_hour;
+	    var slot_end_hour = slot_start_hour;
       var slot_end_min = slot_start_min;
-	  var slot_end_time_ampm="AM";
-	  var adj_start_hour;
+	    var slot_end_time_ampm="AM";
+	    var adj_start_hour;
 
 
       while(slot_end_min/60 + slot_end_hour < ae_min/60 + ae_hour)
-	  {
+	    {
       // alert(filledSlot);
       if(filledSlot!=""){
         alert("hi");
@@ -722,9 +723,6 @@ export default class Example extends React.Component {
 
         }
       }
-      // if(filledID!=""){
-      //   AuthRadio=[];
-      // }
       AuthRadioYo=AuthRadio;
       AuthButton=(
       <div style={{textAlign:'center'}}>
@@ -739,48 +737,6 @@ export default class Example extends React.Component {
     if(this.state.slot_min==0){
       AuthButton=[];
     }
-//     let ModalToBeShown;
-//     let ModalBind;
-
-//     if(this.state.slot!=""){
-//       ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
-//         <form onSubmit={confirmRefresh()}>
-//       <br/>
-//   <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
-//       <p id="transition-modal-description">
-//         <h6>Supporter-Name:{fil.map(supporter => {
-//         return supporter.name;
-//       })}</h6>
-//         <h6>Helps-In:{fil.map(supporter => {
-//         return supporter.type;
-//       })}</h6>
-//         <h6>Date:{fil.map(supporter => {
-//         return supporter.date;
-//       })}</h6>
-//         <h6>Time: {this.state.slot}</h6>
-//         <h6>Location:{fil.map(supporter => {
-//         return supporter.location;
-//       })}</h6>
-//        <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-//        <br/>
-//         <Button type="submit" style={{float:'right',marginRight:'10px'}} >Confirm appointment</Button>
-//         &nbsp;
-//       </p>
-//       <br/>
-//  </form>
-//     </div>
-
-//     );
-//     }
-//     else{
-//       ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
-//         <br/>
-//         <p id="transition-modal-description">
-//           Please Select a Slot.
-//         </p>
-//       </div>)
-//     }
-    // ModalBind=({ModalToBeShown}</form>);
       let arr=[];
     if (supporter.name == "Chinmay Patil"){
    arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP' style = {{width: '175px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
