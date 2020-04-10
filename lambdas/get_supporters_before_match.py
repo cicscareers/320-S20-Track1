@@ -19,12 +19,12 @@ def get_supporters_before_match(event, context):
                 FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
                 specialization_type ST, supporter_specializations SS\
                 WHERE U.id = S.user_id\
-                AND supporters.supporter_id\
+                AND S.supporter_id\
                 AND AB.appointment_block_id = SFB.appointment_block_id\
                 AND SFB.specialization_type_id = ST.specialization_type_id\
                 AND ST.specialization_type_id = SS.specialization_type_id\
-                AND start_date BETWEEN " + date_start + " AND " + date_end + "\
-                AND number_of_students != max_students;"
+                AND start_date BETWEEN %s AND %s\
+                AND number_of_students != max_students;"%(date_start, date_end)
     )
 
     if appointment_info['records'] == []: 
