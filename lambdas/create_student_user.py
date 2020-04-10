@@ -7,10 +7,10 @@ import boto3
 #Output: 
 def create_student_user(event, context):
     
-    first_name = "testfirstname" #event['first_name']
-    last_name = "testlastname" #event['last_name']
-    email = "test2email" #event['student_id']
-    password = "test2pass" #event['hashed_password']
+    first_name = event['first_name']
+    last_name = event['last_name']
+    email = event['student_id']
+    password = event['hashed_password']
     client = boto3.client('rds-data') #Connecting to the database
 
     #Need to check if email is already in DB
@@ -26,6 +26,7 @@ def create_student_user(event, context):
         return{
             'statusCode': 404 
         }
+
     # adds a user to the "users" table
     create_users_instance = client.execute_statement(
         secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
@@ -36,9 +37,10 @@ def create_student_user(event, context):
     )
 
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
-        print("Student user not created")
+        
         return {
-            "statusCode": 404
+            'body': json.dumps("Student user not created"),
+            'statusCode': 404
         }
     else:
         # adds a user to the "students" table with the same user id
@@ -51,5 +53,6 @@ def create_student_user(event, context):
     )
         print("Student user created")
         return{
+            'body': json.dumps("Student user created"),
             'statusCode': 201
         }

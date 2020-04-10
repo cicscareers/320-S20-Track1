@@ -17,13 +17,13 @@ def get_appointment_students(event, context):
     )
 
     if (appointment_info['records'] == []): 
-        print("The user has no appointments")
-        return {
+        return{
+            'body': json.dumps("The user has no appointments"),
             'statusCode': 404
         }
     else:
         return{
-            'statusCode': 200,
-            'body': json.dumps(appointment_info['records']) #outputs the query in JSON format
+            'body': json.dumps(appointment_info['records']), #outputs the query in JSON format
+            'statusCode': 200
         }
     

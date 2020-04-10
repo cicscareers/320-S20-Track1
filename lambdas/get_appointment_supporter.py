@@ -17,12 +17,12 @@ def get_appointment_supporter(event, context):
     )
     
     if (appointment_info['records'] == []): 
-        print("The supporter does not have any appointments")
         return {
+            'body': ("The supporter does not have any appointments"),
             'statusCode': 404
         }
     else:
         return{
-            'statusCode': 200,
-            'body': json.dumps(appointment_info['records']) #outputs the query in JSON format 
+            'body': json.dumps(appointment_info['records']), #outputs the query in JSON format
+            'statusCode': 200
         }
