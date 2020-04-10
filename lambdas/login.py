@@ -1,4 +1,4 @@
-from package import db_config
+from package import lambda_exception
 from package.query_db import query
 from package import jwt
 from datetime import timedelta
@@ -98,6 +98,5 @@ def login_handler(event, context):
         json_exception = json.dumps(api_exception)
         raise LambdaException(json_exception)
 
-class LambdaException(Exception):
-    pass
+
 
