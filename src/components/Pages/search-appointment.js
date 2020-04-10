@@ -85,19 +85,6 @@ export default class Example extends React.Component {
 
     filledID=this.state.activeId;
     filledSlot=this.state.slot;
-    // var filledSlotArr=filledSlot.split("to");
-    // var filled_slot_start=filledSlotArr[0].substring(0,4);
-    // var filled_slot_start_hm=filled_slot_start.split(":");
-    // var filled_slot_start_hour=parseInt(filled_slot_start_hm[0]);
-
-    // var filled_slot_start_ampm=filledSlotArr[0].substring(5,7);
-
-    // if(fil_slot_start_ampm){
-
-    // }
-    // alert();
-    // var ele=AuthRadioYo.getElementByValue(filledSlot);
-    // alert(AuthRadioYo[0]);
     this.handleClose();
 
 
@@ -107,24 +94,8 @@ export default class Example extends React.Component {
         if(values == null){
           values = "";
         }
-        var femal=values;
-        var t=this.state.activeTab;
-        var rat=this.state.rating;
-        var start=this.state.start_time;
-        var end=this.state.end_time;
-        var dat=this.state.date;
         this.setState({
-          activeTab: t,
-          search:"",
-          female:femal,
-          rating:rat,
-          start_time:start,
-          end_time:end,
-          date:dat,
-          modal:false,
-          activeId:'1',
-          slot_min:0,
-          slot:""
+          female:values
         });
    }
   handleChange = (event) => {
@@ -138,92 +109,26 @@ export default class Example extends React.Component {
 		switch (id) {
 
 			case 'rating_opt':
-				femal=this.state.female;
-				t=this.state.activeTab;
-				rat=event.target.value;
-				start=this.state.start_time;
-				end=this.state.end_time;
-				dat=this.state.date;
 				this.setState({
-					activeTab: t,
-					search:"",
-					female:femal,
-					rating:rat,
-					start_time:start,
-					end_time:end,
-					date:dat,
-					modal:false,
-					activeId:'1',
-					slot_min:0,
-					slot:0
+					rating:event.target.value
 				});
 			break;
 
 			case 'time_start':
-				console.log('time start');
-				femal=this.state.female;
-				t=this.state.activeTab;
-				rat=this.state.rating;
-				start=event.target.value;
-				end=this.state.end_time;
-				dat=this.state.date;
 				this.setState({
-					activeTab: t,
-					search:"",
-					female:femal,
-					rating:rat,
-					start_time:start,
-					end_time:end,
-					date:dat,
-					modal:false,
-					activeId:'1',
-					slot_min:0,
-					slot:""
+					start_time:event.target.value
 				});
 			break;
 			case 'time_end':
-				console.log('time end');
-				femal=this.state.female;
-				t=this.state.activeTab;
-				rat=this.state.rating;
-				start=this.state.start_time;
-				end=event.target.value;
-				dat=this.state.date;
 				this.setState({
-					activeTab: t,
-					search:"",
-					female:femal,
-					rating:rat,
-					start_time:start,
-					end_time:end,
-					date:dat,
-					modal:false,
-					activeId:'1',
-					slot_min:0,
-					slot:"0"
+					end_time:event.target.value
 				});
 			break;
 
 			case 'date_select':
-				console.log('date select');
-				femal=this.state.female;
-				t=this.state.activeTab;
-				rat=this.state.rating;
-				start=this.state.start_time;
-				end=this.state.end_time;
 				dat=event.target.value.toString();
 				this.setState({
-					activeTab: t,
-					search:"",
-					female:femal,
-					rating:rat,
-					start_time:start,
-					end_time:end,
-					date:dat,
-					modal:false,
-					activeId:'1',
-					slot_min:0,
-					slot:""
+					date:event.target.value.toString()
 				});
 			break;
 
@@ -453,48 +358,17 @@ export default class Example extends React.Component {
     });
   }
   handleSlot=e=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var sea=this.state.search;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    var sm=e.target.value;
-    var s=this.state.slot;
     this.setState({
-      activeTab: t,
-      search:sea,
-      female:femal,
-      start_time:start,
-      end_time:end,
-      date:dat,
       modal:false,
       activeId:e.target.id,
-      slot_min:sm,
+      slot_min:e.target.value,
       slot:""
     });
 
   }
   handleSlotTime=e=>{
-    var femal=this.state.female;
-    var t=this.state.activeTab;
-    var sea=this.state.search;
-    var start=this.state.start_time;
-    var end=this.state.end_time;
-    var dat=this.state.date;
-    var sm=this.state.slot_min;
-    var s=e.target.value;
     this.setState({
-      activeTab: t,
-      search:sea,
-      female:femal,
-      start_time:start,
-      end_time:end,
-      date:dat,
-      modal:false,
-      activeId:e.target.id,
-      slot_min:sm,
-      slot:s
+      slot:e.target.value
     });
 
   }
@@ -921,7 +795,7 @@ export default class Example extends React.Component {
 
         }
 
-        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> No Supporters Available </b> </p> </h3> </div>);
+        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> Please use the filters to search! </b> </p> </h3> </div>);
         if(filteredSupportersBySearch.length!=0){
           nav_content=filteredSupportersBySearch.map(supporter => {
                 return this.renderSupporterTabContent(supporter);
