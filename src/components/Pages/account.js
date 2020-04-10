@@ -54,7 +54,7 @@ export default function accts() {
             </Grid>
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 30}}>Update Info</Button>
+            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 30}}>Update Info</Button>
           </Grid>
             
         </Grid>
@@ -90,7 +90,7 @@ export default function accts() {
             
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
+            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
           </Grid>
             
         </Grid>
@@ -100,7 +100,7 @@ export default function accts() {
         <Grid>
           <Grid>
               
-              <Typography style={{marginTop: 10, marginBottom: 20}}><strong>Academic</strong></Typography>
+              <Typography style={{width: 150, marginTop: 10, marginBottom: 20}}><strong>Academic</strong></Typography>
           </Grid>
           <Grid style={{display: 'flex'}}>
             <Grid  lg ={4} >
@@ -114,7 +114,7 @@ export default function accts() {
             
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
+            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Info</Button>
           </Grid>
             
         </Grid>
@@ -138,7 +138,7 @@ export default function accts() {
             
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
+            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Bio</Button>
           </Grid>
             
         </Grid>
@@ -162,7 +162,7 @@ export default function accts() {
             
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
+            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Links</Button>
           </Grid>
             
         </Grid>
