@@ -12,3 +12,13 @@ Not fully connected yet
 # Matching
 It is not connected to the database yet, but the components are set up. 
 We added searchable drop downs for topics, and will be adding tags in the same way soon.
+Please set the date to 3/26 and 3/27. These are just temporary card coded values, it wont be like this much longer
+
+# My Account
+This will become edit account soon, with my account showing the data statically. Will also be adding supporter and admin settings next release
+
+# FAQ
+Let us know what you want the FAQ to have!
+
+# Feedback
+Again, not connected to the database yet, but let us know what you think of the format

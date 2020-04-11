@@ -1032,7 +1032,7 @@ export default class Example extends React.Component {
         }
 
 
-        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> No Supporters Available </b> </p> </h3> </div>);
+        var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> We couldn't find a supporter with that information. Try getting rid of some tags! </b> </p> </h3> </div>);
         if(filteredSupportersBySearch.length!=0){
           nav_content= this.renderSupporterTabContent(this.state.selected_supporter);
 
