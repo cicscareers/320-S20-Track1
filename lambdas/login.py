@@ -3,6 +3,7 @@ from package.query_db import query
 from package import jwt
 from datetime import timedelta
 import datetime
+import dateutil.tz
 import json
 
 JWT_SECRET = 'secret'
