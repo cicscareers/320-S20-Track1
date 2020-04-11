@@ -35,10 +35,10 @@ def login(event, context):
 
     print("User exists! Fetching name...") 
     sql = "SELECT first_name FROM users WHERE email = '%s';" % (given_email)
-    f_name = query(sql)
+    f_name = query(sql)['records'][0][0]['stringValue']
 
     sql = "SELECT last_name FROM users WHERE email = '%s';" % (given_email)
-    l_name = query(sql)
+    l_name = query(sql)['records'][0][0]['stringValue']
 
     #Get password from existing user and if does not match return a 400 http
     print("Acquiring password...")
