@@ -1,0 +1,31 @@
+[
+  {
+    "email":"johndoe@umass.edu",
+    "password": "$2a$10$h5nGGhW7Rw3RG.uHi332X.rK/2DxpLsaDQrYrOMeNrM7cmj.Ubroa",
+    "fname": "John",
+    "lname": "Doe",
+    "role": "Student"
+  },
+  {
+    "email":"janedoe@umass.edu",
+    "password": "$2a$10$HQtEvylY/NDYAGzTYZQDf.Zbz3wKj0s7BPhPIPbYGA9G1Gb4CE3UW",
+    "fname": "Jane",
+    "lname": "Doe",
+    "role": "Student"
+  },
+  {
+    "email":"supporter@umass.edu",
+    "password": "$2a$10$Bwql.fginBCY6zpS9rcVw.Q7Dfrw2KaTiKyuj/KKO.NzGKWItQ67C",
+    "fname": "Example",
+    "lname": "Supporter",
+    "role": "Supporter"
+  },
+  {
+    "email":"admin@umass.edu",
+    "password": "$2a$10$GYuIVxCYeQrbL6aXOJfUSOGyj5ma/oZeWBjBdSuOrwp334eH6UCL6",
+    "fname": "Example",
+    "lname": "Admin",
+    "role": "Admin"
+  }
+ 
+]
