@@ -42,15 +42,15 @@ export default function accts() {
           <Grid style={{display: 'flex'}}>
             <Grid  lg ={4} >
               <Typography>Email address</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
+              <TextField id="outlined-basic" label="" variant="outlined" label={email}/>
             </Grid>
             <Grid lg = {4} >
               <Typography>First Name</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
+              <TextField id="outlined-basic" label="" variant="outlined" label={fname}/>
             </Grid>
             <Grid lg = {4} >
               <Typography>Last Name</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
+              <TextField id="outlined-basic" label="" variant="outlined" label={lname}/>
             </Grid>
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>

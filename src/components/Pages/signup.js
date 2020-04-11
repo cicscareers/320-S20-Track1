@@ -83,7 +83,7 @@ export default function SignUp() {
   }
 
   function handleSubmit(event) {
-    var hash=bcrypt.hashSync(password, salt);
+    var hash=password
 
     event.preventDefault();
 
