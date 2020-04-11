@@ -51,6 +51,7 @@ const rootStyle={
   width: '100%',
 };
 const optionsForTopic = ["","Interview Coaching","Salary Negotiation","Job Search","Resume/CV"]
+const optionsForTags = ["","Amazon Experience","Microsoft Experience","Grad", "Undergrad","test"]
 
 const useStyles3 = makeStyles(theme => ({
   modal: {
@@ -104,7 +105,7 @@ export default class Example extends React.Component {
     this.state = {
       activeTab: '6',
       search:"",
-      female:"",
+      female:[],
       rating:0,
       start_time:"0:00",
       end_time:"23:59",
@@ -113,7 +114,8 @@ export default class Example extends React.Component {
       activeId:'1',
       slot_min:0,
       slot:"",
-      selected_supporter: null
+      selected_supporter: null,
+      tags: []
     };
   }
   confirmRefresh=()=>{
@@ -121,6 +123,31 @@ export default class Example extends React.Component {
     filledSlot=this.state.slot;
     this.handleClose();
   }
+
+  handleOpen=e=>{
+    var femal=this.state.female;
+    var t=this.state.activeTab;
+    var sea=this.state.search;
+    var start=this.state.start_time;
+    var end=this.state.end_time;
+    var dat=this.state.date;
+    var sm=this.state.slot_min;
+    var s=this.state.slot;
+    this.setState({
+      activeTab: t,
+      search:sea,
+      female:femal,
+      start_time:start,
+      end_time:end,
+      date:dat,
+      modal:true,
+      activeId:e.target.id,
+      slot_min:sm,
+      slot:s
+    });
+
+    }
+
   handleSlot=e=>{
     this.setState({
       modal:false,
@@ -161,7 +188,8 @@ export default class Example extends React.Component {
   handleSupporterSelected = (event, value) => {
       console.log(value);
       this.setState({
-          selected_supporter:supporters[value]
+          selected_supporter:supporters[value],
+          activeTab: (value+1).toString()
       });
   }
   handleAutoCompleteChange= (event, values) => {
@@ -173,47 +201,177 @@ export default class Example extends React.Component {
           female:values
         });
    }
-  handleChange = (event) => {
-    const { id } = event.target;
-    var femal;    
-    var t;
-    var rat;
-    var start;
-    var end;
-    var dat;
-    switch (id) {
-      case 'rating_opt':
-        rat=event.target.value;
-        this.setState({
-          rating:rat
-        });
-      break;
 
-      case 'time_start':
-        start=event.target.value;
-        this.setState({
-          start_time:start
-        });
-      break;
-      case 'time_end':
-        end=event.target.value;
-        this.setState({
-          end_time:end
-        });
-      break;
+   handeAutoCompleteChange1= (event, values) => {
+         if(values == null){
+           values = "";
+         }
 
-      case 'date_select':
-        console.log('date select');
-        dat=event.target.value.toString();
-        this.setState({
-          date:dat,
-        });
-      break;
+         var femal=this.state.female;
+         var tg=values;
+         var t=this.state.activeTab;
+         var rat=this.state.rating;
+         var start=this.state.start_time;
+         var end=this.state.end_time;
+         var dat=this.state.date;
+         var topic=values;
 
-      default:
-      break;
+         this.setState({
+           activeTab: t,
+           search:"",
+           female:femal,
+           tags:tg,
+           rating:rat,
+           start_time:start,
+           end_time:end,
+           date:dat,
+           modal:false,
+           activeId:'1',
+           slot_min:0,
+           slot:"",
+           topicchange:values
+         });
     }
-  }
+
+
+    handleChange = (event) => {
+      const { id } = event.target;
+      var femal;
+      var t;
+      var rat;
+      var start;
+      var end;
+      var dat;
+      var topic;
+  		switch (id) {
+
+  			case 'rating_opt':
+  				femal=this.state.female;
+  				t=this.state.activeTab;
+  				rat=event.target.value;
+  				start=this.state.start_time;
+  				end=this.state.end_time;
+  				dat=this.state.date;
+  				this.setState({
+  					activeTab: t,
+  					search:"",
+  					female:femal,
+            tags:this.state.tags,
+  					rating:rat,
+  					start_time:start,
+  					end_time:end,
+  					date:dat,
+  					modal:false,
+  					activeId:'1',
+  					slot_min:0,
+  					slot:0,
+            topicchange:this.state.female
+  				});
+  			break;
+
+  			case 'time_start':
+  				console.log('time start');
+  				femal=this.state.female;
+  				t=this.state.activeTab;
+  				rat=this.state.rating;
+  				start=event.target.value;
+  				end=this.state.end_time;
+  				dat=this.state.date;
+  				this.setState({
+  					activeTab: t,
+  					search:"",
+  					female:femal,
+            tags:this.state.tags,
+  					rating:rat,
+  					start_time:start,
+  					end_time:end,
+  					date:dat,
+  					modal:false,
+  					activeId:'1',
+  					slot_min:0,
+  					slot:"",
+            topicchange:this.state.female
+  				});
+  			break;
+  			case 'time_end':
+  				console.log('time end');
+  				femal=this.state.female;
+  				t=this.state.activeTab;
+  				rat=this.state.rating;
+  				start=this.state.start_time;
+  				end=event.target.value;
+  				dat=this.state.date;
+  				this.setState({
+  					activeTab: t,
+  					search:"",
+  					female:femal,
+            tags:this.state.tags,
+  					rating:rat,
+  					start_time:start,
+  					end_time:end,
+  					date:dat,
+  					modal:false,
+  					activeId:'1',
+  					slot_min:0,
+  					slot:"0",
+            topicchange:this.state.female
+  				});
+  			break;
+
+        case 'type_select1':
+          femal=this.state.female;
+          t=this.state.activeTab;
+          rat=this.state.rating;
+          start=this.state.start_time;
+          end=this.state.end_time;
+          dat=this.state.date;
+          topic=event.target.value.toString();
+          this.setState({
+            activeTab: t,
+            search:"",
+            female:femal,
+            tags:this.state.tags,
+            rating:rat,
+            start_time:start,
+            end_time:end,
+            date:dat,
+            modal:true,
+            activeId:'1',
+            slot_min:0,
+            slot:this.state.slot,
+            topicchange:event.target.value
+          });
+        //  alert(this.state.topicchange);
+          break;
+  			case 'date_select':
+  				console.log('date select');
+  				femal=this.state.female;
+  				t=this.state.activeTab;
+  				rat=this.state.rating;
+  				start=this.state.start_time;
+  				end=this.state.end_time;
+  				dat=event.target.value.toString();
+  				this.setState({
+  					activeTab: t,
+  					search:"",
+  					female:femal,
+            tags:this.state.tags,
+  					rating:rat,
+  					start_time:start,
+  					end_time:end,
+  					date:dat,
+  					modal:false,
+  					activeId:'1',
+  					slot_min:0,
+  					slot:"",
+            topicchange:this.state.female
+  				});
+  			break;
+
+  			default:
+  			break;
+  		}
+  	}
 
   RadioButtonsGroup(){
     return (
@@ -221,6 +379,7 @@ export default class Example extends React.Component {
         <br />
         <FormControl>
          <Autocomplete
+         multiple
           id="topic"
           options={optionsForTopic}
           style={{ width: 300 }}
@@ -228,6 +387,16 @@ export default class Example extends React.Component {
           renderInput={(params) => <TextField {...params} label="Topic" variant="outlined" id = "topic"/> }
           />
           <br/>
+
+          <Autocomplete
+           id="tags"
+           multiple
+           options={optionsForTags}
+           style={{ width: 300 }}
+           onChange={this.handeAutoCompleteChange1}
+           renderInput={(params) => <TextField {...params} label="Tags" variant="outlined" id = "tags"/> }
+           />
+        <br/>
           <TextField
           id="time_start"
           label="Start Time"
@@ -343,30 +512,49 @@ export default class Example extends React.Component {
     });
 
   };
-  renderSupporterTab(filtered_supporters) {
-    let i = -1; 
+  renderSupporterTab = supporter =>  {
+    let i = -1;
     let other_i = -1;
-    return(
-      <div style={{fontFamily:'Futiger'}}>
-        <Tabs
-          orientation="vertical"
-          variant="scrollable"
-          onChange={this.handleSupporterSelected}
-          value = {0}
-        >
-        {filtered_supporters.map((supporter) => (
-                <Tab label = {supporter.name} {...supporter.name}/>
-                ))}
-        </Tabs>
+    let string = supporter.name + '\t' + supporter.date+ '\t' + supporter.start_time;
+    var start_time_hm=supporter.start_time.split(/[.:]/);
+    var end_time_hm=supporter.end_time.split(/[.:]/);
+    var start_time_ampm="AM";
+    var end_time_ampm="AM";
+    var start_hour=start_time_hm[0];
+    var start_min=start_time_hm[1];
+    var end_hour=end_time_hm[0];
+    var end_min=end_time_hm[1];
+    if(parseInt(start_hour)>=12){
+      if(parseInt(start_hour)>12){
 
-      </div>
+      start_hour=(parseInt(start_hour)-12).toString();
+    }
+      start_time_ampm="PM";
+    }
+
+    if(parseInt(end_hour)>=12){
+      if(parseInt(end_hour)>12){
+      end_hour=(parseInt(end_hour)-12).toString();
+      }
+      end_time_ampm="PM";
+    }
+
+    var tablabel = ( <div> <h3>{supporter.name}</h3>
+            <h6>   Date:{supporter.date}</h6>
+           <h6>   From {start_hour}:{start_min} {start_time_ampm} to {end_hour}:{end_min} {end_time_ampm}</h6> </div>);
+    return(
+
+
+        <Tab label = {tablabel} {...supporter.name}/>
     );
   };
+
+
   renderSupporterTabContent(supporter) {
     if(supporter != null){
     const classes = useStyles3;
     const fil=supporters.filter(supporter => {
-      return supporter.id===this.state.activeId;
+      return supporter.id===this.state.activeTab;
     });
     let AuthButton;
     var fil_start_time_hm=fil.map(supporter=>{return supporter.start_time.split(/[.:]/);});
@@ -416,7 +604,8 @@ export default class Example extends React.Component {
     }
     if(this.state.slot_min!==0){
       const slot_filter=supporters.filter(supporter => {
-        return supporter.id===this.state.activeTab;
+
+        return supporter.id==this.state.activeTab;
       });
       var slot_filter_start=slot_filter.map(supporter=>{return supporter.start_time.split(":");});
       let j1=slot_filter_start[0].toString().split(",");
@@ -601,6 +790,66 @@ export default class Example extends React.Component {
     if(this.state.slot_min==0){
       AuthButton=[];
     }
+    let ModalTopic=[];
+    fil.map(supporter => {
+      for(var i=0;i<supporter.type.length;i++){
+        ModalTopic[i]=( <option value={supporter.type[i]}>{supporter.type[i]}</option>);
+     }
+            });
+    let ModalTopicDropDown=(<div> <InputLabel htmlFor="type"><br/><br/><br/>Topic</InputLabel>
+    <Select
+      native
+      value={this.state.topicchange}
+  id="type_select1"
+      onChange={this.handleChange}
+      inputProps={{
+        name: 'age',
+        id: 'type_select1',
+      }}
+    >
+      <option aria-label="None" value="" />
+      {ModalTopic}
+    </Select></div>);
+    let ModalToBeShown;
+    let ModalBind;
+
+    if(this.state.slot!=""){
+      ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+
+      <br/>
+  <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
+      <p id="transition-modal-description">
+        <h6>Supporter-Name:{fil.map(supporter => {
+        return supporter.name;
+      })}</h6>
+        <h6>
+       {ModalTopicDropDown}</h6>
+        <h6>Date:{fil.map(supporter => {
+        return supporter.date;
+      })}</h6>
+        <h6>Time: {this.state.slot}</h6>
+        <h6>Location:{fil.map(supporter => {
+        return supporter.location;
+      })}</h6>
+       <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
+       <br/>
+        <Button type="submit" style={{float:'right',marginRight:'10px'}} >Confirm appointment</Button>
+        &nbsp;
+      </p>
+      <br/>
+    </div>
+
+    );
+    }
+    else{
+      ModalToBeShown=(<div className={classes.paper} style={{textAlign:'center'}}>
+        <br/>
+        <p id="transition-modal-description">
+          Please Select a Slot.
+        </p>
+      </div>)
+    }
+
       let arr=[];
     if (supporter.name == "Chinmay Patil"){
    arr = (<img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP' style = {{width: '175px', height:'150px', float: 'right', marginRight: '10px', border: 'solid 2px black', marginTop:'10px'}}/>);
@@ -687,28 +936,7 @@ export default class Example extends React.Component {
           <Fade in={this.state.modal}style={{marginTop:'10%',width:'50%',marginLeft:'27%',backgroundColor:'white',text:'black'}}>
           <div className={classes.paper} style={{textAlign:'center'}}>
         <form onSubmit={this.confirmRefresh.bind(this)}>
-      <br/>
-  <h4 id="transition-modal-title" style={{borderBottom:'solid 1px black'}}>Appointment Confirmation</h4>
-      <p id="transition-modal-description">
-        <h6>Supporter-Name:{fil.map(supporter => {
-        return supporter.name;
-      })}</h6>
-        <h6>Helps-In:{fil.map(supporter => {
-        return supporter.type;
-      })}</h6>
-        <h6>Date:{fil.map(supporter => {
-        return supporter.date;
-      })}</h6>
-        <h6>Time: {this.state.slot}</h6>
-        <h6>Location:{fil.map(supporter => {
-        return supporter.location;
-      })}</h6>
-       <textarea style={{width:'70%',height:'80%'}} placeholder="Please write anything you want to share to supporter"></textarea>
-       <br/>
-        <Button type="submit" style={{float:'right',marginRight:'10px'}} >Confirm appointment</Button>
-        &nbsp;
-      </p>
-      <br/>
+        {ModalToBeShown}
  </form>
     </div>
 
@@ -729,6 +957,7 @@ export default class Example extends React.Component {
         const  female  = this.state.female;
         const  rating  = this.state.rating;
         const  date = this.state.date;
+        const tags = this.state.tags;
 
         const start_time=this.state.start_time;
         var start_hoursMinutes = start_time.toString().split(/[.:]/);
@@ -744,9 +973,30 @@ export default class Example extends React.Component {
           return supporter.rating>=rating;
         });
         const filteredSupportersByType = filteredSupportersByRating.filter(supporter => {
-          return supporter.type.toLowerCase().indexOf(female.toLowerCase()) !== -1;
+          if(female==""){
+            return true;
+          }
+          for(var i=0; i<female.length;i++){
+            if(!supporter.type.includes(female[i])){
+              return false;
+            }
+          }
+          return true;
         });
-        const filteredSupportersByDate = filteredSupportersByType.filter(supporter => {
+
+        const filteredSupportersByTags = filteredSupportersByType.filter(supporter => {
+          if(tags==""){
+            return true;
+          }
+          for(var i=0; i<tags.length;i++){
+            if(!supporter.tags.includes(tags[i])){
+              return false;
+            }
+          }
+          return true;
+        });
+
+        const filteredSupportersByDate = filteredSupportersByTags.filter(supporter => {
           return !(supporter.date.localeCompare(date.toString()));
         });
         const filteredSupportersByTime = filteredSupportersByDate.filter(supporter => {
@@ -773,8 +1023,22 @@ export default class Example extends React.Component {
         });
 
         var nav_tabs= '';
+        if(filteredSupportersBySearch.length!=0){
+          nav_tabs=filteredSupportersBySearch.map(supporter => {
+                return this.renderSupporterTab(supporter);
+              });
+
+
+        }
+
 
         var nav_content=(<div style={{marginTop: '100px', textAlign:'center', fontFamily:'Futiger'}}> <h3> <p> <b> No Supporters Available </b> </p> </h3> </div>);
+        if(filteredSupportersBySearch.length!=0){
+          nav_content= this.renderSupporterTabContent(this.state.selected_supporter);
+
+
+        }
+
       return (
 
       <Grid container
@@ -783,10 +1047,19 @@ export default class Example extends React.Component {
             alignItems="flex-start">
 
         <Grid item>
-        {this.renderSupporterTab(filteredSupportersBySearch)}
+        <div style={{fontFamily:'Futiger'}}>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            onChange={this.handleSupporterSelected}
+            value = {0}
+          >
+        {nav_tabs}
+        </Tabs>
+        </div>
         </Grid>
         <Grid item>
-        {this.renderSupporterTabContent(this.state.selected_supporter)}
+        {nav_content}
         </Grid>
         <Grid item>
           <ExpansionPanel style={{transform:'rotateZ(360deg)',float:'right',height:'600px'}} defaultExpanded='true'>

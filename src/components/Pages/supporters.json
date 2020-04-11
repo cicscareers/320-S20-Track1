@@ -2,8 +2,9 @@
   {
     "id":"1",
     "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-10",
+    "type": ["Interview Coaching"],
+    "tags":["Undergrad","Amazon Experience"],
+    "date": "2020-03-26",
     "start_time": "13:00",
     "end_time": "13:30",
     "rating": 1.7,
@@ -12,8 +13,9 @@
   {
     "id":"2",
     "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-10",
+    "type": ["Salary Negotiation"],
+    "tags":["Undergrad"],
+    "date": "2020-03-26",
     "start_time": "13:30",
     "end_time": "14:00",
     "rating":2.7,
@@ -22,8 +24,9 @@
   {
     "id":"3",
     "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-10",
+    "type": ["Job Search"],
+    "tags":["Graduate"],
+    "date": "2020-03-26",
     "start_time": "14:00",
     "end_time": "14:30",
     "rating":3.7,
@@ -32,8 +35,9 @@
   {
     "id":"4",
     "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-10",
+    "type": ["Resume/CV"],
+    "tags":["Undergrad"],
+    "date": "2020-03-26",
     "start_time": "14:30",
     "end_time": "15:00",
     "rating":4.7,
@@ -42,8 +46,9 @@
   {
     "id":"5",
     "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-10",
+    "type": ["Resume/CV"],
+    "tags":["Undergrad"],
+    "date": "2020-03-27",
     "start_time": "16:00",
     "end_time": "16:30",
     "rating": 1.7,
@@ -52,8 +57,9 @@
   {
     "id":"6",
     "name": "Dhruvil Gala",
-    "type": "Job Search",
-    "date": "2020-04-10",
+    "type": ["Job Search"],
+    "tags":["Undergrad"],
+    "date": "2020-03-27",
     "start_time": "15:30",
     "end_time": "16:00",
     "rating":2.7,
@@ -62,8 +68,9 @@
   {
     "id":"7",
     "name": "Brian Krusell",
-    "type": "Salary Negotiation",
-    "date": "2020-04-10-",
+    "type":[ "Salary Negotiation"],
+    "tags":["Graduate"],
+    "date": "2020-03-27",
     "start_time": "17:00",
     "end_time": "17:30",
     "rating":3.7,
@@ -72,8 +79,9 @@
   {
     "id":"8",
     "name": "Adithya Parmar",
-    "type": "Interview Coaching",
-    "date": "2020-04-10",
+    "type": ["Interview Coaching"],
+    "tags":["Undergrad"],
+    "date": "2020-03-27",
     "start_time": "16:30",
     "end_time": "17:00",
     "rating":4.7,
@@ -82,8 +90,9 @@
   {
     "id":"9",
     "name": "Chinmay Patil",
-    "type": "Salary Negotiation",
-    "date": "2020-04-11",
+    "type": ["Salary Negotiation"],
+    "tags":["Undergrad"],
+    "date": "2020-03-31",
     "start_time": "8:00",
     "end_time": "12:30",
     "rating": 1.7,
@@ -92,8 +101,9 @@
   {
     "id":"10",
     "name": "Dhruvil Gala",
-    "type": "Resume/CV",
-    "date": "2020-04-11",
+    "type":[ "Resume/CV"],
+    "tags":["Undergrad"],
+    "date": "2020-03-31",
     "start_time": "8:30",
     "end_time": "12:00",
     "rating":2.7,
@@ -102,8 +112,9 @@
   {
     "id":"11",
     "name": "Brian Krusell",
-    "type": "Interview Coaching",
-    "date": "2020-04-11",
+    "type": ["Interview Coaching"],
+    "tags":["Graduate"],
+    "date": "2020-03-31",
     "start_time": "9:00",
     "end_time": "13:30",
     "rating":3.7,
@@ -112,311 +123,13 @@
   {
     "id":"12",
     "name": "Adithya Parmar",
-    "type": "Job Search",
-    "date": "2020-04-11",
+    "type": ["Job Search"],
+    "tags":["Undergrad"],
+    "date": "2020-03-31",
     "start_time": "9:30",
-    "end_time": "12:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },{
-    "id":"13",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-12",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"14",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-12",
-    "start_time": "13:30",
     "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"15",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-12",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"16",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-12",
-    "start_time": "14:30",
-    "end_time": "15:00",
     "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"17",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-12",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"18",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-13",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"19",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-13",
-    "start_time": "13:30",
-    "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"20",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-13",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"21",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-13",
-    "start_time": "14:30",
-    "end_time": "15:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"22",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-13",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"23",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-14",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"24",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-14",
-    "start_time": "13:30",
-    "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"25",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-14",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"26",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-14",
-    "start_time": "14:30",
-    "end_time": "15:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"27",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-14",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"28",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-15",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"29",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-15",
-    "start_time": "13:30",
-    "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"30",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-15",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"31",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-15",
-    "start_time": "14:30",
-    "end_time": "15:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"32",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-15",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"33",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-16",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"34",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-16",
-    "start_time": "13:30",
-    "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"35",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-16",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"36",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-16",
-    "start_time": "14:30",
-    "end_time": "15:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"37",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-16",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"38",
-    "name": "Chinmay Patil",
-    "type": "Interview Coaching",
-    "date": "2020-04-17",
-    "start_time": "13:00",
-    "end_time": "13:30",
-    "rating": 1.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"39",
-    "name": "Dhruvil Gala",
-    "type": "Salary Negotiation",
-    "date": "2020-04-17",
-    "start_time": "13:30",
-    "end_time": "14:00",
-    "rating":2.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"40",
-    "name": "Brian Krusell",
-    "type": "Job Search",
-    "date": "2020-04-17",
-    "start_time": "14:00",
-    "end_time": "14:30",
-    "rating":3.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"41",
-    "name": "Adithya Parmar",
-    "type": "Resume/CV",
-    "date": "2020-04-17",
-    "start_time": "14:30",
-    "end_time": "15:00",
-    "rating":4.7,
-    "location":"LGRC A301"
-  },
-  {
-    "id":"42",
-    "name": "Chinmay Patil",
-    "type": "Resume/CV",
-    "date": "2020-04-17",
-    "start_time": "16:00",
-    "end_time": "16:30",
-    "rating": 1.7,
     "location":"LGRC A301"
   }
-  
+
 ]
