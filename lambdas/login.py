@@ -2,7 +2,6 @@ from package.lambda_exception import LambdaException
 from package.query_db import query
 from package import jwt
 from datetime import timedelta
-from package.pytz import timezone
 import datetime
 import json
 
