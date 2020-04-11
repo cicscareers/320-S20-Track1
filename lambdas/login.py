@@ -7,8 +7,9 @@ import datetime
 import json
 
 JWT_SECRET = 'secret'
-JWT_ALGORITHM = 'HS265'
+JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 86400
+EASTERN_TIME = dateutil.tz.gettz('US/Eastern')
 
 def login(event, context):
     
@@ -20,16 +21,6 @@ def login(event, context):
     if 'Password' not in event:
         print("no password")
         raise LambdaException("Invalid input: no password")
-
-    # if 'email' not in http_body:
-    #     print("no email")
-    #     raise LambdaException("Invalid input: no email")
-    # if 'pass' not in http_body:
-    #     print("no password")
-    #     raise LambdaException("Invalid input: no password")
-
-    # given_email = http_body['email']
-    # given_password = http_body['pass']
 
     given_email = event['UserEmail']
     given_password = event['Password']
@@ -68,17 +59,17 @@ def login(event, context):
     token_payload = {
         'email' : given_email,
         'role' : role,
-        'exp' : datetime.datetime.utcnow(timezone('US/Eastern')) + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
+        'exp' : datetime.datetime.now(tz=EASTERN_TIME) + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
     }
     token = jwt.encode(token_payload, JWT_SECRET, JWT_ALGORITHM)
 
     print("Done!")
     response_body = {
-        'token': token, 
-        'email' : given_email,
-        'f_name': f_name,
-        'l_name': l_name,
-        'role': role
+        'token': str(token), 
+        'email' : str(given_email),
+        'f_name': str(f_name),
+        'l_name': str(l_name),
+        'role': str(role)
         }
     return response_body
 
