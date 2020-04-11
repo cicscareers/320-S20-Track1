@@ -1,10 +1,15 @@
-import query from query_db
+from package.lambda_exception import LambdaException
+from package.query_db import query
+from package import jwt
+from datetime import timedelta
 import datetime
+import dateutil.tz
 import json
 
 JWT_SECRET = 'secret'
-JWT_ALGORITHM = 'HS265'
+JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 86400
+EASTERN_TIME = dateutil.tz.gettz('US/Eastern')
 
 def login(event, context):
     
@@ -16,16 +21,6 @@ def login(event, context):
     if 'Password' not in event:
         print("no password")
         raise LambdaException("Invalid input: no password")
-
-    # if 'email' not in http_body:
-    #     print("no email")
-    #     raise LambdaException("Invalid input: no email")
-    # if 'pass' not in http_body:
-    #     print("no password")
-    #     raise LambdaException("Invalid input: no password")
-
-    # given_email = http_body['email']
-    # given_password = http_body['pass']
 
     given_email = event['UserEmail']
     given_password = event['Password']
@@ -40,10 +35,10 @@ def login(event, context):
 
     print("User exists! Fetching name...") 
     sql = "SELECT first_name FROM users WHERE email = '%s';" % (given_email)
-    f_name = query(sql)
+    f_name = query(sql)['records'][0][0]['stringValue']
 
     sql = "SELECT last_name FROM users WHERE email = '%s';" % (given_email)
-    l_name = query(sql)
+    l_name = query(sql)['records'][0][0]['stringValue']
 
     #Get password from existing user and if does not match return a 400 http
     print("Acquiring password...")
@@ -64,17 +59,17 @@ def login(event, context):
     token_payload = {
         'email' : given_email,
         'role' : role,
-        'exp' : datetime.utcnow() + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
+        'exp' : datetime.datetime.now(tz=EASTERN_TIME) + timedelta(seconds = JWT_EXP_DELTA_SECONDS)
     }
-    token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    token = jwt.encode(token_payload, JWT_SECRET, JWT_ALGORITHM)
 
     print("Done!")
     response_body = {
-        'token': token, 
-        'email' : given_email,
-        'f_name':,
-        'l_name':,
-        'role':
+        'token': str(token), 
+        'email' : str(given_email),
+        'f_name': str(f_name),
+        'l_name': str(l_name),
+        'role': str(role)
         }
     return response_body
 
@@ -95,6 +90,5 @@ def login_handler(event, context):
         json_exception = json.dumps(api_exception)
         raise LambdaException(json_exception)
 
-class LambdaException(Exception):
-    pass
+
 
