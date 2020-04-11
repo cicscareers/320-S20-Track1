@@ -108,7 +108,14 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                
+                <MenuItem onClick={handleClose}>
+                  <Link href="/match">
+                    <Typography component="h6" variant="h6">
+                      Matching
+                    </Typography>
+                  </Link>
+                </MenuItem>
+
                 <MenuItem onClick={handleClose}>
                   <Link href="/account">
                     <Typography component="h6" variant="h6">

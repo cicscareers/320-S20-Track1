@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
 
 
 export default function SignIn() {
-
   //sets styling
   const classes = useStyles();
 
@@ -46,75 +45,62 @@ export default function SignIn() {
 
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
+  var salt = bcrypt.genSaltSync(10);
 
   //Gets run when submit is pressed and handles authentication.
   function handleSubmit(event) {
+    event.preventDefault();
 
-    //count tracks if the user has been found
-    var count=0;
-    for (var i = 0; i < users.length; i++){
-      if (users[i].email === email){
-        count++;
-
-        //gets the password in the database (json file for now) and compares it to the inputted password
-        var dbpass=users[i].password
-        var verify = bcrypt.compareSync(password, dbpass);
-
-        //If they put in the wrong password
-        if (!verify){
-          alert("Invalid Password");
-        }
-
-        //If the password is correct
-        else if (verify){
-
-          alert("User authenticated");
-
-          //cookie gets set to 30 minutes
-          const timestamp = new Date().getTime();
-          const expire = timestamp + (60 * 30 * 1000);
-          const expireDate = new Date(expire);
-
-          //Sets all of the appropriate cookies
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          UserEmail: email,
+          Password: password
+        })
+      }
+    )
+      .then(response => {
+        console.log(response);
+        return response.json();
+      })
+      .then(json => {
+        console.log(json);
+        if (json.token !== undefined) {
+          alert("Account Successfully Created!");
+          console.log("hooray! we have json!");
+          console.log(json);
           const cookies = new Cookies();
           cookies.remove("email");
           cookies.remove("firstName");
           cookies.remove("lastName");
           cookies.remove("role");
           cookies.remove("token");
-          cookies.set("email", email, {
-            path: "/",
-            expires: expireDate
+          cookies.set("email", json.email, {
+            path: "/"
           });
-          cookies.set("firstName", users[i].fname, {
-            path: "/",
-            expires: expireDate
+          cookies.set("firstName", json.f_name, {
+            path: "/"
           });
-          cookies.set("lastName", users[i].lname, {
-            path: "/",
-            expires: expireDate
+          cookies.set("lastName", json.l_name, {
+            path: "/"
           });
-          cookies.set("role", users[i].role, { 
-            path: "/" ,
-            expires: expireDate
-          });
-          cookies.set("token", "token", { 
-            path: "/" ,
-            expires: expireDate
-          });
-
-          //reloads the window now that they are authenticated 
+          cookies.set("role", json.role, { path: "/" });
+          cookies.set("token", json.token, { path: "/" });
           window.location.reload();
-        }
-        break;
-      
-      }
-    }
-
-    //If the user wasnt in the database
-    if(count===0){
-      alert("User not found");
-    }
+        }else {
+            throw new Error();
+          }
+      })
+      .catch(error => {
+        alert("Invalid credentials");
+        console.log(error);
+      });
   }
 
 
