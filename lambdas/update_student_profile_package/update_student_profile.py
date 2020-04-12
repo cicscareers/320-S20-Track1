@@ -15,62 +15,33 @@ def update_student_profile(event, context):
     #users table
     first_name = event['first_name']
     last_name = event['last_name']
-
-    query_str_users = f"SET first_name = '{first_name}', last_name = '{last_name}'"
-
-    if 'preferred_name' in event:
-        preferred_name = event['preferred_name']
-        query_str_users += f", preferred_name = '{preferred_name}'"
+    if 'prefered_name' in event:
+        prefered_name = event['prefered_name']
     if 'picture' in event:
         picture = event['picture']
-        query_str_users += f", picture = '{picture}'"
     if 'bio' in event:
         bio = event['bio']
-        query_str_users += f", bio = '{bio}'"
     if 'pronouns' in event:
         pronouns = event['pronouns']
-        query_str_users += f", pronouns = '{pronouns}'"
     if 'phone' in event:
         phone = event['phone']
-        query_str_users += f", phone = '{phone}'"
-    
     #students table
-    grad_student = event['grad_student']
-    job_search = event['job_search']
-
-    query_str_students = f"SET job_search = {job_search}, grad_student = {grad_student}"
-
     if 'college' in event:
         college = event['college']
-        query_str_students += f", college = '{college}'"
     if 'grad_year' in event:
         grad_year= event['grad_year']
-        query_str_students += f", grad_year = '{grad_year}'"
     if 'resume' in event: 
         resume = event['resume']
-        query_str_students += f", resume = '{resume}'"
-
+    if 'job_search' in event:
+        job_search = event['job_search']
+    if 'grad_student' in event:
+        grad_student = event['grad_student']
     #student_majors table
-    delete_majors = ""
-    student_majors_sql = ""
-
     if 'majors' in event:
         majors = event['majors']
-        delete_majors = (f"DELETE FROM student_majors WHERE student_id = '{student_id}';")
-        for major in majors:
-            student_majors_sql += (f"INSERT INTO student_majors " \
-                f"VALUES ('{student_id}', (SELECT major_id FROM major WHERE major = '{major}');")
-    
     #student_minors table
-    delete_minors = ""
-    student_minors_sql = ""
-
     if 'minors' in event:
         minors = event['minors']
-        delete_minors = (f"DELETE FROM student_minors WHERE student_id = '{student_id}';")
-        for minor in minors:
-            student_minors_sql += (f"INSERT INTO student_minors " \
-                f"VALUES ('{student_id}', (SELECT minor_id FROM minor WHERE minor = '{minor}');")
     
     #Connecting to the database
     client = boto3.client('rds-data') 
@@ -95,15 +66,31 @@ def update_student_profile(event, context):
         }
 
     #sql queries to update data in each table
-    users_table = (f"UPDATE users {query_str_users}" \
-                        f" WHERE id = '{student_id}';")
-    students_table = (f"UPDATE students {query_str_students}" \
-                        f" WHERE student_id = '{student_id}';")
+    users_table = (f"UPDATE users "
+                        f"SET first_name = '{first_name}', last_name = '{last_name}', "
+                        f"prefered_name = '{prefered_name}', picture = '{picture}', bio = '{bio}', "
+                        f"pronouns = '{pronouns}', phone = '{phone}' "
+                            f"WHERE student_id = '{student_id}';")
+    students_table = (f"UPDATE students "
+                        f"SET college = '{college}', grad_year = '{grad_year}', resume = '{resume}', "
+                        f"job_search = '{job_search}', grad_student = '{grad_student}' "
+                            f"WHERE student_id = '{student_id}';")
+    
+    delete_majors = (f"DELETE FROM student_majors WHERE student_id = '{student_id}';")
+
+    for major in majors:
+        student_majors_sql = student_majors_sql + (f"INSERT INTO student_majors "
+                      f"VALUES ('{student_id}', (SELECT major_id FROM major WHERE major = '{major}');")
+
+    delete_minors = (f"DELETE FROM student_minors WHERE student_id = '{student_id}';")
+
+    for minor in minors:
+        student_minors_sql = student_minors_sql + (f"INSERT INTO student_minors "
+                      f"VALUES ('{student_id}', (SELECT minor_id FROM minor WHERE minor = '{minor}');")
     
     query = users_table + " " + students_table + " " + delete_majors + " " + student_majors_sql + " " \
             + delete_minors + " " + student_minors_sql
 
-    print(query)
     update_data = client.execute_statement(
         secretArn = db_config.SECRET_ARN, 
         database = db_config.DB_NAME,
