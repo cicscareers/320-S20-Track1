@@ -17,6 +17,10 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Input from '@material-ui/core/Input';
+import Select from '@material-ui/core/Select';
 
 function Copyright() {
   return (
@@ -64,7 +68,7 @@ const styles = (theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[500],
-  },
+  }
 });
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -102,6 +106,11 @@ export default function SignUp() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [open, setOpen] = React.useState(false);
+  const [supporterType, setSupporterType] = React.useState([]);
+  const [employer, setEmployer] = useState("");
+  const [title, setTitle] = useState("");
+
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -115,7 +124,8 @@ export default function SignUp() {
     return password===password2 && email.length > 0 
     && password.length > 0 && password2.length > 0 
     && fname.length > 0 && lname.length > 0
-    && validEmail(email);
+    && validEmail(email) && supporterType.length >0 
+    && employer.length > 0 && title.length > 0;
   }
 
   function samePass(pass, pass2){
@@ -157,6 +167,34 @@ export default function SignUp() {
       handleSubmit(event)
     }
   }
+
+  const supporterTypes = [
+    'Professional Staff',
+    'Student Staff',
+    'Alumni',
+    'Faculty',
+    'Other',
+  ];
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  const handleChange = (event) => {
+    setSupporterType(event.target.value);
+  };
+
+  const formStyle = {
+    minWidth: '100%'
+  };
+ 
 
   return (
     <Container component="main" maxWidth="xs">
@@ -239,6 +277,46 @@ export default function SignUp() {
               </FormHelperText>
             </FormControl>
           )}
+          <FormControl className={classes.formControl} style = {formStyle}>
+            <InputLabel id="demo-mutiple-name-label">Supporter Type *</InputLabel>
+            <Select
+              labelId="demo-mutiple-name-label"
+              id="demo-mutiple-name"
+              multiple
+              value={supporterType}
+              onChange={handleChange}
+              input={<Input />}
+              MenuProps={MenuProps}
+            >
+              {supporterTypes.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="employer"
+            label="Current Employer"
+            name="employer"
+            autoComplete="employer"
+            onChange={e => setEmployer(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="title"
+            label="Title"
+            name="title"
+            autoComplete="title"
+            onChange={e => setTitle(e.target.value)}
+          />
           <Typography align="center" variant="body2">
             By requesing an account you agree to ReachOut's
           </Typography>
