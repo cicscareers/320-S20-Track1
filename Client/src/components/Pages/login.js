@@ -77,7 +77,7 @@ export default function SignIn() {
       .then(json => {
         console.log(json);
         if (json.token !== undefined) {
-          alert("Account Successfully Created!");
+          alert("Login Successful!");
           console.log("hooray! we have json!");
           console.log(json);
           const cookies = new Cookies();
