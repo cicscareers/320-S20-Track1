@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, FormControlLabel, Link, Grid, Box, Typography, Container } from "@material-ui/core";
+import { Button, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import users from "../Data/users.json";
 import Cookies from "universal-cookie";
@@ -42,6 +42,11 @@ export default function SignIn() {
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginType, setLoginType] = React.useState("Student");
+
+  const handleRadio = (event) => {
+    setLoginType(event.target.value);
+  };
 
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
@@ -52,7 +57,7 @@ export default function SignIn() {
     event.preventDefault();
 
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/login",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/login",
       {
         method: "POST",
         headers: {
@@ -151,6 +156,8 @@ export default function SignIn() {
             onChange={e => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
+          
+          
           <Button
             margin="normal"
             fullWidth
