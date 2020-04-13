@@ -3,6 +3,11 @@ import { Button, TextField, FormControlLabel, Link, Grid, Box, Typography, Conta
 import { makeStyles } from "@material-ui/core/styles";
 import users from "../Data/users.json";
 import Cookies from "universal-cookie";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+
 
 //Function that shows the copyright (will get updated to the appropiate one later)
 function Copyright() {
@@ -31,6 +36,7 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: "100%",
     marginTop: theme.spacing(2),
+    align: "center"
   },
   rad: {
 
@@ -43,13 +49,16 @@ export default function SignIn() {
   const classes = useStyles();
 
   //Email and password from the textbox
-  const [radio, setRadio] = useState("Student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
 
-  const handleRadio = (event) => {
-    setLoginType(event.target.value);
+  const handleChange = (event) => {
+    const name = event.target.name;
+    setLoginType({
+      ...loginType,
+      [name]: event.target.value,
+    });
   };
 
   //sets up the encryption library
@@ -161,32 +170,22 @@ export default function SignIn() {
             onKeyPress={handleKeyPress}
           />
           <Typography align="center">What type of user are you?</Typography>
-          <Box className={classes.rad} justifyContent="center" align="center" >
-          <RadioGroup row aria-label="position" name="position" defaultValue="top">
-            <FormControlLabel
-              autoFocus
-              value="Student"
-              control={<Radio color="primary" />}
-              label="Student"
-              labelPlacement="bottom"
-              onChange={e => setRadio(e.target.value)}
-            />
-            <FormControlLabel
-              value="Supporter"
-              control={<Radio color="primary" />}
-              label="Supporter"
-              labelPlacement="bottom"
-              onChange={e => setRadio(e.target.value)}
-            />
-            <FormControlLabel
-              value="Admin"
-              control={<Radio color="primary" />}
-              label="Admin"
-              labelPlacement="bottom"
-              onChange={e => setRadio(e.target.value)}
-            />
-          </RadioGroup>
-          </Box>
+          <FormControl className={classes.formControl} align="center">
+        <Select
+          native
+          value={loginType}
+          onChange={handleChange}
+          inputProps={{
+            name: 'LoginType',
+            id: 'LoginType-simple',
+          }}
+        >
+          <option aria-label="None" value="" />
+          <option value="Student">Student</option>
+          <option value="Supporter">Supporter</option>
+          <option value="Admin">Admin</option>
+        </Select>
+      </FormControl>
           
           <Button
             margin="normal"
