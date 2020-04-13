@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
+import { Button, MenuItem, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import users from "../Data/users.json";
 import Cookies from "universal-cookie";
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+
 
 
 //Function that shows the copyright (will get updated to the appropiate one later)
@@ -54,11 +54,7 @@ export default function SignIn() {
   const [loginType, setLoginType] = React.useState("Student");
 
   const handleChange = (event) => {
-    const name = event.target.name;
-    setLoginType({
-      ...loginType,
-      [name]: event.target.value,
-    });
+    setLoginType(event.target.value);
   };
 
   //sets up the encryption library
@@ -170,22 +166,24 @@ export default function SignIn() {
             onKeyPress={handleKeyPress}
           />
           <Typography align="center">What type of user are you?</Typography>
-          <FormControl className={classes.formControl} align="center">
-        <Select
-          native
-          value={loginType}
-          onChange={handleChange}
-          inputProps={{
-            name: 'LoginType',
-            id: 'LoginType-simple',
-          }}
-        >
-          <option aria-label="None" value="" />
-          <option value="Student">Student</option>
-          <option value="Supporter">Supporter</option>
-          <option value="Admin">Admin</option>
-        </Select>
-      </FormControl>
+          <FormControl fullWidth className={classes.form}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={loginType}
+              onChange={handleChange}
+            >
+              <MenuItem value={"Student"}>
+                <Typography align="center" variant="h6">Student</Typography>
+              </MenuItem>
+              <MenuItem value={"Supporter"}>
+                <Typography align="center" variant="h6">Supporter</Typography>
+              </MenuItem>
+              <MenuItem value={"Admin"}>
+                <Typography align="center" variant="h6">Admin</Typography>
+              </MenuItem>
+            </Select>
+          </FormControl>
           
           <Button
             margin="normal"
