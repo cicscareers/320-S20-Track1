@@ -30,7 +30,10 @@ const useStyles = makeStyles(theme => ({
   },
   form: {
     width: "100%",
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+  },
+  rad: {
+
   },
  }));
 
@@ -40,6 +43,7 @@ export default function SignIn() {
   const classes = useStyles();
 
   //Email and password from the textbox
+  const [radio, setRadio] = useState("Student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
@@ -156,7 +160,33 @@ export default function SignIn() {
             onChange={e => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          
+          <Typography align="center">What type of user are you?</Typography>
+          <Box className={classes.rad} justifyContent="center" align="center" >
+          <RadioGroup row aria-label="position" name="position" defaultValue="top">
+            <FormControlLabel
+              autoFocus
+              value="Student"
+              control={<Radio color="primary" />}
+              label="Student"
+              labelPlacement="bottom"
+              onChange={e => setRadio(e.target.value)}
+            />
+            <FormControlLabel
+              value="Supporter"
+              control={<Radio color="primary" />}
+              label="Supporter"
+              labelPlacement="bottom"
+              onChange={e => setRadio(e.target.value)}
+            />
+            <FormControlLabel
+              value="Admin"
+              control={<Radio color="primary" />}
+              label="Admin"
+              labelPlacement="bottom"
+              onChange={e => setRadio(e.target.value)}
+            />
+          </RadioGroup>
+          </Box>
           
           <Button
             margin="normal"

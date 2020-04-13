@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
+import {Button, withStyles, Dialog} from "@material-ui/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -15,7 +15,12 @@ import Container from "@material-ui/core/Container";
 import { createMuiTheme } from "@material-ui/core/styles";
 import purple from "@material-ui/core/colors/purple";
 import red from "@material-ui/core/colors/red";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import {FormHelperText, FormControl} from "@material-ui/core";
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 
 function Copyright() {
   return (
@@ -52,25 +57,71 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
-export default function SignIn() {
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
+
+export default function ResetPass() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  };
+  const classes = useStyles();
+   function handleSubmitButton(event){
+    handleSubmit(event)
+    handleClickOpen()
+  }
+  function handleKeyPress(event){
+    if(event.key === 'Enter'){
+      handleSubmit(event)
+    }
+  }
   function handleSubmit(event) {
-    alert("password changed");
   }
 
   function validateForm() {
-    return password===password2 && email.length > 0 
-    && password.length > 0 && password2.length > 0 
-    && validEmail(email);
-  }
-
-  function samePass(pass, pass2){
-    return password===password2;
+   email.length > 0 && validEmail(email);
   }
 
   function validEmail(address) {
@@ -99,6 +150,7 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             onChange={e => setEmail(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           {!validEmail(email) && email.length > 0 && (
             <FormControl className={classes.error} error>
@@ -107,47 +159,33 @@ export default function SignIn() {
               </FormHelperText>
             </FormControl>
           )}
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="new password"
-            label="New Password"
-            type="password"
-            id="New_password"
-            autoComplete="current-password"
-            onChange={e => setPassword(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="confirm password"
-            label="Confirm Password"
-            type="password"
-            id="Confirmpassword"
-            autoComplete="current-password"
-            onChange={e => setPassword2(e.target.value)}
-          />
-          {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
-            <FormControl className={classes.error} error>
-              <FormHelperText>
-                Passwords do not match
-              </FormHelperText>
-            </FormControl>
-          )}
           <Button
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
-            disabled={!validateForm()}
+            onClick={handleSubmitButton}
           >
-            Reset My Password
+            Request Password Reset
           </Button>
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Password Reset Requested
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+              Your request for a password reset has been submitted.
+              </Typography>
+              <Typography gutterBottom>
+              An link will be sent to {email} to reset your password
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus href="/login" color="primary">
+                Back to sign in
+              </Button>
+            </DialogActions>
+          </Dialog>
           <Grid container>
             <Grid item>
               <Link href="/login" variant="body2">

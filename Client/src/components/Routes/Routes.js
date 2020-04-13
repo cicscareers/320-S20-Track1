@@ -17,6 +17,7 @@ import AuthenticatedRoute from "./AuthenticatedRoute";
 import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import Feedback from '../Pages/feedback';
+import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
 
 
@@ -37,6 +38,7 @@ export default function Routes() {
           <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
           <UnauthenticatedRoute path="/signup" exact component={SignUp} />
           <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
+          <UnauthenticatedRoute path="/forgot-password2" exact component={resetPassAfterEmail} />
           <Route path="/index.html" to="/" />
           <Route component={NotFound} />
         </Switch>
