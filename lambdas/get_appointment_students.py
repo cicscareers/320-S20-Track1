@@ -21,7 +21,7 @@ def get_appointment_students(event, context):
     if (appointment_info['records'] == []): 
         return{
             'body': json.dumps("The user does not exist or has no appointments"),
-            'statusCode': 409
+            'statusCode': 404
         }
     else:
         return{

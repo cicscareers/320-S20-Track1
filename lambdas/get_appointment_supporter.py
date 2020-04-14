@@ -21,7 +21,7 @@ def get_appointment_supporter(event, context):
     if (appointment_info['records'] == []): 
         return {
             'body': json.dumps("The supporter does not have any appointments or does not exist"),
-            'statusCode': 409
+            'statusCode': 404
         }
     else:
         return{
