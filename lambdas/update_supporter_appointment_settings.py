@@ -5,7 +5,7 @@ import boto3
 import constants
 
 def update_supporter_appointment_settings(event, context):
-    supporter_id = event['supporter_id']
+    supporter_id = event['id']
     max_students = event['max_students']
     duration = event['duration']
     major_id = event['major_id']
@@ -28,27 +28,13 @@ def update_supporter_appointment_settings(event, context):
             'statuscode' : 404
         }
 
-    #Dictionary of things that need to be updated
-    # updates = {}
     query = ""
 
     #Can't be null
-    # if(job_search != None):
-    #     updates["job_search"] = job_search
-    # if(grad_student != None):
-    #     updates["grad_student"] = grad_student
     if(job_search == None or grad_student == None): #These values cannot be null
         return{
             'statusCode' : 422 #unproccesable
         }
-
-    #Can be null
-    # updates["max_students"] = max_students
-    # updates["duration"] = duration
-    # updates["major_id"] = major_id
-    # updates["specialization_type_id"] = specialization_type_id
-
-    #Put the values into a dictionary to make the query easier to make but there's multiple tables so it's probably not needed
 
     preferences_table = "UPDATE supporter_preferences_for_students SET job_search = '%s', grad_student = '%s' WHERE supporter_id = '%d';" % (job_search, grad_student, supporter_id)
     specialization_table = "UPDATE supporter_specializations SET max_students = '%d', duration = '%d', specialization_type_id = '%d' WHERE supporter_id = '%d';" % (max_students, duration, specialization_type_id, supporter_id)
