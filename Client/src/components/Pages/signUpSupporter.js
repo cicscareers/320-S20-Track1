@@ -109,7 +109,7 @@ export default function SignUp() {
   const [supporterType, setSupporterType] = React.useState([]);
   const [employer, setEmployer] = useState("");
   const [title, setTitle] = useState("");
-
+  const [team, setTeam] = useState([]);
 
 
   const handleClickOpen = () => {
@@ -176,6 +176,11 @@ export default function SignUp() {
     'Other',
   ];
 
+  const teams = [
+    'CICS Careers',
+    'Ventures'
+  ];
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -187,15 +192,10 @@ export default function SignUp() {
     },
   };
 
-  const handleChange = (event) => {
-    setSupporterType(event.target.value);
-  };
-
   const formStyle = {
     minWidth: '100%'
   };
  
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -278,13 +278,13 @@ export default function SignUp() {
             </FormControl>
           )}
           <FormControl className={classes.formControl} style = {formStyle}>
-            <InputLabel id="demo-mutiple-name-label">Supporter Type *</InputLabel>
+            <InputLabel id="supporter-types">Supporter Type *</InputLabel>
             <Select
-              labelId="demo-mutiple-name-label"
-              id="demo-mutiple-name"
+              labelId="supporter-types"
+              id="supporter-types"
               multiple
               value={supporterType}
-              onChange={handleChange}
+              onChange={e => setSupporterType(e.target.value)}
               input={<Input />}
               MenuProps={MenuProps}
             >
@@ -317,6 +317,24 @@ export default function SignUp() {
             autoComplete="title"
             onChange={e => setTitle(e.target.value)}
           />
+          <FormControl className={classes.formControl} style = {formStyle}>
+            <InputLabel id="teams">Team (Optional)</InputLabel>
+            <Select
+              labelId="teams"
+              id="teams"
+              multiple
+              value={team}
+              onChange={e => setTeam(e.target.value)}
+              input={<Input />}
+              MenuProps={MenuProps}
+            >
+              {teams.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Typography align="center" variant="body2">
             By requesing an account you agree to ReachOut's
           </Typography>
