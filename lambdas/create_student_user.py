@@ -40,8 +40,8 @@ def create_student_user(event, context):
         secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
         database = "postgres",
         resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key) \
-        VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (new_id,first_name,last_name,email,password)
+        sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key,user_type) \
+        VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt','student')" % (new_id,first_name,last_name,email,password)
     )
 
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
