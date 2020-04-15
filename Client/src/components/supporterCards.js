@@ -62,6 +62,9 @@ export default function ControlledExpansionPanels() {
               <Paper className={classes.paper}>
                 <Typography>Topics: Interview Help, Resume Review</Typography>
                 <Typography>Tags: React, Machine Learning, AWS</Typography>
+                <Typography>Employer: CICS Careers</Typography>
+                <Typography>Title: Career Developer</Typography>
+                <Typography>Office: A243 LGRC Lowrise</Typography>
               </Paper>
             </Grid>
             <Grid item xs={12} sm={6}>
