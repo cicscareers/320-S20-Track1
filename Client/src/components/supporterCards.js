@@ -156,12 +156,12 @@ export default function ControlledExpansionPanels() {
                 <Typography>A243 LGRC Lowrise</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
-                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
-                <Chip size="small" variant="outlined" color="primary" label="Networking Strategies" />
-                <Chip size="small" variant="outlined" label="Postgresql" />
-                <Chip size="small" variant="outlined" label="Algorithms" />
-                <Chip size="small" variant="outlined" label="AWS" />
+                <Chip variant="outlined" color="primary" label="Interview Help" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Resume Review" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Networking Strategies" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Postgresql" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Algorithms" className={classes.tagChip}/>
+                <Chip variant="outlined" label="AWS" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -200,11 +200,11 @@ export default function ControlledExpansionPanels() {
                 <Typography>A243 LGRC Lowrise</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
-                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
-                <Chip size="small" variant="outlined" label="Industry" />
-                <Chip size="small" variant="outlined" label="Career Development" />
-                <Chip size="small" variant="outlined" label="Networking" />
+                <Chip variant="outlined" color="primary" label="Interview Help" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Resume Review" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Industry" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Career Development" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Networking" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -243,11 +243,11 @@ export default function ControlledExpansionPanels() {
                 <Typography>Mullins Center</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                <Chip size="small" variant="outlined" color="primary" label="Sporting Events" />
-                <Chip size="small" variant="outlined" color="primary" label="Hype" />
-                <Chip size="small" variant="outlined" label="Football" />
-                <Chip size="small" variant="outlined" label="Free Pizza" />
-                <Chip size="small" variant="outlined" label="Selfies" />
+                <Chip variant="outlined" color="primary" label="Sporting Events" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Hype" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Football" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Free Pizza" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Selfies" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
