@@ -82,7 +82,7 @@ export default function ControlledExpansionPanels() {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <Paper className={classes.paper}>
-                <Typography>Topics: Interview Help, Resume Review</Typography>
+                <Typography>Available For: Interview Help, Resume Review</Typography>
                 <Typography>Tags: React, Machine Learning, AWS</Typography>
                 <Typography>Employer: CICS Careers</Typography>
                 <Typography>Title: Career Developer</Typography>
@@ -120,16 +120,32 @@ export default function ControlledExpansionPanels() {
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={4.5} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <div>
-            <Button
-              margin="normal"
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
-              Create Appointment
-            </Button>
-          </div>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <Paper className={classes.paper}>
+                <Typography>Available For: Interview Help, Resume Review</Typography>
+                <Typography>Tags: Postgresql, Microsoft, AWS</Typography>
+                <Typography>Employer: CICS Careers</Typography>
+                <Typography>Title: Career Developer</Typography>
+                <Typography>Office: A243 LGRC Lowrise</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              
+                <Avatar alt="Dhruvil Gala" src='https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq'
+                 className={classes.large} />
+             
+            </Grid>
+            <Grid item xs={12} align="center">
+              <Button
+                  margin="normal"
+                  variant="contained"
+                  color="primary"
+                >
+                  Create Appointment
+              </Button>
+            </Grid>
+          </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -138,17 +154,39 @@ export default function ControlledExpansionPanels() {
           aria-controls="panel3bh-content"
           id="panel3bh-header"
         >
-          <Typography className={classes.heading}>Brian Krussel</Typography>
+          <Typography className={classes.heading}>Brian Krusell</Typography>
           <Typography className={classes.secondaryHeading}>
             Match Score: Good
           </Typography>
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={4} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-            vitae egestas augue. Duis vel est augue.
-          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <Paper className={classes.paper}>
+                <Typography>Available For: Interview Help, Resume Review</Typography>
+                <Typography>Tags: Networking, Industry, Career Development</Typography>
+                <Typography>Employer: CICS Careers</Typography>
+                <Typography>Title: Director of Career & Student Development</Typography>
+                <Typography>Office: A213 LGRC Lowrise</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              
+                <Avatar alt="Brian Krusell" src='https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/krusell.jpg?itok=tjD9O0Rp'
+                 className={classes.large} />
+             
+            </Grid>
+            <Grid item xs={12} align="center">
+              <Button
+                  margin="normal"
+                  variant="contained"
+                  color="primary"
+                >
+                  Create Appointment
+              </Button>
+            </Grid>
+          </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
       <ExpansionPanel expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
@@ -164,10 +202,32 @@ export default function ControlledExpansionPanels() {
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={5} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-            vitae egestas augue. Duis vel est augue.
-          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <Paper className={classes.paper}>
+                <Typography>Available For: Sporting Events, Hype</Typography>
+                <Typography>Tags: Football, Free Pizza, Selfies</Typography>
+                <Typography>Employer: UMass Amherst</Typography>
+                <Typography>Title: Influencer</Typography>
+                <Typography>Office: Mullins Center</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              
+                <Avatar alt="Sam the Minuteman" src='https://www.umass.edu/newsoffice/sites/default/files/styles/article_medium/public/Sam.jpg'
+                 className={classes.large} />
+             
+            </Grid>
+            <Grid item xs={12} align="center">
+              <Button
+                  margin="normal"
+                  variant="contained"
+                  color="primary"
+                >
+                  Create Appointment
+              </Button>
+            </Grid>
+          </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>
