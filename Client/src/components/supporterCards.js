@@ -95,12 +95,11 @@ export default function ControlledExpansionPanels() {
                  className={classes.large} />
              
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} align="center">
               <Button
                   margin="normal"
                   variant="contained"
                   color="primary"
-                  fullWidth 
                 >
                   Create Appointment
               </Button>
