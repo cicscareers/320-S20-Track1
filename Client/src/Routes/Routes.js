@@ -20,6 +20,7 @@ import SupporterRoute from "./SupporterRoute";
 import Feedback from '../Pages/feedback';
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
+import Settings from '../Pages/settings.js'
 
 
 export default function Routes() {
@@ -30,6 +31,7 @@ export default function Routes() {
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AdminRoute path="/admin-settings" exact component={AdminSettings} />
+          <UnauthenticatedRoute path="/settings" exact component={Settings} />
           <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
