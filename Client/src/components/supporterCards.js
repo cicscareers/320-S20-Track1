@@ -9,6 +9,7 @@ import Rating from '@material-ui/lab/Rating';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import blue from '@material-ui/core/colors/blue';
+import smileRate from "../components/ratings"
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -190,7 +191,7 @@ export default function ControlledExpansionPanels() {
           <Typography className={classes.secondaryHeading}>
             Match Score: Good
           </Typography>
-          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={4} readOnly />
+          {smileRate()}
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
