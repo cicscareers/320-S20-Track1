@@ -17,7 +17,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, TextField } from '@material-ui/core';
 import Menu from "../Navigation/appbarMatching.js";
-import supporterCards from "../Components/supporterCards.js"
+import supporterCards from "../components/supporterCards.js"
 
 const drawerWidth = "25%";
 
