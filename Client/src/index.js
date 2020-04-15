@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Frutiger",
+    fontFamily: "Open Sans Light",
     fontStyle: "normal"
   },
   palette: {
