@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Paper, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
+import { makeStyles, Paper, Chip, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -8,7 +8,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
+import blue from '@material-ui/core/colors/blue';
+const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   dayselect: {
     marginLeft: "40%"
+  },
+  tagChip: {
+    color: 'blue',
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -81,13 +85,15 @@ export default function ControlledExpansionPanels() {
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <Paper className={classes.paper}>
-                <Typography>Available For: Interview Help, Resume Review</Typography>
-                <Typography>Tags: React, Machine Learning, AWS</Typography>
-                <Typography>Employer: CICS Careers</Typography>
-                <Typography>Title: Career Developer</Typography>
-                <Typography>Office: A243 LGRC Lowrise</Typography>
-              </Paper>
+                <Typography>CICS Careers, Career Developer</Typography>
+                <Typography>A243 LGRC Lowrise</Typography>
+                <br/>
+                <Typography>Helps With:</Typography>
+                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
+                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
+                <Chip size="small" variant="outlined" label="React" />
+                <Chip size="small" variant="outlined" label="Machine Learning" />
+                <Chip size="small" variant="outlined" label="AWS" />
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -122,13 +128,16 @@ export default function ControlledExpansionPanels() {
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <Paper className={classes.paper}>
-                <Typography>Available For: Interview Help, Resume Review</Typography>
-                <Typography>Tags: Postgresql, Microsoft, AWS</Typography>
-                <Typography>Employer: CICS Careers</Typography>
-                <Typography>Title: Career Developer</Typography>
-                <Typography>Office: A243 LGRC Lowrise</Typography>
-              </Paper>
+                <Typography>CICS Careers, Career Developer</Typography>
+                <Typography>A243 LGRC Lowrise</Typography>
+                <br/>
+                <Typography>Helps With:</Typography>
+                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
+                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
+                <Chip size="small" variant="outlined" color="primary" label="Networking Strategies" />
+                <Chip size="small" variant="outlined" label="Postgresql" />
+                <Chip size="small" variant="outlined" label="Algorithms" />
+                <Chip size="small" variant="outlined" label="AWS" />
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -163,13 +172,15 @@ export default function ControlledExpansionPanels() {
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <Paper className={classes.paper}>
-                <Typography>Available For: Interview Help, Resume Review</Typography>
-                <Typography>Tags: Networking, Industry, Career Development</Typography>
-                <Typography>Employer: CICS Careers</Typography>
-                <Typography>Title: Director of Career & Student Development</Typography>
-                <Typography>Office: A213 LGRC Lowrise</Typography>
-              </Paper>
+                <Typography>CICS Careers, Career Developer</Typography>
+                <Typography>A243 LGRC Lowrise</Typography>
+                <br/>
+                <Typography>Helps With:</Typography>
+                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
+                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
+                <Chip size="small" variant="outlined" label="Industry" />
+                <Chip size="small" variant="outlined" label="Career Development" />
+                <Chip size="small" variant="outlined" label="Networking" />
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -204,13 +215,15 @@ export default function ControlledExpansionPanels() {
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <Paper className={classes.paper}>
-                <Typography>Available For: Sporting Events, Hype</Typography>
-                <Typography>Tags: Football, Free Pizza, Selfies</Typography>
-                <Typography>Employer: UMass Amherst</Typography>
-                <Typography>Title: Influencer</Typography>
-                <Typography>Office: Mullins Center</Typography>
-              </Paper>
+                <Typography>UMass Amherst, Influencer</Typography>
+                <Typography>Mullins Center</Typography>
+                <br/>
+                <Typography>Helps With:</Typography>
+                <Chip size="small" variant="outlined" color="primary" label="Sporting Events" />
+                <Chip size="small" variant="outlined" color="primary" label="Hype" />
+                <Chip size="small" variant="outlined" label="Football" />
+                <Chip size="small" variant="outlined" label="Free Pizza" />
+                <Chip size="small" variant="outlined" label="Selfies" />
             </Grid>
             <Grid item xs={12} sm={6}>
               
