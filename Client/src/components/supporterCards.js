@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Paper, Chip, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
+import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "40%"
   },
   tagChip: {
-    color: 'blue',
+      margin: theme.spacing(0.5),
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -53,6 +53,15 @@ const useStyles = makeStyles((theme) => ({
 export default function ControlledExpansionPanels() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  const [date,setDate]=React.useState(15);
+
+  const handleBack = () => {
+    setDate(date-1);
+  };
+
+  const handleNext = () => {
+    setDate(date+1);
+  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -62,13 +71,27 @@ export default function ControlledExpansionPanels() {
     <div className={classes.root}>
       <Grid container className={classes.dayselect} spacing={3}>
         <Grid item>
-          <NavigateBeforeIcon/>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleBack}
+            edge="start"
+          >
+            <NavigateBeforeIcon/>
+          </IconButton>
         </Grid>
         <Grid item>
-          <Typography>April 15, 2020</Typography>
+          <Typography>April {date}, 2020</Typography>
         </Grid>
         <Grid item>
-          <NavigateNextIcon/>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleNext}
+            edge="start"
+          >
+            <NavigateNextIcon/>
+          </IconButton>
         </Grid>
       </Grid>
       <br/>
@@ -89,11 +112,11 @@ export default function ControlledExpansionPanels() {
                 <Typography>A243 LGRC Lowrise</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                <Chip size="small" variant="outlined" color="primary" label="Interview Help" />
-                <Chip size="small" variant="outlined" color="primary" label="Resume Review" />
-                <Chip size="small" variant="outlined" label="React" />
-                <Chip size="small" variant="outlined" label="Machine Learning" />
-                <Chip size="small" variant="outlined" label="AWS" />
+                <Chip variant="outlined" color="primary" label="Interview Help" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Resume Review" className={classes.tagChip}/>
+                <Chip variant="outlined" label="React" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Machine Learning" className={classes.tagChip}/>
+                <Chip variant="outlined" label="AWS" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
