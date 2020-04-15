@@ -1,6 +1,6 @@
 import React from "react";
-import Menu from "./components/Navigation/appbar.js";
-import Routes from "./components/Routes/Routes";
+import Menu from "./Navigation/appbar.js";
+import Routes from "./Routes/Routes";
 import Cookies from "universal-cookie";
 
 export default function App() {

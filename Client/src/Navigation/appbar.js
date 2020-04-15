@@ -14,7 +14,14 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
-  }
+  },
+  buttonGroup: {
+    marginLeft: "45%",
+    flexGrow : 1
+  },
+  button: {
+    width: "30%",
+  },
 }));
 const styles = {
   button: {
@@ -32,7 +39,6 @@ export default function MenuAppBar() {
   const token = cookies.get("token");
   const name = cookies.get("firstName");
   const role = cookies.get("role");
-
   //Sets the styling
   const classes = useStyles();
 
@@ -69,17 +75,11 @@ export default function MenuAppBar() {
           <Typography component="h1" variant="h3" color="secondary">
               ReachOUT
           </Typography>
-          <Button
-            type="submit"
-            href="/match"
-            className={classes.menuButton}
-            align = "left"
-          >
-            <Typography component="h1" variant="h4" color="secondary">
-              Find a Supporter!
-            </Typography>
-          </Button>
-
+          <ButtonGroup variant="text" color="secondary" className={classes.buttonGroup}>
+              <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+              <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+              <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+          </ButtonGroup>
           {auth && (
             <div>
               <IconButton
@@ -108,14 +108,7 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>
-                  <Link href="/match">
-                    <Typography component="h6" variant="h6">
-                      Matching
-                    </Typography>
-                  </Link>
-                </MenuItem>
-
+            
                 <MenuItem onClick={handleClose}>
                   <Link href="/account">
                     <Typography component="h6" variant="h6">
@@ -145,14 +138,6 @@ export default function MenuAppBar() {
                 )}
 
                 <MenuItem onClick={handleClose}>
-                  <Link href="/appointments">
-                    <Typography component="h6" variant="h6">
-                      Upcoming Appointments
-                    </Typography>
-                  </Link>
-                </MenuItem>
-
-                <MenuItem onClick={handleClose}>
                   <Link href="/feedback">
                     <Typography component="h6" variant="h6">
                       Feedback
@@ -160,14 +145,6 @@ export default function MenuAppBar() {
                   </Link>
                 </MenuItem>
 
-                <MenuItem onClick={handleClose}>
-                  <Link href="/FAQ">
-                    <Typography component="h6" variant="h6">
-                      FAQ
-                    </Typography>
-                  </Link>
-                </MenuItem>
-      
                 <MenuItem onClick={logout}>
                   <Link href="/login">
                     <Typography component="h6" variant="h6">

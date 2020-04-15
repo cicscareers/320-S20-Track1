@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import { Grid, AppBar, Toolbar, Typography } from "@material-ui/core";
-import Faqs from "../Faqs";
+import Faqs from "../Components/Faqs";
 import Header from "../Navigation/appbar.js";
 
 class App extends Component {
