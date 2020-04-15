@@ -1,11 +1,13 @@
 import React from 'react';
-import { makeStyles, Paper, Button, Grid, Container, Box, Card, CardContent, CardActions } from '@material-ui/core';
+import { makeStyles, Paper, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,9 +32,17 @@ const useStyles = makeStyles((theme) => ({
   rating: {
     marginLeft: "20%"
   },
+  dayselect: {
+    marginLeft: "40%"
+  },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
+  },
+  large: {
+    marginLeft: "55%",
+    width: theme.spacing(20),
+    height: theme.spacing(20),
   },
 }));
 
@@ -46,6 +56,18 @@ export default function ControlledExpansionPanels() {
 
   return (
     <div className={classes.root}>
+      <Grid container className={classes.dayselect} spacing={3}>
+        <Grid item>
+          <NavigateBeforeIcon/>
+        </Grid>
+        <Grid item>
+          <Typography>April 15, 2020</Typography>
+        </Grid>
+        <Grid item>
+          <NavigateNextIcon/>
+        </Grid>
+      </Grid>
+      <br/>
       <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -68,9 +90,10 @@ export default function ControlledExpansionPanels() {
               </Paper>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Card className={classes.picture}>
-                <img src = 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'/>
-              </Card>
+              
+                <Avatar alt="Chinmay Patil" src='https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
+                 className={classes.large} />
+             
             </Grid>
             <Grid item xs={12}>
               <Button
