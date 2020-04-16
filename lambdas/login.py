@@ -1,6 +1,6 @@
 from package.lambda_exception import LambdaException
 from package.query_db import query
-from package import jwt
+from package/external_libraries import jwt
 from datetime import timedelta
 import datetime
 import dateutil.tz
