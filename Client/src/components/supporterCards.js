@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    flexBasis: '33.33%',
+    flexBasis: '25%',
     flexShrink: 0,
   },
   gridpic: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     width: "130%",
   },
   rating: {
-    marginLeft: "20%"
+    flexBasis: '15%'
   },
   tagChip: {
       margin: theme.spacing(0.5),
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
   large: {
     marginLeft: "55%",
-    width: theme.spacing(20),
-    height: theme.spacing(20),
+    width: theme.spacing(25),
+    height: theme.spacing(25),
   },
 }));
 
@@ -69,13 +69,13 @@ const SupporterCard = (props) => {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>{name}</Typography>
-          {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
-          <Typography className={classes.secondaryHeading}>Match Score: Great</Typography>
+          <Typography className={classes.heading}>Match Score: Great</Typography>
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
+          {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={5}>
                 <Typography>{employer}, {title}</Typography>
                 <Typography>{location}</Typography>
                 <br/>
@@ -95,13 +95,16 @@ const SupporterCard = (props) => {
                 <Chip variant="outlined" color="primary" label="5:30 PM" className={classes.tagChip}/>
                 <Chip variant="outlined" color="primary" label="7:30 PM" className={classes.tagChip}/>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={2} align="center">
               
+            </Grid>
+            <Grid item xs={5}>
                 <Avatar alt={name} src={imgsrc}
                  className={classes.large} />
              
             </Grid>
             <Grid item xs={12} align="center">
+              
               <Button
                   margin="normal"
                   variant="contained"

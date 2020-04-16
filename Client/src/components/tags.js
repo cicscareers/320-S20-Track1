@@ -1,1 +1,2 @@
-export default ["tag1","tag2","tag3","tag4","tag5","tag6","tag7"]
+export default ["Combinatorics","AWS","iOS","Networking","Microsoft","React","Machine Learning","Algorithms","Discrete Math",
+"Football","Basketball","Hockey","Industry"]
