@@ -1228,6 +1228,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import CheckCircleRoundedIcon from '@material-ui/icons/CheckCircleRounded';
 const StyledRating = withStyles({
   iconFilled: {
     color: '#ff6d75',
@@ -2074,15 +2075,27 @@ if(this.state.female.length==0){
   }
 }
 else{
+ 
+  var k=0;
+  
 for(var i=0;i<supporter.type.length;i++){
+  var bool=false;
   for(var j=0;j<this.state.female.length;j++){
+
     if(supporter.type[i].localeCompare(this.state.female[j])==0){
-      topicsCovered[i]=( <Chip variant="outlined" color="primary" label={supporter.type[i]}/>);
+       
+      topicsCovered[k++]=( <Chip variant="default" color="primary" avatar={<CheckCircleRoundedIcon/>} label={supporter.type[i]}/>);
+      bool=true;
+      break;
     }
-    else{
-    topicsCovered[i]=( <Chip variant="outlined"  label={supporter.type[i]} />)
-    }
+   
   }
+  if(bool){
+    continue;
+  }
+    topicsCovered[k++]=( <Chip variant="outlined"  label={supporter.type[i]} />)
+    
+  
 }
 }
 let tagsCovered=[];
@@ -2092,15 +2105,23 @@ if(this.state.tags.length==0){
   }
 }
 else{
+  var k=0;
+  
 for(var i=0;i<supporter.tags.length;i++){
+  var bool=false;
   for(var j=0;j<this.state.tags.length;j++){
     if(supporter.tags[i].localeCompare(this.state.tags[j])==0){
-      tagsCovered[i]=( <Chip variant="outlined" color="primary" label={supporter.tags[i]}/>);
+      tagsCovered[i]=( <Chip variant="default" color="primary" avatar={<CheckCircleRoundedIcon/>} label={supporter.tags[i]}/>);
+      bool=true;
+      break;
     }
-    else{
-    tagsCovered[i]=( <Chip variant="outlined"  label={supporter.tags[i]} />)
-    }
+  } 
+  if(bool){
+    continue;
   }
+    tagsCovered[i]=( <Chip variant="outlined"  label={supporter.tags[i]} />)
+    
+  
 }
 }
       let arr=[];
