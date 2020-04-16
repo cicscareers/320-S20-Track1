@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,10 +15,16 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField } from '@material-ui/core';
+import { makeStyles, useTheme, TextField, Grid } from '@material-ui/core';
+import {Rating, Autocomplete} from '@material-ui/lab';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Menu from "../Navigation/appbarMatching.js";
-import supporterCards from "../components/supporterCards.js"
-
+import SupporterCard from "../components/supporterCards.js"
+import SimpleCard from "../components/test.js"
+import SupporterList from "../Data/match2consts.js"
+import topicsList from "../components/topics.js"
+import tagsList from "../components/tags.js"
 const drawerWidth = "25%";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
       flexShrink: 0,
     },
+  },
+  dayselect: {
+    marginLeft: "40%"
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
@@ -56,13 +65,43 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  rating: {
+   marginLeft: "34%"
+  },
 }));
 
-function ResponsiveDrawer(props) {
+const ResponsiveDrawer = (props) => {
   const { container } = props;
+  const [date,setDate]=React.useState(15);
+  const [stateTopics, setStateTopics]=React.useState([]);
+  const [start,setStart]=React.useState("00:00");
+  const [end,setEnd]=React.useState("23:59");
+  const [stateTags, setStateTags]=React.useState([]);
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [name,setName]=React.useState("");
+  const [rating,setRating]=React.useState(0);
+
+  const updateList = (val) => {
+    setName(val);
+  };
+  var newList = (SupporterList.filter(x => String(x.name.toLowerCase()).includes(name.toLowerCase()))).filter(
+    x => x.rating>=rating).filter(
+    x => stateTopics.every(val => x.topics.includes(val))).filter(
+    x => stateTags.every(val => x.tags.includes(val)));
+
+  const getSupporterCard = supporterObj => {
+    return <SupporterCard {...supporterObj}/>;
+  };
+
+  const handleBack = () => {
+    setDate(date-1);
+  };
+
+  const handleNext = () => {
+    setDate(date+1);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -72,13 +111,96 @@ function ResponsiveDrawer(props) {
     <div>
       <br/>
       <Typography align="center" variant="h5">Filters</Typography>
+      <br/>
       <TextField
         variant="outlined"
         margin="normal"
         className={classes.inputs}
         align="center"
         placeholder="Search Supporter"
+        onChange={e => setName(e.target.value)}
       />
+      <br/>
+      <br/>
+      <Autocomplete
+        multiple
+        className={classes.inputs}
+        id="tags-outlined"
+        options={topicsList}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Help Needed Topics"
+            placeholder="Favorites"
+          />
+        )}
+        onChange={(e,v) => setStateTopics(v)}
+      />
+      <br/>
+      <Autocomplete
+        multiple
+        className={classes.inputs}
+        id="tags-outlined"
+        options={tagsList}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Supporter Tags"
+            placeholder="Favorites"
+          />
+        )}
+        onChange={(e,v) => setStateTags(v)}
+      />
+      <br/>
+      <form align="center" noValidate>
+        <TextField
+          id="time"
+          label="Start Time"
+          type="time"
+          fullWidth
+          onChange={e => setStart(e.target.value)}
+          defaultValue="00:00"
+          className={classes.inputs}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, // 5 min
+          }}
+        />
+        <br/>
+        <br/>
+        <TextField
+          id="time"
+          label="End Time"
+          type="time"
+          fullWidth
+          onChange={e => setEnd(e.target.value)}
+          defaultValue="23:59"
+          className={classes.inputs}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, // 5 min
+          }}
+        />
+        <br/>
+        <br/>
+        </form>
+        <Typography align="center">Minimum Required Rating</Typography>
+        <Rating 
+          align="center"
+          className={classes.rating} 
+          name="Supporter Rating" 
+          precision={0.5} 
+          value={rating} 
+          onChange={e => setRating(e.target.value)}
+          size="large"
+        />
+        <br/>
     </div>
   );
 
@@ -121,18 +243,36 @@ function ResponsiveDrawer(props) {
       </nav>
       <main className={classes.content}>
         <br/>
-        {supporterCards()}
+        <Grid container className={classes.dayselect} spacing={3}>
+        <Grid item>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleBack}
+            edge="start"
+          >
+            <NavigateBeforeIcon/>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <Typography>April {date}, 2020</Typography>
+        </Grid>
+        <Grid item>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleNext}
+            edge="start"
+          >
+            <NavigateNextIcon/>
+          </IconButton>
+        </Grid>
+      </Grid>
+      <br/>
+      {newList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
     </div>
   );
 }
-
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  container: PropTypes.any,
-};
 
 export default ResponsiveDrawer;

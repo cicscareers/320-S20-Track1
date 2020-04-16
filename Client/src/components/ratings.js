@@ -62,13 +62,13 @@ IconContainer.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function CustomizedRatings() {
+export default function CustomizedRatings(e) {
    const classes = useStyles();
   return (
     
         <Rating
           name="customized-icons"
-          defaultValue={5}
+          defaultValue={e}
           readOnly
           getLabelText={(value) => customIcons[value].label}
           IconContainerComponent={IconContainer}

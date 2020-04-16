@@ -8,7 +8,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
-
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,14 +46,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc} = props;
+const SupporterCard = () => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
   return (
     <div className={classes.root}>
       <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
@@ -63,23 +61,26 @@ const SupporterCard = (props) => {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography className={classes.heading}>{name}</Typography>
+          <Typography className={classes.heading}>Chinmay Patil</Typography>
           <Typography className={classes.secondaryHeading}>Match Score: Great</Typography>
-          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
+          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={5} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-                <Typography>{employer}, {title}</Typography>
-                <Typography>{location}</Typography>
+                <Typography>CICS Careers, Career Developer</Typography>
+                <Typography>A243 LGRC Lowrise</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                {topics.map(topic => <Chip variant="outlined" color="primary" label={topic} className={classes.tagChip}/>)}
-                {tags.map(tag => <Chip variant="outlined" label={tag} className={classes.tagChip}/>)}
+                <Chip variant="outlined" color="primary" label="Interview Help" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="Resume Review" className={classes.tagChip}/>
+                <Chip variant="outlined" label="React" className={classes.tagChip}/>
+                <Chip variant="outlined" label="Machine Learning" className={classes.tagChip}/>
+                <Chip variant="outlined" label="AWS" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
-                <Avatar alt={name} src={imgsrc}
+                <Avatar alt="Chinmay Patil" src='https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
                  className={classes.large} />
              
             </Grid>
