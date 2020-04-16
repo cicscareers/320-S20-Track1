@@ -1,4 +1,5 @@
 import json
+from query_db import query
 import boto3
 
 
@@ -52,12 +53,16 @@ def create_supporter(event, context):
     client = boto3.client('rds-data')  # Connecting to Database
 
     # checking if user exists
-    check_user = client.execute_statement(
-        secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database="postgres",
-        resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql="SELECT email from users where email = '%s';" % email
-    )
+
+    # check_user = client.execute_statement(
+    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database="postgres",
+    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    #     sql="SELECT email from users where email = '%s';" % email
+    # )
+
+    sql = "SELECT email from users where email = '%s';" % email
+    check_user = query(sql)
 
     if check_user['records'] != []:
         print("This email exists already")
@@ -66,28 +71,36 @@ def create_supporter(event, context):
         }
 
     # creates id
-    create_id = client.execute_statement(
-        secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database="postgres",
-        resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql="SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-    )
 
-    new_id = create_id['records'][0][0]['longValue'] + 1
+    # create_id = client.execute_statement(
+    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database="postgres",
+    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    #     sql="SELECT id FROM users ORDER BY id DESC LIMIT 1;"
+    # )
+
+    sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
+    new_id = query(sql)['records'][0][0]['longValue'] + 1
 
     # insert new user into users table
-    new_user = client.execute_statement(
-        secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database="postgres",
-        resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
 
-        # sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key) \
-        # VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (first_name, last_name, email, password)
+    # new_user = client.execute_statement(
+    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database="postgres",
+    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
 
-        sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key) \
-        VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false, true,'%s','salt')" % (new_id, first_name, last_name, email, password)
+    #     # sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key) \
+    #     # VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (first_name, last_name, email, password)
 
-    )
+    #     sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
+    #     VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false, true,'%s','salt', 'supporter')" % (new_id, first_name, last_name, email, password)
+
+    # )
+
+    sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
+    VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false, true,'%s','salt', 'supporter')" % (new_id, first_name, last_name, email, password)
+
+    new_user = query(sql)
 
     # check if user data successfully loaded
     if new_user['numberOfRecordsUpdated'] == 0:
@@ -97,18 +110,24 @@ def create_supporter(event, context):
         }
 
     # inserts user into supporters table with same user_id
-    new_supp = client.execute_statement(
-        secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database="postgres",
-        resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
 
-        # sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
-        #     VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1),(SELECT id FROM users ORDER BY id DESC LIMIT 1), 'employer', 'title', 'team', false, 0, 'team name')" ,
+    # new_supp = client.execute_statement(
+    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database="postgres",
+    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
 
-        sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
+    #     # sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
+    #     #     VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1),(SELECT id FROM users ORDER BY id DESC LIMIT 1), 'employer', 'title', 'team', false, 0, 'team name')" ,
+
+    #     sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
+    #         VALUES ('%s', '%s' , '%s', '%s', '%s', false, 0, 'team name')" % (new_id, new_id, employer, title, team)
+
+    # )
+
+    sql = "INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
             VALUES ('%s', '%s' , '%s', '%s', '%s', false, 0, 'team name')" % (new_id, new_id, employer, title, team)
 
-    )
+    new_supp = query(sql)
 
     # check if supporter data successfully loaded
     if new_supp['numberOfRecordsUpdated'] == 0:
@@ -118,13 +137,18 @@ def create_supporter(event, context):
         }
 
     # inserts specific supporter types into suppoert types table with same id
-    supp_types = client.execute_statement(
-        secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database="postgres",
-        resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql="INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+    # supp_types = client.execute_statement(
+    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database="postgres",
+    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    #     sql="INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+    #         VALUES ('%s', '%s', '%r', '%r','%r', '%r' , '%r')" % (new_id, new_id, professional_staff, student_staff, alumni, faculty, other)
+    # )
+
+    sql = "INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
             VALUES ('%s', '%s', '%r', '%r','%r', '%r' , '%r')" % (new_id, new_id, professional_staff, student_staff, alumni, faculty, other)
-    )
+
+    supp_types = query(sql)
 
     # check if supporter types successfully loaded
     if supp_types['numberOfRecordsUpdated'] == 0:
