@@ -39,7 +39,7 @@ def update_supporter_appointment_settings(event, context):
     sql = 'UPDATE supporter_preferences_for_students SET job_search = :job_search, grad_student = :grad_student WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(preferences)
     response = query(sql, sql_parameters)
-    response['records']
+    #response['records']
     #check response for status code
 
     #Execute parameterized query for updating specializations
@@ -47,7 +47,7 @@ def update_supporter_appointment_settings(event, context):
         specialization_type_id = :specialization_type_id WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(specializations)
     response = query(sql, sql_parameters)
-    response['records']
+    #response['records']
     #check response for status code
 
     #Execute parameterized query for inserting major preference
@@ -57,7 +57,7 @@ def update_supporter_appointment_settings(event, context):
         {'name': 'major_id', 'value': {'longValue': major_id}}
     ]
     response = query(sql, sql_parameters)
-    response["numberOfRecordsUpdated"]
+    #response["numberOfRecordsUpdated"]
     #check response for status code
 
     return {
