@@ -1,23 +1,21 @@
 import json
-import boto3
+from package.query_db import query
 
-#Input: supporter_id
+#Written by Matt Hill
+#Input: student_id
 #Output: JSON object of current appointments that a student has in the format: 
 # "studentFN", "studentLN", "supporterFN", "supporterLN", "type", "duration","method","location"
 
 def get_appointment_students(event, context):
     
     given_id = event['student_id']
-    client = boto3.client('rds-data') #Connecting to the database
-    appointment_info = client.execute_statement(
-        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database = "postgres",
-        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql = "SELECT U1.first_name as studentFN, U1.last_name as studentLN, U2.first_name as supporterFN, U2.last_name as supporterLN, SA.type,SA.duration, SA.method, SA.location \
+    sql = 'SELECT U1.first_name as studentFN, U1.last_name as studentLN, U2.first_name as supporterFN, U2.last_name as supporterLN, SA.type,SA.duration, SA.method, SA.location \
             FROM students S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
-             WHERE S.student_id = SR.student_id and SR.appointment_id = SA.appointment_id and S.student_id = U1.id and SA.supporter_id = U2.id and S.student_id = '%s';" % (given_id)
-    )
+             WHERE S.student_id = SR.student_id and SR.appointment_id = SA.appointment_id and S.student_id = U1.id and SA.supporter_id = U2.id and S.student_id=:given_id;' 
+    sql_parameters = [{'name':'given_id', 'value':{'longValue': f'{given_id}'}}]
+    appointment_info = query(sql, sql_parameters)
 
+    #Check to see if the query even returned anything
     if (appointment_info['records'] == []): 
         return{
             'body': json.dumps("The user does not exist or has no appointments"),
@@ -39,8 +37,9 @@ def get_appointment_students(event, context):
             block["location"] = entry[7].get("stringValue")
             student_appointments.append(block)
 
+        #Returns the query contents in JSON format
         return{
-            'body': json.dumps(student_appointments), #outputs the query in JSON format
+            'body': json.dumps(student_appointments),
             'statusCode': 200
         }
     
