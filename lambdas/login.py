@@ -1,4 +1,7 @@
-import query from query_db
+from package.lambda_exception import LambdaException
+from package.query_db import query
+from package/external_libraries import jwt
+from datetime import timedelta
 import datetime
 import json
 
@@ -16,16 +19,6 @@ def login(event, context):
     if 'Password' not in event:
         print("no password")
         raise LambdaException("Invalid input: no password")
-
-    # if 'email' not in http_body:
-    #     print("no email")
-    #     raise LambdaException("Invalid input: no email")
-    # if 'pass' not in http_body:
-    #     print("no password")
-    #     raise LambdaException("Invalid input: no password")
-
-    # given_email = http_body['email']
-    # given_password = http_body['pass']
 
     given_email = event['UserEmail']
     given_password = event['Password']
@@ -95,6 +88,4 @@ def login_handler(event, context):
         json_exception = json.dumps(api_exception)
         raise LambdaException(json_exception)
 
-class LambdaException(Exception):
-    pass
 
