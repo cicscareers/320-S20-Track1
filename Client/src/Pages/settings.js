@@ -19,9 +19,7 @@ import { makeStyles, useTheme, TextField } from '@material-ui/core';
 import Menu from "../Navigation/appbarMatching.js";
 import supporterCards from "../components/supporterCards.js"
 import AdminSettings from './adminSettings.js'
-import A from './Settings Pages/testA'
-import B from './Settings Pages/testB'
-import C from './Settings Pages/testC'
+import Account from './account.js'
 
 const drawerWidth = "10%";
 
@@ -79,14 +77,8 @@ function ResponsiveDrawer(props) {
         <ListItem button key="Admin Settings" onClick={e => setCurrDrawer(AdminSettings())}>
           <ListItemText primary="Admin Settings"/>
         </ListItem>
-        <ListItem button key="A" onClick={e => setCurrDrawer(A())}>
-          <ListItemText primary="A"/>
-        </ListItem>
-        <ListItem button key="B" onClick={e => setCurrDrawer(B())}>
-          <ListItemText primary="B"/>
-        </ListItem>
-        <ListItem button key="C" onClick={e => setCurrDrawer(C())}>
-          <ListItemText primary="C"/>
+        <ListItem button key="User Settings" onClick={e => setCurrDrawer(Account())}>
+          <ListItemText primary="User Settings"/>
         </ListItem>
       </List>
     </div>
@@ -130,7 +122,6 @@ function ResponsiveDrawer(props) {
         </Hidden>
       </nav>
       <main className={classes.content}>
-        <br/><br/>
         {currDrawer}
       </main>
     </div>

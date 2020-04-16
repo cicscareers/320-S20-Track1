@@ -17,10 +17,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
+import {Autocomplete} from '@material-ui/lab';
 
 function Copyright() {
   return (
@@ -169,7 +166,7 @@ export default function SignUp() {
   }
 
   const supporterTypes = [
-    'Professional Staff',
+    "Professional Staff",
     'Student Staff',
     'Alumni',
     'Faculty',
@@ -277,24 +274,20 @@ export default function SignUp() {
               </FormHelperText>
             </FormControl>
           )}
-          <FormControl className={classes.formControl} style = {formStyle}>
-            <InputLabel id="supporter-types">Supporter Type *</InputLabel>
-            <Select
-              labelId="supporter-types"
-              id="supporter-types"
-              multiple
-              value={supporterType}
-              onChange={e => setSupporterType(e.target.value)}
-              input={<Input />}
-              MenuProps={MenuProps}
-            >
-              {supporterTypes.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <br/><br/>
+          <Autocomplete
+            multiple
+            id="supporter-types"
+            options= {supporterTypes}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Supporter Types *"
+              />
+            )}
+            onChange={(e,v) => setSupporterType(v)}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -317,24 +310,21 @@ export default function SignUp() {
             autoComplete="title"
             onChange={e => setTitle(e.target.value)}
           />
-          <FormControl className={classes.formControl} style = {formStyle}>
-            <InputLabel id="teams">Team (Optional)</InputLabel>
-            <Select
-              labelId="teams"
-              id="teams"
-              multiple
-              value={team}
-              onChange={e => setTeam(e.target.value)}
-              input={<Input />}
-              MenuProps={MenuProps}
-            >
-              {teams.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <br/><br/>
+          <Autocomplete
+            multiple
+            id="teams"
+            options= {teams}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Team (Optional)"
+              />
+            )}
+            onChange={(e,v) => setTeam(v)}
+          />
+          <br/>
           <Typography align="center" variant="body2">
             By requesing an account you agree to ReachOut's
           </Typography>
