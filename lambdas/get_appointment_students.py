@@ -12,7 +12,7 @@ def get_appointment_students(event, context):
     sql = 'SELECT U1.first_name as studentFN, U1.last_name as studentLN, U2.first_name as supporterFN, U2.last_name as supporterLN, SA.type,SA.duration, SA.method, SA.location \
             FROM students S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
              WHERE S.student_id = SR.student_id and SR.appointment_id = SA.appointment_id and S.student_id = U1.id and SA.supporter_id = U2.id and S.student_id = given_id' 
-    sql_parameters = [{'name':'given_id', 'value':{'longValue': f'{given_id}'}}]
+    sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
     appointment_info = query(sql, sql_parameters)
 
     #Check to see if the query even returned anything
