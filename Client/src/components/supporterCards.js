@@ -69,7 +69,6 @@ const SupporterCard = (props) => {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>{name}</Typography>
-          <Typography className={classes.heading}>{apptTopic}</Typography>
           {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
           <Typography className={classes.secondaryHeading}>Match Score: Great</Typography>
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
