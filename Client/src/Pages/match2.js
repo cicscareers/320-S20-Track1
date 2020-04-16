@@ -19,7 +19,7 @@ import { makeStyles, useTheme, TextField, Grid } from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import Menu from "../Navigation/appbarMatching.js";
+import Menu from "../Navigation/appbar.js";
 import SupporterCard from "../components/supporterCards.js"
 import SimpleCard from "../components/test.js"
 import SupporterList from "../Data/match2consts.js"
@@ -45,10 +45,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "40%"
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
+    zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -75,7 +72,6 @@ const ResponsiveDrawer = (props) => {
   const [date,setDate]=React.useState(15);
   const [stateTopics, setStateTopics]=React.useState([]);
   const [start,setStart]=React.useState("00:00");
-  const [end,setEnd]=React.useState("23:59");
   const [stateTags, setStateTags]=React.useState([]);
   const classes = useStyles();
   const theme = useTheme();
@@ -86,10 +82,12 @@ const ResponsiveDrawer = (props) => {
   const updateList = (val) => {
     setName(val);
   };
-  var newList = (SupporterList.filter(x => String(x.name.toLowerCase()).includes(name.toLowerCase()))).filter(
+  var newList = (SupporterList.filter(
+    x => String(x.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     x => x.rating>=rating).filter(
     x => stateTopics.every(val => x.topics.includes(val))).filter(
-    x => stateTags.every(val => x.tags.includes(val)));
+    x => stateTags.every(val => x.tags.includes(val)))
+    //.filter(x => x.start<=start);
 
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
@@ -107,140 +105,104 @@ const ResponsiveDrawer = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
-  const drawer = (
-    <div>
-      <br/>
-      <Typography align="center" variant="h5">Filters</Typography>
-      <br/>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        className={classes.inputs}
-        align="center"
-        placeholder="Search Supporter"
-        onChange={e => setName(e.target.value)}
-      />
-      <br/>
-      <br/>
-      <Autocomplete
-        multiple
-        className={classes.inputs}
-        id="tags-outlined"
-        options={topicsList}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Help Needed Topics"
-            placeholder="Favorites"
-          />
-        )}
-        onChange={(e,v) => setStateTopics(v)}
-      />
-      <br/>
-      <Autocomplete
-        multiple
-        className={classes.inputs}
-        id="tags-outlined"
-        options={tagsList}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Supporter Tags"
-            placeholder="Favorites"
-          />
-        )}
-        onChange={(e,v) => setStateTags(v)}
-      />
-      <br/>
-      <form align="center" noValidate>
-        <TextField
-          id="time"
-          label="Start Time"
-          type="time"
-          fullWidth
-          onChange={e => setStart(e.target.value)}
-          defaultValue="00:00"
-          className={classes.inputs}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300, // 5 min
-          }}
-        />
-        <br/>
-        <br/>
-        <TextField
-          id="time"
-          label="End Time"
-          type="time"
-          fullWidth
-          onChange={e => setEnd(e.target.value)}
-          defaultValue="23:59"
-          className={classes.inputs}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300, // 5 min
-          }}
-        />
-        <br/>
-        <br/>
-        </form>
-        <Typography align="center">Minimum Required Rating</Typography>
-        <Rating 
-          align="center"
-          className={classes.rating} 
-          name="Supporter Rating" 
-          precision={0.5} 
-          value={rating} 
-          onChange={e => setRating(e.target.value)}
-          size="large"
-        />
-        <br/>
-    </div>
-  );
-
+  
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Menu/>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <Typography align="center" variant="h5">Filters</Typography>
+        <br/>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          className={classes.inputs}
+          align="center"
+          placeholder="Search Supporter"
+          onChange={e => setName(e.target.value)}
+        />
+        <br/>
+        <br/>
+        <Autocomplete
+          multiple
+          className={classes.inputs}
+          id="tags-outlined"
+          options={topicsList}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Help Needed Topics"
+              placeholder="Favorites"
+            />
+          )}
+          onChange={(e,v) => setStateTopics(v)}
+        />
+        <br/>
+        <Autocomplete
+          multiple
+          className={classes.inputs}
+          id="tags-outlined"
+          options={tagsList}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Supporter Tags"
+              placeholder="Favorites"
+            />
+          )}
+          onChange={(e,v) => setStateTags(v)}
+        />
+        <br/>
+        <form align="center" noValidate>
+          <TextField
+            id="time"
+            label="Start Time"
+            type="time"
+            fullWidth
+            onChange={e => setStart(e.target.value)}
+            defaultValue="00:00"
+            className={classes.inputs}
+            InputLabelProps={{
+              shrink: true,
             }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+            inputProps={{
+              step: 300, // 5 min
             }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+          />
+          <br/>
+          <br/>
+          </form>
+          <Typography align="center">Minimum Required Rating</Typography>
+          <Rating 
+            align="center"
+            className={classes.rating} 
+            name="Supporter Rating" 
+            precision={0.5} 
+            value={rating} 
+            onChange={e => setRating(e.target.value)}
+            size="large"
+          />
+          <br/>
+
+      </div>
+      </Drawer>
       <main className={classes.content}>
         <br/>
         <Grid container className={classes.dayselect} spacing={3}>

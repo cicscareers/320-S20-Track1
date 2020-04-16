@@ -1,1 +1,1 @@
-export default ["topic1","topic2","topic3","topic4","topic5","topic6","topic7"]
+export default ["Cover Letter","Job Search","Homework","Hype","Giving Pizza","Mock Interview","Resume Review"]

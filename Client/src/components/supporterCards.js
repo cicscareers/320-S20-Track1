@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
+import DoneIcon from '@material-ui/icons/Done';
 
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
@@ -48,34 +49,52 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, start, panel} = props;
   const classes = useStyles();
+  const [apptTopic, setApptTopic] = React.useState("");
   const [expanded, setExpanded] = React.useState(false);
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  const chipFilter = (item) => { 
+    setApptTopic(item);
+  }
+  const handleClick = (e) => {
+    console.info(e.target.getAttribute('color'));
   };
   
   return (
-    <div className={classes.root}>
-      <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+
+      <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>{name}</Typography>
+          <Typography className={classes.heading}>{apptTopic}</Typography>
+          {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
           <Typography className={classes.secondaryHeading}>Match Score: Great</Typography>
           <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={5}>
                 <Typography>{employer}, {title}</Typography>
                 <Typography>{location}</Typography>
                 <br/>
                 <Typography>Helps With:</Typography>
-                {topics.map(topic => <Chip variant="outlined" color="primary" label={topic} className={classes.tagChip}/>)}
-                {tags.map(tag => <Chip variant="outlined" label={tag} className={classes.tagChip}/>)}
+                {topics.map(topic => <Chip 
+                  clickable 
+                  value={topic}
+                  variant="outlined" 
+                  deleteIcon={apptTopic===topic && <DoneIcon />} 
+                  color="primary" 
+                  label={topic} 
+                  className={classes.tagChip}
+                  onClick={ () => chipFilter(topic) }
+                />)}
+                <Typography>Time Blocks:</Typography>
+                <Chip variant="outlined" color="primary" clickable label="2:30 PM" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="5:30 PM" className={classes.tagChip}/>
+                <Chip variant="outlined" color="primary" label="7:30 PM" className={classes.tagChip}/>
             </Grid>
             <Grid item xs={12} sm={6}>
               
@@ -95,8 +114,6 @@ const SupporterCard = (props) => {
           </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      
-    </div>
   );
 }
 
