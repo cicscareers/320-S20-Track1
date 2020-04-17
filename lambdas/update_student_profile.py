@@ -3,7 +3,7 @@ import json
 
 from package import db_config
 from package.query_db import query
-from package import lambda_exception
+from package.lambda_exception import LambdaException
 
 #Authors: Victoria Caruso and Hadley Pope
 #Date: 4/9/20
@@ -14,7 +14,7 @@ def update_student_profile(event, context):
     if student_id in event:
         student_id = event['student_id']
     else:
-        raise lambda_exception("Invalid input: No user Id")
+        raise LambdaException("Invalid input: No user Id")
 
     student_id_param = [{'name' : 'student_id', 'value' : {'stringValue' : student_id}}]
 
@@ -159,18 +159,18 @@ def update_student_profile(event, context):
         print("No existing Student Record, checking to see if user exists")
         if(existing_user['records'] == []):
             print("User DNE")
-            raise lambda_exception("User does not exist")
+            raise LambdaException("User does not exist")
         else:
             sql = "SELECT user_type FROM users WHERE id= :student_id"
             user_type = query(sql, student_id_param)
             error_message = "Not a student, user is a '%s';" % (user_type)
             print(error_message) 
-            raise lambda_exception(error_message)
+            raise LambdaException(error_message)
 
 
     #values that can not be null
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
-        raise lambda_exception(Unprocessable Entity)
+        raise LambdaException(Unprocessable Entity)
 
 
     #sql queries to update data in each table
