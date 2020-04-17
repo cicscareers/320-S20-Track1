@@ -14,6 +14,7 @@ def update_supporter_appointment_settings(event, context):
 
     preferences = {}
     specializations = {}
+    majors = {}
 
     #Adding to preferences dictionary
     #The reason I add to the dictionary by adding another dictionary with the value type
@@ -34,6 +35,9 @@ def update_supporter_appointment_settings(event, context):
     specializations['specialization_type_id'] = {'longValue': specialization_type_id}
     specializations['supporter_id'] = {'longValue': supporter_id}
 
+    #Adding to majors dictionary
+    majors['supporter_id'] = {'longValue': supporter_id}
+    majors['major_id'] = {'longValue': major_id}
 
     #Execute parameterized query for updating preferences
     sql = 'UPDATE supporter_preferences_for_students SET job_search = :job_search, grad_student = :grad_student WHERE supporter_id = :supporter_id;'
@@ -43,7 +47,7 @@ def update_supporter_appointment_settings(event, context):
     #check response for status code
 
     #Execute parameterized query for updating specializations
-    sql = 'UPDATE supporter_specializations SET max_students = :max_student, duration = :duration, \
+    sql = 'UPDATE supporter_specializations SET max_students = :max_students, duration = :duration, \
         specialization_type_id = :specialization_type_id WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(specializations)
     response = query(sql, sql_parameters)
@@ -51,11 +55,8 @@ def update_supporter_appointment_settings(event, context):
     #check response for status code
 
     #Execute parameterized query for inserting major preference
-    sql = 'INSERT INTO supporter_major_preferences (supporter_id, major_id) values (:supporter_id, :major_id)'
-    sql_parameters = [
-        {'name': 'supporter_id', 'value': {'longValue': supporter_id}},
-        {'name': 'major_id', 'value': {'longValue': major_id}}
-    ]
+    sql = 'INSERT INTO supporter_major_preferences (supporter_id, major_id) VALUES (:supporter_id, :major_id);'
+    sql_parameters = dictionary_to_list(majors)
     response = query(sql, sql_parameters)
     #response["numberOfRecordsUpdated"]
     #check response for status code
