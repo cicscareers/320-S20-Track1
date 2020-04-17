@@ -8,7 +8,7 @@ from package.query_db import query
 
 def get_appointment_supporter(event, context):
 
-    given_id = event['supporter_id']
+    given_id = event['supporter_id'] 
     sql = 'SELECT U1.first_name as supporterFN, U1.last_name as supporterLN, U2.first_name as studentFN, U2.last_name as studentLN, SA.type, SA.duration, SA.method, SA.location \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
             WHERE S.supporter_id = SR.supporter_id and SR.appointment_id = SA.appointment_id and S.supporter_id = U1.id and SR.student_id = U2.id and S.supporter_id=:given_id;'
