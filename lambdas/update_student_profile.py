@@ -2,113 +2,187 @@ import boto3
 import json
 
 from package import db_config
-from package import query_db
+from package.query_db import query
+from package import lambda_exception
 
-#Author: Victoria Caruso
+#Authors: Victoria Caruso and Hadley Pope
 #Date: 4/9/20
 
 #function updates the student profile details in the database
 def update_student_profile(event, context):
     #student identifier 
-    student_id = event['student_id']
+    if student_id in event:
+        student_id = event['student_id']
+    else:
+        raise lambda_exception("Invalid input: No user Id")
+
+    student_id_param = [{'name' : 'student_id', 'value' : {'stringValue' : student_id}}]
+
 
     #users table
-    first_name = event['first_name']
-    last_name = event['last_name']
+    updated_user_vals = ""
 
-    query_str_users = f"SET first_name = '{first_name}', last_name = '{last_name}'"
+    if first_name in event:
+        first_name = event['first_name']
+    else:
+        sql = "SELECT first_name FROM users WHERE id= :student_id"
+        first_name = query(sql, student_id_param)
+    updated_user_vals += "first_name='%s', " % (first_name)
+
+    if last_name in event:        
+        last_name = event['last_name']
+    else:
+        sql = "SELECT last_name FROM users WHERE id= :student_id"
+        last_name = query(sql, student_id_param)
+    updated_user_vals += "last_name='%s', " % (last_name)
 
     if 'preferred_name' in event:
         preferred_name = event['preferred_name']
-        query_str_users += f", preferred_name = '{preferred_name}'"
+    else:
+        sql = "SELECT preferred_name FROM users WHERE id= :student_id"
+        preferred_name = query(sql, student_id_param)
+    updated_user_vals += "preferred_name='%s', " % (preferred_name)
+
     if 'picture' in event:
         picture = event['picture']
-        query_str_users += f", picture = '{picture}'"
+    else:
+        sql = "SELECT picture FROM users WHERE id= :student_id"
+        picture = query(sql, student_id_param)
+    updated_user_vals += "picture='%s', " % (picture)
+
     if 'bio' in event:
         bio = event['bio']
-        query_str_users += f", bio = '{bio}'"
+    else:
+        sql = "SELECT bio FROM users WHERE id= :student_id"
+        bio = query(sql, student_id_param)
+    updated_user_vals += "bio='%s', " % (bio)
+
     if 'pronouns' in event:
         pronouns = event['pronouns']
-        query_str_users += f", pronouns = '{pronouns}'"
+    else:
+        sql = "SELECT pronouns FROM users WHERE id= :student_id"
+        pronouns = query(sql, student_id_param)
+    updated_user_vals += "pronouns='%s', " % (pronouns)
+
     if 'phone' in event:
         phone = event['phone']
-        query_str_users += f", phone = '{phone}'"
+    else:
+        sql = "SELECT phone FROM users WHERE id= :student_id"
+        phone = query(sql, student_id_param)
+    updated_user_vals += "phone='%s'" % (phone)
+
     
     #students table
-    grad_student = event['grad_student']
-    job_search = event['job_search']
+    updated_student_vals = ""
 
-    query_str_students = f"SET job_search = {job_search}, grad_student = {grad_student}"
+    if 'grad_student' in event:
+        grad_student = event['grad_student']
+    else:
+        sql = "SELECT grad_student FROM students WHERE id= :student_id"
+        grad_student = query(sql, student_id_param)
+    updated_student_vals += "grad_student='%s', " % (grad_student)
+
+    if "job_search" in event:
+        job_search = event['job_search']
+    else:
+        sql = "SELECT job_search FROM students WHERE id= :student_id"
+    updated_student_vals += "job_search='%s', " % (job_search)
 
     if 'college' in event:
         college = event['college']
-        query_str_students += f", college = '{college}'"
+    else:
+        sql = "SELECT college FROM students WHERE id= :student_id"
+        college = query(sql, student_id_param)
+    updated_student_vals += "college='%s', " % (college)
+
     if 'grad_year' in event:
         grad_year= event['grad_year']
-        query_str_students += f", grad_year = '{grad_year}'"
+    else:
+        sql = "SELECT grad_year FROM students WHERE id= :student_id"
+        grad_year = query(sql, student_id_param)
+    updated_student_vals += "grad_year='%s', " % (grad_year)
+
     if 'resume' in event: 
         resume = event['resume']
-        query_str_students += f", resume = '{resume}'"
+    else:
+        sql = "SELECT resume FROM students WHERE id= :student_id"
+        resume = query(sql, student_id_param)
+    updated_student_vals += "resume='%s'" % (resume)
+
 
     #student_majors table
-    delete_majors = ""
+    delete_majors_sql = ""
     student_majors_sql = ""
+    major_params = student_id_param
 
     if 'majors' in event:
         majors = event['majors']
-        delete_majors = (f"DELETE FROM student_majors WHERE student_id = '{student_id}';")
+        delete_majors_sql = "DELETE FROM student_majors WHERE student_id= :student_id"
+
         for major in majors:
-            student_majors_sql += (f"INSERT INTO student_majors " \
-                f"VALUES ('{student_id}', (SELECT major_id FROM major WHERE major = '{major}');")
+            major_sql = "SELECT major_id FROM major WHERE major= :major"
+            param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
+            major_id = query(major_sql, param)
+
+            student_majors_sql += "INSERT INTO student_majors VALUES (:student, :major_id)"
+            major_id_param = {'name' : 'major_id', 'value' : {'longValue' : major_id}}
+            major_params.append(major_id_param)
+
     
     #student_minors table
-    delete_minors = ""
+    delete_minors_sql = ""
     student_minors_sql = ""
+    minor_params = student_id_param
 
     if 'minors' in event:
         minors = event['minors']
-        delete_minors = (f"DELETE FROM student_minors WHERE student_id = '{student_id}';")
-        for minor in minors:
-            student_minors_sql += (f"INSERT INTO student_minors " \
-                f"VALUES ('{student_id}', (SELECT minor_id FROM minor WHERE minor = '{minor}');")
-    
-    #Connecting to the database
-    client = boto3.client('rds-data') 
+        delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
 
-    #Check if supporter exists
-    existing_user = client.execute_statement(
-        secretArn = db_config.SECRET_ARN,
-        database = db_config.DB_NAME,
-        resourceArn = db_config.ARN,
-        sql = f"SELECT student_id FROM students WHERE student_id = '{student_id}';"
-    )
-    if(existing_user['records'] == []):
-        print("No existing Student Record")
-        return{
-            'statuscode' : 404 #not found
-        }
+        for minor in minors:
+            minor_sql = "SELECT minor_id FROM minor WHERE minor= :minor"
+            param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
+            minor_id = query(minor_sql, param)
+
+            student_minors_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
+            minor_id_param = {'name' : 'minor_id', 'value' : {'longValue' : minor_id}}
+            minor_params.append(minor_id_param)
+ 
+
+    #Check if student exists
+    sql = "SELECT student_id FROM students WHERE student_id= :student_id"
+    existing_student = query(sql, student_id_param)
+
+    sql = "SELECT id FROM users WHERE id= :student_id"
+    existing_user = query(sql, student_id_param)
+
+    if(existing_student['records'] == []):
+        print("No existing Student Record, checking to see if user exists")
+        if(existing_user['records'] == []):
+            print("User DNE")
+            raise lambda_exception("User does not exist")
+        else:
+            sql = "SELECT user_type FROM users WHERE id= :student_id"
+            user_type = query(sql, student_id_param)
+            error_message = "Not a student, user is a '%s';" % (user_type)
+            print(error_message) 
+            raise lambda_exception(error_message)
+
 
     #values that can not be null
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
-        return{
-            'statusCode' : 422 #unproccesable entity
-        }
+        raise lambda_exception(Unprocessable Entity)
+
 
     #sql queries to update data in each table
-    users_table = (f"UPDATE users {query_str_users}" \
-                        f" WHERE id = '{student_id}';")
-    students_table = (f"UPDATE students {query_str_students}" \
-                        f" WHERE student_id = '{student_id}';")
+    users_table_sql = (f"UPDATE users SET {updated_user_vals} WHERE id= :student_id")
+                        
+    students_table_sql = (f"UPDATE students SET {updated_student_vals} WHERE student_id= :student_id")
     
-    query = users_table + " " + students_table + " " + delete_majors + " " + student_majors_sql + " " \
-            + delete_minors + " " + student_minors_sql
+    sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
+            + delete_minors_sql + " " + student_minors_sql
 
     print(query)
-    update_data = client.execute_statement(
-        secretArn = db_config.SECRET_ARN, 
-        database = db_config.DB_NAME,
-        resourceArn = db_config.ARN,
-        sql = query
+    update_data = query(sql, student_id_param)
     )
 
     if(update_data['numberOfRecordsUpdated'] == 0): 
@@ -118,5 +192,5 @@ def update_student_profile(event, context):
         }
     print("Updated Student Profile")
     return {
-        'statusCode': 201 #created 
+        'statusCode': 204 #no content 
     }
