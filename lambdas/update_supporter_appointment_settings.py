@@ -20,24 +20,24 @@ def update_supporter_appointment_settings(event, context):
     #The reason I add to the dictionary by adding another dictionary with the value type
     #and then value is for the parameterization
     if(job_search != None):
-        preferences['job_search'] = {'booleanValue': job_search}
+        preferences['job_search'] = job_search
     if(grad_student != None):
-        preferences['grad_student'] = {'booleanValue': grad_student}
+        preferences['grad_student'] = grad_student
     if(job_search == None or grad_student == None): #These values cannot be null
         return{
             'statusCode' : 422 #unproccesable
         }
-    preferences['supporter_id'] = {'longValue': supporter_id}
+    preferences['supporter_id'] = supporter_id
 
     #Adding to specializations dictionary
-    specializations['max_students'] = {'longValue': max_students}
-    specializations['duration'] = {'longValue': duration}
-    specializations['specialization_type_id'] = {'longValue': specialization_type_id}
-    specializations['supporter_id'] = {'longValue': supporter_id}
+    specializations['max_students'] = max_students
+    specializations['duration'] = duration
+    specializations['specialization_type_id'] = specialization_type_id
+    specializations['supporter_id'] = supporter_id
 
     #Adding to majors dictionary
-    majors['supporter_id'] = {'longValue': supporter_id}
-    majors['major_id'] = {'longValue': major_id}
+    majors['supporter_id'] = supporter_id
+    majors['major_id'] = major_id
 
     #Execute parameterized query for updating preferences
     sql = 'UPDATE supporter_preferences_for_students SET job_search = :job_search, grad_student = :grad_student WHERE supporter_id = :supporter_id;'
@@ -50,6 +50,7 @@ def update_supporter_appointment_settings(event, context):
     sql = 'UPDATE supporter_specializations SET max_students = :max_students, duration = :duration, \
         specialization_type_id = :specialization_type_id WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(specializations)
+    print(sql_parameters)
     response = query(sql, sql_parameters)
     #response['records']
     #check response for status code
@@ -67,7 +68,16 @@ def update_supporter_appointment_settings(event, context):
 
 def dictionary_to_list(dictionary):
     params = []
+    valueType = ""
     #For each key, name = key and value = dictionary {value type : value}
     for key in dictionary.keys():
-        params.append({'name': key, 'value': dictionary[key]})
+        if(type(dictionary[key]) == int):
+            valueType = 'longValue'
+        if(type(dictionary[key]) == str):
+            valueType = 'stringValue'
+        if(type(dictionary[key]) == bool):
+            valueType = 'booleanValue'
+        if(type(dictionary[key]) == float):
+            valueType = 'doubleValue'
+        params.append({'name': key, 'value': {valueType : dictionary[key]}})
     return params
