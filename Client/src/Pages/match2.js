@@ -112,7 +112,7 @@ const ResponsiveDrawer = (props) => {
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
-  
+
   const updateList = (val) => {
     setName(val);
   };
@@ -151,7 +151,7 @@ const ResponsiveDrawer = (props) => {
 
   function checkTimeInRange(start,end, timeBlockArray){
     for(let i=0;i<timeBlockArray.length;i++){
-      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime))){
+      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime)) && start!==end){
         return true
       }
     }

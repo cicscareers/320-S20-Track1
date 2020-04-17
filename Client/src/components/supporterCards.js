@@ -177,7 +177,7 @@ const SupporterCard = (props) => {
                 Location: {location}
               </Typography>
               <Typography gutterBottom>
-                Time: {convertTime(time)} for 30 minutes on April 17
+                Time: {convertTime(time)} for 30 minutes on {day}
               </Typography>
               <Typography gutterBottom>
                 Appointment Type: {apptTopic}
