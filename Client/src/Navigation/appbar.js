@@ -72,9 +72,11 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography component="h1" variant="h3" color="secondary">
+        <Button href="/match">
+          <Typography component="h1" variant="h3" href="/match" color="secondary">
               ReachOUT
           </Typography>
+          </Button>
           <ButtonGroup variant="text" color="secondary" className={classes.buttonGroup}>
               <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
               <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
