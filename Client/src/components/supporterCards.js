@@ -12,6 +12,7 @@ import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
+import convertTime from "../components/convertTime.js"
 
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc, start, panel} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day} = props;
   const classes = useStyles();
   const cookies = new Cookies();
   const email = cookies.get("email");
@@ -91,7 +92,28 @@ const SupporterCard = (props) => {
   function validateForm() {
     return apptTopic!="" && time!="";
   };
-  
+  function convertToMin(t){
+    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
+  }
+  var startTimes = [];
+  function generateTimeChip(st){
+    return <Chip
+      clickable 
+      value={st}
+      variant={(time === st) ? 'default' : 'outlined'}
+      color="primary" 
+      label={convertTime(st)}
+      className={classes.tagChip}
+      onClick={ () => chipFilterTime(st) }
+    />
+  }
+  function generateMultipleTimeChips(s,e){
+    let st=convertToMin(s)
+    let et=convertToMin(e)
+    for(let i=st;i<et;i+=30){
+       startTimes.push(i);
+    }
+  }
   return (
 
       <ExpansionPanel>
@@ -116,40 +138,14 @@ const SupporterCard = (props) => {
                   clickable 
                   value={topic}
                   variant={(apptTopic === topic) ? 'default' : 'outlined'}
-                  deleteIcon={apptTopic===topic && <DoneIcon />} 
                   color="primary" 
                   label={topic} 
                   className={classes.tagChip}
                   onClick={ () => chipFilter(topic) }
                 />)}
                 <Typography>Select Appointment Time:</Typography>
-                <Chip
-                  clickable 
-                  value="11 AM" 
-                  variant={(time === "11 AM") ? 'default' : 'outlined'}
-                  color="primary" 
-                  label="11 AM" 
-                  className={classes.tagChip}
-                  onClick={ () => chipFilterTime("11 AM") }
-                />
-                <Chip
-                  clickable 
-                  value="2 PM"
-                  variant={(time === "2 PM") ? 'default' : 'outlined'}
-                  color="primary" 
-                  label="2 PM" 
-                  className={classes.tagChip}
-                  onClick={ () => chipFilterTime("2 PM") }
-                />
-                <Chip
-                  clickable 
-                  value="4 PM"
-                  variant={(time === "4 PM") ? 'default' : 'outlined'}
-                  color="primary" 
-                  label="4 PM" 
-                  className={classes.tagChip}
-                  onClick={ () => chipFilterTime("4 PM") }
-                />
+                {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
+                {startTimes.map(st => generateTimeChip(st))}
             </Grid>
             <Grid item xs={1} align="center">
               
@@ -181,7 +177,7 @@ const SupporterCard = (props) => {
                 Location: {location}
               </Typography>
               <Typography gutterBottom>
-                Time: {time} for 30 minutes on April 17
+                Time: {convertTime(time)} for 30 minutes on April 17
               </Typography>
               <Typography gutterBottom>
                 Appointment Type: {apptTopic}

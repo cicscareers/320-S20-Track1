@@ -15,7 +15,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField, Grid } from '@material-ui/core';
+import { makeStyles, useTheme, TextField, Grid, Slider, Box } from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -25,6 +25,8 @@ import SimpleCard from "../components/test.js"
 import SupporterList from "../Data/match2consts.js"
 import topicsList from "../components/topics.js"
 import tagsList from "../components/tags.js"
+import convertTime from "../components/convertTime.js"
+import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 const drawerWidth = "25%";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputs: {
     marginLeft: "5%",
+    marginRight: "5%",
     width:"90%"
   },
   drawer: {
@@ -63,47 +66,98 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   rating: {
-   marginLeft: "34%"
+   align: "center",
+   alignItems: "center",
   },
 }));
 
+function getList(event) {
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-04-01&end_date=2020-04-28",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+      }
+    )
+      .then(response => {
+        console.log(response);
+        return response.json();
+      })
+      .then(json => {
+        console.log(json);
+      })
+      .catch(error => {
+        alert("No Supporters Found");
+        console.log(error);
+      });
+  }
+
 const ResponsiveDrawer = (props) => {
   const { container } = props;
-  const [date,setDate]=React.useState(15);
+  const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
-  const [start,setStart]=React.useState("00:00");
   const [stateTags, setStateTags]=React.useState([]);
+  const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
 
+  //add a day to the date
+  //var lambdaList=getList()
+
+  //This is temporary, will eventually be gotten from lambda
+  const blockTime=30;
+  
   const updateList = (val) => {
     setName(val);
   };
   var newList = (SupporterList.filter(
-    x => String(x.name.toLowerCase()).includes(name.toLowerCase()))).filter(
-    x => x.rating>=rating).filter(
-    x => stateTopics.every(val => x.topics.includes(val))).filter(
-    x => stateTags.every(val => x.tags.includes(val)))
-    //.filter(x => x.start<=start);
+    supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
+    supporter => supporter.rating>=rating).filter(
+    supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
+    supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
+    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
+    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
 
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
   };
 
-  const handleBack = () => {
-    setDate(date-1);
-  };
-
-  const handleNext = () => {
-    setDate(date+1);
-  };
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const handleSliderChange = (event, newValue) => {
+    setSliderTime(newValue);
+  };
+  function convertToMin(t){
+    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
+  }
+  function getTheMonth(month){
+    if (parseInt(month)>10){
+      console.log(month.toString())
+      return month.toString();
+    }
+    else{
+      console.log("0".concat(month.toString()))
+      return "0".concat(month.toString());
+    }
+  }
+
+  function checkTimeInRange(start,end, timeBlockArray){
+    for(let i=0;i<timeBlockArray.length;i++){
+      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime))){
+        return true
+      }
+    }
+    return false
+  }
+
 
   
   return (
@@ -170,68 +224,57 @@ const ResponsiveDrawer = (props) => {
           onChange={(e,v) => setStateTags(v)}
         />
         <br/>
-        <form align="center" noValidate>
-          <TextField
-            id="time"
-            label="Start Time"
-            type="time"
-            fullWidth
-            onChange={e => setStart(e.target.value)}
-            defaultValue="00:00"
-            className={classes.inputs}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputProps={{
-              step: 300, // 5 min
-            }}
-          />
-          <br/>
-          <br/>
-          </form>
-          <Typography align="center">Minimum Required Rating</Typography>
-          <Rating 
+        <Typography align="center">What day would you like an appointment on?</Typography>
+        <br/>
+        <Box align="center">
+          <DatePicker
             align="center"
-            className={classes.rating} 
-            name="Supporter Rating" 
-            precision={0.5} 
-            value={rating} 
-            onChange={e => setRating(e.target.value)}
-            size="large"
+            variant="inline"
+            value={selectedDate}
+            onChange={handleDateChange}
           />
-          <br/>
-
+        </Box>
+        <br/>
+        <br/>
+        <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+          What is your availability on {selectedDate.toDateString()}?
+        </Typography>
+        <Slider
+          value={sliderTime}
+          onChange={handleSliderChange}
+          step={30}
+          min={420}
+          max={1140}
+          defaultValue={[540, 1020]}
+          valueLabelDisplay="off"
+          aria-labelledby="range-slider"
+          className={classes.inputs}
+          getAriaValueText={convertTime}
+        />
+        <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+          {convertTime(sliderTime[0])}: {convertTime(sliderTime[1])}
+        </Typography>
+        <br/>
+        <Typography align="center">Minimum Required Rating</Typography>
+        <br/>
+        <Box align="center">
+        <Rating 
+          className={classes.rating} 
+          name="Supporter Rating" 
+          precision={0.5} 
+          value={rating} 
+          onChange={e => setRating(e.target.value)}
+          size="large"
+        />
+        </Box>
       </div>
       </Drawer>
       <main className={classes.content}>
+        
+        <Typography align="center" variant="h4">Recommended Supporters</Typography>
         <br/>
-        <Grid container className={classes.dayselect} spacing={3}>
-        <Grid item>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleBack}
-            edge="start"
-          >
-            <NavigateBeforeIcon/>
-          </IconButton>
-        </Grid>
-        <Grid item>
-          <Typography>April {date}, 2020</Typography>
-        </Grid>
-        <Grid item>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleNext}
-            edge="start"
-          >
-            <NavigateNextIcon/>
-          </IconButton>
-        </Grid>
-      </Grid>
-      <br/>
-      {newList.map(supporterObj => getSupporterCard(supporterObj))}
+        <br/>
+        {newList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
     </div>
   );

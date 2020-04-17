@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const theme = createMuiTheme({
   typography: {
@@ -29,7 +31,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <App />
+    </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,
   document.getElementById("root")
