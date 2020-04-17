@@ -1,6 +1,7 @@
 import boto3
 import json
 
+from copy import deepcopy
 from package import db_config
 from package.query_db import query
 from package.lambda_exception import LambdaException
@@ -114,7 +115,7 @@ def update_student_profile(event, context):
     #student_majors table
     delete_majors_sql = ""
     student_majors_sql = ""
-    major_params = student_id_param
+    major_params = deepcopy(student_id_param)
 
     if 'majors' in event:
         majors = event['majors']
@@ -133,7 +134,7 @@ def update_student_profile(event, context):
     #student_minors table
     delete_minors_sql = ""
     student_minors_sql = ""
-    minor_params = student_id_param
+    minor_params = deepcopy(student_id_param)
 
     if 'minors' in event:
         minors = event['minors']
