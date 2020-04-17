@@ -11,7 +11,7 @@ from package.lambda_exception import LambdaException
 #function updates the student profile details in the database
 def update_student_profile(event, context):
     #student identifier 
-    if student_id in event:
+    if 'student_id' in event:
         student_id = event['student_id']
     else:
         raise LambdaException("Invalid input: No user Id")
@@ -22,14 +22,14 @@ def update_student_profile(event, context):
     #users table
     updated_user_vals = ""
 
-    if first_name in event:
+    if 'first_name' in event:
         first_name = event['first_name']
     else:
         sql = "SELECT first_name FROM users WHERE id= :student_id"
         first_name = query(sql, student_id_param)
     updated_user_vals += "first_name='%s', " % (first_name)
 
-    if last_name in event:        
+    if 'last_name' in event:        
         last_name = event['last_name']
     else:
         sql = "SELECT last_name FROM users WHERE id= :student_id"
@@ -183,7 +183,6 @@ def update_student_profile(event, context):
 
     print(query)
     update_data = query(sql, student_id_param)
-    )
 
     if(update_data['numberOfRecordsUpdated'] == 0): 
         print("Student data not updated")
