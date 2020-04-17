@@ -37,7 +37,7 @@ def lambda_handler(event, context):
     supporter_id = supporter
     
     # generate and set time_scheduled
-    timestamp = time.time()
+    timestamp = time.time() - 240
     time_scheduled = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
     # generate and set appointment_id 
