@@ -26,17 +26,11 @@ def create_student_user(event, context):
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1"
     sql_parameters = []
     new_id_query = query(sql,sql_parameters)
-#    new_id_query = client.execute_statement(
-#        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-#        database = "postgres",
-#        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-#        sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-#    )
     new_id = new_id_query['records'][0][0]['longValue'] + 1
 
     # adds a user to the "users" table with the new generated id
-    sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key,user_type) \
-        VALUES (':new_id',':first_name',':last_name',':email','pn','pic','bio','pro','gen','pho',false,true,':password','salt','student')"
+    sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key,user_type) \
+        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,:password,'salt','student')"""
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}},
     {'name' : 'first_name', 'value': {'stringValue' : first_name}},
     {'name' : 'last_name', 'value': {'stringValue' : last_name}},
@@ -48,14 +42,14 @@ def create_student_user(event, context):
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
         return {
             'body': json.dumps("Student user not created"),
-            'statusCode': 5
+            'statusCode': 500
         }
     else:
         # adds a user to the "students" table with the same user id
-        sql = "INSERT INTO students(student_id,user_id,spire_id,college,grad_year,resume,job_search,grad_student) \
-        VALUES (':new_id',':new_id',1000,'college',4000,'resume',false,false)"
-        sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}},
-                        {'name' : 'new_id', 'value': {'longValue' : new_id}}]
+        sql = """INSERT INTO students(student_id,user_id,spire_id,college,grad_year,resume,job_search,grad_student) \
+        VALUES (:new_id,:new_id,1000,'college',4000,'resume',false,false)"""
+        sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}}]
+        
         create_users_instance = query(sql,sql_parameters)
         
         return{
