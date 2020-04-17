@@ -12,12 +12,29 @@ import datetime
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
-    supporter_id = int(event['supporter_id'])
+    supporter = int(event['supporter_id'])
     time_of_appt = event['time_of_appt']
     appt_type = event['type']
     duration = int(event['duration'])
     method = event['method']
-    location = event['location']    
+    location = event['location']
+    
+    # check that supporter is in DB
+    sql = "SELECT supporter_id FROM supporters WHERE supporter_id = :supporter"
+    sql_parameters = [
+        {'name' : 'supporter', 'value': {'longValue': supporter}}
+    ]
+    check_supporter = query(sql, sql_parameters)
+    
+    # if supporter does not exist in DB, return error
+    if(check_supporter['records'] == []):
+        return{
+            'body': json.dumps("Supporter not found."),
+            'statusCode': 404
+        }
+    
+    # if supporter is in DB, set id variable for query
+    supporter_id = supporter
     
     # generate and set time_scheduled
     timestamp = time.time()
@@ -48,15 +65,15 @@ def lambda_handler(event, context):
     # make query
     response = query(SQLquery, query_parameters)
 
-    # if error, return 404
+    # catch-all error 404
     if(response['numberOfRecordsUpdated'] == 0):
         return {
             'statusCode': 404, 
-            'body': json.dumps('Error making appointment')
+            'body': json.dumps('Error making appointment.')
         }
 
     # if no error, return 201 Created
     return {
         'statusCode': 201, 
-        'body': json.dumps('Appointment created')
+        'body': json.dumps('Appointment created.')
     }
