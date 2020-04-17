@@ -26,49 +26,49 @@ def update_student_profile(event, context):
         first_name = event['first_name']
     else:
         sql = "SELECT first_name FROM users WHERE id= :student_id"
-        first_name = query(sql, student_id_param)
+        first_name = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "first_name='%s', " % (first_name)
 
     if 'last_name' in event:        
         last_name = event['last_name']
     else:
         sql = "SELECT last_name FROM users WHERE id= :student_id"
-        last_name = query(sql, student_id_param)
+        last_name = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "last_name='%s', " % (last_name)
 
     if 'preferred_name' in event:
         preferred_name = event['preferred_name']
     else:
         sql = "SELECT preferred_name FROM users WHERE id= :student_id"
-        preferred_name = query(sql, student_id_param)
+        preferred_name = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "preferred_name='%s', " % (preferred_name)
 
     if 'picture' in event:
         picture = event['picture']
     else:
         sql = "SELECT picture FROM users WHERE id= :student_id"
-        picture = query(sql, student_id_param)
+        picture = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "picture='%s', " % (picture)
 
     if 'bio' in event:
         bio = event['bio']
     else:
         sql = "SELECT bio FROM users WHERE id= :student_id"
-        bio = query(sql, student_id_param)
+        bio = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "bio='%s', " % (bio)
 
     if 'pronouns' in event:
         pronouns = event['pronouns']
     else:
         sql = "SELECT pronouns FROM users WHERE id= :student_id"
-        pronouns = query(sql, student_id_param)
+        pronouns = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "pronouns='%s', " % (pronouns)
 
     if 'phone' in event:
         phone = event['phone']
     else:
         sql = "SELECT phone FROM users WHERE id= :student_id"
-        phone = query(sql, student_id_param)
+        phone = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_user_vals += "phone='%s'" % (phone)
 
     
@@ -79,34 +79,35 @@ def update_student_profile(event, context):
         grad_student = event['grad_student']
     else:
         sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
-        grad_student = query(sql, student_id_param)
+        grad_student = query(sql, student_id_param)['records'][0][0]['booleanValue']
     updated_student_vals += "grad_student='%s', " % (grad_student)
 
     if "job_search" in event:
         job_search = event['job_search']
     else:
         sql = "SELECT job_search FROM students WHERE student_id= :student_id"
+        job_search = query(sql, student_id_param)['records'][0][0]['booleanValue']
     updated_student_vals += "job_search='%s', " % (job_search)
 
     if 'college' in event:
         college = event['college']
     else:
         sql = "SELECT college FROM students WHERE student_id= :student_id"
-        college = query(sql, student_id_param)
+        college = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_student_vals += "college='%s', " % (college)
 
     if 'grad_year' in event:
         grad_year= event['grad_year']
     else:
         sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
-        grad_year = query(sql, student_id_param)
+        grad_year = query(sql, student_id_param)['records'][0][0]['longValue']
     updated_student_vals += "grad_year='%s', " % (grad_year)
 
     if 'resume' in event: 
         resume = event['resume']
     else:
         sql = "SELECT resume FROM students WHERE student_id= :student_id"
-        resume = query(sql, student_id_param)
+        resume = query(sql, student_id_param)['records'][0][0]['stringValue']
     updated_student_vals += "resume='%s'" % (resume)
 
 
@@ -122,7 +123,7 @@ def update_student_profile(event, context):
         for major in majors:
             major_sql = "SELECT major_id FROM major WHERE major= :major"
             param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
-            major_id = query(major_sql, param)
+            major_id = query(major_sql, param)['records'][0][0]['longValue']
 
             student_majors_sql += "INSERT INTO student_majors VALUES (:student, :major_id)"
             major_id_param = {'name' : 'major_id', 'value' : {'longValue' : major_id}}
@@ -141,7 +142,7 @@ def update_student_profile(event, context):
         for minor in minors:
             minor_sql = "SELECT minor_id FROM minor WHERE minor= :minor"
             param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
-            minor_id = query(minor_sql, param)
+            minor_id = query(minor_sql, param)['records'][0][0]['longValue']
 
             student_minors_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
             minor_id_param = {'name' : 'minor_id', 'value' : {'longValue' : minor_id}}
