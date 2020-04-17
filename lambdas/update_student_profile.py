@@ -12,11 +12,11 @@ from package.lambda_exception import LambdaException
 def update_student_profile(event, context):
     #student identifier 
     if 'student_id' in event:
-        student_id = event['student_id']
+        student_id = int(event['student_id'])
     else:
         raise LambdaException("Invalid input: No user Id")
 
-    student_id_param = [{'name' : 'student_id', 'value' : {'stringValue' : student_id}}]
+    student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}}]
 
 
     #users table
