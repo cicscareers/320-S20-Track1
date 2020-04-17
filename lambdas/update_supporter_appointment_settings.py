@@ -17,6 +17,16 @@ def update_supporter_appointment_settings(event, context):
     specializations = {}
     majors = {}
 
+    #Check if supporter exists
+    sql = 'SELECT * FROM supporters WHERE supporter_id = :supporter_id;'
+    sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
+    response = query(sql, sql_parameters)
+    if(response['records'] == []):
+        return {
+            'body': json.dumps("The supporter does not exist"),
+            'statusCode': 404
+        }
+
     #Adding to preferences dictionary
     #The reason I add to the dictionary by adding another dictionary with the value type
     #and then value is for the parameterization
@@ -43,25 +53,30 @@ def update_supporter_appointment_settings(event, context):
     #Execute parameterized query for updating preferences
     sql = 'UPDATE supporter_preferences_for_students SET job_search = :job_search, grad_student = :grad_student WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(preferences)
-    response = query(sql, sql_parameters)
-    #response['records']
-    #check response for status code
+    pref_response = query(sql, sql_parameters)
+    if(pref_response == {}):
+        return {
+            'statusCode': 304 #not modified
+        }
 
     #Execute parameterized query for updating specializations
     sql = 'UPDATE supporter_specializations SET max_students = :max_students, duration = :duration, \
         specialization_type_id = :specialization_type_id WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(specializations)
-    response = query(sql, sql_parameters)
-    #response['records']
-    #check response for status code
+    spec_response = query(sql, sql_parameters)
+    if(spec_response == {}):
+        return {
+            'statusCode': 304 #not modified
+        }
 
     #Execute parameterized query for inserting major preference
     sql = 'INSERT INTO supporter_major_preferences(supporter_id, major_id) VALUES (:supporter_id, :major_id)'
     sql_parameters = dictionary_to_list(majors)
-    response = query(sql, sql_parameters)
-    #response["numberOfRecordsUpdated"]
-    #check response for status code
-
+    major_response = query(sql, sql_parameters)
+    if(major_response["numberOfRecordsUpdated"] == 0):
+        return {
+            'statusCode': 409 #conflict
+        }
     return {
         'statusCode': 200
     }
