@@ -19,11 +19,13 @@ def create_supporter(event, context):
     title = event['title']
 
     # optional
-    team = event['team']
 
     # if no input for team place empty
-    if team == None:
+    if 'team' not in event:
         team = ""
+
+    else:
+        team = event['team']
 
     # Supporters_type table input
     supporter_types = event['supporter_types']
