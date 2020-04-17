@@ -11,7 +11,6 @@ import Account from "../Pages/account.js";
 import AdminSettings from "../Pages/adminSettings.js"
 import SupporterSettings from "../Pages/SupporterSettings.js"
 import Matching from "../Pages/match2.js"
-import MatchingOld from "../Pages/search-appointment.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
@@ -35,7 +34,6 @@ export default function Routes() {
           <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
-          <AuthenticatedRoute path="/match-demo" exact component={MatchingOld} />
           <Route path="/TOS" exact component={tos} />
           <AuthenticatedRoute path="/appointments" exact component={appts} />
           <AuthenticatedRoute path="/account" exact component={Account} />
