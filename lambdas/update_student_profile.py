@@ -170,7 +170,7 @@ def update_student_profile(event, context):
 
     #values that can not be null
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
-        raise LambdaException(Unprocessable Entity)
+        raise LambdaException("Unprocessable Entity")
 
 
     #sql queries to update data in each table
