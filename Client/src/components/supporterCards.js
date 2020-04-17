@@ -1,5 +1,7 @@
 import React from 'react';
-import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, Box, Card, CardContent, CardActions, Avatar } from '@material-ui/core';
+import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
+  Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
+  DialogContent, DialogActions } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -9,6 +11,7 @@ import Rating from '@material-ui/lab/Rating';
 import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
+import Cookies from "universal-cookie";
 
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
   tagChip: {
       margin: theme.spacing(0.5),
   },
+  modal: {
+  },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
@@ -51,13 +56,40 @@ const useStyles = makeStyles((theme) => ({
 const SupporterCard = (props) => {
   const {name, rating, employer, title, location, topics, tags, imgsrc, start, panel} = props;
   const classes = useStyles();
+  const cookies = new Cookies();
+  const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
   const [expanded, setExpanded] = React.useState(false);
+  const [time, setTime] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [openCreated, setOpenCreated] = React.useState(false);
   const chipFilter = (item) => { 
     setApptTopic(item);
   }
+  const chipFilterTime = (item) => { 
+    setTime(item);
+  }
   const handleClick = (e) => {
     console.info(e.target.getAttribute('color'));
+  };
+  const handleChange = (event) => {
+    setTime(event.target.value);
+  };
+  const handleConfirm = (event) => {
+    setOpen(false);
+    setOpenCreated(true);
+  };
+  const handleButton = (event) => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleCloseCreated = () => {
+    setOpenCreated(false);
+  };
+  function validateForm() {
+    return apptTopic!="" && time!="";
   };
   
   return (
@@ -79,23 +111,47 @@ const SupporterCard = (props) => {
                 <Typography>{employer}, {title}</Typography>
                 <Typography>{location}</Typography>
                 <br/>
-                <Typography>Helps With:</Typography>
+                <Typography>Select Appointment Topic:</Typography>
                 {topics.map(topic => <Chip 
                   clickable 
                   value={topic}
-                  variant="outlined" 
+                  variant={(apptTopic === topic) ? 'default' : 'outlined'}
                   deleteIcon={apptTopic===topic && <DoneIcon />} 
                   color="primary" 
                   label={topic} 
                   className={classes.tagChip}
                   onClick={ () => chipFilter(topic) }
                 />)}
-                <Typography>Time Blocks:</Typography>
-                <Chip variant="outlined" color="primary" clickable label="2:30 PM" className={classes.tagChip}/>
-                <Chip variant="outlined" color="primary" label="5:30 PM" className={classes.tagChip}/>
-                <Chip variant="outlined" color="primary" label="7:30 PM" className={classes.tagChip}/>
+                <Typography>Select Appointment Time:</Typography>
+                <Chip
+                  clickable 
+                  value="11 AM" 
+                  variant={(time === "11 AM") ? 'default' : 'outlined'}
+                  color="primary" 
+                  label="11 AM" 
+                  className={classes.tagChip}
+                  onClick={ () => chipFilterTime("11 AM") }
+                />
+                <Chip
+                  clickable 
+                  value="2 PM"
+                  variant={(time === "2 PM") ? 'default' : 'outlined'}
+                  color="primary" 
+                  label="2 PM" 
+                  className={classes.tagChip}
+                  onClick={ () => chipFilterTime("2 PM") }
+                />
+                <Chip
+                  clickable 
+                  value="4 PM"
+                  variant={(time === "4 PM") ? 'default' : 'outlined'}
+                  color="primary" 
+                  label="4 PM" 
+                  className={classes.tagChip}
+                  onClick={ () => chipFilterTime("4 PM") }
+                />
             </Grid>
-            <Grid item xs={2} align="center">
+            <Grid item xs={1} align="center">
               
             </Grid>
             <Grid item xs={5}>
@@ -109,11 +165,53 @@ const SupporterCard = (props) => {
                   margin="normal"
                   variant="contained"
                   color="primary"
+                  onClick={handleButton}
+                  disabled={!validateForm()}
                 >
                   Create Appointment
               </Button>
             </Grid>
           </Grid>
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Create appointment with {name}
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Location: {location}
+              </Typography>
+              <Typography gutterBottom>
+                Time: {time} for 30 minutes on April 17
+              </Typography>
+              <Typography gutterBottom>
+                Appointment Type: {apptTopic}
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleConfirm}color="primary">
+                Create Appointment
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openCreated}>
+            <DialogTitle id="customized-dialog-title" onClose={handleCloseCreated}>
+              Appointment Created
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Your appointment with {name} has been created
+              </Typography>
+              <Typography gutterBottom>
+                You will receive a verification email at {email} to remind you of your appointment
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus href="/appointments" color="primary">
+                View Appointments
+              </Button>
+            </DialogActions>
+          </Dialog>
         </ExpansionPanelDetails>
       </ExpansionPanel>
   );

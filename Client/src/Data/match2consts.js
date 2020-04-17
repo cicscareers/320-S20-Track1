@@ -19,7 +19,7 @@ export default [
 		title:"Career Developer",
 		location:"A243 LGRC Lowrise",
 		topics: ["Mock Interview","Resume Review","Cover Letter"],
-		tags: ["AWS", "Microsoft","Algorithms","AWS","Algorithms","iOS"],
+		tags: ["AWS", "Microsoft","Algorithms","AWS"],
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq',
 		start: "12:00",
 	},

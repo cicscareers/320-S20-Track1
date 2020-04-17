@@ -21,7 +21,7 @@ import supporterCards from "../components/supporterCards.js"
 import AdminSettings from './adminSettings.js'
 import Account from './account.js'
 
-const drawerWidth = "10%";
+const drawerWidth = "25%";
 
 const useStyles = makeStyles((theme) => ({
   root: {
