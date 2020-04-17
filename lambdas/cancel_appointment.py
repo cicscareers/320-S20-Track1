@@ -16,6 +16,7 @@ def cancel_appointment(event, context):
         cancel_reason_dic['cancel_reason'] = cancel_reason
 
     
+    sql_select = """appointment_id FROM scheduled_appointments WHERE appointment_id = :appointment_id;"""
     #Check if appointment exists
     existing_user = client.execute_statement(
         secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7", 
@@ -31,7 +32,7 @@ def cancel_appointment(event, context):
 
     cancel_bool = 'True'
     #This is the query that we need to execute
-    updateQuery = "UPDATE scheduled_appointments SET cancelled = '%s', cancel_reason = '%s' WHERE appointment_id = '%d';" % (cancel_bool, cancel_reason, appointment_id_to_delete)
+    sql_update = "UPDATE scheduled_appointments SET cancelled = '%s', cancel_reason = '%s' WHERE appointment_id = '%d';" % (cancel_bool, cancel_reason, appointment_id_to_delete)
 
     #Accessing database and executing query
     client.execute_statement(
