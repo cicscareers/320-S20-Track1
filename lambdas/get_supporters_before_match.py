@@ -15,7 +15,7 @@ def get_supporters_before_match(event, context):
         secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
         database = "postgres",
         resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, AB.start_date, AB.end_date, ST.specialization, SS.duration, AB.number_of_students, SS.max_students\
+        sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization\
                 FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
                 specialization_type ST, supporter_specializations SS\
                 WHERE U.id = S.user_id\
@@ -34,23 +34,33 @@ def get_supporters_before_match(event, context):
             "statusCode": 404
         }
     else:
-        appointments = []
+        appointmentDict = dict()
 
         #For each entry in the query data, extracts relevant data and stores it in a dictionary with appropriate key
         for entry in query_data['records']: 
-            block = dict()
-            block["supporter_id"] = entry[0].get("longValue")
-            block["fname"] = entry[1].get("stringValue")
-            block["lname"] = entry[2].get("stringValue")
-            block["picture"] = entry[3].get("stringValue")
-            block["rating"] = entry[4].get("longValue")
-            block["start_time"] = entry[5].get("stringValue")
-            block["end_time"] = entry[6].get("stringValue")
-            block["type"] = entry[7].get("stringValue")
-            block["duration"] = entry[8].get("longValue")
-            block["number_of_students"] = entry[9].get("longValue")
-            block["max_students"] = entry[10].get("longValue")
-            appointments.append(block)
+            if(entry[6].get("stringValue")[0:10] in appointmentDict):
+                block = appointmentDict[entry[6].get("stringValue")]
+                time = dict()
+                time["start"] = entry[6].get("stringValue")[11:19]
+                time["end"] = entry[7].get("stringValue")[11:19]
+                block[time].append(time)
+            else:
+                block = dict()
+                block["supporter_id"] = entry[0].get("longValue")
+                block["name"] = "%s %s" %(entry[1].get("stringValue"), entry[2].get("stringValue"))
+                block["picture"] = entry[3].get("stringValue")
+                block["rating"] = entry[4].get("longValue")
+                block["employer"] = entry[5].get("stringValue")
+                block["title"] = entry[6].get("stringValue")
+                block["topics"] = [entry[8].get("stringValue")]
+                time = dict()
+                time["start"] = entry[6].get("stringValue")[11:19]
+                time["end"] = entry[7].get("stringValue")[11:19]
+                block["timeBlocks"] = [time]
+                block["day"] = entry[6].get("stringValue")[0:10]
+                appointmentDict.add(block["day"], block)
+
+            
 
         return{
             'statusCode': 200,
