@@ -19,7 +19,6 @@ def update_student_profile(event, context):
 
     student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}}]
 
-
     #users table
     updated_user_vals = ""
 
@@ -183,8 +182,12 @@ def update_student_profile(event, context):
     sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
             + delete_minors_sql + " " + student_minors_sql
 
+    all_params = [student_id_param]
+    all_params.extend(major_params)
+    all_params.extend(minor_params)
+
     print(sql)
-    update_data = query(sql, student_id_param)
+    update_data = query(sql, all_params)
 
     if(update_data['numberOfRecordsUpdated'] == 0): 
         print("Student data not updated")
