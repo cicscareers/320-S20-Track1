@@ -117,7 +117,7 @@ export default function MenuAppBar() {
                   </Link>
                 </MenuItem>
 
-                {role==="Admin" && (
+                {/* {role==="Admin" && (
                   <MenuItem onClick={handleClose}>
                     <Link href="/admin-settings">
                       <Typography component="h6" variant="h6">
@@ -125,7 +125,16 @@ export default function MenuAppBar() {
                       </Typography>
                     </Link>
                   </MenuItem>
-                )}
+                )} */}
+                
+                <MenuItem onClick={handleClose}>
+                  <Link href="/admin-settings">
+                    <Typography component="h6" variant="h6">
+                      Admin Settings
+                    </Typography>
+                  </Link>
+                </MenuItem>
+                
 
                 {role==="Supporter" && (
                   <MenuItem onClick={handleClose}>

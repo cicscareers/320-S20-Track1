@@ -12,6 +12,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from "@material-ui/core/Button";
 import Topics from "../components/topics.js"
+import Tags from "../components/tags.js"
 
 
 
@@ -22,10 +23,25 @@ export default function AdminSettings() {
     'C',
     'D'
   ]
+
+  const users = [
+    'UserA',
+    'UserB'
+  ]
+
+  const blockedUsers = [
+    'UserC',
+    'UserD'
+  ]
+
   const [curField, setCurrField] = useState("");
   const [newDefault, setNewDefault] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
   const [addTopic, setAddTopic] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
+  const [addTag, setAddTag] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedBlockedUser, setSelectedBlockedUser] = useState("");
 
 
   return (
@@ -74,14 +90,14 @@ export default function AdminSettings() {
                     variant="outlined"
                     id="default"
                     fullWidth
-                    label="Set new:"
+                    label="Set default:"
                     name="field default"
                     onChange={e => setNewDefault(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={1}>
                   <Button variant='contained' color='primary' size='large'>
-                    Change
+                    Set
                   </Button>
                 </Grid>
               </Grid>
@@ -113,9 +129,9 @@ export default function AdminSettings() {
                     onChange={(e,v) => setSelectedTopic(v)}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <Button variant='contained' color='primary' size='large'>
-                    Delete Selected Topic
+                    Delete Topic
                   </Button>
                 </Grid>
                 <Grid item xs={3}>
@@ -128,18 +144,131 @@ export default function AdminSettings() {
                     onChange={e => setAddTopic(e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <Button variant='contained' color='primary' size='large'>
                     Add Topic
                   </Button>
                 </Grid>
               </Grid>
             </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>
+                Help Needed Tags
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={1}>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    id="tags"
+                    options= {Tags}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Tags"
+                      />
+                    )}
+                    onChange={(e,v) => setSelectedTag(v)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant='contained' color='primary' size='large'>
+                    Delete Tag
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="add-tag"
+                    fullWidth
+                    label="Tag to add:"
+                    name="add-tag"
+                    onChange={e => setAddTag(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant='contained' color='primary' size='large'>
+                    Add Tag
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>
+                Block/Unblock User
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={1}>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    id="users"
+                    options= {users}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Users"
+                      />
+                    )}
+                    onChange={(e,v) => setSelectedUser(v)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant='contained' color='primary' size='large'>
+                    Block user
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    id="blocked users"
+                    options= {blockedUsers}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Blocked Users"
+                      />
+                    )}
+                    onChange={(e,v) => setSelectedBlockedUser(v)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant='contained' color='primary' size='large'>
+                    Unblock user
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>
+                Download Data
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              TODO
+            </ExpansionPanelDetails>
           </ExpansionPanel>            
         </Grid>
-
-
-      
       </Paper>
     </Grid>
 
