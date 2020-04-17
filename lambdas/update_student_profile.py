@@ -78,34 +78,34 @@ def update_student_profile(event, context):
     if 'grad_student' in event:
         grad_student = event['grad_student']
     else:
-        sql = "SELECT grad_student FROM students WHERE id= :student_id"
+        sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
         grad_student = query(sql, student_id_param)
     updated_student_vals += "grad_student='%s', " % (grad_student)
 
     if "job_search" in event:
         job_search = event['job_search']
     else:
-        sql = "SELECT job_search FROM students WHERE id= :student_id"
+        sql = "SELECT job_search FROM students WHERE student_id= :student_id"
     updated_student_vals += "job_search='%s', " % (job_search)
 
     if 'college' in event:
         college = event['college']
     else:
-        sql = "SELECT college FROM students WHERE id= :student_id"
+        sql = "SELECT college FROM students WHERE student_id= :student_id"
         college = query(sql, student_id_param)
     updated_student_vals += "college='%s', " % (college)
 
     if 'grad_year' in event:
         grad_year= event['grad_year']
     else:
-        sql = "SELECT grad_year FROM students WHERE id= :student_id"
+        sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
         grad_year = query(sql, student_id_param)
     updated_student_vals += "grad_year='%s', " % (grad_year)
 
     if 'resume' in event: 
         resume = event['resume']
     else:
-        sql = "SELECT resume FROM students WHERE id= :student_id"
+        sql = "SELECT resume FROM students WHERE student_id= :student_id"
         resume = query(sql, student_id_param)
     updated_student_vals += "resume='%s'" % (resume)
 
