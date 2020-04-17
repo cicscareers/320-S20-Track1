@@ -1,3 +1,5 @@
   
 *.zip
 *.json
+**/.vscode
+**/external_libraries

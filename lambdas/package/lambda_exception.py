@@ -1,0 +1,2 @@
+class LambdaException(Exception):
+    pass
