@@ -126,7 +126,7 @@ def update_student_profile(event, context):
             param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
             major_id = query(major_sql, param)['records'][0][0]['longValue']
 
-            student_majors_sql += "INSERT INTO student_majors VALUES (:student, :major_id)"
+            student_majors_sql += "INSERT INTO student_majors VALUES (:student_id, :major_id)"
             major_id_param = {'name' : 'major_id', 'value' : {'longValue' : major_id}}
             major_params.append(major_id_param)
 
@@ -183,7 +183,7 @@ def update_student_profile(event, context):
     sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
             + delete_minors_sql + " " + student_minors_sql
 
-    print(query)
+    print(sql)
     update_data = query(sql, student_id_param)
 
     if(update_data['numberOfRecordsUpdated'] == 0): 
