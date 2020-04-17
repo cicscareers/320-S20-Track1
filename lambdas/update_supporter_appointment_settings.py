@@ -51,13 +51,12 @@ def update_supporter_appointment_settings(event, context):
     sql = 'UPDATE supporter_specializations SET max_students = :max_students, duration = :duration, \
         specialization_type_id = :specialization_type_id WHERE supporter_id = :supporter_id;'
     sql_parameters = dictionary_to_list(specializations)
-    print(sql_parameters)
     response = query(sql, sql_parameters)
     #response['records']
     #check response for status code
 
     #Execute parameterized query for inserting major preference
-    sql = 'INSERT INTO supporter_major_preferences (supporter_id, major_id) VALUES (:supporter_id, :major_id);'
+    sql = 'INSERT INTO supporter_major_preferences(supporter_id, major_id) VALUES (:supporter_id, :major_id)'
     sql_parameters = dictionary_to_list(majors)
     response = query(sql, sql_parameters)
     #response["numberOfRecordsUpdated"]
