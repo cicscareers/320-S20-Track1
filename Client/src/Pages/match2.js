@@ -202,7 +202,7 @@ const ResponsiveDrawer = (props) => {
               {...params}
               variant="outlined"
               label="Help Needed Topics"
-              placeholder="Favorites"
+              placeholder="Help Needed Topics"
             />
           )}
           onChange={(e,v) => setStateTopics(v)}
@@ -218,7 +218,7 @@ const ResponsiveDrawer = (props) => {
               {...params}
               variant="outlined"
               label="Supporter Tags"
-              placeholder="Favorites"
+              placeholder="Supporter Tags"
             />
           )}
           onChange={(e,v) => setStateTags(v)}
