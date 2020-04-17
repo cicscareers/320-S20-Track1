@@ -10,8 +10,8 @@ import NotFound from "../Pages/NotFound.js"
 import Account from "../Pages/account.js";
 import AdminSettings from "../Pages/adminSettings.js"
 import SupporterSettings from "../Pages/SupporterSettings.js"
-import MatchingDemo from "../Pages/match2.js"
-import Matching from "../Pages/search-appointment.js"
+import Matching from "../Pages/match2.js"
+import MatchingOld from "../Pages/search-appointment.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
@@ -27,22 +27,22 @@ export default function Routes() {
   return (
         <Switch>
           <Redirect exact from="/" to="/match" />
-          <AuthenticatedRoute path="/home" exact component={Home} />
-          <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
-          <AuthenticatedRoute path="/feedback" exact component={Feedback} />
-          <AdminRoute path="/admin-settings" exact component={AdminSettings} />
-          <AuthenticatedRoute path="/settings" exact component={Settings} />
-          <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
-          <UnauthenticatedRoute path="/login" exact component={Login} />
-          <AuthenticatedRoute path="/match" exact component={Matching} />
-          <AuthenticatedRoute path="/match-demo" exact component={MatchingDemo} />
+          <Route path="/home" exact component={Home} />
+          <Route path="/FAQ" exact component={FAQ} />
+          <Route path="/feedback" exact component={Feedback} />
+          <Route path="/admin-settings" exact component={AdminSettings} />
+          <Route path="/settings" exact component={Settings} />
+          <Route path="/supporter-settings" exact component={SupporterSettings} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/match" exact component={Matching} />
+          <Route path="/match-demo" exact component={MatchingOld} />
           <Route path="/TOS" exact component={tos} />
-          <AuthenticatedRoute path="/appointments" exact component={appts} />
-          <AuthenticatedRoute path="/account" exact component={Account} />
-          <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
-          <UnauthenticatedRoute path="/signup" exact component={SignUp} />
-          <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
-          <UnauthenticatedRoute path="/forgot-password2" exact component={resetPassAfterEmail} />
+          <Route path="/appointments" exact component={appts} />
+          <Route path="/account" exact component={Account} />
+          <Route path="/signup-supporter" exact component={SignUpSupporter} />
+          <dRoute path="/signup" exact component={SignUp} />
+          <Route path="/forgot-password" exact component={ForgotPassword} />
+          <Route path="/forgot-password2" exact component={resetPassAfterEmail} />
           <Route path="/index.html" to="/" />
           <Route component={NotFound} />
         </Switch>

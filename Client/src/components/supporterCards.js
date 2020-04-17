@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
   Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
-  DialogContent, DialogActions } from '@material-ui/core';
+  DialogContent, DialogActions, TextField } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -186,6 +186,16 @@ const SupporterCard = (props) => {
               <Typography gutterBottom>
                 Appointment Type: {apptTopic}
               </Typography>
+              <Typography gutterBottom>
+                Additional Comments
+              </Typography>
+              <TextField
+                id="outlined-multiline-static"
+                multiline
+                fullWidth
+                rows="4"
+                variant="outlined"
+              />
             </DialogContent>
             <DialogActions>
               <Button autoFocus onClick={handleConfirm}color="primary">
