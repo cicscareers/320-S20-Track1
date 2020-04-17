@@ -133,6 +133,7 @@ def create_supporter(event, context):
 
     # finish
     print("Supporter has been created")
+    print("YAY!!!")
     return {
         'statusCode': 201
     }
