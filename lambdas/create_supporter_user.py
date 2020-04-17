@@ -94,7 +94,7 @@ def create_supporter(event, context):
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
-        {'name': 'new_id', 'value': {'longValue': new_id}},
+        #{'name': 'new_id', 'value': {'longValue': new_id}},
         {'name': 'employer', 'value': {'stringValue': employer}},
         {'name': 'title', 'value': {'stringValue': title}},
         {'name': 'team', 'value': {'stringValue': team}}
@@ -115,7 +115,7 @@ def create_supporter(event, context):
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
-        {'name': 'new_id', 'value': {'longValue': new_id}},
+        #{'name': 'new_id', 'value': {'longValue': new_id}},
         {'name': 'professional_staff', 'value': {
             'booleanValue': professional_staff}},
         {'name': 'student_staff', 'value': {'booleanValue': student_staff}},
