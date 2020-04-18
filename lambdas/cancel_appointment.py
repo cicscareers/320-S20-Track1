@@ -8,11 +8,18 @@ def cancel_appointment(event, context):
 
     appointment_id_dic = {}
     cancel_reason_dic = {}
-    if appointment_id_to_delete != None:
-        appointment_id_dic['appointment_id'] = appointment_id_to_delete
+    if appointment_id_to_delete == None:
+        return{
+            "statusCode": 404 
+        }
     
-    if cancel_reason != None:
-        cancel_reason_dic['cancel_reason'] = cancel_reason
+    if cancel_reason == None:
+        return{
+            "statusCode": 404 
+        }
+
+    appointment_id_dic['appointment_id'] = appointment_id_to_delete
+    cancel_reason_dic['cancel_reason'] = cancel_reason
 
     
     sql_select = """SELECT appointment_id FROM scheduled_appointments WHERE appointment_id = :appointment_id;"""
