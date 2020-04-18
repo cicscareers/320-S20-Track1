@@ -1,27 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField, Grid, Slider, Box } from '@material-ui/core';
+import { makeStyles, useTheme, TextField, Grid, Slider, Box, AppBar, Divider, Drawer, Hidden, IconButton, Toolbar, Typography, CssBaseline} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Menu from "../Navigation/appbar.js";
 import SupporterCard from "../components/supporterCards.js"
-import SimpleCard from "../components/test.js"
 import SupporterList from "../Data/match2consts.js"
 import topicsList from "../components/topics.js"
 import tagsList from "../components/tags.js"
@@ -108,7 +90,7 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  var lambdaList=getList()
+  //var lambdaList=getList()
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;

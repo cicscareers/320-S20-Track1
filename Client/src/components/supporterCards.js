@@ -1,14 +1,12 @@
 import React from 'react';
 import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
   Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField, Badge } from '@material-ui/core';
+  DialogContent, DialogActions, TextField, Badge, Typography  } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
-import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
