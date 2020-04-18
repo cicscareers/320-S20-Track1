@@ -1,6 +1,8 @@
 import json
 import boto3
 
+from package.query_db import query
+
 # This lambda fetches a JSON list of available appointments blocks from the database. 
 # the list is then filtered down by the front end. 
 # Input: start_date, end_date
@@ -9,24 +11,47 @@ def get_supporters_before_match(event, context):
     
     date_start = event['start_date'] #Getting beginning of time to search from event
     date_end = event['end_date'] #Getting end of time to search from event
+    
+    print(type(date_start))
 
     client = boto3.client('rds-data') #Connecting to the database
-    query_data = client.execute_statement( #Performing query
-        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        database = "postgres",
-        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization\
-                FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
-                specialization_type ST, supporter_specializations SS\
-                WHERE U.id = S.user_id\
-                AND S.supporter_id = AB.supporter_id\
-                AND AB.appointment_block_id = SFB.appointment_block_id\
-                AND SFB.specialization_type_id = ST.specialization_type_id\
-                AND ST.specialization_type_id = SS.specialization_type_id\
-                AND S.supporter_id = SS.supporter_id\
-                AND start_date BETWEEN %s AND %s\
-                AND number_of_students != max_students;"%(date_start, date_end)
-    )
+    
+    # sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization\
+    #             FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
+    #             specialization_type ST, supporter_specializations SS\
+    #             WHERE U.id = S.user_id\
+    #             AND S.supporter_id = AB.supporter_id\
+    #             AND AB.appointment_block_id = SFB.appointment_block_id\
+    #             AND SFB.specialization_type_id = ST.specialization_type_id\
+    #             AND ST.specialization_type_id = SS.specialization_type_id\
+    #             AND S.supporter_id = SS.supporter_id\
+    #             AND start_date BETWEEN %s AND %s\
+    #             AND number_of_students != max_students;"%(date_start, date_end)
+    
+    sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization\
+            FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
+            specialization_type ST, supporter_specializations SS\
+            WHERE U.id = S.user_id\
+            AND S.supporter_id = AB.supporter_id\
+            AND AB.appointment_block_id = SFB.appointment_block_id\
+            AND SFB.specialization_type_id = ST.specialization_type_id\
+            AND ST.specialization_type_id = SS.specialization_type_id\
+            AND S.supporter_id = SS.supporter_id\
+            AND start_date BETWEEN :date_start AND :date_end\
+            AND number_of_students != max_students;"
+            
+    params = [{'name' : 'date_start', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'value' : {'stringValue' : date_end}}]
+                
+    print(sql)
+    
+    # query_data = client.execute_statement( #Performing query
+    #     secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
+    #     database = "postgres",
+    #     resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    #     sql = sql
+    # )
+
+    query_data = query(sql, params)
 
     if query_data['records'] == []: #If response was empty
         print("There are no appointment blocks available")
@@ -66,4 +91,5 @@ def get_supporters_before_match(event, context):
             'statusCode': 200,
             'body': json.dumps(appointments) #Outputs the appointment list in JSON format 
         }
+
 
