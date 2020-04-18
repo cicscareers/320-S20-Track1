@@ -179,7 +179,6 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <br/>
-        <br/>
         <Typography align="center" variant="h5">Filters</Typography>
         <br/>
         <TextField
@@ -252,7 +251,7 @@ const ResponsiveDrawer = (props) => {
           getAriaValueText={convertTime}
         />
         <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          {convertTime(sliderTime[0])}: {convertTime(sliderTime[1])}
+          {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])}
         </Typography>
         <br/>
         <Typography align="center">Minimum Required Rating</Typography>

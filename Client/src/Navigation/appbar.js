@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {AppBar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Menu, Link} from "@material-ui/core";
+import {AppBar, Avatar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Menu, Link} from "@material-ui/core";
 import Cookies from "universal-cookie";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Redirect } from "react-router-dom";
@@ -9,18 +9,37 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: 30,
+      }, 
+    }, 
+  }, 
   menuButton: {
     flexGrow: 1,
   },
   title: {
     flexGrow: 1
   },
+  button: {
+    shape: {
+      borderRadius: 1125,
+    },
+  },
   buttonGroup: {
     marginLeft: "45%",
-    flexGrow : 1
+    flexGrow : 1,
+    shape: {
+      borderRadius: 25,
+    },
   },
   button: {
     width: "30%",
+  },
+  large: {
+    width: theme.spacing(6),
+    height: theme.spacing(6),
   },
 }));
 const styles = {
@@ -70,31 +89,25 @@ export default function MenuAppBar() {
   //First button is to link back to home. The rest is the drop down menu from the user icon, and handles the routing.
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="secondary">
         <Toolbar>
         <Button href="/match">
-          <Typography component="h1" variant="h3" href="/match" color="secondary">
+          <Typography component="h1" variant="h3" href="/match" color="primary">
               ReachOUT
           </Typography>
           </Button>
-          <ButtonGroup variant="text" color="secondary" className={classes.buttonGroup}>
+          <ButtonGroup variant="text" color="primary" className={classes.buttonGroup}>
               <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
               <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
               <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           </ButtonGroup>
           {auth && (
             <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-                style={styles.button}
-                iconStyle={styles.icon}
-              >
+            <Avatar alt={name} src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP" onClick={handleMenu}
+                className={classes.large}>
+              
                 <AccountCircle />
-              </IconButton>
+              </Avatar>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}

@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
     width: "130%",
   },
   rating: {
-    flexBasis: '15%'
+    flexBasis: '15%',
+    marginLeft: "15%"
   },
   tagChip: {
       margin: theme.spacing(0.5),
@@ -124,8 +125,8 @@ const SupporterCard = (props) => {
         >
           <Typography className={classes.heading}>{name}</Typography>
           <Typography className={classes.heading}>Match Score: Great</Typography>
-          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
           {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
+          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
