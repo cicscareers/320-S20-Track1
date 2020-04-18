@@ -11,6 +11,9 @@ from package.lambda_exception import LambdaException
 
 #function updates the student profile details in the database
 def update_student_profile(event, context):
+
+    total_update = 0
+
     #student identifier 
     if 'student_id' in event:
         student_id = int(event['student_id'])
@@ -18,6 +21,7 @@ def update_student_profile(event, context):
         raise LambdaException("Invalid input: No user Id")
 
     student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}}]
+
 
     #users table
     updated_user_vals = ""
@@ -131,22 +135,25 @@ def update_student_profile(event, context):
 
     
     #student_minors table
-    delete_minors_sql = ""
-    student_minors_sql = ""
-    minor_params = deepcopy(student_id_param)
+    
+    #minor_queries stores sql queries and their parameters as tuples
+    minors_queries = []
 
     if 'minors' in event:
         minors = event['minors']
-        delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
 
         for minor in minors:
             minor_sql = "SELECT minor_id FROM minor WHERE minor= :minor"
-            param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
-            minor_id = query(minor_sql, param)['records'][0][0]['longValue']
+            minor_param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
+            minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
 
-            student_minors_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
-            minor_id_param = {'name' : 'minor_id', 'value' : {'longValue' : minor_id}}
-            minor_params.append(minor_id_param)
+            minor_id_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
+            minor_id_param = deepcopy(student_id_param).append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
+            minors_queries.append((minor_id_sql, minor_id_param))
+            
+
+    #Deleting existing minors, relevant existing minors will be re-added
+    delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
  
 
     #Check if student exists
@@ -173,21 +180,22 @@ def update_student_profile(event, context):
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
         raise LambdaException("Unprocessable Entity")
 
-
     #sql queries to update data in each table
     users_table_sql = (f"UPDATE users SET {updated_user_vals} WHERE id= :student_id")
+    update_user_data = query(users_table_sql, student_id_param)['numberOfRecordsUpdated']
                         
     students_table_sql = (f"UPDATE students SET {updated_student_vals} WHERE student_id= :student_id")
+    update_student_data = query(students_table_sql, student_id_param)['numberOfRecordsUpdated']
     
-    sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
-            + delete_minors_sql + " " + student_minors_sql
+    # sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
+    #         + delete_minors_sql + " " + student_minors_sql
 
-    all_params = [student_id_param]
+    all_params = deepcopy(student_id_param)
     all_params.extend(major_params)
     all_params.extend(minor_params)
 
-    print(sql)
-    update_data = query(sql, all_params)
+    # print(sql)
+    # update_data = query(sql, all_params)
 
     if(update_data['numberOfRecordsUpdated'] == 0): 
         print("Student data not updated")
