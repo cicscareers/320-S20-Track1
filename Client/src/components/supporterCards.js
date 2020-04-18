@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
   Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField } from '@material-ui/core';
+  DialogContent, DialogActions, TextField, Badge } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -13,6 +13,7 @@ import smileRate from "../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
 import convertTime from "../components/convertTime.js"
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,10 @@ const useStyles = makeStyles((theme) => ({
   tagChip: {
       margin: theme.spacing(0.5),
   },
-  modal: {
+  badge: {
+    marginLeft: "290%",
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -56,8 +60,8 @@ const useStyles = makeStyles((theme) => ({
   },
   large: {
     marginLeft: "55%",
-    width: theme.spacing(25),
-    height: theme.spacing(25),
+    width: theme.spacing(30),
+    height: theme.spacing(30),
   },
 }));
 
@@ -134,10 +138,12 @@ const SupporterCard = (props) => {
               <Typography className={classes.heading}>{name}</Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography className={classes.heading}>Match Score: Great</Typography>
+              <Typography className={classes.heading}>Great Match</Typography>
             </Grid>
             <Grid item xs={3}>
-              {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
+              {tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
+              {tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
+              {tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
             </Grid>
             <Grid item xs={3}>
               <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
@@ -146,7 +152,7 @@ const SupporterCard = (props) => {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
                 <Typography>{employer}, {title}</Typography>
                 <Typography>{location}</Typography>
                 <br/>
@@ -160,17 +166,30 @@ const SupporterCard = (props) => {
                   className={classes.tagChip}
                   onClick={ () => chipFilter(topic) }
                 />)}
+                <br/>
+                <br/>
                 <Typography>Select Appointment Time:</Typography>
                 {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
                 {startTimes.map(st => generateTimeChip(st))}
             </Grid>
             <Grid item xs={1} align="center">
-              
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={3} align="center">
+            <Typography>Supporter Specialties:</Typography>
+              {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
+            </Grid>
+            <Grid item xs={3}>
+              <Badge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={<LinkedInIcon className={classes.badge}/>}
+                >
                 <Avatar alt={name} src={imgsrc}
                  className={classes.large} />
-             
+             </Badge>
             </Grid>
             <Grid item xs={12} align="center">
               

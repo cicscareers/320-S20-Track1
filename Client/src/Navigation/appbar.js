@@ -23,21 +23,22 @@ const useStyles = makeStyles(theme => ({
     minHeight: 80,
   },
   logo:{
-    fontSize: '240%',
+    color: '#881c1c',
+    fontSize: '255%',
     borderRadius: "40em",
     '&:hover': {
-            backgroundColor: '#881c1c',
-            color: '#FFF'
-        }
+      backgroundColor: '#FFFFFF',
+    }
   },
   button: {
-    fontSize: '120%',
+    color: '#881c1c',
+    fontSize: '140%',
     width: "100%",
     minHeight: 60,
     borderRadius: "40em",
     '&:hover': {
-            backgroundColor: '#881c1c',
-            color: '#FFF'
+      backgroundColor: '#881c1c',
+      color: '#FFF'
     }
   },
   pictureButton: {
