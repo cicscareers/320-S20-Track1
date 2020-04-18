@@ -47,22 +47,17 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
   },
   badge: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
-  badgeButton: {
     borderRadius: "1em",
-    backgroundColor: '#FFF',
-    '&:hover': {
-      backgroundColor: '#FFF',
-    },
+    borderColor: '#FFF',
+    width: theme.spacing(6),
+    height: theme.spacing(6),
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
   large: {
-    marginLeft: "55%",
+    //marginLeft: "55%",
     width: theme.spacing(30),
     height: theme.spacing(30),
   },
@@ -181,7 +176,9 @@ const SupporterCard = (props) => {
             <Typography>Supporter Specialties:</Typography>
               {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs={2}>
             {linkedin !== "" && (
               <Badge
                   overlap="circle"
@@ -190,11 +187,12 @@ const SupporterCard = (props) => {
                     horizontal: 'right',
                   }}
                   badgeContent={
-                    <Button className={classes.badgeButton} href={linkedin}>
-                      <img 
+                    //<Button className={classes.badgeButton} href={linkedin}>
+                      <img border={5}
                         src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
                         className={classes.badge}/>
-                    </Button>}
+                    //</Button>
+                  }
                 >
                 <Avatar alt={name} src={imgsrc} className={classes.large} />
              </Badge>
@@ -202,7 +200,6 @@ const SupporterCard = (props) => {
             {linkedin === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
             </Grid>
             <Grid item xs={12} align="center">
-              
               <Button
                   margin="normal"
                   variant="contained"

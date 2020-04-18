@@ -8,7 +8,7 @@ export default [
 		topics: ["Mock Interview","Resume Review","Job Search"],
 		tags: ["React", "Machine Learning","iOS","React", "C++","HTML","CSS", "x86 Assembly","320","Project Managing", "UI Design","UX Design","Natrual Language Processing", "Typography","OSX","Vim", "Git","Angular"],
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
+		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"16:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/chinmayspatil/",
 	},
@@ -24,6 +24,7 @@ export default [
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "12:00", end:"13:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/dhruvilgala/",
+		supporterID: "73616129"
 	},
 	{
 		name:"Brian Krusell",
