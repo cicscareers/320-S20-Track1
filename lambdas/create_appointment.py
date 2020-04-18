@@ -1,45 +1,79 @@
 # Written by Maeve Newman
-# 4/08/2020
+# Updated 4/16/2020
 
 import json
-import boto3
-#from package import db_config
+from package.query_db import query
+from package.lambda_exception import LambdaException
+import time
+import datetime
 
 # function puts the appointment details in the database
-# Input: supporter_id, time, type, duration, location
+# Inputs: supporter_id, time_of_appt, type, duration, method, location
 # Output: 201 Created
 def lambda_handler(event, context):
-    appointment_id = event['appointment_id']
-    supporter_id = event['supporter_id']
-    time = event['time_of_appt']
+    # take in lambda input
+    supporter = int(event['supporter_id'])
+    time_of_appt = event['time_of_appt']
     appt_type = event['type']
-    duration = event['duration']
-    location = event['location']
+    duration = int(event['duration'])
     method = event['method']
+    location = event['location']
+    
+    # check that supporter is in DB
+    sql = "SELECT supporter_id FROM supporters WHERE supporter_id = :supporter"
+    sql_parameters = [
+        {'name' : 'supporter', 'value': {'longValue': supporter}}
+    ]
+    check_supporter = query(sql, sql_parameters)
+    
+    # if supporter does not exist in DB, return error
+    if(check_supporter['records'] == []):
+        return{
+            'body': json.dumps("Supporter not found."),
+            'statusCode': 404
+        }
+    
+    # if supporter is in DB, set id variable for query
+    supporter_id = supporter
+    
+    # generate and set time_scheduled
+    timestamp = time.time() - 240
+    time_scheduled = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-    # connect to db
-    client = boto3.client('rds-data')
+    # generate and set appointment_id 
+    sql = "SELECT appointment_id FROM scheduled_appointments ORDER BY appointment_id DESC LIMIT 1"
+    sql_parameters = []
+    id_query = query(sql,sql_parameters)
+    appointment_id = id_query['records'][0][0]['longValue'] + 1
 
-    query = f"INSERT INTO scheduled_appointments(appointment_id, method, supporter_id, time_of_appt, type, duration, cancelled, cancel_reason, location) VALUES ('{appointment_id}', '{method}', '{supporter_id}', '{time}', '{appt_type}', '{duration}', False, 'None', '{location}');"
-    #INSERT INTO scheduled_appointments(appointment_id, method, supporter_id, time_of_appt, type, duration, cancelled, cancel_reason, location) VALUES ('0', 'test', '2', '01-01-2021', 'Interview', '30', False, 'None', 'CICS');
-    #query = "INSERT INTO scheduled_appointments(appointment_id, method, supporter_id, time_of_appt, type, duration, cancelled, cancel_reason, location) VALUES (" + appointment_id + ", " + method + ", " + supporter_id + ", " + time + ", " + appt_type + ", " + duration
+    # format query
+    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method, time_scheduled) \
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
+    
+    # format query parameters
+    query_parameters = [
+        {'name' : 'appointment_id', 'value': {'longValue' : appointment_id}},
+        {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+        {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
+        {'name' : 'appt_type', 'value':{'stringValue': appt_type}},
+        {'name' : 'duration', 'value': {'longValue' : duration}},
+        {'name' : 'location', 'value':{'stringValue': location}},
+        {'name':'method', 'value':{'stringValue': method}},
+        {'name' : 'time_scheduled', 'value': {'stringValue' : time_scheduled}}
+    ]
 
-    response = client.execute_statement(
-        database = "postgres",
-        resourceArn = "arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-        secretArn = "arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-        sql = query,
-    )
+    # make query
+    response = query(SQLquery, query_parameters)
 
-    # if error, return 404
+    # catch-all error 404
     if(response['numberOfRecordsUpdated'] == 0):
         return {
             'statusCode': 404, 
-            'body': json.dumps('Error making appointment')
+            'body': json.dumps('Error making appointment.')
         }
 
     # if no error, return 201 Created
     return {
         'statusCode': 201, 
-        'body': json.dumps('Appointment created')
+        'body': json.dumps('Appointment created.')
     }
