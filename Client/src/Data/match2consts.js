@@ -10,6 +10,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/18/2020",
+		linkedin: "https://www.linkedin.com/in/chinmayspatil/",
 	},
 	{
 		name:"Dhruvil Gala",
@@ -22,6 +23,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "12:00", end:"13:00"}],
 		day: "04/18/2020",
+		linkedin: "https://www.linkedin.com/in/dhruvilgala/",
 	},
 	{
 		name:"Brian Krusell",
@@ -34,6 +36,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/krusell.jpg?itok=tjD9O0Rp',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/18/2020",
+		linkedin: "https://www.linkedin.com/in/briankrusell/detail/recent-activity/posts/",
 	},
 	{
 		name:"Sam the Minuteman",
@@ -46,6 +49,7 @@ export default [
 		imgsrc: 'https://www.umass.edu/newsoffice/sites/default/files/styles/article_medium/public/Sam.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/18/2020",
+		linkedin: "",
 	},
 	{
 		name:"David Barrington",
@@ -58,6 +62,7 @@ export default [
 		imgsrc: 'https://people.cs.umass.edu/~barring/david_3.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/18/2020",
+		linkedin: "",
 	},
 	{
 		name:"Chinmay Patil",
@@ -69,6 +74,7 @@ export default [
 		tags: ["React", "Machine Learning","iOS","React", "C++","HTML","CSS", "x86 Assembly","320","Project Managing", "UI Design","UX Design","Natrual Language Processing", "Typography","OSX","Vim", "Git","Angular"],		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/19/2020",
+		linkedin: "https://www.linkedin.com/in/chinmayspatil/",
 	},
 	{
 		name:"Dhruvil Gala",
@@ -81,6 +87,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "12:00", end:"13:00"}],
 		day: "04/19/2020",
+		linkedin: "https://www.linkedin.com/in/dhruvilgala/",
 	},
 	{
 		name:"Brian Krusell",
@@ -93,6 +100,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/krusell.jpg?itok=tjD9O0Rp',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/19/2020",
+		linkedin: "https://www.linkedin.com/in/briankrusell/detail/recent-activity/posts/",
 	},
 	{
 		name:"Sam the Minuteman",
@@ -105,6 +113,7 @@ export default [
 		imgsrc: 'https://www.umass.edu/newsoffice/sites/default/files/styles/article_medium/public/Sam.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/19/2020",
+		linkedin: "",
 	},
 	{
 		name:"David Barrington",
@@ -117,6 +126,7 @@ export default [
 		imgsrc: 'https://people.cs.umass.edu/~barring/david_3.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/19/2020",
+		linkedin: "",
 	},
 	{
 		name:"Chinmay Patil",
@@ -128,6 +138,7 @@ export default [
 		tags: ["React", "Machine Learning","iOS","React", "C++","HTML","CSS", "x86 Assembly","320","Project Managing", "UI Design","UX Design","Natrual Language Processing", "Typography","OSX","Vim", "Git","Angular"],		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/20/2020",
+		linkedin: "https://www.linkedin.com/in/chinmayspatil/",
 	},
 	{
 		name:"Dhruvil Gala",
@@ -140,6 +151,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/image2_001.jpg?itok=ogGUoKuq',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "12:00", end:"13:00"}],
 		day: "04/20/2020",
+		linkedin: "https://www.linkedin.com/in/dhruvilgala/",
 	},
 	{
 		name:"Brian Krusell",
@@ -152,6 +164,7 @@ export default [
 		imgsrc: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/krusell.jpg?itok=tjD9O0Rp',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/20/2020",
+		linkedin: "https://www.linkedin.com/in/briankrusell/detail/recent-activity/posts/",
 	},
 	{
 		name:"Sam the Minuteman",
@@ -164,6 +177,7 @@ export default [
 		imgsrc: 'https://www.umass.edu/newsoffice/sites/default/files/styles/article_medium/public/Sam.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/20/2020",
+		linkedin: "",
 	},
 	{
 		name:"David Barrington",
@@ -176,5 +190,6 @@ export default [
 		imgsrc: 'https://people.cs.umass.edu/~barring/david_3.jpg',
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/20/2020",
+		linkedin: "",
 	},
 ]

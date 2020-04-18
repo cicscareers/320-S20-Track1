@@ -50,9 +50,15 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.5),
   },
   badge: {
-    marginLeft: "290%",
     width: theme.spacing(7),
     height: theme.spacing(7),
+  },
+  badgeButton: {
+    borderRadius: "1em",
+    backgroundColor: '#FFF',
+    '&:hover': {
+      backgroundColor: '#FFF',
+    },
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -66,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin} = props;
   const classes = useStyles();
   const cookies = new Cookies();
   const email = cookies.get("email");
@@ -179,17 +185,24 @@ const SupporterCard = (props) => {
               {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
             </Grid>
             <Grid item xs={3}>
+            {linkedin !== "" && (
               <Badge
                   overlap="circle"
                   anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
                   }}
-                  badgeContent={<LinkedInIcon className={classes.badge}/>}
+                  badgeContent={
+                    <Button className={classes.badgeButton} href={linkedin}>
+                      <img 
+                        src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
+                        className={classes.badge}/>
+                    </Button>}
                 >
-                <Avatar alt={name} src={imgsrc}
-                 className={classes.large} />
+                <Avatar alt={name} src={imgsrc} className={classes.large} />
              </Badge>
+            )}
+            {linkedin === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
             </Grid>
             <Grid item xs={12} align="center">
               
