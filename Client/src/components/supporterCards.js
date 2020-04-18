@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
   tagChip: {
       margin: theme.spacing(0.5),
   },
+  badgeButton: {
+    borderRadius: "1em",
+  },
   badge: {
     borderRadius: "1em",
     borderColor: '#FFF',
@@ -187,11 +190,11 @@ const SupporterCard = (props) => {
                     horizontal: 'right',
                   }}
                   badgeContent={
-                    //<Button className={classes.badgeButton} href={linkedin}>
+                    <Button className={classes.badgeButton} href={linkedin}>
                       <img border={5}
                         src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
                         className={classes.badge}/>
-                    //</Button>
+                    </Button>
                   }
                 >
                 <Avatar alt={name} src={imgsrc} className={classes.large} />
