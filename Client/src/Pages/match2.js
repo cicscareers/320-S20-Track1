@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getList(event) {
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-04-01&end_date=2020-04-28",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2000-01-01+12:00:00&end_date=2050-05-28+12:00:00",
       {
         method: "GET",
         headers: {
@@ -108,7 +108,7 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  //var lambdaList=getList()
+  var lambdaList=getList()
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -174,6 +174,7 @@ const ResponsiveDrawer = (props) => {
         }}
       >
         <div>
+        <br/>
         <br/>
         <br/>
         <br/>

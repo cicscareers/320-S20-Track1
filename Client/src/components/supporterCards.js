@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   rating: {
     flexBasis: '15%',
-    marginLeft: "15%"
+    marginLeft: "30%"
   },
   tagChip: {
       margin: theme.spacing(0.5),
@@ -123,10 +123,20 @@ const SupporterCard = (props) => {
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
-          <Typography className={classes.heading}>{name}</Typography>
-          <Typography className={classes.heading}>Match Score: Great</Typography>
-          {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
-          <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
+          <Grid container>
+            <Grid item xs={3}>
+              <Typography className={classes.heading}>{name}</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography className={classes.heading}>Match Score: Great</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
+            </Grid>
+            <Grid item xs={3}>
+              <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
+            </Grid>
+          </Grid>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={3}>

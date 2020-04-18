@@ -19,13 +19,21 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     flexGrow: 1,
   },
-  title: {
-    flexGrow: 1
+  bar: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    minHeight: 80,
   },
-  button: {
-    shape: {
-      borderRadius: 1125,
-    },
+  logo:{
+    fontSize: '240%',
+    width: "10%",
+    height: "100%",
+    marginRight: "50%",
+    borderRadius: "40em",
+    '&:hover': {
+            backgroundColor: '#881c1c',
+            color: '#FFF'
+        }
   },
   buttonGroup: {
     marginLeft: "45%",
@@ -35,11 +43,19 @@ const useStyles = makeStyles(theme => ({
     },
   },
   button: {
-    width: "30%",
+    fontSize: '120%',
+    width: "10%",
+    minHeight: 60,
+    borderRadius: "40em",
+    '&:hover': {
+            backgroundColor: '#881c1c',
+            color: '#FFF'
+        }
   },
   large: {
-    width: theme.spacing(6),
-    height: theme.spacing(6),
+    marginLeft: "100%",
+    width: theme.spacing(9),
+    height: theme.spacing(9),
   },
 }));
 const styles = {
@@ -89,18 +105,16 @@ export default function MenuAppBar() {
   //First button is to link back to home. The rest is the drop down menu from the user icon, and handles the routing.
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="secondary">
+      <AppBar position="static" color="secondary" className={classes.bar}>
         <Toolbar>
-        <Button href="/match">
-          <Typography component="h1" variant="h3" href="/match" color="primary">
+        <Button href="/match" className={classes.logo}>
+          
               ReachOUT
-          </Typography>
+         
           </Button>
-          <ButtonGroup variant="text" color="primary" className={classes.buttonGroup}>
-              <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
-              <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
-              <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
-          </ButtonGroup>
+          <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+          <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+          <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           {auth && (
             <div>
             <Avatar alt={name} src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP" onClick={handleMenu}
