@@ -25,15 +25,15 @@ const theme = createMuiTheme({
     tertiary: {
       main: "#71b2c9"
     }
-  }
+  },
 });
 
 ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <App />
-    </MuiPickersUtilsProvider>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <App />
+      </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,
   document.getElementById("root")

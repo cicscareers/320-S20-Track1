@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getList(event) {
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-04-01&end_date=2020-04-28",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2000-01-01+12:00:00&end_date=2050-05-28+12:00:00",
       {
         method: "GET",
         headers: {
@@ -108,7 +108,7 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  //var lambdaList=getList()
+  var lambdaList=getList()
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -202,7 +202,6 @@ const ResponsiveDrawer = (props) => {
               {...params}
               variant="outlined"
               label="Help Needed Topics"
-              placeholder="Help Needed Topics"
             />
           )}
           onChange={(e,v) => setStateTopics(v)}
@@ -217,8 +216,7 @@ const ResponsiveDrawer = (props) => {
             <TextField
               {...params}
               variant="outlined"
-              label="Supporter Tags"
-              placeholder="Supporter Tags"
+              label="Supporter Specialties"
             />
           )}
           onChange={(e,v) => setStateTags(v)}
@@ -228,6 +226,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <Box align="center">
           <DatePicker
+            autoOk
             align="center"
             variant="inline"
             value={selectedDate}
@@ -237,7 +236,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          What is your availability on {selectedDate.toDateString()}?
+          What is your availability on {selectedDate.toDateString().substring(0,3)+"day,"+selectedDate.toDateString().substring(3)}?
         </Typography>
         <Slider
           value={sliderTime}
@@ -252,7 +251,7 @@ const ResponsiveDrawer = (props) => {
           getAriaValueText={convertTime}
         />
         <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          {convertTime(sliderTime[0])}: {convertTime(sliderTime[1])}
+          {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
         </Typography>
         <br/>
         <Typography align="center">Minimum Required Rating</Typography>
@@ -271,7 +270,8 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        <Typography align="center" variant="h4">Recommended Supporters</Typography>
+        {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
         {newList.map(supporterObj => getSupporterCard(supporterObj))}
