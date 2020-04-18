@@ -13,7 +13,6 @@ import Cookies from "universal-cookie";
 import convertTime from "../components/convertTime.js"
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
-const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
