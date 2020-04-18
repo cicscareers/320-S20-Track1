@@ -21,7 +21,7 @@ def lambda_handler(event, context):
     location = event['location']
     
     # check that student is in DB
-    sql = "SELECT supporter_id FROM supporters WHERE supporter_id = :student"
+    sql = "SELECT student_id FROM students WHERE student_id = :student"
     sql_parameters = [
         {'name' : 'student', 'value': {'longValue': student}}
     ]
@@ -70,7 +70,7 @@ def lambda_handler(event, context):
     query_parameters = [
         {'name' : 'appointment_id', 'value': {'longValue' : appointment_id}},
         {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
-        {'name' : 'student_id', 'value':{'longValue': student_id}}
+        {'name' : 'student_id', 'value':{'longValue': student_id}},
         {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
         {'name' : 'appt_type', 'value':{'stringValue': appt_type}},
         {'name' : 'duration', 'value': {'longValue' : duration}},
