@@ -246,7 +246,7 @@ const SupporterCard = (props) => {
             </DialogActions>
           </Dialog>
 
-          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openCreated}>
+          <Dialog onClose={handleCloseCreated} aria-labelledby="customized-dialog-title" open={openCreated}>
             <DialogTitle id="customized-dialog-title" onClose={handleCloseCreated}>
               Appointment Created
             </DialogTitle>
