@@ -86,8 +86,6 @@ export default function SignIn() {
       .then(json => {
         console.log(json);
         if (json.token !== undefined) {
-          alert("Login Successful!");
-          console.log("hooray! we have json!");
           console.log(json);
           const cookies = new Cookies();
           cookies.remove("email");
@@ -95,6 +93,7 @@ export default function SignIn() {
           cookies.remove("lastName");
           cookies.remove("role");
           cookies.remove("token");
+          cookies.remove("id");
           cookies.set("email", json.email, {
             path: "/"
           });
@@ -104,6 +103,7 @@ export default function SignIn() {
           cookies.set("lastName", json.l_name, {
             path: "/"
           });
+          cookies.set("id", json.user_id, { path: "/" });
           cookies.set("role", json.role, { path: "/" });
           cookies.set("token", json.token, { path: "/" });
           window.location.reload();
