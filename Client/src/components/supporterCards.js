@@ -35,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     width: "130%",
   },
+  supporterCard: {
+    '&:hover': {
+      backgroundColor: '#F5F5F5',
+      color: '#000'
+    }
+  },
   rating: {
     flexBasis: '15%',
     marginLeft: "30%"
@@ -117,7 +123,7 @@ const SupporterCard = (props) => {
   }
   return (
 
-      <ExpansionPanel>
+      <ExpansionPanel className={classes.supporterCard}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
