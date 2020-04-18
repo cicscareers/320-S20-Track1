@@ -149,12 +149,14 @@ def update_student_profile(event, context):
 
             minor_id_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
             minor_id_param = deepcopy(student_id_param).append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
-            minors_queries.append((minor_id_sql, minor_id_param))
-            
+            minors_queries.append((minor_id_sql, minor_id_param))         
 
-    #Deleting existing minors, relevant existing minors will be re-added
+    #Deleting pre-existing minors, relevant minors will be re-added
     delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
- 
+
+    #Add current minors
+    for sql, params in minors_queries:
+        
 
     #Check if student exists
     sql = "SELECT student_id FROM students WHERE student_id= :student_id"
