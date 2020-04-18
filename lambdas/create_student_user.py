@@ -39,9 +39,10 @@ def create_student_user(event, context):
 
     create_users_instance = query(sql,sql_parameters)
 
+    # Check to see if the users table was updated
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
         return {
-            'body': json.dumps("Student user not created"),
+            'body': json.dumps("User not created"),
             'statusCode': 500
         }
     else:
@@ -50,9 +51,16 @@ def create_student_user(event, context):
         VALUES (:new_id,:new_id,1000,'college',4000,'resume',false,false)"""
         sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}}]
         
-        create_users_instance = query(sql,sql_parameters)
-        
-        return{
-            'body': json.dumps("Student user created"),
-            'statusCode': 201
+        create_students_instance = query(sql,sql_parameters)
+
+        # Check to see if the students table was updated
+        if(create_students_instance['numberOfRecordsUpdated'] == 0): 
+            return {
+                'body': json.dumps("Student not created"),
+                'statusCode': 500
         }
+        else:
+            return{
+                'body': json.dumps("Student user created"),
+                'statusCode': 201
+            }
