@@ -137,13 +137,13 @@ const SupporterCard = (props) => {
           id="panel1bh-header"
         >
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography className={classes.heading}>{name}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography className={classes.heading}>Great Match</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={5}>
               {tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
               {tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
               {tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}

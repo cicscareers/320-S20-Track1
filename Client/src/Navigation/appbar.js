@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
     color: '#881c1c',
     fontSize: '140%',
     width: "100%",
-    minHeight: 60,
     borderRadius: "40em",
     '&:hover': {
       backgroundColor: '#881c1c',
@@ -116,27 +115,27 @@ export default function MenuAppBar() {
           <Grid item sm={3}>
           </Grid>
           <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
+            <Grid item sm={2}>
             </Grid>
-            <Grid item sm={9}>
+            <Grid item sm={8}>
               <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
             </Grid>
             <Grid item sm={2}>
             </Grid>
           </Grid>
           <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
+            <Grid item sm={2}>
             </Grid>
-            <Grid item sm={9}>
+            <Grid item sm={8}>
               <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
             </Grid>
             <Grid item sm={2}>
             </Grid>
           </Grid>
           <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
+            <Grid item sm={2}>
             </Grid>
-            <Grid item sm={9}>
+            <Grid item sm={8}>
               <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
             </Grid>
             <Grid item sm={2}>
