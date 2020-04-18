@@ -9,9 +9,22 @@ from package.query_db import query
 def get_appointment_supporter(event, context):
 
     given_id = event['supporter_id'] 
+
+    #Check to see if the ssupporter exists
+    sql = 'SELECT supporter_id FROM supporters WHERE supporter_id=:given_id'
+    sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
+    exists = query(sql,sql_parameters)
+
+    if(exists['records'] == []):
+        return{
+            'body': json.dumps("The user does not exist"),
+            'statusCode': 404
+        }
+
+    #The user does exist, so fetch appointments
     sql = 'SELECT U1.first_name as supporterFN, U1.last_name as supporterLN, U2.first_name as studentFN, U2.last_name as studentLN, SA.type, SA.duration, SA.method, SA.location \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
-            WHERE S.supporter_id = SR.supporter_id and SR.appointment_id = SA.appointment_id and S.supporter_id = U1.id and SR.student_id = U2.id and S.supporter_id=:given_id;'
+            WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND S.supporter_id=:given_id;'
     
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
     appointment_info = query(sql, sql_parameters)
@@ -19,7 +32,7 @@ def get_appointment_supporter(event, context):
     #Check to see if the query even returned anything
     if (appointment_info['records'] == []): 
         return {
-            'body': json.dumps("The supporter does not have any appointments or does not exist"),
+            'body': json.dumps("The supporter has no appointments"),
             'statusCode': 404
         }
     else:
