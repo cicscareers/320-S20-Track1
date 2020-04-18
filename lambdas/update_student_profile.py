@@ -126,11 +126,12 @@ def update_student_profile(event, context):
         for major in majors:
             major_sql = "SELECT major_id FROM major WHERE major= :major"
             major_param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
-            major_id = query(major_sql, param)['records'][0][0]['longValue']
+            major_id = query(major_sql, major_param)['records'][0][0]['longValue']
 
             major_id_sql = "INSERT INTO student_majors VALUES (:student_id, :major_id)"
-            major_id_param = deepcopy(student_id_param).append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
-            major_queries.append((major_id_sql, major_id_param))
+            major_id_param = deepcopy(student_id_param)
+            major_id_param.append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
+            majors_queries.append((major_id_sql, major_id_param))
 
     
     #student_minors table
@@ -147,7 +148,8 @@ def update_student_profile(event, context):
             minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
 
             minor_id_sql = "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
-            minor_id_param = deepcopy(student_id_param).append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
+            minor_id_param = deepcopy(student_id_param)
+            minor_id_param.append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
             minors_queries.append((minor_id_sql, minor_id_param))         
 
 
@@ -175,7 +177,7 @@ def update_student_profile(event, context):
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
         raise LambdaException("Unprocessable Entity")
 
-        
+
     update_error_messages = []
 
     #sql queries to update data in each table
