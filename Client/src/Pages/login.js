@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Button, TextField, FormControlLabel, Link, Grid, Box, Typography, Container } from "@material-ui/core";
+import { Button, MenuItem, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import users from "../Data/users.json";
 import Cookies from "universal-cookie";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
+
+
 
 //Function that shows the copyright (will get updated to the appropiate one later)
 function Copyright() {
@@ -30,7 +35,11 @@ const useStyles = makeStyles(theme => ({
   },
   form: {
     width: "100%",
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    align: "center"
+  },
+  rad: {
+
   },
  }));
 
@@ -42,6 +51,11 @@ export default function SignIn() {
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginType, setLoginType] = React.useState("Student");
+
+  const handleChange = (event) => {
+    setLoginType(event.target.value);
+  };
 
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
@@ -52,7 +66,7 @@ export default function SignIn() {
     event.preventDefault();
 
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/login",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/login",
       {
         method: "POST",
         headers: {
@@ -72,7 +86,7 @@ export default function SignIn() {
       .then(json => {
         console.log(json);
         if (json.token !== undefined) {
-          alert("Account Successfully Created!");
+          alert("Login Successful!");
           console.log("hooray! we have json!");
           console.log(json);
           const cookies = new Cookies();
@@ -151,6 +165,26 @@ export default function SignIn() {
             onChange={e => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
+          <Typography align="center">What type of user are you?</Typography>
+          <FormControl fullWidth className={classes.form}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={loginType}
+              onChange={handleChange}
+            >
+              <MenuItem value={"Student"}>
+                <Typography align="center" variant="h6">Student</Typography>
+              </MenuItem>
+              <MenuItem value={"Supporter"}>
+                <Typography align="center" variant="h6">Supporter</Typography>
+              </MenuItem>
+              <MenuItem value={"Admin"}>
+                <Typography align="center" variant="h6">Admin</Typography>
+              </MenuItem>
+            </Select>
+          </FormControl>
+          
           <Button
             margin="normal"
             fullWidth

@@ -10,13 +10,14 @@ import NotFound from "../Pages/NotFound.js"
 import Account from "../Pages/account.js";
 import AdminSettings from "../Pages/adminSettings.js"
 import SupporterSettings from "../Pages/SupporterSettings.js"
-import Matching from "../Pages/search-appointment.js"
+import Matching from "../Pages/match2.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
 import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import Feedback from '../Pages/feedback';
+import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
 
 
@@ -27,7 +28,7 @@ export default function Routes() {
           <AuthenticatedRoute path="/home" exact component={Home} />
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
-          <AdminRoute path="/admin-settings" exact component={AdminSettings} />
+          <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />
           <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <AuthenticatedRoute path="/match" exact component={Matching} />
@@ -37,6 +38,7 @@ export default function Routes() {
           <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
           <UnauthenticatedRoute path="/signup" exact component={SignUp} />
           <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
+          <UnauthenticatedRoute path="/forgot-password2" exact component={resetPassAfterEmail} />
           <Route path="/index.html" to="/" />
           <Route component={NotFound} />
         </Switch>

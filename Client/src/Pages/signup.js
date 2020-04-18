@@ -89,7 +89,7 @@ export default function SignUp() {
 
     //POST the user info to the database
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/register/students",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/register/students",
       {
         method: "POST",
         headers: {

@@ -4,12 +4,16 @@ import "./index.css";
 import App from "./App";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Frutiger",
-    fontStyle: "normal"
+    fontFamily: "Open Sans Light",
+    fontStyle: "normal",
+    button: {
+      textTransform: 'none'
+    }
   },
   palette: {
     primary: {
@@ -17,6 +21,9 @@ const theme = createMuiTheme({
     },
     secondary: {
       main: "#FFFFFF"
+    },
+    tertiary: {
+      main: "#71b2c9"
     }
   }
 });
@@ -24,7 +31,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <App />
+    </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,
   document.getElementById("root")

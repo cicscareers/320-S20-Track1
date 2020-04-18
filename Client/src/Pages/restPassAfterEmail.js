@@ -54,7 +54,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const classes = useStyles();
@@ -64,17 +63,11 @@ export default function SignIn() {
   }
 
   function validateForm() {
-    return password===password2 && email.length > 0 
-    && password.length > 0 && password2.length > 0 
-    && validEmail(email);
+    return password===password2 && password.length > 0 && password2.length > 0;
   }
 
   function samePass(pass, pass2){
     return password===password2;
-  }
-
-  function validEmail(address) {
-    return !! address.match(/.+@.+/);
   }
 
   return (
@@ -88,25 +81,6 @@ export default function SignIn() {
           Reset Password
         </Typography>
         <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            onChange={e => setEmail(e.target.value)}
-          />
-          {!validEmail(email) && email.length > 0 && (
-            <FormControl className={classes.error} error>
-              <FormHelperText>
-                Please enter a valid email
-              </FormHelperText>
-            </FormControl>
-          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -163,4 +137,3 @@ export default function SignIn() {
     </Container>
   );
 }
-

@@ -8,8 +8,9 @@ export default function adminSettings() {
   return (
     <Container component="main" maxWidth="xs" align="center">
       <Typography component="h1" variant="h5" align="center">
-        Admin Settings
+        A
       </Typography>
+      <img src = 'https://vignette.wikia.nocookie.net/muppet/images/6/6a/Broughtbya.jpg/revision/latest/scale-to-width-down/340?cb=20060314164703'/>
     </Container>
   );
 }
