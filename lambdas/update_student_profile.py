@@ -116,22 +116,21 @@ def update_student_profile(event, context):
 
 
     #student_majors table
-    delete_majors_sql = ""
-    student_majors_sql = ""
-    major_params = deepcopy(student_id_param)
+    
+    #major_queries stores sql queries and their parameters as tuples
+    majors_queries = []
 
     if 'majors' in event:
         majors = event['majors']
-        delete_majors_sql = "DELETE FROM student_majors WHERE student_id= :student_id"
 
         for major in majors:
             major_sql = "SELECT major_id FROM major WHERE major= :major"
-            param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
+            major_param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
             major_id = query(major_sql, param)['records'][0][0]['longValue']
 
-            student_majors_sql += "INSERT INTO student_majors VALUES (:student_id, :major_id)"
-            major_id_param = {'name' : 'major_id', 'value' : {'longValue' : major_id}}
-            major_params.append(major_id_param)
+            major_id_sql = "INSERT INTO student_majors VALUES (:student_id, :major_id)"
+            major_id_param = deepcopy(student_id_param).append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
+            major_queries.append((major_id_sql, major_id_param))
 
     
     #student_minors table
@@ -147,16 +146,10 @@ def update_student_profile(event, context):
             minor_param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
             minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
 
-            minor_id_sql += "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
+            minor_id_sql = "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
             minor_id_param = deepcopy(student_id_param).append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
             minors_queries.append((minor_id_sql, minor_id_param))         
 
-    #Deleting pre-existing minors, relevant minors will be re-added
-    delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
-
-    #Add current minors
-    for sql, params in minors_queries:
-        
 
     #Check if student exists
     sql = "SELECT student_id FROM students WHERE student_id= :student_id"
@@ -182,28 +175,58 @@ def update_student_profile(event, context):
     if(first_name == None or last_name == None or job_search == None or grad_student == None):
         raise LambdaException("Unprocessable Entity")
 
+        
+    update_error_messages = []
+
     #sql queries to update data in each table
     users_table_sql = (f"UPDATE users SET {updated_user_vals} WHERE id= :student_id")
-    update_user_data = query(users_table_sql, student_id_param)['numberOfRecordsUpdated']
+    try:
+        update_user_data = query(users_table_sql, student_id_param)['numberOfRecordsUpdated']
+    except Exception as e:
+        update_error_messages.append("User table update failed: " + str(e))
                         
     students_table_sql = (f"UPDATE students SET {updated_student_vals} WHERE student_id= :student_id")
-    update_student_data = query(students_table_sql, student_id_param)['numberOfRecordsUpdated']
-    
-    # sql = users_table_sql + " " + students_table_sql + " " + delete_majors_sql + " " + student_majors_sql + " " \
-    #         + delete_minors_sql + " " + student_minors_sql
+    try:
+        update_student_data = query(students_table_sql, student_id_param)['numberOfRecordsUpdated']
+    except Exception as e:
+        update_error_messages.append("Student table update failed: " + str(e))
 
-    all_params = deepcopy(student_id_param)
-    all_params.extend(major_params)
-    all_params.extend(minor_params)
 
-    # print(sql)
-    # update_data = query(sql, all_params)
+    #Deleting pre-existing majors, relevant majors will be re-added
+    delete_majors_sql = "DELETE FROM student_majors WHERE student_id= :student_id"
+    try:
+        deleted_majors = query(delete_majors_sql, student_id_param)
+    except Exception as e:
+        update_error_messages.append("Deletion of majors failed: " + str(e))
 
-    if(update_data['numberOfRecordsUpdated'] == 0): 
-        print("Student data not updated")
-        return {
-            "statusCode": 400 #bad request
-        }
+    #Adding current majors
+    for sql, params in majors_queries:
+        try:
+            updated_majors = query(sql, params)
+        except Exception as e:
+            update_error_messages.append("Student majors update failed: " + str(e))
+
+
+    #Deleting pre-existing minors, relevant minors will be re-added
+    delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
+    try:
+        deleted_minors = query(delete_minors_sql, student_id_param)
+    except Exception as e:
+        update_error_messages.append("Deletion of minors failed: " + str(e))
+
+    #Adding current minors
+    for sql, params in minors_queries:
+        try:
+            updated_minors = query(sql, params)
+        except Exception as e:
+            update_error_messages.append("Student minors update failed: " + str(e))
+
+
+    if(len(update_error_messages) > 0): 
+        print("One or more updates failed")
+        error_details = "\n".join(update_error_messages)
+        raise LambdaException(error_details)
+
     print("Updated Student Profile")
     return {
         'statusCode': 204 #no content 
