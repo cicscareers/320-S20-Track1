@@ -103,8 +103,11 @@ const ResponsiveDrawer = (props) => {
     supporter => supporter.rating>=rating).filter(
     supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
+    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
+
+    //This correctly filters date when added, I just got sick of repopulating the JSON for now.
+    //.filter(
+    //supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
 
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
