@@ -11,20 +11,20 @@ def get_supporters_before_match(event, context):
     
     date_start = event['start_date']
     date_end = event['end_date']
-    
-    sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization, SPS.job_search, SPS.grad_student, SMP.major_id\
-            FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
-            specialization_type ST, supporter_specializations SS, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
-            WHERE U.id = S.user_id\
-            AND S.supporter_id = AB.supporter_id\
-            AND SPS.supporter_id = S.supporter_id\
-            AND SMP.supporter_id = S.supporter_id\
-            AND AB.appointment_block_id = SFB.appointment_block_id\
-            AND SFB.specialization_type_id = ST.specialization_type_id\
-            AND ST.specialization_type_id = SS.specialization_type_id\
-            AND S.supporter_id = SS.supporter_id\
-            AND start_date BETWEEN :date_start AND :date_end\
-            AND number_of_students != max_students;"
+
+    sql = "SELECT DISTINCT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
+    FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
+    specialization_type ST, supporter_specializations SS, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
+    WHERE U.id = S.user_id\
+    AND S.supporter_id = AB.supporter_id\
+    AND SPS.supporter_id = S.supporter_id\
+    AND SMP.supporter_id = S.supporter_id\
+    AND AB.appointment_block_id = SFB.appointment_block_id\
+    AND SFB.specialization_type_id = ST.specialization_type_id\
+    AND ST.specialization_type_id = SS.specialization_type_id\
+    AND S.supporter_id = SS.supporter_id\
+    AND start_date BETWEEN: date_start AND: date_end\
+    AND number_of_students != max_students;"
             
     params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
 
