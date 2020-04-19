@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: student_id
 #Output: JSON object of current appointments that a student has in the format: 
-# "studentFN", "studentLN", "supporterFN", "supporterLN", "type", "duration","method","location"
+# "studentFN", "studentLN", "supporterFN", "supporterLN", "time_scheduled","type", "duration","method","location"
 
 def get_appointment_students(event, context):
     
@@ -22,7 +22,7 @@ def get_appointment_students(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT U1.first_name as studentFN, U1.last_name as studentLN, U2.first_name as supporterFN, U2.last_name as supporterLN, SA.type,SA.duration, SA.method, SA.location \
+    sql = 'SELECT U1.first_name as studentFN, U1.last_name as studentLN, U2.first_name as supporterFN, U2.last_name as supporterLN, SA.time_scheduled, SA.type,SA.duration, SA.method, SA.location \
             FROM students S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
              WHERE S.student_id = SR.student_id AND SR.appointment_id = SA.appointment_id AND S.student_id = U1.id AND SA.supporter_id = U2.id AND S.student_id=:given_id' 
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
@@ -44,10 +44,11 @@ def get_appointment_students(event, context):
             block["studentLN"] = entry[1].get("stringValue")
             block["supporterFN"] = entry[2].get("stringValue")
             block["supporterLN"] = entry[3].get("stringValue")
-            block["type"] = entry[4].get("stringValue")
-            block["duration"] = entry[5].get("longValue")
-            block["method"] = entry[6].get("stringValue")
-            block["location"] = entry[7].get("stringValue")
+            block["time_scheduled"] = entry[4].get("stringValue")
+            block["type"] = entry[5].get("stringValue")
+            block["duration"] = entry[6].get("longValue")
+            block["method"] = entry[7].get("stringValue")
+            block["location"] = entry[8].get("stringValue")
             student_appointments.append(block)
 
         #Returns the query contents in JSON format
