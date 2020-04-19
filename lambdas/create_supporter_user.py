@@ -4,6 +4,9 @@ from package.query_db import query
 
 # Written by Dat Duong
 
+# Input: first_name, last_name, email, hashed_password, employer, title, supporter_types,
+# team (optional)
+# Output:
 def create_supporter(event, context):
 
     print('OOF')
@@ -51,21 +54,22 @@ def create_supporter(event, context):
             other = True
 
     # checking if user exists
-    sql = "SELECT email from users where email = :email;"
+    sql = "SELECT email FROM users WHERE email = :email;"
 
     sql_parameters = [{'name': 'email', 'value': {'stringValue': email}}]
 
     check_user = query(sql, sql_parameters)
 
     if check_user['records'] != []:
-        print("This email exists already")
         return {
+            'body': json.dumps("This email exists already!!!"),
             'statusCode': 404
         }
 
     # creates id
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-    new_id = query(sql)['records'][0][0]['longValue'] + 1
+    sql_parameters = []
+    new_id = query(sql, sql_parameters)['records'][0][0]['longValue'] + 1
 
     # insert new user into users table
     sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
@@ -83,8 +87,8 @@ def create_supporter(event, context):
 
     # check if user data successfully loaded
     if new_user['numberOfRecordsUpdated'] == 0:
-        print("User was not created")
         return {
+            'body': json.dumps("User was not created"),
             'statusCode': 404
         }
 
@@ -103,8 +107,8 @@ def create_supporter(event, context):
 
     # check if supporter data successfully loaded
     if new_supp['numberOfRecordsUpdated'] == 0:
-        print("Supporter was not created")
         return {
+            'body': json.dumps("Supporter was not created"),
             'statusCode': 404
         }
 
@@ -126,14 +130,13 @@ def create_supporter(event, context):
 
     # check if supporter types successfully loaded
     if supp_types['numberOfRecordsUpdated'] == 0:
-        print("Supporter types not loaded")
         return {
+            'body': json.dumps("Supporter types not loaded"),
             'statusCode': 404
         }
 
     # finish
-    print("Supporter has been created")
-    print("YAY!!!")
     return {
+        'body': json.dumps("Supporter has been created. YAY!!!"),
         'statusCode': 201
     }
