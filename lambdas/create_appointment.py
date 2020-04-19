@@ -63,14 +63,13 @@ def lambda_handler(event, context):
     appointment_id = id_query['records'][0][0]['longValue'] + 1
 
     # format query
-    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, student_id, time_of_appt, type, duration, location, method, time_scheduled) \
+    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method, time_scheduled) \
         VALUES (:appointment_id, :supporter_id, :student_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
     
     # format query parameters
     query_parameters = [
         {'name' : 'appointment_id', 'value': {'longValue' : appointment_id}},
         {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
-        {'name' : 'student_id', 'value':{'longValue': student_id}},
         {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
         {'name' : 'appt_type', 'value':{'stringValue': appt_type}},
         {'name' : 'duration', 'value': {'longValue' : duration}},
@@ -80,13 +79,24 @@ def lambda_handler(event, context):
     ]
 
     # make query
-    response = query(SQLquery, query_parameters)
-
-    # catch-all error 404
-    if(response['numberOfRecordsUpdated'] == 0):
+    try:
+        response = query(SQLquery, query_parameters)
+    except Exception as e:
         return {
-            'statusCode': 404, 
-            'body': json.dumps('Error making appointment.')
+            'statusCode' : 404,
+            'body' : "Update to scheduled appointment failed: " + str(e)
+        }
+
+    # query to update student_appointment_relation
+    sql = "INSERT INTO student_appointment_relation (student_id, appointment_id) VALUES (:student_id, :appointment_id);"
+
+    # update student_appointment_relation
+    try:
+        response = query(sql, query_parameters)
+    except Exception as e:
+        return {
+            'statusCode' : 404,
+            'body' : "Update to student appointment relation failed: " + str(e)
         }
 
     # if no error, return 201 Created
