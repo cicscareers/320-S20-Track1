@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: supporter_id
 #Output: JSON object of current supporter appointments in the format: 
-# "supporterFN", "supporterLN", "studentFN", "studentLN", "type", "duration","method","location"
+# "supporterFN", "supporterLN", "studentFN", "studentLN", "time_scheduled","type", "duration","method","location"
 
 def get_appointment_supporter(event, context):
 
@@ -22,7 +22,7 @@ def get_appointment_supporter(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT U1.first_name as supporterFN, U1.last_name as supporterLN, U2.first_name as studentFN, U2.last_name as studentLN, SA.type, SA.duration, SA.method, SA.location \
+    sql = 'SELECT U1.first_name as supporterFN, U1.last_name as supporterLN, U2.first_name as studentFN, U2.last_name as studentLN, SA.time_scheduled, SA.type, SA.duration, SA.method, SA.location \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
             WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND S.supporter_id=:given_id;'
     
@@ -45,10 +45,11 @@ def get_appointment_supporter(event, context):
             block["supporterLN"] = entry[1].get("stringValue")
             block["studentFN"] = entry[2].get("stringValue")
             block["studentLN"] = entry[3].get("stringValue")
-            block["type"] = entry[4].get("stringValue")
-            block["duration"] = entry[5].get("longValue")
-            block["method"] = entry[6].get("stringValue")
-            block["location"] = entry[7].get("stringValue")
+            block["time_scheduled"] = entry[4].get("stringValue")
+            block["type"] = entry[5].get("stringValue")
+            block["duration"] = entry[6].get("longValue")
+            block["method"] = entry[7].get("stringValue")
+            block["location"] = entry[8].get("stringValue")
             supporter_appointments.append(block)
 
         #Returns the query contents in JSON format
