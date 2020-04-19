@@ -64,12 +64,13 @@ def lambda_handler(event, context):
 
     # format query
     SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method, time_scheduled) \
-        VALUES (:appointment_id, :supporter_id, :student_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
     
     # format query parameters
     query_parameters = [
         {'name' : 'appointment_id', 'value': {'longValue' : appointment_id}},
         {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+        {'name' : 'student_id', 'value':{'longValue': student_id}},
         {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
         {'name' : 'appt_type', 'value':{'stringValue': appt_type}},
         {'name' : 'duration', 'value': {'longValue' : duration}},
@@ -102,5 +103,5 @@ def lambda_handler(event, context):
     # if no error, return 201 Created
     return {
         'statusCode': 201, 
-        'body': json.dumps('Appointment created.')
+        'body': 'Appointment created.'
     }
