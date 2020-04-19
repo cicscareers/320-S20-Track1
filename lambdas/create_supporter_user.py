@@ -1,10 +1,12 @@
 import json
-from query_db import query
-import boto3
+from package.query_db import query
 
 
 # Written by Dat Duong
 
+# Input: first_name, last_name, email, hashed_password, employer, title, supporter_types,
+# team (optional)
+# Output:
 def create_supporter(event, context):
 
     print('OOF')
@@ -20,11 +22,12 @@ def create_supporter(event, context):
     title = event['title']
 
     # optional
-    team = event['team']
+    # if no input for team place empty
+    if 'team' not in event:
+        team = 'team'
 
-    # if no input for team
-    if team == None:
-        team = ""
+    else:
+        team = event['team']
 
     # Supporters_type table input
     supporter_types = event['supporter_types']
@@ -50,115 +53,90 @@ def create_supporter(event, context):
         if typ == 'other':
             other = True
 
-    client = boto3.client('rds-data')  # Connecting to Database
-
     # checking if user exists
+    sql = "SELECT email FROM users WHERE email = :email;"
 
-    # check_user = client.execute_statement(
-    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-    #     database="postgres",
-    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-    #     sql="SELECT email from users where email = '%s';" % email
-    # )
+    sql_parameters = [{'name': 'email', 'value': {'stringValue': email}}]
 
-    sql = "SELECT email from users where email = '%s';" % email
-    check_user = query(sql)
+    check_user = query(sql, sql_parameters)
 
     if check_user['records'] != []:
-        print("This email exists already")
         return {
+            'body': json.dumps("This email exists already!!!"),
             'statusCode': 404
         }
 
     # creates id
-
-    # create_id = client.execute_statement(
-    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-    #     database="postgres",
-    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-    #     sql="SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-    # )
-
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-    new_id = query(sql)['records'][0][0]['longValue'] + 1
+    sql_parameters = []
+    new_id = query(sql, sql_parameters)['records'][0][0]['longValue'] + 1
 
     # insert new user into users table
+    sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
+    VALUES (:new_id, :first_name, :last_name, :email,'pn','pic','bio','pro','gen','pho',false, true, :password,'salt', 'supporter')"""
 
-    # new_user = client.execute_statement(
-    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-    #     database="postgres",
-    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    sql_parameters = [
+        {'name': 'new_id', 'value': {'longValue': new_id}},
+        {'name': 'first_name', 'value': {'stringValue': first_name}},
+        {'name': 'last_name', 'value': {'stringValue': last_name}},
+        {'name': 'email', 'value': {'stringValue': email}},
+        {'name': 'password', 'value': {'stringValue': password}}
+    ]
 
-    #     # sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key) \
-    #     # VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1)+1,'%s','%s','%s','pn','pic','bio','pro','gen','pho',false,true,'%s','salt')" % (first_name, last_name, email, password)
-
-    #     sql="INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
-    #     VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false, true,'%s','salt', 'supporter')" % (new_id, first_name, last_name, email, password)
-
-    # )
-
-    sql = "INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
-    VALUES ('%s','%s','%s','%s','pn','pic','bio','pro','gen','pho',false, true,'%s','salt', 'supporter')" % (new_id, first_name, last_name, email, password)
-
-    new_user = query(sql)
+    new_user = query(sql, sql_parameters)
 
     # check if user data successfully loaded
     if new_user['numberOfRecordsUpdated'] == 0:
-        print("User was not created")
         return {
+            'body': json.dumps("User was not created"),
             'statusCode': 404
         }
 
     # inserts user into supporters table with same user_id
+    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
+            VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name')"""
 
-    # new_supp = client.execute_statement(
-    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-    #     database="postgres",
-    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
+    sql_parameters = [
+        {'name': 'new_id', 'value': {'longValue': new_id}},
+        {'name': 'employer', 'value': {'stringValue': employer}},
+        {'name': 'title', 'value': {'stringValue': title}},
+        {'name': 'team', 'value': {'stringValue': team}}
+    ]
 
-    #     # sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
-    #     #     VALUES ((SELECT id FROM users ORDER BY id DESC LIMIT 1),(SELECT id FROM users ORDER BY id DESC LIMIT 1), 'employer', 'title', 'team', false, 0, 'team name')" ,
-
-    #     sql="INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
-    #         VALUES ('%s', '%s' , '%s', '%s', '%s', false, 0, 'team name')" % (new_id, new_id, employer, title, team)
-
-    # )
-
-    sql = "INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
-            VALUES ('%s', '%s' , '%s', '%s', '%s', false, 0, 'team name')" % (new_id, new_id, employer, title, team)
-
-    new_supp = query(sql)
+    new_supp = query(sql, sql_parameters)
 
     # check if supporter data successfully loaded
     if new_supp['numberOfRecordsUpdated'] == 0:
-        print("Supporter was not created")
         return {
+            'body': json.dumps("Supporter was not created"),
             'statusCode': 404
         }
 
     # inserts specific supporter types into suppoert types table with same id
-    # supp_types = client.execute_statement(
-    #     secretArn="arn:aws:secretsmanager:us-east-2:500514381816:secret:rds-db-credentials/cluster-33FXTTBJUA6VTIJBXQWHEGXQRE/postgres-3QyWu7",
-    #     database="postgres",
-    #     resourceArn="arn:aws:rds:us-east-2:500514381816:cluster:postgres",
-    #     sql="INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
-    #         VALUES ('%s', '%s', '%r', '%r','%r', '%r' , '%r')" % (new_id, new_id, professional_staff, student_staff, alumni, faculty, other)
-    # )
+    sql = """INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+            VALUES (:new_id, :new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
 
-    sql = "INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
-            VALUES ('%s', '%s', '%r', '%r','%r', '%r' , '%r')" % (new_id, new_id, professional_staff, student_staff, alumni, faculty, other)
+    sql_parameters = [
+        {'name': 'new_id', 'value': {'longValue': new_id}},
+        {'name': 'professional_staff', 'value': {
+            'booleanValue': professional_staff}},
+        {'name': 'student_staff', 'value': {'booleanValue': student_staff}},
+        {'name': 'alumni', 'value': {'booleanValue': alumni}},
+        {'name': 'faculty', 'value': {'booleanValue': faculty}},
+        {'name': 'other', 'value': {'booleanValue': other}}
+    ]
 
-    supp_types = query(sql)
+    supp_types = query(sql, sql_parameters)
 
     # check if supporter types successfully loaded
     if supp_types['numberOfRecordsUpdated'] == 0:
-        print("Supporter types not loaded")
         return {
+            'body': json.dumps("Supporter types not loaded"),
             'statusCode': 404
         }
 
     # finish
-    print("Supporter has been created")
     return {
+        'body': json.dumps("Supporter has been created. YAY!!!"),
         'statusCode': 201
     }
