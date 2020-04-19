@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   bar: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     minHeight: 80,
   },
   logo:{
@@ -32,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     color: '#881c1c',
-    fontSize: '140%',
+    fontSize: '120%',
     width: "100%",
     borderRadius: "40em",
     '&:hover': {
@@ -47,8 +49,8 @@ const useStyles = makeStyles(theme => ({
         },
   },
   large: {
-    width: theme.spacing(9),
-    height: theme.spacing(9),
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 const styles = {
@@ -102,14 +104,14 @@ export default function MenuAppBar() {
         <Toolbar>
         <Grid container>
           <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
+            <Grid item sm={0}>
             </Grid>
-            <Grid item sm={8}>
+            <Grid item sm={12}>
               <Button href="/match" className={classes.logo}>
                  ReachOUT
               </Button>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item sm={0}>
             </Grid>
           </Grid>
           <Grid item sm={3}>
@@ -117,37 +119,43 @@ export default function MenuAppBar() {
           <Grid item container direction="column" sm={2}>
             <Grid item sm={2}>
             </Grid>
-            <Grid item sm={8}>
+            <Grid item sm={10}>
               <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item sm={0}>
             </Grid>
           </Grid>
           <Grid item container direction="column" sm={2}>
             <Grid item sm={2}>
             </Grid>
-            <Grid item sm={8}>
+            <Grid item sm={10}>
               <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item sm={0}>
             </Grid>
           </Grid>
           <Grid item container direction="column" sm={2}>
             <Grid item sm={2}>
             </Grid>
-            <Grid item sm={8}>
+            <Grid item sm={10}>
               <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item sm={0}>
             </Grid>
           </Grid>
           <Grid item sm={1}>
-            <Button className={classes.pictureButton} onClick={handleMenu}>
-              <Avatar alt={name} 
-                src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
-                className={classes.large}>
-              </Avatar>
-            </Button>
+            <Grid item sm={0}>
+            </Grid>
+            <Grid item sm={12}>
+              <Button className={classes.pictureButton} onClick={handleMenu}>
+                <Avatar alt={name} 
+                  src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
+                  className={classes.large}>
+                </Avatar>
+              </Button>
+            </Grid>
+            <Grid item sm={0}>
+            </Grid>
           </Grid>
         </Grid>
         <Menu

@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
   Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField, Badge, Typography  } from '@material-ui/core';
+  DialogContent, DialogActions, TextField, Badge, Typography, Slide  } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -72,10 +72,15 @@ const SupporterCard = (props) => {
   const cookies = new Cookies();
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [expanded, setExpanded] = React.useState(false);
   const [time, setTime] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const chipFilter = (item) => { 
     setApptTopic(item);
   }
@@ -128,7 +133,7 @@ const SupporterCard = (props) => {
   }
   return (
 
-      <ExpansionPanel className={classes.supporterCard}>
+      <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
@@ -142,9 +147,11 @@ const SupporterCard = (props) => {
               <Typography className={classes.heading}>Great Match</Typography>
             </Grid>
             <Grid item xs={5}>
-              {tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
-              {tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
-              {tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
+              
+                {!expanded && tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
+                {!expanded && tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
+                {!expanded && tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
+              
             </Grid>
             <Grid item xs={3}>
               <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
