@@ -33,9 +33,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   button: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    marginLeft: "2.5%",
+    marginRight: "2.5%",
     color: '#881c1c',
     fontSize: '120%',
-    width: "100%",
     borderRadius: "40em",
     '&:hover': {
       backgroundColor: '#881c1c',
@@ -43,6 +46,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   pictureButton: {
+    marginLeft: "2.5%",
+    marginRight: "2.5%",
     borderRadius: "100em",
     '&:hover': {
           backgroundColor: '#881c1c',
@@ -103,59 +108,23 @@ export default function MenuAppBar() {
       <AppBar position="static" color="secondary" className={classes.bar}>
         <Toolbar>
         <Grid container>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={0}>
-            </Grid>
-            <Grid item sm={12}>
-              <Button href="/match" className={classes.logo}>
-                 ReachOUT
-              </Button>
-            </Grid>
-            <Grid item sm={0}>
-            </Grid>
+          <Grid item sm={2}>
+            <Button href="/match" className={classes.logo}>
+               ReachOUT
+            </Button>
           </Grid>
-          <Grid item sm={3}>
+          <Grid item sm={6}>
           </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={2}>
-            </Grid>
-            <Grid item sm={10}>
+          <Grid item sm={4}>
               <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
-            </Grid>
-            <Grid item sm={0}>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={2}>
-            </Grid>
-            <Grid item sm={10}>
               <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
-            </Grid>
-            <Grid item sm={0}>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={2}>
-            </Grid>
-            <Grid item sm={10}>
               <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
-            </Grid>
-            <Grid item sm={0}>
-            </Grid>
-          </Grid>
-          <Grid item sm={1}>
-            <Grid item sm={0}>
-            </Grid>
-            <Grid item sm={12}>
               <Button className={classes.pictureButton} onClick={handleMenu}>
                 <Avatar alt={name} 
                   src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
                   className={classes.large}>
                 </Avatar>
               </Button>
-            </Grid>
-            <Grid item sm={0}>
-            </Grid>
           </Grid>
         </Grid>
         <Menu

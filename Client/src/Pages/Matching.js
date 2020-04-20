@@ -166,7 +166,6 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" variant="h5">Filters</Typography>
-        <br/>
         <TextField
           variant="outlined"
           margin="normal"
@@ -257,7 +256,6 @@ const ResponsiveDrawer = (props) => {
         
         {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
         {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
-        <br/>
         <br/>
         {newList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
