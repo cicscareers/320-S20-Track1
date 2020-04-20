@@ -29,8 +29,6 @@ def get_supporters_before_match(event, context):
     params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
 
     query_data = query(sql, params)
-    
-    print(query_data['records'])
 
     if query_data['records'] == []: #If response was empty
         print("There are no appointment blocks available")
@@ -41,7 +39,10 @@ def get_supporters_before_match(event, context):
         supporter_availibility = {}
     
         for entry in query_data['records']:
-            print(len(entry))
+            if len(entry) != 14:
+                return {
+                    "statusCode": 422
+                }
             
             supporter_id = entry[0]['longValue']
             day = entry[7]['stringValue'][:10]
