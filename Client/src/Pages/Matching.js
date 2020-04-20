@@ -113,6 +113,7 @@ const ResponsiveDrawer = (props) => {
     supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
     supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
 */
+
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
   };
@@ -168,7 +169,6 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" variant="h5">Filters</Typography>
-        <br/>
         <TextField
           variant="outlined"
           margin="normal"
