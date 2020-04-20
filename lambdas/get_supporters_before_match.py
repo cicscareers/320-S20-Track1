@@ -12,23 +12,25 @@ def get_supporters_before_match(event, context):
     date_start = event['start_date']
     date_end = event['end_date']
 
-    sql = "SELECT DISTINCT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
+    sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization, T.tags, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
     FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
-    specialization_type ST, supporter_specializations SS, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
+    specialization_type ST, supporter_specializations SS, tags T, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
     WHERE U.id = S.user_id\
     AND S.supporter_id = AB.supporter_id\
+    AND T.supporter_id = S.supporter_id\
     AND SPS.supporter_id = S.supporter_id\
     AND SMP.supporter_id = S.supporter_id\
     AND AB.appointment_block_id = SFB.appointment_block_id\
     AND SFB.specialization_type_id = ST.specialization_type_id\
     AND ST.specialization_type_id = SS.specialization_type_id\
     AND S.supporter_id = SS.supporter_id\
-    AND start_date BETWEEN: date_start AND: date_end\
-    AND number_of_students != max_students;"
+    AND start_date BETWEEN '2020-04-17 00:01:00' AND '2020-04-19 11:59:00';"
             
     params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
 
     query_data = query(sql, params)
+    
+    print(query_data['records'])
 
     if query_data['records'] == []: #If response was empty
         print("There are no appointment blocks available")
@@ -36,37 +38,52 @@ def get_supporters_before_match(event, context):
             "statusCode": 404
         }
     else:
-        appointmentDict = dict()
-
-        #For each entry in the query data, extracts relevant data and stores it in a dictionary with appropriate key
-        for entry in query_data['records']: 
-            if(entry[6].get("stringValue")[0:10] in appointmentDict):
-                block = appointmentDict[entry[6].get("stringValue")]
-                time = dict()
-                time["start"] = entry[6].get("stringValue")[11:19]
-                time["end"] = entry[7].get("stringValue")[11:19]
-                block[time].append(time)
-            else:
-                block = dict()
-                block["supporter_id"] = entry[0].get("longValue")
-                block["name"] = "%s %s" %(entry[1].get("stringValue"), entry[2].get("stringValue"))
-                block["picture"] = entry[3].get("stringValue")
-                block["rating"] = entry[4].get("longValue")
-                block["employer"] = entry[5].get("stringValue")
-                block["title"] = entry[6].get("stringValue")
-                block["topics"] = [entry[8].get("stringValue")]
-                time = dict()
-                time["start"] = entry[6].get("stringValue")[11:19]
-                time["end"] = entry[7].get("stringValue")[11:19]
-                block["timeBlocks"] = [time]
-                block["day"] = entry[6].get("stringValue")[0:10]
-                appointmentDict.add(block["day"], block)
-
+        supporter_availibility = {}
+    
+        for entry in query_data['records']:
+            print(len(entry))
             
-
-        return{
-            'statusCode': 200,
-            'body': json.dumps(appointments) #Outputs the appointment list in JSON format 
-        }
-
-
+            supporter_id = entry[0]['longValue']
+            day = entry[7]['stringValue'][:10]
+            
+            if (supporter_id, day) in supporter_availibility:
+                supporter = supporter_availibility[(supporter_id, day)]
+                
+                topics = supporter['topics']
+                new_topic = entry[9]['stringValue']
+                if new_topic not in topics:
+                    topics.append(new_topic)
+                    supporter['topics'] = topics
+                
+                supporter_prefs = supporter['preferences']
+                major_prefs = supporter_prefs['major_prefs']
+                new_major_pref = entry[13]['stringValue']
+                if new_major_pref not in major_prefs:
+                    major_prefs.append(new_major_pref)
+                    supporter_prefs['major_prefs'] = major_prefs
+                    supporter['preferences'] = supporter_prefs
+                    
+                supporter_availibility[(supporter_id, day)] = supporter
+            
+            else:
+                supporter = {}
+                
+                
+                supporter['supporter_id'] = entry[0]['longValue']
+                supporter['name'] = entry[1]['stringValue'] + " " + entry[2]['stringValue']
+                supporter['rating'] = entry[4]['longValue']
+                supporter['employer'] = entry[5]['stringValue']
+                supporter['title'] = entry[6]['stringValue']
+                supporter['topics'] = [entry[9]['stringValue']]
+                supporter['tags'] = entry[10]['stringValue'][1:-1].split(",")
+                supporter['imgsrc'] = entry[3]['stringValue']
+                supporter['timeBlocks'] = [{'start' : entry[7]['stringValue'][11:], 'end' : entry[8]['stringValue'][11:]}]
+                supporter['day'] = entry[7]['stringValue'][:10]
+                supporter['preferences'] = {'job_search' : entry[11]['booleanValue'], 'grad_student' : entry[12]['booleanValue'], 'major_prefs' : [entry[13]['stringValue']]}
+            
+                supporter_availibility[(supporter_id, day)] = supporter
+            
+    return {
+        'statusCode' : 200,
+        'body' : list(supporter_availibility.values())
+    }
