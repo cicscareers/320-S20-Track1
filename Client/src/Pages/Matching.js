@@ -71,10 +71,10 @@ function getList(event) {
       })
       .then(json => {
         for (let i=0;i<json["body"].length;i++){
-          //console.log(json["body"][i])
+          console.log(json["body"][i])
           LambdaList.push(json["body"][i]);
         }
-        //console.log(json["body"])
+        console.log(json["body"])
       })
       .catch(error => {
         alert("No Supporters Found");
@@ -95,9 +95,9 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  getList()
-  console.log(LambdaList[0])
-  console.log(LambdaList.length)
+  //getList()
+  //console.log(LambdaList)
+  //console.log(LambdaList.length)
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -257,11 +257,11 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {LambdaList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-        {LambdaList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {SupporterList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {SupporterList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {LambdaList.map(supporterObj => getSupporterCard(supporterObj))}
+        {SupporterList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
     </div>
   );

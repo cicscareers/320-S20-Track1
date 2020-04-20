@@ -35,8 +35,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    marginLeft: "2.5%",
-    marginRight: "2.5%",
+    marginLeft: "1%",
     color: '#881c1c',
     fontSize: '120%',
     borderRadius: "40em",
@@ -46,8 +45,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   pictureButton: {
-    marginLeft: "2.5%",
-    marginRight: "2.5%",
+    marginLeft: "1%",
     borderRadius: "100em",
     '&:hover': {
           backgroundColor: '#881c1c',
@@ -56,6 +54,9 @@ const useStyles = makeStyles(theme => ({
   large: {
     width: theme.spacing(7),
     height: theme.spacing(7),
+  },
+  spacer: {
+    flexGrow: 1,
   },
 }));
 const styles = {
@@ -107,59 +108,53 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static" color="secondary" className={classes.bar}>
         <Toolbar>
-        <Grid container>
-          <Grid item sm={2}>
-            <Button href="/match" className={classes.logo}>
-               ReachOUT
-            </Button>
-          </Grid>
-          <Grid item sm={6}>
-          </Grid>
-          <Grid item sm={4}>
-              <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
-              <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
-              <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
-              <Button className={classes.pictureButton} onClick={handleMenu}>
-                <Avatar alt={name} 
-                  src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
-                  className={classes.large}>
-                </Avatar>
-              </Button>
-          </Grid>
-        </Grid>
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right"
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right"
-          }}
-          open={open}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>
-            <Link href="/account">
-              <Typography component="h6" variant="h6">
-                My Account
-              </Typography>
-            </Link>
-          </MenuItem>
+          <Button href="/match" className={classes.logo}>
+             ReachOUT
+          </Button>
+          <Typography className={classes.spacer}>
+          </Typography>
+          <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+          <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+          <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+          <Button className={classes.pictureButton} onClick={handleMenu}>
+            <Avatar alt={name} 
+              src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
+              className={classes.large}>
+            </Avatar>
+          </Button>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <Link href="/account">
+                <Typography component="h6" variant="h6">
+                  My Account
+                </Typography>
+              </Link>
+            </MenuItem>
 
-            {/* {role==="Admin" && (
-              <MenuItem onClick={handleClose}>
-                <Link href="/admin-settings">
-                  <Typography component="h6" variant="h6">
-                    Admin Settings
-                  </Typography>
-                </Link>
-              </MenuItem>
-            )} */}
-            
+              {/* {role==="Admin" && (
+                <MenuItem onClick={handleClose}>
+                  <Link href="/admin-settings">
+                    <Typography component="h6" variant="h6">
+                      Admin Settings
+                    </Typography>
+                  </Link>
+                </MenuItem>
+              )} */}
+              
             <MenuItem onClick={handleClose}>
               <Link href="/admin-settings">
                 <Typography component="h6" variant="h6">

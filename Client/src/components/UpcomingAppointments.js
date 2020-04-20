@@ -82,7 +82,7 @@ const PreviousAppointmentCard = (props) => {
         setExpanded(isExpanded ? panel : false);
     };
     return (
-        <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')} style={{width: 1000}}>
+        <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"

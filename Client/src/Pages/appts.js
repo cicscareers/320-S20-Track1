@@ -30,7 +30,7 @@ import tagsList from "../components/tags.js"
 import convertTime from "../components/convertTime.js"
 import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 const drawerWidth = "25%";
-const appts = 
+const old_appts = 
 [
   {
     topic: 'Resume Review',
@@ -39,7 +39,7 @@ const appts =
     medium: 'In Person',
     start: '13:00',
     end: '13:30',
-    date: '04/24/2020',
+    date: '04/17/2020',
     profilepic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
@@ -49,8 +49,41 @@ const appts =
     medium: 'Online',
     start: '13:00',
     end: '13:30',
-    date: '04/25/2020',
+    date: '04/17/2020',
     profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+  },
+  {
+    topic: 'Academic Advising',
+    location: 'LGRC A330',
+    supporter: 'Aditya Parmar',
+    medium: 'Online',
+    start: '13:00',
+    end: '13:30',
+    date: '04/18/2020',
+    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+  },
+  {
+    topic: 'Academic Advising',
+    location: 'LGRC A330',
+    supporter: 'Aditya Parmar',
+    medium: 'Online',
+    start: '13:00',
+    end: '13:30',
+    date: '04/19/2020',
+    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+  }
+];
+
+const new_appts =[
+  {
+    topic: 'Resume Review',
+    supporter: 'Chinmay Patil',
+    location: 'LGRC A310',
+    medium: 'In Person',
+    start: '13:00',
+    end: '13:30',
+    date: '04/24/2020',
+    profilepic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
     topic: 'Academic Advising',
@@ -153,14 +186,14 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  var lambdaList=getList()
+  //var lambdaList=getList()
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
 
   const updateList = (val) => {
     setName(val);
-  };
+  };/*
   var newList = (SupporterList.filter(
     supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     supporter => supporter.rating>=rating).filter(
@@ -168,7 +201,7 @@ const ResponsiveDrawer = (props) => {
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
     supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
     supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
-
+*/
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
   };
@@ -315,12 +348,12 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {newList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
-        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {new_appts.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
+        {new_appts.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {appts.map((appointment) => (
-                  <Grid lg = {12} style = {{justifyContent: 'center', display: 'flex'}}>
+        {new_appts.map((appointment) => (
+                  <Grid lg = {12}>
                     <UpcomingAppointmentCard 
                     subject = {appointment.subject}
                     location = {appointment.location}
@@ -336,12 +369,12 @@ const ResponsiveDrawer = (props) => {
                 ))}
         <br/>
         <br/>
-        {newList.length>0 && <Typography align="center" variant="h4">Previous Appointments</Typography>}
-        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {old_appts.length>0 && <Typography align="center" variant="h4">Previous Appointments</Typography>}
+        {old_appts.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {appts.map((appointment) => (
-                <Grid lg = {12} style = {{justifyContent: 'center', display: 'flex'}}>
+        {old_appts.map((appointment) => (
+                <Grid lg = {12}>
                   <PreviousAppointmentCard 
                     subject = {appointment.subject}
                     location = {appointment.location}
