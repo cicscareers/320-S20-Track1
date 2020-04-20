@@ -9,8 +9,19 @@ import DateFnsUtils from '@date-io/date-fns';
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Open Sans Light",
-    fontStyle: "normal",
+    fontFamily: [
+      'Open Sans Light',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
     button: {
       textTransform: 'none'
     }

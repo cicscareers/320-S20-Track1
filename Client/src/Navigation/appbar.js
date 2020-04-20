@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   bar: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     minHeight: 80,
   },
   logo:{
@@ -31,10 +33,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   button: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    marginLeft: "2.5%",
+    marginRight: "2.5%",
     color: '#881c1c',
-    fontSize: '140%',
-    width: "100%",
-    minHeight: 60,
+    fontSize: '120%',
     borderRadius: "40em",
     '&:hover': {
       backgroundColor: '#881c1c',
@@ -42,14 +46,16 @@ const useStyles = makeStyles(theme => ({
     }
   },
   pictureButton: {
+    marginLeft: "2.5%",
+    marginRight: "2.5%",
     borderRadius: "100em",
     '&:hover': {
           backgroundColor: '#881c1c',
         },
   },
   large: {
-    width: theme.spacing(9),
-    height: theme.spacing(9),
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 const styles = {
@@ -102,53 +108,23 @@ export default function MenuAppBar() {
       <AppBar position="static" color="secondary" className={classes.bar}>
         <Toolbar>
         <Grid container>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
-            </Grid>
-            <Grid item sm={8}>
-              <Button href="/match" className={classes.logo}>
-                 ReachOUT
-              </Button>
-            </Grid>
-            <Grid item sm={2}>
-            </Grid>
-          </Grid>
-          <Grid item sm={3}>
-          </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
-            </Grid>
-            <Grid item sm={9}>
-              <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
-            </Grid>
-            <Grid item sm={2}>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
-            </Grid>
-            <Grid item sm={9}>
-              <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
-            </Grid>
-            <Grid item sm={2}>
-            </Grid>
-          </Grid>
-          <Grid item container direction="column" sm={2}>
-            <Grid item sm={1}>
-            </Grid>
-            <Grid item sm={9}>
-              <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
-            </Grid>
-            <Grid item sm={2}>
-            </Grid>
-          </Grid>
-          <Grid item sm={1}>
-            <Button className={classes.pictureButton} onClick={handleMenu}>
-              <Avatar alt={name} 
-                src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
-                className={classes.large}>
-              </Avatar>
+          <Grid item sm={2}>
+            <Button href="/match" className={classes.logo}>
+               ReachOUT
             </Button>
+          </Grid>
+          <Grid item sm={6}>
+          </Grid>
+          <Grid item sm={4}>
+              <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+              <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+              <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+              <Button className={classes.pictureButton} onClick={handleMenu}>
+                <Avatar alt={name} 
+                  src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
+                  className={classes.large}>
+                </Avatar>
+              </Button>
           </Grid>
         </Grid>
         <Menu

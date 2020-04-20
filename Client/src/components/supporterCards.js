@@ -1,21 +1,18 @@
 import React from 'react';
 import { makeStyles, Paper, IconButton, Chip, Button, Grid, Container, 
   Box, Card, CardContent, CardActions, Avatar, Radio, RadioGroup, FormControlLabel, Dialog, DialogTitle,
-  DialogContent, DialogActions, TextField, Badge } from '@material-ui/core';
+  DialogContent, DialogActions, TextField, Badge, Typography  } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
-import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
 import convertTime from "../components/convertTime.js"
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
-const tagColor = blue.A300;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -49,23 +46,21 @@ const useStyles = makeStyles((theme) => ({
   tagChip: {
       margin: theme.spacing(0.5),
   },
-  badge: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
   badgeButton: {
     borderRadius: "1em",
-    backgroundColor: '#FFF',
-    '&:hover': {
-      backgroundColor: '#FFF',
-    },
+  },
+  badge: {
+    borderRadius: "1em",
+    borderColor: '#FFF',
+    width: theme.spacing(6),
+    height: theme.spacing(6),
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
   large: {
-    marginLeft: "55%",
+    //marginLeft: "55%",
     width: theme.spacing(30),
     height: theme.spacing(30),
   },
@@ -77,10 +72,14 @@ const SupporterCard = (props) => {
   const cookies = new Cookies();
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [expanded, setExpanded] = React.useState(false);
   const [time, setTime] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const chipFilter = (item) => { 
     setApptTopic(item);
   }
@@ -133,23 +132,23 @@ const SupporterCard = (props) => {
   }
   return (
 
-      <ExpansionPanel className={classes.supporterCard}>
+      <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1bh-content"
           id="panel1bh-header"
         >
           <Grid container>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography className={classes.heading}>{name}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography className={classes.heading}>Great Match</Typography>
             </Grid>
-            <Grid item xs={3}>
-              {tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
-              {tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
-              {tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
+            <Grid item xs={5}>
+              {!expanded && tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
+              {!expanded && tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
+              {!expanded && tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
             </Grid>
             <Grid item xs={3}>
               <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
@@ -184,7 +183,9 @@ const SupporterCard = (props) => {
             <Typography>Supporter Specialties:</Typography>
               {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs={2}>
             {linkedin !== "" && (
               <Badge
                   overlap="circle"
@@ -194,10 +195,11 @@ const SupporterCard = (props) => {
                   }}
                   badgeContent={
                     <Button className={classes.badgeButton} href={linkedin}>
-                      <img 
+                      <img border={5}
                         src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
                         className={classes.badge}/>
-                    </Button>}
+                    </Button>
+                  }
                 >
                 <Avatar alt={name} src={imgsrc} className={classes.large} />
              </Badge>
@@ -205,7 +207,6 @@ const SupporterCard = (props) => {
             {linkedin === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
             </Grid>
             <Grid item xs={12} align="center">
-              
               <Button
                   margin="normal"
                   variant="contained"
@@ -249,7 +250,7 @@ const SupporterCard = (props) => {
             </DialogActions>
           </Dialog>
 
-          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openCreated}>
+          <Dialog onClose={handleCloseCreated} aria-labelledby="customized-dialog-title" open={openCreated}>
             <DialogTitle id="customized-dialog-title" onClose={handleCloseCreated}>
               Appointment Created
             </DialogTitle>

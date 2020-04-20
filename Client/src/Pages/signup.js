@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, DialogActions, DialogTitle, DialogContent, Dialog } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import users from "../Data/users.json"
 import Cookies from "universal-cookie";
@@ -54,13 +54,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignUp() {
-
+  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  }; 
 
   //to encrypt the password and token
   var bcrypt = require('bcryptjs');
@@ -117,43 +125,7 @@ export default function SignUp() {
           console.log(json);
 
           if (json.statusCode >= 200 && json.statusCode < 300) {
-            alert("Account Successfully Created!");
-
-          //cookie gets set to 30 minutes
-          const timestamp = new Date().getTime();
-          const expire = timestamp + (60 * 30 * 1000);
-          const expireDate = new Date(expire);
-
-          //Sets all of the appropriate cookies
-          const cookies = new Cookies();
-          cookies.remove("email");
-          cookies.remove("firstName");
-          cookies.remove("lastName");
-          cookies.remove("role");
-          cookies.remove("token");
-          cookies.set("email", email, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("firstName", fname, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("lastName", lname, {
-            path: "/",
-            expires: expireDate
-          });
-          cookies.set("role", "Student", { 
-            path: "/" ,
-            expires: expireDate
-          });
-          cookies.set("token", bcrypt.hashSync(email, saltE) , { 
-            path: "/" ,
-            expires: expireDate
-          });
-
-          //reloads the window now that they are authenticated 
-          window.location.reload();
+            handleClickOpen()
           } else {
             throw new Error();
           }
@@ -270,6 +242,24 @@ export default function SignUp() {
           >
             Create Account
           </Button>
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Account Created.
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+              Your student account has been created.
+              </Typography>
+              <Typography gutterBottom>
+              You can now log in as a student and find the supporter that best fits your needs
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus href="/login" color="primary">
+                Back to sign in
+              </Button>
+            </DialogActions>
+          </Dialog>
           <Grid container>
             <Grid item xs>
               <Link href="/login" variant="body2">
