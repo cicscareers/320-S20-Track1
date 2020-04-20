@@ -90,7 +90,7 @@ const PreviousAppointmentCard = (props) => {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>{props.supporter}</Typography>
-          <Typography className={classes.secondaryHeading}>{props.date + ' at ' + props.time}</Typography>
+          <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
           <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -123,7 +123,13 @@ const PreviousAppointmentCard = (props) => {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
-                <Feedback></Feedback>
+                <Feedback subject = {props.subject}
+                    location = {props.location}
+                    medium = {props.medium}
+                    time = {props.time}
+                    date = {props.date}
+                    supporter = {props.supporter}
+                    profilepic = {props.profilepic}></Feedback>
             </Modal>
             </Grid>
           </Grid>

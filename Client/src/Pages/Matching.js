@@ -9,7 +9,9 @@ import topicsList from "../components/topics.js"
 import tagsList from "../components/tags.js"
 import convertTime from "../components/convertTime.js"
 import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
+
 const drawerWidth = "25%";
+var LambdaList=[];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getList(event) {
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2000-01-01+12:00:00&end_date=2050-05-28+12:00:00",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00",
       {
         method: "GET",
         headers: {
@@ -65,11 +67,14 @@ function getList(event) {
       }
     )
       .then(response => {
-        console.log(response);
         return response.json();
       })
       .then(json => {
-        console.log(json);
+        for (let i=0;i<json["body"].length;i++){
+          //console.log(json["body"][i])
+          LambdaList.push(json["body"][i]);
+        }
+        //console.log(json["body"])
       })
       .catch(error => {
         alert("No Supporters Found");
@@ -90,7 +95,9 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  //var lambdaList=getList()
+  getList()
+  console.log(LambdaList[0])
+  console.log(LambdaList.length)
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -98,14 +105,14 @@ const ResponsiveDrawer = (props) => {
   const updateList = (val) => {
     setName(val);
   };
-  var newList = (SupporterList.filter(
+  /*var newList = (SupporterList.filter(
     supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     supporter => supporter.rating>=rating).filter(
     supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
     supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
     supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
-
+*/
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
   };
@@ -122,11 +129,9 @@ const ResponsiveDrawer = (props) => {
   }
   function getTheMonth(month){
     if (parseInt(month)>10){
-      console.log(month.toString())
       return month.toString();
     }
     else{
-      console.log("0".concat(month.toString()))
       return "0".concat(month.toString());
     }
   }
@@ -252,11 +257,11 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {LambdaList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {LambdaList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {newList.map(supporterObj => getSupporterCard(supporterObj))}
+        {LambdaList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
     </div>
   );

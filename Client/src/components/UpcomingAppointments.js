@@ -10,7 +10,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import blue from '@material-ui/core/colors/blue';
 import smileRate from "../components/ratings";
-import Feedback from './feedback'
+import Cancel from './cancelAppt'
 
 
 const tagColor = blue.A300;
@@ -89,7 +89,7 @@ const PreviousAppointmentCard = (props) => {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>{props.supporter}</Typography>
-          <Typography className={classes.secondaryHeading}>{props.date + ' at ' + props.time}</Typography>
+          <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
           <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -114,7 +114,7 @@ const PreviousAppointmentCard = (props) => {
                   color="primary"
                   onClick={handleOpen}
                 >
-                  Submit Feedback
+                  Cancel Appointment
               </Button>
               <Modal
                 open={open}
@@ -122,7 +122,7 @@ const PreviousAppointmentCard = (props) => {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
-                <Feedback></Feedback>
+                <Cancel></Cancel>
             </Modal>
             </Grid>
           </Grid>

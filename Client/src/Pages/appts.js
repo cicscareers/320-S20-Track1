@@ -33,39 +33,43 @@ const drawerWidth = "25%";
 const appts = 
 [
   {
-    subject: 'Resume Help',
+    topic: 'Resume Review',
     supporter: 'Chinmay Patil',
     location: 'LGRC A310',
     medium: 'In Person',
-    time: '12:00 PM - 12:30 PM',
-    date: 'April 20th',
+    start: '13:00',
+    end: '13:30',
+    date: '04/24/2020',
     profilepic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
-    subject: 'Academic Advising',
+    topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
     medium: 'Online',
-    time: '1:00 PM - 1:30 PM',
-    date: 'April 21st',
+    start: '13:00',
+    end: '13:30',
+    date: '04/25/2020',
     profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   },
   {
-    subject: 'Academic Advising',
+    topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
     medium: 'Online',
-    time: '1:00 PM - 1:30 PM',
-    date: 'April 21st',
+    start: '13:00',
+    end: '13:30',
+    date: '04/26/2020',
     profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   },
   {
-    subject: 'Academic Advising',
+    topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
     medium: 'Online',
-    time: '1:00 PM - 1:30 PM',
-    date: 'April 21st',
+    start: '13:00',
+    end: '13:30',
+    date: '04/27/2020',
     profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   }
 ];
@@ -321,7 +325,8 @@ const ResponsiveDrawer = (props) => {
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}
-                    time = {appointment.time}
+                    start = {appointment.start}
+                    end = {appointment.end}
                     date = {appointment.date}
                     supporter = {appointment.supporter}
                     profilepic = {appointment.profilepic}
@@ -341,7 +346,8 @@ const ResponsiveDrawer = (props) => {
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}
-                    time = {appointment.time}
+                    start = {appointment.start}
+                    end = {appointment.end}
                     date = {appointment.date}
                     supporter = {appointment.supporter}
                     profilepic = {appointment.profilepic}
