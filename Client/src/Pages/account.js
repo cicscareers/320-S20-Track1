@@ -1,175 +1,304 @@
-import React from "react";
-import {Container, Typography} from "@material-ui/core";
+import React, { useState } from "react";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import Link from "@material-ui/core/Link";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Button from "@material-ui/core/Button";
+import Topics from "../components/topics.js";
+import Tags from "../components/tags.js";
 
-import Cookies from "universal-cookie";
-import { Box, Grid, TextField, Button, Avatar, Card } from "@material-ui/core";
+export default function StudentSettings() {
+  const fieldDefaults = ["A", "B", "C", "D"];
 
-export default function accts() {
+  const users = ["UserA", "UserB"];
 
-  const cookies = new Cookies();
-  const fname = cookies.get("firstName");
-  const lname = cookies.get("lastName");
-  const role = cookies.get("role");
-  const email = cookies.get("email");
+  const blockedUsers = ["UserC", "UserD"];
 
-  //This is just filler for the accounts page which is yet to be implimented
+  const [curField, setCurrField] = useState("");
+  const [newDefault, setNewDefault] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [addTopic, setAddTopic] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
+  const [addTag, setAddTag] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedBlockedUser, setSelectedBlockedUser] = useState("");
+
   return (
-    /*<Container component="main" maxWidth="xs" align="center">
-      <Typography component="h1" variant="h5" align="center">
-        User: {fname} {lname}
-      </Typography>
-      <Typography component="h1" variant="h5" align="center">
-        Role: {role}
-      </Typography>
-      <Typography component="h1" variant="h5" align="center">
-        Email Address: {email}
-      </Typography>
-    </Container>*/
-    
+    // <Container component="main" maxWidth="xs" align="center">
+    //   <Typography component="h1" variant="h5" align="center">
+    //     Admin Settings
+    //   </Typography>
+    // </Container>
 
-    
-    <Container component='main'>
-      <Card style = {{marginTop: 30, padding: 30, marginBottom: 30}}>
-      <Avatar style={{marginTop: 30, width: 50,height: 50}}>{fname.toUpperCase().charAt(0) + lname.toUpperCase().charAt(0)}</Avatar>
-      <Typography style = {{fontSize: 30, textAlign: 'left', marginTop: 40}}><strong>Account Settings</strong></Typography>
-      
-      <Box borderTop = {1} borderBottom={1} style={{marginTop: 30, height: 220}}>
-        <Grid>
-          <Grid>
-              
-              <Typography style={{marginTop: 10, marginBottom: 10}}><strong>Your Info</strong></Typography>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid  lg ={4} >
-              <Typography>Email address</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" label={email}/>
-            </Grid>
-            <Grid lg = {4} >
-              <Typography>First Name</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" label={fname}/>
-            </Grid>
-            <Grid lg = {4} >
-              <Typography>Last Name</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" label={lname}/>
-            </Grid>
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 30}}>Update Info</Button>
-          </Grid>
-            
+    <Grid container direction="column">
+      <Paper style={{ padding: 20 }}>
+        <Grid Item>
+          <Typography component="h1" variant="h5" color="primary">
+            Your Account
+          </Typography>
         </Grid>
-        
-      </Box>
-      <Box borderBottom={1}  borderColor='#D3D3D3' style={{marginTop: 10, height: 200}}>
-        <Grid>
-          <Grid>
-              
-              <Typography style={{marginBottom: 20}}>Password</Typography>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid  lg ={4} >
-              <Typography>New Password</Typography>
-              <TextField
-                id="outlined-password-input"
-                label=""
-                type="password"
-                autoComplete="current-password"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid lg = {4} >
-              <Typography>Confirm New Password</Typography>
-              <TextField
-                id="outlined-password-input"
-                label=""
-                type="password"
-                autoComplete="current-password"
-                variant="outlined"
-              />
-            </Grid>
-            
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Password</Button>
-          </Grid>
-            
+        <Grid item xs={12}>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>Profile Information</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="First Name"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Preferred Name"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Last Name"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Email Address"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Pronouns"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth="true"
+                    multiline
+                    rows="5"
+                    label="Personal Biography"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                UPLOAD PHOTO HERE
+                <Grid item xs={3}>
+                  <Button variant="contained" color="primary" size="large">
+                    Save Changes
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography> Academics</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={1}>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Spire ID"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Colleges"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Majors"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Minors"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Expected Graduation Year"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                UPLOAD RESUME HERE
+                <Grid item xs={3}>
+                  <Button variant="contained" color="primary" size="large">
+                    Save Changes
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>Links</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={1}>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="GitHub Link:"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="LinkedIn Link:"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="outlined"
+                    id="default"
+                    fullWidth
+                    label="Personal Website Link:"
+                    name="field default"
+                    onChange={(e) => setNewDefault(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <Button variant="contained" color="primary" size="large">
+                    Save Changes
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography>Account Settings</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container spacing={1}>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    id="users"
+                    options={users}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="outlined" label="Users" />
+                    )}
+                    onChange={(e, v) => setSelectedUser(v)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant="contained" color="primary" size="large">
+                    Block user
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Autocomplete
+                    id="blocked users"
+                    options={blockedUsers}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Blocked Users"
+                      />
+                    )}
+                    onChange={(e, v) => setSelectedBlockedUser(v)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant="contained" color="primary" size="large">
+                    Unblock user
+                  </Button>
+                </Grid>
+              </Grid>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            ></ExpansionPanelSummary>
+          </ExpansionPanel>
         </Grid>
-        
-      </Box>
-      <Box borderBottom={1}  borderColor='#D3D3D3' style={{height: 200}}>
-        <Grid>
-          <Grid>
-              
-              <Typography style={{width: 150, marginTop: 10, marginBottom: 20}}><strong>Academic</strong></Typography>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid  lg ={4} >
-              <Typography>Major</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
-            </Grid>
-            <Grid lg = {4} >
-              <Typography>Graduation Year</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
-            </Grid>
-            
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Info</Button>
-          </Grid>
-            
-        </Grid>
-        
-      </Box>
-      <Box borderBottom={1}  borderColor='#D3D3D3' style={{height: 260}}>
-        <Grid>
-          <Grid>
-              
-              <Typography style={{marginTop: 10, marginBottom: 20}}><strong>Biography</strong></Typography>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-              <TextField
-                style = {{width: 1000}}
-                id="outlined-multiline-static"
-                multiline
-                rows="6"
-                
-                variant="outlined"
-              />
-            
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Bio</Button>
-          </Grid>
-            
-        </Grid>
-        
-      </Box>
-      <Box borderBottom={1}  borderColor='#D3D3D3' style={{height: 200}}>
-        <Grid>
-          <Grid>
-              
-              <Typography style={{marginTop: 10, marginBottom: 20}}><strong>Links</strong></Typography>
-          </Grid>
-          <Grid style={{display: 'flex'}}>
-            <Grid  lg ={4} >
-              <Typography>LinkedIn</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
-            </Grid>
-            <Grid lg = {4} >
-              <Typography>Github</Typography>
-              <TextField id="outlined-basic" label="" variant="outlined" />
-            </Grid>
-            
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'flex-end'}}>
-            <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 15}}>Update Links</Button>
-          </Grid>
-            
-        </Grid>
-        
-      </Box>
-      </Card>
-    </Container>
-    
+      </Paper>
+    </Grid>
   );
 }
