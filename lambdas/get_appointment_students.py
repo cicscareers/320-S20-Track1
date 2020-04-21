@@ -8,7 +8,7 @@ from package.query_db import query
 
 def get_appointment_students(event, context):
     
-    given_id = event['student_id']
+    given_id = int(event['student_id'])
 
     #Check to see if the student user exists
     sql = 'SELECT student_id FROM students WHERE student_id=:given_id'
