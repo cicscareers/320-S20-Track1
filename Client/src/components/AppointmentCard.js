@@ -93,13 +93,12 @@ const PreviousAppointmentCard = (props) => {
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+    //Expansion panel for supporters view
     function supporterViewAppointmentCard(){
             return (
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
           >
             <Typography className={classes.heading}>{props.student}</Typography>
             <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
@@ -119,6 +118,7 @@ const PreviousAppointmentCard = (props) => {
                    className={classes.large} />       
               </Grid>
               <Grid item xs={12} align="center">
+              {props.upcoming ? (
                 <Button
                     margin="normal"
                     variant="contained"
@@ -127,28 +127,41 @@ const PreviousAppointmentCard = (props) => {
                   >
                     Cancel Appointment
                 </Button>
+                ) :
+                (
+                  <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenFeedbackModal}
+                  >
+                    Submit Feedback
+                  </Button>
+                )}
                 <Modal
-                  open={cancelAppointmentModalOpen}
-                  onClose={handleCloseAppointmentModal}
-                  aria-labelledby="simple-modal-title"
-                  aria-describedby="simple-modal-description"
+                  open={feedbackModalOpen}
+                  onClose={handleCloseFeedbackModal}
                 >
-              <Cancel></Cancel>
-              </Modal>
+                <Feedback subject = {props.subject}
+                    location = {props.location}
+                    medium = {props.medium}
+                    time = {props.time}
+                    date = {props.date}
+                    supporter = {props.supporter}
+                    profilepic = {props.profilepic}></Feedback>
+                </Modal>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
         );
     }
-
+    //Expansion panel for the student's view
     function studentViewAppointmentCard(){
       return (
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
           >
             <Typography className={classes.heading}>{props.supporter}</Typography>
             <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
@@ -217,8 +230,62 @@ const PreviousAppointmentCard = (props) => {
         </ExpansionPanel>
         );
       }
+
     function adminViewAppointmentCard(){
-      return null;
+          return (
+          <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+          >
+            <Typography className={classes.heading}>Supporter: {props.supporter}</Typography>
+            <Typography className={classes.heading}>Student: {props.student}</Typography>
+            <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
+            <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                  <Typography>{props.location}</Typography>
+                  <Typography>{props.medium}</Typography>
+                  <br/>
+                  <Typography className={classes.tagChip}>No Comments</Typography>
+                  
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                
+                  <Avatar src={props.supporterProfilePic}
+                   className={classes.large} />
+                  <Avatar src={props.studentProfilePic}
+                   className={classes.large} />
+               
+              </Grid>
+              <Grid item xs={12} align="center">
+              {props.upcoming ? (
+                <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenAppointmentModal}
+                  >
+                    Cancel Appointment
+                </Button>
+                ) :
+                (
+                  null
+                )}
+
+                <Modal
+                  open={cancelAppointmentModalOpen}
+                  onClose={handleCloseAppointmentModal}
+                >
+                  <Cancel></Cancel>
+                </Modal>
+
+              </Grid>
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        );
     }
 
     if(props.role == 'supporter'){

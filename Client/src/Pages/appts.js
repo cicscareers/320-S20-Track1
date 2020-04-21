@@ -34,7 +34,7 @@ const cookies = new Cookies();
 const role = cookies.get("role");
 
 const drawerWidth = "25%";
-const old_appts = 
+const appointments = 
 [
   {
     topic: 'Resume Review',
@@ -83,10 +83,7 @@ const old_appts =
     date: '04/19/2020',
     studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
     supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  }
-];
-
-const new_appts =[
+  },
   {
     topic: 'Resume Review',
     supporter: 'Chinmay Patil',
@@ -96,7 +93,7 @@ const new_appts =[
     start: '13:00',
     end: '13:30',
     date: '04/24/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    studentProfilePic: 'https://i1.wp.com/rollercoasteryears.com/wp-content/uploads/Thrive-During-Finals-.jpg?resize=1000%2C667&ssl=1',
     supporterProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
@@ -192,8 +189,9 @@ function getList(event) {
   }
 
 const ResponsiveDrawer = (props) => {
-    //Gets info from the cookies
+  //Gets info from the cookies
   //get users role
+  const today = new Date();
   const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -204,6 +202,7 @@ const ResponsiveDrawer = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
+  const [search,setSearch]=React.useState("");
 
 
   //add a day to the date
@@ -211,7 +210,10 @@ const ResponsiveDrawer = (props) => {
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
-
+  if(role == 'student'){
+    var filteredAppointmentList = (appointments.filter(
+      appt => String(appt.supporter.toLowerCase()).includes(search.toLowerCase())))
+  }
   const updateList = (val) => {
     setName(val);
   };
@@ -272,21 +274,30 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" variant="h5">Filters</Typography>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          className={classes.inputs}
+          align="center"
+          placeholder="Search Supporter"
+          onChange={e => setSearch(e.target.value)}
+        />
         <br/>
         {}
       </div> 
       </Drawer>
       <main className={classes.content}>
         
-        {new_appts.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
-        {new_appts.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
+        {filteredAppointmentList  .length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
+        {filteredAppointmentList  .length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {new_appts.map((appointment) => (
+        {filteredAppointmentList.map((appointment) => (
+                today < new Date(appointment.date) &&
                   <Grid lg = {12}>
                     <AppointmentCard 
                       upcoming = {true}
-                      role = {role}
+                      role = {"admin"}
                       subject = {appointment.subject}
                       location = {appointment.location}
                       medium = {appointment.medium}
@@ -299,19 +310,19 @@ const ResponsiveDrawer = (props) => {
                       studentProfilePic = {appointment.studentProfilePic}
                     />
                   </Grid>
+                
                   
                 ))}
         <br/>
         <br/>
-        {old_appts.length>0 && <Typography align="center" variant="h4">Previous Appointments</Typography>}
-        {old_appts.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {old_appts.map((appointment) => (
+        {filteredAppointmentList.map((appointment) => (
+                today > new Date(appointment.date) &&
                 <Grid lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
-                    role = {role}
+                    role = {"admin"}
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}
