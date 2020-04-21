@@ -210,7 +210,7 @@ const ResponsiveDrawer = (props) => {
                   <Grid lg = {12}>
                     <AppointmentCard 
                       upcoming = {true}
-                      role = {"admin"}
+                      role = {role}
                       subject = {appointment.subject}
                       location = {appointment.location}
                       medium = {appointment.medium}
@@ -235,7 +235,7 @@ const ResponsiveDrawer = (props) => {
                 <Grid lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
-                    role = {"admin"}
+                    role = {role}
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}

@@ -238,19 +238,22 @@ const PreviousAppointmentCard = (props) => {
             expandIcon={<ExpandMoreIcon />}
           >
             <Typography className={classes.heading}>Student: {props.student}</Typography>
+            <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
+            <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
             <Typography className={classes.heading}>Supporter: {props.supporter}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={3}>
-              <Grid item xs={4}>
-                  <Avatar src={props.studentProfilePic}
-                   className={classes.large} />
-               
-              </Grid>
-              <Grid item xs={4}>
-                  <Avatar src={props.supporterProfilePic}
-                   className={classes.large} />
-               
+              <Grid container justify="space-around" allignItems = "flex-start">
+                <Grid item x6 = {0}>
+                    <Avatar src={props.studentProfilePic}
+                     className={classes.large} />
+                </Grid>
+
+                <Grid item x6 = {0}>
+                    <Avatar src={props.supporterProfilePic}
+                     className={classes.large} />
+                </Grid>
               </Grid>
               <Grid item xs={12} sm={6} justify="space-between">
 
