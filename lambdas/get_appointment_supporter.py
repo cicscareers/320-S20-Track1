@@ -8,7 +8,7 @@ from package.query_db import query
 
 def get_appointment_supporter(event, context):
 
-    given_id = event['supporter_id'] 
+    given_id = int(event['supporter_id'])
 
     #Check to see if the ssupporter exists
     sql = 'SELECT supporter_id FROM supporters WHERE supporter_id=:given_id'
