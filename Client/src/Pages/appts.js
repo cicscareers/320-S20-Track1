@@ -23,7 +23,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Menu from "../Navigation/appbar.js";
 import SupporterCard from "../components/supporterCards.js"
 import SimpleCard from "../components/test.js"
-import SupporterList from "../Data/match2consts.js"
+import appointments from "../Data/appointments2.js"
 import topicsList from "../components/topics.js"
 import tagsList from "../components/tags.js"
 import convertTime from "../components/convertTime.js"
@@ -34,93 +34,6 @@ const cookies = new Cookies();
 const role = cookies.get("role");
 
 const drawerWidth = "25%";
-const appointments = 
-[
-  {
-    topic: 'Resume Review',
-    supporter: 'Chinmay Patil',
-    student: 'Noah Brinton',
-    location: 'LGRC A310',
-    medium: 'In Person',
-    start: '13:00',
-    end: '13:30',
-    date: '04/17/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
-  },
-  {
-    topic: 'Academic Advising',
-    location: 'LGRC A330',
-    supporter: 'Aditya Parmar',
-    student: 'Noah Brinton',
-    medium: 'Online',
-    start: '13:00',
-    end: '13:30',
-    date: '04/17/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  },
-  {
-    topic: 'Academic Advising',
-    location: 'LGRC A330',
-    supporter: 'Aditya Parmar',
-    student: 'Noah Brinton',
-    medium: 'Online',
-    start: '13:00',
-    end: '13:30',
-    date: '04/18/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  },
-  {
-    topic: 'Academic Advising',
-    location: 'LGRC A330',
-    supporter: 'Aditya Parmar',
-    student: 'Noah Brinton',
-    medium: 'Online',
-    start: '13:00',
-    end: '13:30',
-    date: '04/19/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  },
-  {
-    topic: 'Resume Review',
-    supporter: 'Chinmay Patil',
-    student: 'Noah Brinton',
-    location: 'LGRC A310',
-    medium: 'In Person',
-    start: '13:00',
-    end: '13:30',
-    date: '04/24/2020',
-    studentProfilePic: 'https://i1.wp.com/rollercoasteryears.com/wp-content/uploads/Thrive-During-Finals-.jpg?resize=1000%2C667&ssl=1',
-    supporterProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
-  },
-  {
-    topic: 'Academic Advising',
-    location: 'LGRC A330',
-    supporter: 'Aditya Parmar',
-    student: 'Noah Brinton',
-    medium: 'Online',
-    start: '13:00',
-    end: '13:30',
-    date: '04/26/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  },
-  {
-    topic: 'Academic Advising',
-    location: 'LGRC A330',
-    supporter: 'Aditya Parmar',
-    student: 'Noah Brinton',
-    medium: 'Online',
-    start: '13:00',
-    end: '13:30',
-    date: '04/27/2020',
-    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
-    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
-  }
-];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -297,7 +210,7 @@ const ResponsiveDrawer = (props) => {
                   <Grid lg = {12}>
                     <AppointmentCard 
                       upcoming = {true}
-                      role = {"admin"}
+                      role = {role}
                       subject = {appointment.subject}
                       location = {appointment.location}
                       medium = {appointment.medium}
@@ -322,7 +235,7 @@ const ResponsiveDrawer = (props) => {
                 <Grid lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
-                    role = {"admin"}
+                    role = {role}
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}
