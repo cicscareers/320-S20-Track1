@@ -18,10 +18,6 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Autocomplete} from '@material-ui/lab';
-import { Auth } from "aws-amplify";
-import { Redirect } from 'react-router-dom';
-import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
-
 
 function Copyright() {
   return (
@@ -106,26 +102,26 @@ export default function SignUp() {
   const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const [supporterType, setSupporterType] = useState("");
+  const [open, setOpen] = React.useState(false);
+  const [supporterType, setSupporterType] = React.useState([]);
   const [employer, setEmployer] = useState("");
   const [title, setTitle] = useState("");
-  const [team, setTeam] = useState("");
+  const [team, setTeam] = useState([]);
 
-  const [open, setOpen] =useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   window.location.reload();
-  // };
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  };
 
   function validateForm() {
-    return password===password2 && email.length > 0
-    && password.length > 0 && password2.length > 0
+    return password===password2 && email.length > 0 
+    && password.length > 0 && password2.length > 0 
     && fname.length > 0 && lname.length > 0
-    && validEmail(email) && supporterType.length >0
+    && validEmail(email) && supporterType.length >0 
     && employer.length > 0 && title.length > 0;
   }
 
@@ -142,7 +138,7 @@ export default function SignUp() {
     handleClickOpen()
   }
 
-  const handleSubmit = async event => {
+  function handleSubmit(event) {
     var error = false;
     if(password !== password2){
       alert("Passwords must match!");
@@ -161,90 +157,13 @@ export default function SignUp() {
       var hash = bcrypt.hashSync(password, salt);
       setPassword(hash)
     }
-
-    var username = email;
-    var attributeList = []
-    var emailData = {
-      Name : 'email',
-      Value : email
-    };
-    var role = {
-        Name : 'custom:role',
-        Value : 'Supporter'
-    };
-    var first_name = {
-        Name : 'custom:first_name',
-        Value : fname
-    };
-    var last_name = {
-        Name : 'custom:last_name',
-        Value : lname
-    };
-
-    var supporter_type ={
-      Name: 'custom:supporter_type',
-      Value: supporterType
-    }
-
-    var employerData = {
-      Name: 'employer',
-      Value: employer
-    }
-
-    var titleData = {
-      Name: 'title',
-      Value: title
-    }
-
-    var teamData ={
-      Name: 'team',
-      Value: team
-    }
-
-
-    attributeList.push(new CognitoUserAttribute(emailData));
-    attributeList.push(new CognitoUserAttribute(role));
-    attributeList.push(new CognitoUserAttribute(first_name));
-    attributeList.push(new CognitoUserAttribute(last_name));
-    attributeList.push(new CognitoUserAttribute(supporter_type));
-    attributeList.push(new CognitoUserAttribute(employerData));
-    attributeList.push(new CognitoUserAttribute(titleData));
-    attributeList.push(new CognitoUserAttribute(teamData));
-        event.preventDefault();
-
-
-          try{
-            const signUpResponse = await Auth.signUp({
-              username,
-              password,
-              attributeList
-            })
-
-            setOpen(true)
-            console.log('Redirect$$$$$$$$')
-            //setRedirect(true);
-
-          }catch(error){
-            console.log("AHHHHHHHHHHWOIPOQIWPU0930838-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            console.log(error)
-            alert(error)
-          }
-        }
-
-
-
-
+  }
 
   function handleKeyPress(event){
     if(event.key === 'Enter'){
       handleSubmit(event)
     }
   }
-
-  const handleClose = () => {
-   setOpen(false);
- };
-
 
   const supporterTypes = [
     "Professional Staff",
@@ -273,7 +192,7 @@ export default function SignUp() {
   const formStyle = {
     minWidth: '100%'
   };
-
+ 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -426,22 +345,21 @@ export default function SignUp() {
           >
             Create Account
           </Button>
-
           <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-              Confirm Your Email Address
+              Supporter Account Requested
             </DialogTitle>
             <DialogContent dividers>
               <Typography gutterBottom>
-              A confirmation email has been sent to {email}. Click on the confirmation link in the email to activate your account.
+              Your request for a supporter account has been submitted.
               </Typography>
               <Typography gutterBottom>
-              An admin to review your submission. You will get an email
-              when an admin makes a decision.
+              Please wait for an admin to review your submission. You will get an email 
+              when an admin makes a decision. 
               </Typography>
               <Typography gutterBottom>
-              If you are accepted as a supporter, you can sign in using the credentials you
-              supplied.
+              If you are accepted as a supporter, you can sign in using the credentials you 
+              supplied. 
               </Typography>
             </DialogContent>
             <DialogActions>
@@ -465,3 +383,4 @@ export default function SignUp() {
     </Container>
   );
 }
+
