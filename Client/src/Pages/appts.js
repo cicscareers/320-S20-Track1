@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import UpcomingAppointmentCard from '../components/UpcomingAppointments';
+import AppointmentCard from '../components/AppointmentCard';
 import PreviousAppointmentCard from '../components/PreviousAppointments';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -29,48 +29,61 @@ import topicsList from "../components/topics.js"
 import tagsList from "../components/tags.js"
 import convertTime from "../components/convertTime.js"
 import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+const role = cookies.get("role");
+
 const drawerWidth = "25%";
 const old_appts = 
 [
   {
     topic: 'Resume Review',
     supporter: 'Chinmay Patil',
+    student: 'Noah Brinton',
     location: 'LGRC A310',
     medium: 'In Person',
     start: '13:00',
     end: '13:30',
     date: '04/17/2020',
-    profilepic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
     topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
+    student: 'Noah Brinton',
     medium: 'Online',
     start: '13:00',
     end: '13:30',
     date: '04/17/2020',
-    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   },
   {
     topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
+    student: 'Noah Brinton',
     medium: 'Online',
     start: '13:00',
     end: '13:30',
     date: '04/18/2020',
-    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   },
   {
     topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
+    student: 'Noah Brinton',
     medium: 'Online',
     start: '13:00',
     end: '13:30',
     date: '04/19/2020',
-    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   }
 ];
 
@@ -78,32 +91,38 @@ const new_appts =[
   {
     topic: 'Resume Review',
     supporter: 'Chinmay Patil',
+    student: 'Noah Brinton',
     location: 'LGRC A310',
     medium: 'In Person',
     start: '13:00',
     end: '13:30',
     date: '04/24/2020',
-    profilepic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP'
   },
   {
     topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
+    student: 'Noah Brinton',
     medium: 'Online',
     start: '13:00',
     end: '13:30',
     date: '04/26/2020',
-    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   },
   {
     topic: 'Academic Advising',
     location: 'LGRC A330',
     supporter: 'Aditya Parmar',
+    student: 'Noah Brinton',
     medium: 'Online',
     start: '13:00',
     end: '13:30',
     date: '04/27/2020',
-    profilepic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
+    studentProfilePic: 'https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP',
+    supporterProfilePic: 'https://media-exp1.licdn.com/dms/image/C4E03AQEI1xiLxIRwwQ/profile-displayphoto-shrink_800_800/0?e=1592438400&v=beta&t=c9kLd437l0lZYFSzgA8Q1C9iNeow_wVHRRB8J3GVRJ8'
   }
 ];
 
@@ -174,6 +193,8 @@ function getList(event) {
   }
 
 const ResponsiveDrawer = (props) => {
+    //Gets info from the cookies
+  //get users role
   const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -185,6 +206,7 @@ const ResponsiveDrawer = (props) => {
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
 
+
   //add a day to the date
   //var lambdaList=getList()
 
@@ -193,15 +215,7 @@ const ResponsiveDrawer = (props) => {
 
   const updateList = (val) => {
     setName(val);
-  };/*
-  var newList = (SupporterList.filter(
-    supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
-    supporter => supporter.rating>=rating).filter(
-    supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
-    supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
-*/
+  };
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
   };
@@ -260,90 +274,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <Typography align="center" variant="h5">Filters</Typography>
         <br/>
-        {/* <TextField
-          variant="outlined"
-          margin="normal"
-          className={classes.inputs}
-          align="center"
-          placeholder="Search Supporter"
-          onChange={e => setName(e.target.value)}
-        />
-        <br/>
-        <br/>
-        <Autocomplete
-          multiple
-          className={classes.inputs}
-          id="tags-outlined"
-          options={topicsList}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Help Needed Topics"
-            />
-          )}
-          onChange={(e,v) => setStateTopics(v)}
-        />
-        <br/>
-        <Autocomplete
-          multiple
-          className={classes.inputs}
-          id="tags-outlined"
-          options={tagsList}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Supporter Specialties"
-            />
-          )}
-          onChange={(e,v) => setStateTags(v)}
-        />
-        <br/>
-        <Typography align="center">What day would you like an appointment on?</Typography>
-        <br/>
-        <Box align="center">
-          <DatePicker
-            autoOk
-            align="center"
-            variant="inline"
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-        </Box>
-        <br/>
-        <br/>
-        <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          What is your availability on {selectedDate.toDateString().substring(0,3)+"day,"+selectedDate.toDateString().substring(3)}?
-        </Typography>
-        <Slider
-          value={sliderTime}
-          onChange={handleSliderChange}
-          step={30}
-          min={420}
-          max={1140}
-          defaultValue={[540, 1020]}
-          valueLabelDisplay="off"
-          aria-labelledby="range-slider"
-          className={classes.inputs}
-          getAriaValueText={convertTime}
-        />
-        <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
-        </Typography>
-        <br/>
-        <Typography align="center">Minimum Required Rating</Typography>
-        <br/>
-        <Box align="center">
-        <Rating 
-          className={classes.rating} 
-          name="Supporter Rating" 
-          precision={0.5} 
-          value={rating} 
-          onChange={e => setRating(e.target.value)}
-          size="large"
-        />
-        </Box>*/}
+        {}
       </div> 
       </Drawer>
       <main className={classes.content}>
@@ -354,15 +285,19 @@ const ResponsiveDrawer = (props) => {
         <br/>
         {new_appts.map((appointment) => (
                   <Grid lg = {12}>
-                    <UpcomingAppointmentCard 
-                    subject = {appointment.subject}
-                    location = {appointment.location}
-                    medium = {appointment.medium}
-                    start = {appointment.start}
-                    end = {appointment.end}
-                    date = {appointment.date}
-                    supporter = {appointment.supporter}
-                    profilepic = {appointment.profilepic}
+                    <AppointmentCard 
+                      upcoming = {true}
+                      role = {role}
+                      subject = {appointment.subject}
+                      location = {appointment.location}
+                      medium = {appointment.medium}
+                      start = {appointment.start}
+                      end = {appointment.end}
+                      date = {appointment.date}
+                      supporter = {appointment.supporter}
+                      student = {appointment.student}
+                      supporterProfilePic = {appointment.supporterProfilePic}
+                      studentProfilePic = {appointment.studentProfilePic}
                     />
                   </Grid>
                   
@@ -375,7 +310,9 @@ const ResponsiveDrawer = (props) => {
         <br/>
         {old_appts.map((appointment) => (
                 <Grid lg = {12}>
-                  <PreviousAppointmentCard 
+                  <AppointmentCard 
+                    upcoming = {false}
+                    role = {role}
                     subject = {appointment.subject}
                     location = {appointment.location}
                     medium = {appointment.medium}
@@ -383,7 +320,9 @@ const ResponsiveDrawer = (props) => {
                     end = {appointment.end}
                     date = {appointment.date}
                     supporter = {appointment.supporter}
-                    profilepic = {appointment.profilepic}
+                    student = {appointment.student}
+                    supporterProfilePic = {appointment.supporterProfilePic}
+                    studentProfilePic = {appointment.studentProfilePic}
                   />
                 </Grid>
               ))}
