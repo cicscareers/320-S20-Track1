@@ -74,7 +74,9 @@ function getList(event) {
           console.log(json["body"][i])
           LambdaList.push(json["body"][i]);
         }
-        console.log(json["body"])
+        //LambdaList=json["body"]
+        //console.log(json["body"])
+        //console.log(LambdaList)
       })
       .catch(error => {
         alert("No Supporters Found");
@@ -95,9 +97,10 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  //getList()
-  //console.log(LambdaList)
-  //console.log(LambdaList.length)
+  getList()
+  console.log(LambdaList)
+  console.log(Object.keys(LambdaList).length)
+  console.log(LambdaList)
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -105,14 +108,15 @@ const ResponsiveDrawer = (props) => {
   const updateList = (val) => {
     setName(val);
   };
-  /*var newList = (SupporterList.filter(
+  var newList = (SupporterList.filter(
     supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     supporter => supporter.rating>=rating).filter(
     supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
-*/
+    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
+    //.filter(
+    //supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
+
 
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
@@ -257,11 +261,11 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {SupporterList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-        {SupporterList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {SupporterList.map(supporterObj => getSupporterCard(supporterObj))}
+        {newList.map(supporterObj => getSupporterCard(supporterObj))}
       </main>
     </div>
   );

@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, id} = props;
   const classes = useStyles();
   const cookies = new Cookies();
   const email = cookies.get("email");
