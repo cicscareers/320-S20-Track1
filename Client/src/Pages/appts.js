@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
-import PreviousAppointmentCard from '../components/PreviousAppointments';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
