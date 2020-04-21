@@ -51,7 +51,7 @@ export default
   {
     topic: 'Resume Review',
     supporter: 'Chinmay Patil',
-    student: 'Noah Brinton',
+    student: 'Gene Student',
     location: 'LGRC A310',
     medium: 'In Person',
     start: '13:00',

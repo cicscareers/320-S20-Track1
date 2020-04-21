@@ -237,50 +237,33 @@ const PreviousAppointmentCard = (props) => {
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
           >
-            <Typography className={classes.heading}>Supporter: {props.supporter}</Typography>
             <Typography className={classes.heading}>Student: {props.student}</Typography>
-            <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
-            <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
+            <Typography className={classes.heading}>Supporter: {props.supporter}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                  <Typography>{props.location}</Typography>
-                  <Typography>{props.medium}</Typography>
-                  <br/>
-                  <Typography className={classes.tagChip}>No Comments</Typography>
-                  
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                
-                  <Avatar src={props.supporterProfilePic}
-                   className={classes.large} />
+              <Grid item xs={4}>
                   <Avatar src={props.studentProfilePic}
                    className={classes.large} />
                
               </Grid>
-              <Grid item xs={12} align="center">
-              {props.upcoming ? (
-                <Button
-                    margin="normal"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleOpenAppointmentModal}
-                  >
-                    Cancel Appointment
-                </Button>
-                ) :
-                (
-                  null
-                )}
+              <Grid item xs={4}>
+                  <Avatar src={props.supporterProfilePic}
+                   className={classes.large} />
+               
+              </Grid>
+              <Grid item xs={12} sm={6} justify="space-between">
 
-                <Modal
-                  open={cancelAppointmentModalOpen}
-                  onClose={handleCloseAppointmentModal}
-                >
-                  <Cancel></Cancel>
-                </Modal>
-
+                  <Typography>{props.location}</Typography>
+                  <Typography>{props.medium}</Typography>
+                  <br/>
+                  <Typography className={classes.tagChip}>No Comments</Typography>
+                  <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
+                  <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
+              </Grid>
+              <Grid item xs={12} sm={6}>
+  
+                  
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
