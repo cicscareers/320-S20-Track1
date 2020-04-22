@@ -191,7 +191,7 @@ def create_student_user(event, context):
 ########################################################################
         # check if supporter data successfully loaded
         if new_supp['numberOfRecordsUpdated'] == 0:
-            print("Supporter was not created")
+            # print("Supporter was not created")
             return {
                 'statusCode': 404
             }
@@ -214,16 +214,12 @@ def create_student_user(event, context):
 
         # check if supporter types successfully loaded
         if supp_types['numberOfRecordsUpdated'] == 0:
-            print("Supporter types not loaded")
+            # print("Supporter types not loaded")
             return {
                 'statusCode': 404
             }
 
         # finish
-        print("the student has been created")
-        print("YAY!!!")
-        return {
-            'statusCode': 201
-        }
-
-       
+        # print("the student has been created")
+        # print("YAY!!!")
+    return event
