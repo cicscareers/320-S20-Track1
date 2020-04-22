@@ -130,6 +130,7 @@ const SupporterCard = (props) => {
        startTimes.push(i);
     }
   }
+  function getSupporterCard(){
   return (
 
       <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
@@ -249,7 +250,6 @@ const SupporterCard = (props) => {
               </Button>
             </DialogActions>
           </Dialog>
-
           <Dialog onClose={handleCloseCreated} aria-labelledby="customized-dialog-title" open={openCreated}>
             <DialogTitle id="customized-dialog-title" onClose={handleCloseCreated}>
               Appointment Created
@@ -270,7 +270,151 @@ const SupporterCard = (props) => {
           </Dialog>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-  );
+  		);
+	}
+	function getStudentCard(){
+  	return (
+
+      <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Grid container>
+            <Grid item xs={2}>
+              <Typography className={classes.heading}>{name}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography className={classes.heading}>Great Match</Typography>
+            </Grid>
+            <Grid item xs={5}>
+              {!expanded && tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
+              {!expanded && tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
+              {!expanded && tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
+            </Grid>
+            <Grid item xs={3}>
+              <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />
+            </Grid>
+          </Grid>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+                <Typography>{employer}, {title}</Typography>
+                <Typography>{location}</Typography>
+                <br/>
+                <Typography>Select Appointment Topic:</Typography>
+                {topics.map(topic => <Chip 
+                  clickable 
+                  value={topic}
+                  variant={(apptTopic === topic) ? 'default' : 'outlined'}
+                  color="primary" 
+                  label={topic} 
+                  className={classes.tagChip}
+                  onClick={ () => chipFilter(topic) }
+                />)}
+                <br/>
+                <br/>
+                <Typography>Select Appointment Time:</Typography>
+                {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
+                {startTimes.map(st => generateTimeChip(st))}
+            </Grid>
+            <Grid item xs={1} align="center">
+            </Grid>
+            <Grid item xs={3} align="center">
+            <Typography>Supporter Specialties:</Typography>
+              {tags.map(tag => <Chip label={tag} size="small" className={classes.tagChip} />)}
+            </Grid>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs={2}>
+            {linkedin !== "" && (
+              <Badge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={
+                    <Button className={classes.badgeButton} href={linkedin}>
+                      <img border={5}
+                        src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
+                        className={classes.badge}/>
+                    </Button>
+                  }
+                >
+                <Avatar alt={name} src={imgsrc} className={classes.large} />
+             </Badge>
+            )}
+            {linkedin === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
+            </Grid>
+            <Grid item xs={12} align="center">
+              <Button
+                  margin="normal"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleButton}
+                  disabled={!validateForm()}
+                >
+                  Create Appointment
+              </Button>
+            </Grid>
+          </Grid>
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Create appointment with {name}
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Location: {location}
+              </Typography>
+              <Typography gutterBottom>
+                Time: {convertTime(time)} for 30 minutes on {day}
+              </Typography>
+              <Typography gutterBottom>
+                Appointment Type: {apptTopic}
+              </Typography>
+              <Typography gutterBottom>
+                Additional Comments
+              </Typography>
+              <TextField
+                id="outlined-multiline-static"
+                multiline
+                fullWidth
+                rows="4"
+                variant="outlined"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleConfirm}color="primary">
+                Create Appointment
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog onClose={handleCloseCreated} aria-labelledby="customized-dialog-title" open={openCreated}>
+            <DialogTitle id="customized-dialog-title" onClose={handleCloseCreated}>
+              Appointment Created
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Your appointment with {name} has been created
+              </Typography>
+              <Typography gutterBottom>
+                You will receive a verification email at {email} to remind you of your appointment
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus href="/appointments" color="primary">
+                View Appointments
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+  		);
+	}
+	return getSupporterCard();
 }
 
 export default SupporterCard;
