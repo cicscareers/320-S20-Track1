@@ -8,7 +8,7 @@ import time
 import datetime
 
 # function puts the appointment details in the database
-# Inputs: student_id, supporter_id, time_of_appt, type, duration, method, location, comments
+# Inputs: supporter_id, time_of_appt, type, duration, method, location
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
@@ -19,7 +19,11 @@ def lambda_handler(event, context):
     duration = int(event['duration'])
     method = event['method']
     location = event['location']
-    comment = event['comment']
+    
+    if 'comment' in event:
+        comment = event['comment']
+    else:
+        comment = ""
     
     # check that student is in DB
     sql = "SELECT student_id FROM students WHERE student_id = :student"
