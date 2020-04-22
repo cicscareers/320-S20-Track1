@@ -12,7 +12,6 @@ import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 import axios from 'axios';
 
 const drawerWidth = "25%";
-var LambdaList={};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,24 +100,28 @@ LambdaList.then(foo => {
   console.log(typeof(foo))
   console.log(foo["body"])
 })*/
-function getList(){
-  const url='https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00';
-  axios.get(url)
-  .then(data=>getData(data.data.body))
-  .catch(err=>console.log(err))
+function getList(list) {
+  const url =
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00";
+  axios
+    .get(url)
+    .then((data) => {
+      data.data.body.forEach((element) => {
+        list.push(element);
+      });
+      console.log(list);
+      console.log(list[0].name);
+    })
+    .catch((err) => console.log(err));
 }
-function getData(body){
-  for(let i=0;i<body.length;i++){
-    console.log(body[i]);
-    LambdaList=(body[i])
-  }
-}
-
 const ResponsiveDrawer = (props) => {
+  var LambdaList = [];
+
   const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
+  const [list, setList]=React.useState(getList(LambdaList));
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
   const theme = useTheme();
@@ -127,8 +130,7 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
 
   //add a day to the date
-  getList()
-  console.log(LambdaList)
+
   //console.log(Object.keys(LambdaList).length)
   //console.log(LambdaList)
 
@@ -138,12 +140,13 @@ const ResponsiveDrawer = (props) => {
   const updateList = (val) => {
     setName(val);
   };
-  var newList = (SupporterList.filter(
-    supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
-    supporter => supporter.rating>=rating).filter(
-    supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
-    supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
+  var newList = (LambdaList.filter(
+    supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase())))
+  //.filter(
+    //supporter => supporter.rating>=rating).filter(
+    //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
+    //supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
+    //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
     //.filter(
     //supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
 
@@ -287,6 +290,7 @@ const ResponsiveDrawer = (props) => {
           size="large"
         />
         </Box>
+        <Typography>List : {list}</Typography>
       </div>
       </Drawer>
       <main className={classes.content}>
