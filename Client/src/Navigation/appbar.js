@@ -4,7 +4,11 @@ import {AppBar, Avatar, Toolbar, Typography, IconButton, Switch, MenuItem, Butto
 import Cookies from "universal-cookie";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Redirect } from "react-router-dom";
-
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import Roles from'./role.json';
+import Chip from '@material-ui/core/Chip';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -58,6 +62,17 @@ const useStyles = makeStyles(theme => ({
   spacer: {
     flexGrow: 1,
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 }));
 const styles = {
   button: {
@@ -84,9 +99,18 @@ export default function MenuAppBar() {
   //To handle the drop down menu
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [openModal, setOpen] = React.useState(false);
 
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
   const handleMenu = event => {
     setAnchorEl(event.currentTarget);
+    
   };
 
   const handleClose = () => {
@@ -102,7 +126,50 @@ export default function MenuAppBar() {
     cookies.remove("token");
     window.location.reload();
   }
+ function renderNavBarButtonsBasedOnRole(){
+   let RenderButtons=[];
+   if(role=="student"){
+     return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+     <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
 
+   }
+  
+    return(<div style={{width:'300px',float:'right'}}>>
+    <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+    <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
+    
+  
+
+ }
+ const SwitchUserHandle= event =>{
+  cookies.set('role',event.currentTarget.id);
+  window.location.reload();
+ }
+ function renderRolesInModal(){
+  let RenderRoles=[];
+  var RolesList=Roles[0];
+  if(RolesList.roles.length==1){
+    RenderRoles=(<h2>Sorry, You just have 1 role.</h2>);
+  }
+  else{
+    for(var i=0;i<RolesList.roles.length;i++){
+      if(RolesList.roles[i]==role){
+        continue;
+      }
+      RenderRoles=(<Chip
+      id={RolesList.roles[i]}
+       
+        label={RolesList.roles[i]}
+        clickable
+        color="primary"
+        onClick={SwitchUserHandle}
+        
+      />);
+    }
+  }
+return RenderRoles;
+}
   //First button is to link back to home. The rest is the drop down menu from the user icon, and handles the routing.
   return (
     <div className={classes.root}>
@@ -113,9 +180,9 @@ export default function MenuAppBar() {
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-          <Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
+         {role=="student" &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
           <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
-          <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 
               src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
@@ -123,73 +190,89 @@ export default function MenuAppBar() {
             </Avatar>
           </Button>
           <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right"
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right"
-            }}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>
-              <Link href="/account">
-                <Typography component="h6" variant="h6">
-                  My Account
-                </Typography>
-              </Link>
-            </MenuItem>
+  id="menu-appbar"
+  anchorEl={anchorEl}
+  anchorOrigin={{
+    vertical: "top",
+    horizontal: "right"
+  }}
+  keepMounted
+  transformOrigin={{
+    vertical: "top",
+    horizontal: "right"
+  }}
+  open={open}
+  onClose={handleClose}
+>
+  <MenuItem onClick={handleClose}>
+    <Link href="/account">
+      <Typography component="h6" variant="h6">
+        My Account
+      </Typography>
+    </Link>
+  </MenuItem>
 
-              {/* {role==="Admin" && (
-                <MenuItem onClick={handleClose}>
-                  <Link href="/admin-settings">
-                    <Typography component="h6" variant="h6">
-                      Admin Settings
-                    </Typography>
-                  </Link>
-                </MenuItem>
-              )} */}
-              
-            <MenuItem onClick={handleClose}>
-              <Link href="/admin-settings">
-                <Typography component="h6" variant="h6">
-                  Admin Settings
-                </Typography>
-              </Link>
-            </MenuItem>
-            
+    {role==="admin" && (
+      <MenuItem onClick={handleClose}>
+        <Link href="/admin-settings">
+          <Typography component="h6" variant="h6">
+            Admin Settings
+          </Typography>
+        </Link>
+      </MenuItem>
+    )}
+      {role==="supporter" && (
+      <MenuItem onClick={handleClose}>
+        <Link href="/supporter-settings">
+          <Typography component="h6" variant="h6">
+            Supporter Settings
+          </Typography>
+        </Link>
+      </MenuItem>
+    )}
+    
+ 
+  <MenuItem onClick={handleModalOpen}>
+    
+      <Typography component="h6" variant="h6">
+        Switch User
+      </Typography>
+  </MenuItem>
+  <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openModal}
+        onClose={handleModalClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openModal}>
+          <div className={classes.paper}>
+            <h2 id="transition-modal-title">What role do you want to switch to?</h2>
+      <p id="transition-modal-description">{renderRolesInModal()}</p>
+          </div>
+        </Fade>
+      </Modal>
+  <MenuItem onClick={handleClose}>
+    <Link href="/feedback">
+      <Typography component="h6" variant="h6">
+        Feedback
+      </Typography>
+    </Link>
+  </MenuItem>
 
-            {role==="Supporter" && (
-              <MenuItem onClick={handleClose}>
-                <Link href="/supporter-settings">
-                  <Typography component="h6" variant="h6">
-                    Supporter Settings
-                  </Typography>
-                </Link>
-              </MenuItem>
-            )}
-
-            <MenuItem onClick={handleClose}>
-              <Link href="/feedback">
-                <Typography component="h6" variant="h6">
-                  Feedback
-                </Typography>
-              </Link>
-            </MenuItem>
-
-            <MenuItem onClick={logout}>
-              <Link href="/login">
-                <Typography component="h6" variant="h6">
-                  Log Out
-                </Typography>
-              </Link>
-            </MenuItem>
-          </Menu>
+  <MenuItem onClick={logout}>
+    <Link href="/login">
+      <Typography component="h6" variant="h6">
+        Log Out
+      </Typography>
+    </Link>
+  </MenuItem>
+</Menu>
         </Toolbar>
       </AppBar>
     </div>
