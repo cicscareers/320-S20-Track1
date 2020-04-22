@@ -24,7 +24,7 @@ def get_supporters_before_match(event, context):
     AND SFB.specialization_type_id = ST.specialization_type_id\
     AND ST.specialization_type_id = SS.specialization_type_id\
     AND S.supporter_id = SS.supporter_id\
-    AND start_date BETWEEN '2020-04-17 00:01:00' AND '2020-04-19 11:59:00';"
+    AND start_date BETWEEN :date_start AND :date_end;"
             
     params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
 
