@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def get_user_roles_handler(event, context):
 
-    user_id = int(event[user_id])
+    user_id = int(event['user_id'])
     user_id_param = [{'name' : 'user_id', 'value' : {'longValue' : user_id}}]
 
     sql = "SELECT is_admin, is_supporter, is_student FROM users WHERE id = :user_id"
