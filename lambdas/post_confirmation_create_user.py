@@ -19,6 +19,7 @@ def create_student_user(event, context):
     last_name = event["request"]["userAttributes"]['family_name']
     email = event["request"]["userAttributes"]['email']
     password = ""
+    is_supporter= True if event["request"]["userAttributes"]["profile"]=="Supporter" else False
 
     #Need to check if email is already in DB
     sql = "SELECT email FROM users WHERE email = :email"
@@ -58,12 +59,13 @@ def create_student_user(event, context):
 
     # adds a user to the "users" table with the new generated id
     sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key,user_type,is_admin,is_supporter,is_student) \
-        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,:password,'salt','student',false, false, true)""" #(last three fields) is_admin, is_supporter, is_student
+        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,:password,'salt','student',false, :is_supporter, true)""" #(last three fields) is_admin, is_supporter, is_student
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}},
     {'name' : 'first_name', 'value': {'stringValue' : first_name}},
     {'name' : 'last_name', 'value': {'stringValue' : last_name}},
     {'name' : 'email', 'value': {'stringValue' : email}},
-    {'name' : 'password', 'value': {'stringValue' : password}}]
+    {'name' : 'password', 'value': {'stringValue' : password}},
+    {'name': 'is_supporter', 'value':{'booleanValue': is_supporter}}] #changes is_supporter to true if it is supporter
 
 
     create_users_instance = query(sql,sql_parameters)
@@ -177,7 +179,7 @@ def create_student_user(event, context):
 
         # inserts user into supporters table with same user_id
         sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name, is_pending, office, google_doc_link) \
-                VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name',true,'office', 'google_doc_link')""" #(LAST THREE) is_pending, office, google_doc_link
+                VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name',false,'office', 'google_doc_link')""" #(LAST THREE) is_pending, office, google_doc_link
 
         sql_parameters = [
             {'name': 'new_id', 'value': {'longValue': new_id}},
