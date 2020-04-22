@@ -5,16 +5,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Rating from '@material-ui/lab/Rating';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import blue from '@material-ui/core/colors/blue';
-import smileRate from "../components/ratings";
 import Cancel from './cancelAppt'
 import Feedback from './feedback'
-
-
-const tagColor = blue.A300;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -274,13 +266,13 @@ const PreviousAppointmentCard = (props) => {
         );
     }
 
-    if(props.role == 'supporter'){
+    if(props.role == 'Supporter'){
       return supporterViewAppointmentCard();
     }
-    if(props.role == 'student'){
+    if(props.role == 'Student'){
       return studentViewAppointmentCard();
     }
-    if(props.role == 'admin'){
+    if(props.role == 'Admin'){
       return adminViewAppointmentCard();
     }
     else return null;
