@@ -76,7 +76,7 @@ def get_supporters_before_match(event, context):
                 supporter['employer'] = entry[5]['stringValue']
                 supporter['title'] = entry[6]['stringValue']
                 supporter['topics'] = [entry[9]['stringValue']]
-                supporter['tags'] = entry[10]['stringValue']['arrayValue']['stringValues']
+                supporter['tags'] = entry[10]['arrayValue']['stringValues']
                 supporter['imgsrc'] = entry[3]['stringValue']
                 supporter['timeBlocks'] = [{'start' : entry[7]['stringValue'][11:], 'end' : entry[8]['stringValue'][11:]}]
                 supporter['day'] = entry[7]['stringValue'][:10]
