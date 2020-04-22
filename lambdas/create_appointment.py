@@ -68,10 +68,8 @@ def lambda_handler(event, context):
     appointment_id = id_query['records'][0][0]['longValue'] + 1
 
     # format query
-    # NOTE: time_scheduled taken out of query pending DB updates
-    # NOTE: student_id will NOT be stored in scheduled_appointments in DB update
-    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method) \
-        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method)"""
+    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method, time_scheduled) \
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
     
     # format query parameters
     query_parameters = [
