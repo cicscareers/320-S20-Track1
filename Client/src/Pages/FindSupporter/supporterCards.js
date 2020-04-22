@@ -7,10 +7,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
-import smileRate from "../components/ratings"
+import smileRate from "../../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
-import convertTime from "../components/convertTime.js"
+import convertTime from "./convertTime.js"
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 
 const useStyles = makeStyles((theme) => ({
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, id} = props;
   const classes = useStyles();
   const cookies = new Cookies();
   const email = cookies.get("email");

@@ -1,125 +1,61 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme, TextField, Grid, Slider, Box, AppBar, Divider, Drawer, Hidden, IconButton, Toolbar, Typography, CssBaseline} from '@material-ui/core';
+import React, { useEffect } from "react";
+import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
-import Menu from "../Navigation/appbar.js";
-import SupporterCard from "../components/supporterCards.js"
-import SupporterList from "../Data/match2consts.js"
-import topicsList from "../components/topics.js"
-import tagsList from "../components/tags.js"
-import convertTime from "../components/convertTime.js"
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
-
-const drawerWidth = "25%";
-var LambdaList=[];
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  inputs: {
-    marginLeft: "5%",
-    marginRight: "5%",
-    width:"90%"
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  dayselect: {
-    marginLeft: "40%"
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  rating: {
-   align: "center",
-   alignItems: "center",
-  },
-}));
-
-function getList(event) {
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-      }
-    )
-      .then(response => {
-        return response.json();
-      })
-      .then(json => {
-        for (let i=0;i<json["body"].length;i++){
-          console.log(json["body"][i])
-          LambdaList.push(json["body"][i]);
-        }
-        console.log(json["body"])
-      })
-      .catch(error => {
-        alert("No Supporters Found");
-        console.log(error);
-      });
-  }
+import Menu from "../../Navigation/appbar.js";
+import SupporterCard from "./supporterCards.js"
+import topicsList from "./topics.js"
+import tagsList from "./tags.js"
+import convertTime from "./convertTime.js"
+import { DatePicker} from "@material-ui/pickers";
+import useStyles from "./MatchingStyles.js"
 
 const ResponsiveDrawer = (props) => {
-  const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
+  const [isLoaded, setLoaded] = React.useState(false);
+  const [supporters, setSupporters] = React.useState([])
 
-  //add a day to the date
-  //getList()
-  //console.log(LambdaList)
-  //console.log(LambdaList.length)
-
+  useEffect(() => {
+    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00')
+            .then(res => res.json())
+            .then(json => {
+              if(json.body[0]!==undefined){
+                console.log(json)
+                setLoaded(true);
+                setSupporters(json.body)
+              }else{
+                throw new Error();
+              }
+            })
+            .catch(error => {
+              console.log("No Supporters Found")
+            });
+    }, [])
+ 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
 
   const updateList = (val) => {
     setName(val);
   };
-  var newList = (SupporterList.filter(
+  var newList = (supporters.filter(
     supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     supporter => supporter.rating>=rating).filter(
     supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
+    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
 
+    //To filter by date. Commented out temporarily so db doesnt need to be repopulated for every day
+    //.filter(supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
 
   const getSupporterCard = supporterObj => {
     return <SupporterCard {...supporterObj}/>;
-  };
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
   };
 
   const handleSliderChange = (event, newValue) => {
@@ -146,8 +82,6 @@ const ResponsiveDrawer = (props) => {
     return false
   }
 
-
-  
   return (
     <div className={classes.root}>
       <CssBaseline />

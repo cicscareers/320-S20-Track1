@@ -11,6 +11,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "10:00"},{start: "11:00", end:"16:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/chinmayspatil/",
+		id:1
 	},
 	{
 		name:"Dhruvil Gala",
@@ -24,7 +25,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "10:00"},{start: "12:00", end:"13:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/dhruvilgala/",
-		supporterID: "73616129"
+		id: 2
 	},
 	{
 		name:"Brian Krusell",
@@ -38,6 +39,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/briankrusell/detail/recent-activity/posts/",
+		id:3
 	},
 	{
 		name:"David Fisher",
@@ -51,6 +53,7 @@ export default [
 		timeBlocks: [{start: "16:00", end: "17:30"}],
 		day: "04/18/2020",
 		linkedin: "",
+		id:4
 	},
 	{
 		name:"Dale Osef",
@@ -64,6 +67,7 @@ export default [
 		timeBlocks: [{start: "07:00", end: "19:00"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/daleosef/",
+		id:5
 	},
 	{
 		name:"Elizabeth Parolski",
@@ -77,6 +81,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "08:30"},{start: "10:00", end: "10:30"},{start: "13:30", end: "14:30"}],
 		day: "04/18/2020",
 		linkedin: "https://www.linkedin.com/in/elizabeth-parolski-0ba9184a/",
+		id:6
 	},
 	{
 		name:"David Barrington",
@@ -90,6 +95,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/18/2020",
 		linkedin: "",
+		id:6
 	},
 	{
 		name:"Sam the Minuteman",
@@ -103,5 +109,6 @@ export default [
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/18/2020",
 		linkedin: "",
+		id:7
 	},
 ]

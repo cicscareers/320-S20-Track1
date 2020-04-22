@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { Button, MenuItem, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
+import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import users from "../Data/users.json";
 import Cookies from "universal-cookie";
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
 
