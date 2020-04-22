@@ -239,14 +239,17 @@ export default function StudentSettings() {
   const [gradYear, setGradYear] = useState("");
   const url="";
 
+
   useEffect(() => {
     fetch(url)
       .then(res => res.json())
       .then(json => {
         var info = json.body;
+        
       })
 
   }, []);
+  
 
   return (
     // <Container component="main" maxWidth="xs" align="center">
