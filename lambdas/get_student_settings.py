@@ -47,5 +47,5 @@ def get_student_settings_handler(event, context):
             error_messages.append(str(e))
 
     return {
-        'statusCode' : 200,
+        'statusCode' : 200
     }
