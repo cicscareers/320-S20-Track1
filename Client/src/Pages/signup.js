@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -7,10 +7,18 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, DialogActions, DialogTitle, DialogContent, Dialog } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import users from "../Data/users.json"
-import Cookies from "universal-cookie";
+import { Auth } from "aws-amplify";
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
+
 
 function Copyright() {
   return (
@@ -53,102 +61,143 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 export default function SignUp() {
-  const [open, setOpen] = React.useState(false);
+
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
+  // const [redirect, setRedirect] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-    window.location.reload();
-  }; 
 
   //to encrypt the password and token
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
   var saltE = bcrypt.genSaltSync(10);
 
+
+
   function validateForm() {
-    return password===password2 && email.length > 0 
-    && password.length > 0 && password2.length > 0 
+    return email.length > 0
     && fname.length > 0 && lname.length > 0
-    && validEmail(email);
+    && validEmail(email)
+    && validatePass(password)
+    && samePass(password,password2);
   }
 
   function samePass(pass, pass2){
     return password===password2;
   }
 
+function hasLowerCase(str) {
+    return str.toUpperCase() !== str;
+}
+function hasUpperCase(str) {
+  return str.toLowerCase() !== str
+}
+
+function containsSpecial(str){
+ return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(str);
+}
+
+
+
+  function validatePass(pass){
+    return pass.length>=8 && hasUpperCase(pass) && hasLowerCase(pass) && containsSpecial(pass);
+  }
+
+
+
   function validEmail(address) {
     return !! address.match(/.+@.+/);
   }
 
-  function handleSubmit(event) {
-    var hash=password
+  // useEffect(() => {
+  //     console.log("@@@@@")
+  //     return (
+  //     <Redirect to='/login' />);
+  //   }, [])
 
-    event.preventDefault();
+const handleSubmit = async event => {
+  var username = email;
+  {/*var attributeList = []
+  var emailData = {
+    Name : 'email',
+    Value : email
+  };
+  var role = {
+      Name : 'profile',
+      Value : 'Student'
+  };
+  var first_name = {
+      Name : 'given name',
+      Value : fname
+  };
+  var last_name = {
+      Name : 'pjdlfjlkj',
+      Value : lname
+  };
+  attributeList.push(new CognitoUserAttribute(emailData));
+  attributeList.push(new CognitoUserAttribute(role));
+  attributeList.push(new CognitoUserAttribute(first_name));
+attributeList.push(new CognitoUserAttribute(last_name));*/}
+      event.preventDefault();
 
-    //POST the user info to the database
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/register/students",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          first_name: fname,
-          last_name: lname,
-          email: email,
-          hashed_password: hash
-        })
+
+        try{
+          const signUpResponse = await Auth.signUp({
+            username,
+            password,
+            attributes:{
+              email: email,
+              given_name: fname,
+              family_name: lname,
+              profile: "Student",
+              preferred_username: "default"
+            },
+
+          })
+          // console.log('Redirect$$$$$$$$')
+          // setRedirect(true);
+          setOpen(true);
+
+        }catch(error){
+          console.log("AHHHHHHHHHHWOIPOQIWPU0930838-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+          console.log(error)
+          alert(error.message)
+        }
       }
-    )
-    //not sure why this is needed but it is
-      .then(function(response) {
-        console.log(response);
-        return response.json();
-      })
 
-      //if the status code is good, set the cookies and authenicate
-      .then(json => {
-          console.log(json.statusCode);
-
-          console.log(json);
-
-          if (json.statusCode >= 200 && json.statusCode < 300) {
-            handleClickOpen()
-          } else {
-            throw new Error();
-          }
-       })
-      .catch(error => {
-        alert("There is already a user with that email address. Please try again!");
-      });
-  }
 
   function handleKeyPress(event){
     if(event.key === 'Enter'){
-      handleSubmit(event)
+    //  handleSubmit();
     }
   }
 
+  const handleClose = () => {
+   setOpen(false);
+ };
+
+
   return (
+
+
     <Container component="main" maxWidth="xs">
+
+
+
+
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Create a student account
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -190,6 +239,13 @@ export default function SignUp() {
               </FormHelperText>
             </FormControl>
           )}
+          {!validatePass(password) && password.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+              Your password should be at least 8 characters long and should include a lowercase, uppercase, and special character.
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -202,6 +258,13 @@ export default function SignUp() {
             autoComplete="current-password"
             onChange={e => setPassword(e.target.value)}
           />
+          {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Passwords do not match
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -215,20 +278,13 @@ export default function SignUp() {
             onChange={e => setPassword2(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          {!samePass(password, password2) && password.length > 0 && password2.length > 0 && (
-            <FormControl className={classes.error} error>
-              <FormHelperText>
-                Passwords do not match
-              </FormHelperText>
-            </FormControl>
-          )}
           <Typography align="center" variant="body2">
-            By requesing an account you agree to ReachOut's
+            By requesting an account you agree to ReachOut's
           </Typography>
           <Grid container align="center">
             <Grid item xs>
               <Link href="/tos" variant="body2" justify="center">
-                Terms and Condtitions
+                Terms and Conditions
               </Link>
             </Grid>
           </Grid>
@@ -242,33 +298,30 @@ export default function SignUp() {
           >
             Create Account
           </Button>
-          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+          <Dialog alignItems= "center" onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-              Account Created.
+              Confirm Your Email Address
             </DialogTitle>
             <DialogContent dividers>
               <Typography gutterBottom>
-              Your student account has been created.
-              </Typography>
-              <Typography gutterBottom>
-              You can now log in as a student and find the supporter that best fits your needs
+              A confirmation email has been sent to {email}. Click on the confirmation link in the email to activate your account.
               </Typography>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus href="/login" color="primary">
-                Back to sign in
+              <Button variant="contained" align = "center" autoFocus href="/login" color="primary">
+                Back to Sign In
               </Button>
             </DialogActions>
           </Dialog>
           <Grid container>
             <Grid item xs>
               <Link href="/login" variant="body2">
-                Back to sign in
+                Back to Sign In
               </Link>
             </Grid>
             <Grid item>
               <Link href="/signup-supporter" variant="body2">
-                Want to request a supporter account? Sign Up
+                Request Supporter Account
               </Link>
             </Grid>
           </Grid>
@@ -280,4 +333,3 @@ export default function SignUp() {
     </Container>
   );
 }
-
