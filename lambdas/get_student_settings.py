@@ -9,7 +9,7 @@ def get_student_settings_handler(event, context):
     response = {}
     error_messages = []
 
-    users_sql = "SELECT first_name, last_name, email, preferred_name, picture, bio, pronouns, gender, phone FROM users WHERE id = :student_id"
+    users_sql = "SELECT first_name, last_name, email, preferred_name, picture, bio, pronouns, gender, phone FROM users WHERE id = :student_id;"
     try:
         user_data = query(users_sql, student_id_param)['records'][0]
 
@@ -26,7 +26,8 @@ def get_student_settings_handler(event, context):
     except Exception as e:
         error_message.append(str(e))
 
-    students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id"
+
+    students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id;"
     try:
         student_data = query(students_sql, student_id_param)
 
@@ -39,32 +40,93 @@ def get_student_settings_handler(event, context):
     except Exception as e:
         error_messages.append(str(e))
 
-    majors_sql = "SELECT * FROM student_majors WHERE student_id = :student_id"
+
+    links_sql = "SELECT link_id FROM user_link WHERE user_id = :student_id"
+    try:
+        student_link_ids = query(links_sql, student_id_param)['records'][0]
+        if len(student_link_ids) > 0:
+            link_ids = student_link_ids[0]['longValue']
+            for link_id in student_link_ids[1:]:
+                link_ids += " OR link_id" + link_id['longValue']
+
+            student_links_sql = "SELECT link FROM link WHERE link_id = " + link_ids + ';'
+            try:
+                student_links = query(student_links_sql)['records'][0]
+                links = []
+                for link in student_links:
+                    links.append(link['stringValue'])
+
+                response['links'] = links
+
+            except Exception as e:
+                error_messages.append(str(e))
+
+
+    majors_sql = "SELECT * FROM student_majors WHERE student_id = :student_id;"
     try:
         student_major_ids = query(majors_sql, student_id_param)['records'][0]
-        major_ids = student_major_ids[0]['stringValue']
+        major_ids = student_major_ids[0]['longValue']
         for major_id in student_major_ids[1:]:
-            major_ids += " OR major_id = " + major_id['stringValue']
+            major_ids += " OR major_id = " + major_id['longValue']
 
         student_majors_sql = "SELECT major FROM major WHERE major_id = " + major_ids + ";"
         try:
-            student_majors = query(student_majors_sql) 
+            student_majors = query(student_majors_sql)['records'][0] 
+            majors = []
+            for major in student_majors:
+                majors.append(major['stringValue'])
+
+            response['major'] = majors
+
         except Exception as e:
             error_messages.append(str(e))
 
-    minors_sql = "SELECT * FROM student_minors WHERE student_id = :student_id"
+
+    minors_sql = "SELECT * FROM student_minors WHERE student_id = :student_id;"
     try:
         student_minor_ids = query(minors_sql, student_id_param)['records'][0]
-        minor_ids = student_minor_ids[0]['stringValue']
+        minor_ids = student_minor_ids[0]['longValue']
         for minor_id in student_minor_ids[1:]:
-            minor_ids += " OR minor_id = " + minor_id['stringValue']
+            minor_ids += " OR minor_id = " + minor_id['longValue']
 
         student_minors_sql = "SELECT minor FROM minor WHERE minor_id = " + minor_ids + ";"
         try:
-            student_minors = query(student_minors_sql)
+            student_minors = query(student_minors_sql)['records'][0]
+            minors = []
+            for minor in student_minors:
+                minors.append(minor['stringValue'])
+
+            response['minor'] = minors 
+
         except Exception as e:
             error_messages.append(str(e))
 
-    return {
-        'statusCode' : 200
-    }
+
+    notification_sql = "SELECT notification_type_id FROM notification_preferenced WHERE user_id = :student_id;"
+    try:
+        notification_type_ids = query(notification_sql, student_id_param)['records'][0]
+        notification_ids = notification_type_ids[0]['longValue']
+        for notification_id in notification_type_ids[1:]:
+            notification_ids += " OR notification_type_id = " + notification_id['longValue']
+
+        student_notification_pref_sql = "SELECT notification_type_name FROM notification_type WHERE notification_type_id = " + notification_ids + ";"
+        try:
+            student_notification_prefs = query(student_notification_pref_sql)['records'][0]
+            notification_prefs = []
+            for pref in notification_prefs:
+                notification_prefs.append(pref['stringValue'])
+
+            response['notification_preferences'] = notification_prefs
+
+        except Exception as e:
+            error_messages.append(str(e))
+            
+
+
+    if len(error_messages) > 0:
+        response['statusCode'] = 500
+        response['errorMessage'] = error_messages
+        return response
+    else:
+        response['statusCode'] = 200
+        return response
