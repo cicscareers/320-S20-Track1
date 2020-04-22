@@ -22,12 +22,7 @@ import {Rating, Autocomplete} from '@material-ui/lab';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import Menu from "../Navigation/appbar.js";
-import SupporterCard from "../components/supporterCards.js"
-import SimpleCard from "../components/test.js"
-import SupporterList from "../Data/match2consts.js"
-import topicsList from "../components/topics.js"
-import tagsList from "../components/tags.js"
-import convertTime from "../components/convertTime.js"
+import SupporterCard from "./FindSupporter/supporterCards.js"
 import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 const drawerWidth = "25%";
 const old_appts = 
