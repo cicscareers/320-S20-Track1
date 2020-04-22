@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: 
 #Output: JSON object of current supporter appointments in the format: 
-# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","type","duration","method","location","comment"
+# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","type","duration","method","location","comment", "feedback","rating","promoter_score"
 
 def get_all_appointments(event, context):
 
@@ -20,7 +20,7 @@ def get_all_appointments(event, context):
         }
     else:
         #There are appointments scheduled, so fetch appointments
-        sql = 'SELECT U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture AS studentPic, SA.time_of_appt, SA.type, SA.duration, SA.method, SA.location, SR.comment \
+        sql = 'SELECT U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture AS studentPic, SA.time_of_appt, SA.type, SA.duration, SA.method, SA.location, SR.comment, S.feedback, S.rating, SR.promoter_score \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
             WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id'
     
@@ -44,6 +44,9 @@ def get_all_appointments(event, context):
             block["method"] = entry[9].get("stringValue")
             block["location"] = entry[10].get("stringValue")
             block["comment"] = entry[11].get("stringValue")
+            block["feedback"] = entry[12].get("booleanValue")
+            block["rating"] = entry[13].get("longValue")
+            block["promoter_score"] = entry[14].get("booleanValue")
             appointments.append(block)
 
         #Returns the query contents
