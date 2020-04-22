@@ -26,9 +26,16 @@ def get_student_settings_handler(event, context):
     except Exception as e:
         error_message.append(str(e))
 
-    students_sql = "SELECT * FROM students WHERE student_id = :student_id"
+    students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id"
     try:
         student_data = query(students_sql, student_id_param)
+
+        response['college'] = student_data[0]['stringValue']
+        response['grad_year'] = student_data[1]['stringValue']
+        response['resume'] = student_data[2]['stringValue']
+        response['job_search'] = student_data[3]['booleanValue']
+        response['grad_student'] = student_data[4]['booleanValue']
+
     except Exception as e:
         error_messages.append(str(e))
 
