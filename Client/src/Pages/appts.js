@@ -1,33 +1,12 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField, Grid, Slider, Box } from '@material-ui/core';
-import {Rating, Autocomplete} from '@material-ui/lab';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles, useTheme, TextField, Grid} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
-import SupporterCard from "../components/supporterCards.js"
-import SimpleCard from "../components/test.js"
 import appointments from "../Data/appointments2.js"
-import topicsList from "../components/topics.js"
-import tagsList from "../components/tags.js"
-import convertTime from "../components/convertTime.js"
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -77,33 +56,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getList(event) {
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2000-01-01+12:00:00&end_date=2050-05-28+12:00:00",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-      }
-    )
-      .then(response => {
-        console.log(response);
-        return response.json();
-      })
-      .then(json => {
-        console.log(json);
-      })
-      .catch(error => {
-        alert("No Supporters Found");
-        console.log(error);
-      });
-  }
-
 const ResponsiveDrawer = (props) => {
   //Gets info from the cookies
   //get users role
+  console.log(appointments)
   const today = new Date();
   const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
@@ -118,10 +74,6 @@ const ResponsiveDrawer = (props) => {
   const [search,setSearch]=React.useState("");
 
 
-  //add a day to the date
-  //var lambdaList=getList()
-
-  //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
   if(role == 'Student'){
     var filteredAppointmentList = (appointments.filter(
@@ -130,10 +82,6 @@ const ResponsiveDrawer = (props) => {
   const updateList = (val) => {
     setName(val);
   };
-  const getSupporterCard = supporterObj => {
-    return <SupporterCard {...supporterObj}/>;
-  };
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -201,8 +149,8 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {filteredAppointmentList  .length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
-        {filteredAppointmentList  .length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
+        {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
+        {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
