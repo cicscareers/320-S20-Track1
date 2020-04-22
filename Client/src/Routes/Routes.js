@@ -25,7 +25,9 @@ export default function Routes() {
   return (
         <Switch>
           <Redirect exact from="/" to="/match" />
-          <AuthenticatedRoute path="/home" exact component={Home} />
+          {/* //TODO Change line 30 AuthenticatedRoute*/}
+
+          <Route path="/home" exact component={Home} />
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />

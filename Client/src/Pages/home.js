@@ -36,6 +36,7 @@ function App() {
   const cookies = new Cookies();
   const fname = cookies.get("firstName");
   const lname = cookies.get("lastName");
+  const role=cookies.get("role");
   const classes = useStyles();
   return (
   	<Container component='main'>
@@ -55,7 +56,7 @@ function App() {
         <Grid contains lg={6} justify='center'>
           
           {Appointments()}
-            
+           
           
         </Grid>
           <Grid container lg={10} justify='center'>

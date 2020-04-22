@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {AppBar, Avatar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Grid, Menu, Link} from "@material-ui/core";
+import {AppBar, Avatar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Grid, Menu, Link,Dialog, DialogTitle,
+  DialogContent, DialogActions} from "@material-ui/core";
 import Cookies from "universal-cookie";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { Redirect } from "react-router-dom";
@@ -89,7 +90,8 @@ export default function MenuAppBar() {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const name = cookies.get("firstName");
-  const role = cookies.get("role");
+  
+  var role = cookies.get("role");
   //Sets the styling
   const classes = useStyles();
 
@@ -143,7 +145,9 @@ export default function MenuAppBar() {
 
  }
  const SwitchUserHandle= event =>{
+  
   cookies.set('role',event.currentTarget.id);
+ 
   window.location.reload();
  }
  function renderRolesInModal(){
@@ -153,11 +157,12 @@ export default function MenuAppBar() {
     RenderRoles=(<h2>Sorry, You just have 1 role.</h2>);
   }
   else{
+
     for(var i=0;i<RolesList.roles.length;i++){
       if(RolesList.roles[i]==role){
         continue;
       }
-      RenderRoles=(<Chip
+      RenderRoles.push((<Chip
       id={RolesList.roles[i]}
        
         label={RolesList.roles[i]}
@@ -165,7 +170,7 @@ export default function MenuAppBar() {
         color="primary"
         onClick={SwitchUserHandle}
         
-      />);
+      />));
     }
   }
 return RenderRoles;
@@ -238,25 +243,9 @@ return RenderRoles;
         Switch User
       </Typography>
   </MenuItem>
-  <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={openModal}
-        onClose={handleModalClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openModal}>
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">What role do you want to switch to?</h2>
-      <p id="transition-modal-description">{renderRolesInModal()}</p>
-          </div>
-        </Fade>
-      </Modal>
+  <Dialog onClose={handleModalClose} aria-labelledby="customized-dialog-title" open={openModal}>
+    
+  </Dialog>
   <MenuItem onClick={handleClose}>
     <Link href="/feedback">
       <Typography component="h6" variant="h6">
