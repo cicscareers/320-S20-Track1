@@ -123,7 +123,7 @@ const ResponsiveDrawer = (props) => {
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
-  if(role == 'student'){
+  if(role == 'Student'){
     var filteredAppointmentList = (appointments.filter(
       appt => String(appt.supporter.toLowerCase()).includes(search.toLowerCase())))
   }

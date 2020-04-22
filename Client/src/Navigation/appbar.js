@@ -1,13 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {AppBar, Avatar, Toolbar, Typography, IconButton, Switch, MenuItem, Button, ButtonGroup, Grid, Menu, Link,Dialog, DialogTitle,
-  DialogContent, DialogActions} from "@material-ui/core";
+import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
 import Cookies from "universal-cookie";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import { Redirect } from "react-router-dom";
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 import Roles from'./role.json';
 import Chip from '@material-ui/core/Chip';
 const useStyles = makeStyles(theme => ({
@@ -75,15 +69,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
-const styles = {
-  button: {
-    width: 64, height: 64,
-    padding: 0,
-  },
-  icon: {
-    width: 64, height: 64,
-  },
-};
+const PossibleRoles=["Student","Supporter","Admin"];
 export default function MenuAppBar() {
 
   //Gets info from the cookies
@@ -130,7 +116,7 @@ export default function MenuAppBar() {
   }
  function renderNavBarButtonsBasedOnRole(){
    let RenderButtons=[];
-   if(role=="student"){
+   if(role==PossibleRoles[0]){
      return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
      <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
@@ -185,7 +171,7 @@ return RenderRoles;
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-         {role=="student" &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
+         {role==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
           <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
@@ -217,7 +203,7 @@ return RenderRoles;
     </Link>
   </MenuItem>
 
-    {role==="admin" && (
+    {role===PossibleRoles[2] && (
       <MenuItem onClick={handleClose}>
         <Link href="/admin-settings">
           <Typography component="h6" variant="h6">
@@ -226,7 +212,7 @@ return RenderRoles;
         </Link>
       </MenuItem>
     )}
-      {role==="supporter" && (
+      {role===PossibleRoles[2] && (
       <MenuItem onClick={handleClose}>
         <Link href="/supporter-settings">
           <Typography component="h6" variant="h6">

@@ -274,13 +274,13 @@ const PreviousAppointmentCard = (props) => {
         );
     }
 
-    if(props.role == 'supporter'){
+    if(props.role == 'Supporter'){
       return supporterViewAppointmentCard();
     }
-    if(props.role == 'student'){
+    if(props.role == 'Student'){
       return studentViewAppointmentCard();
     }
-    if(props.role == 'admin'){
+    if(props.role == 'Admin'){
       return adminViewAppointmentCard();
     }
     else return null;
