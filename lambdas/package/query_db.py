@@ -14,7 +14,7 @@ def query(sql_query, sql_parameters=[]):
 
     try:
         result = client.execute_statement(secretArn=secretArn, database=dbName, resourceArn=arn, sql=sql_query, parameters=sql_parameters)
-    except:
-        raise LambdaException("Invalid query")
+    except Exception as e:
+        raise LambdaException("Invalid query: " + str(e))
 
     return result
