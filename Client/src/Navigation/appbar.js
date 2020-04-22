@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
 import Cookies from "universal-cookie";
@@ -69,15 +69,19 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
   },
 }));
-const PossibleRoles=["Student","Supporter","Admin"];
-export default function MenuAppBar() {
 
+
+export default function MenuAppBar(props) {
+
+  const [PossibleRoles,SetPossibleRoles] = React.useState([]);
   //Gets info from the cookies
   const cookies = new Cookies();
   const token = cookies.get("token");
   const name = cookies.get("firstName");
   
   var role = cookies.get("role");
+
+  const id = cookies.get("id");
   //Sets the styling
   const classes = useStyles();
 
@@ -88,6 +92,18 @@ export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openModal, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
+            .then(res => res.json())
+            .then(json => {
+              SetPossibleRoles(["student","supporter","admin"]);
+            })
+            .catch(error => {
+                console.log(error);
+                console.log("No Supporters Found");
+            });
+    }, [])
 
   const handleModalOpen = () => {
     setOpen(true);
@@ -116,7 +132,7 @@ export default function MenuAppBar() {
   }
  function renderNavBarButtonsBasedOnRole(){
    let RenderButtons=[];
-   if(role==PossibleRoles[0]){
+   if(role.toLowerCase()==PossibleRoles[0]){
      return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>
      <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
@@ -171,7 +187,7 @@ return RenderRoles;
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-         {role==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
+         {role.toLowerCase()==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
           <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
@@ -230,7 +246,6 @@ return RenderRoles;
       </Typography>
   </MenuItem>
   <Dialog onClose={handleModalClose} aria-labelledby="customized-dialog-title" open={openModal}>
-    
   </Dialog>
   <MenuItem onClick={handleClose}>
     <Link href="/feedback">
