@@ -6,11 +6,23 @@ def get_student_settings_handler(event, context):
     student_id = int(event['student_id'])
     student_id_param = [{'name' : 'student_id', 'value' : student_id}]
 
+    response = {}
     error_messages = []
 
-    users_sql = "SELECT * FROM users WHERE id = :student_id"
+    users_sql = "SELECT first_name, last_name, email, preferred_name, picture, bio, pronouns, gender, phone FROM users WHERE id = :student_id"
     try:
         user_data = query(users_sql, student_id_param)['records'][0]
+
+        response['first_name'] = user_data[0]['stringValue']
+        response['last_name'] = user_data[1]['stringValue']
+        response['email'] = user_data[2]['stringValue']
+        response['preferred_name'] = user_data[3]['stringValue']
+        response['picture'] = user_data[4]['stringValue']
+        response['bio'] = user_data[5]['stringValue']
+        response['pronouns'] = user_data[6]['stringValue']
+        response['gender'] = user_data[7]['stringValue']
+        response['phone'] = user_data[8]['stringValue']
+
     except Exception as e:
         error_message.append(str(e))
 
