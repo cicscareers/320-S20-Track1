@@ -1,5 +1,5 @@
 # Written by Maeve Newman
-# Updated 4/16/2020
+# Updated 4/22/2020
 
 import json
 from package.query_db import query
@@ -8,7 +8,7 @@ import time
 import datetime
 
 # function puts the appointment details in the database
-# Inputs: supporter_id, time_of_appt, type, duration, method, location
+# Inputs: student_id, supporter_id, time_of_appt, type, duration, method, location, comments
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
@@ -19,6 +19,7 @@ def lambda_handler(event, context):
     duration = int(event['duration'])
     method = event['method']
     location = event['location']
+    comment = event['comment']
     
     # check that student is in DB
     sql = "SELECT student_id FROM students WHERE student_id = :student"
@@ -63,8 +64,10 @@ def lambda_handler(event, context):
     appointment_id = id_query['records'][0][0]['longValue'] + 1
 
     # format query
-    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method, time_scheduled) \
-        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'))"""
+    # NOTE: time_scheduled taken out of query pending DB updates
+    # NOTE: student_id will NOT be stored in scheduled_appointments in DB update
+    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, type, duration, location, method) \
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :appt_type, :duration, :location, :method)"""
     
     # format query parameters
     query_parameters = [
@@ -75,8 +78,9 @@ def lambda_handler(event, context):
         {'name' : 'appt_type', 'value':{'stringValue': appt_type}},
         {'name' : 'duration', 'value': {'longValue' : duration}},
         {'name' : 'location', 'value':{'stringValue': location}},
-        {'name':'method', 'value':{'stringValue': method}},
-        {'name' : 'time_scheduled', 'value': {'stringValue' : time_scheduled}}
+        {'name': 'method', 'value':{'stringValue': method}},
+        {'name' : 'time_scheduled', 'value': {'stringValue' : time_scheduled}},
+        {'name' : 'comment', 'value':{'stringValue': comment}}
     ]
 
     # make query
@@ -89,7 +93,7 @@ def lambda_handler(event, context):
         }
 
     # query to update student_appointment_relation
-    sql = "INSERT INTO student_appointment_relation (student_id, appointment_id) VALUES (:student_id, :appointment_id);"
+    sql = "INSERT INTO student_appointment_relation (student_id, appointment_id, supporter_id, comment) VALUES (:student_id, :appointment_id, :supporter_id, :comment);"
 
     # update student_appointment_relation
     try:
