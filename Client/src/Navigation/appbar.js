@@ -2,11 +2,6 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
 import Cookies from "universal-cookie";
-import Roles from'./role.json';
-import Chip from '@material-ui/core/Chip';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 // import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,16 +12,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const useStyles = makeStyles(theme => ({
+
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   overrides: {
     MuiButton: {
       root: {
         borderRadius: 30,
-      }, 
-    }, 
-  }, 
+      },
+    },
+  },
   menuButton: {
     flexGrow: 1,
   },
@@ -35,32 +31,33 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(1),
     minHeight: 80,
   },
-  logo:{
-    color: '#881c1c',
-    fontSize: '255%',
+  logo: {
+    color: "#881c1c",
+    fontSize: "255%",
     borderRadius: "40em",
-    '&:hover': {
-      backgroundColor: '#FFFFFF',
-    }
+    "&:hover": {
+      backgroundColor: "#FFFFFF",
+    },
   },
   button: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+
     marginLeft: "1%",
     color: '#881c1c',
     fontSize: '120%',
     borderRadius: "40em",
-    '&:hover': {
-      backgroundColor: '#881c1c',
-      color: '#FFF'
-    }
+    "&:hover": {
+      backgroundColor: "#881c1c",
+      color: "#FFF",
+    },
   },
   pictureButton: {
     marginLeft: "1%",
     borderRadius: "100em",
-    '&:hover': {
-          backgroundColor: '#881c1c',
-        },
+    "&:hover": {
+      backgroundColor: "#881c1c",
+    },
   },
   large: {
     width: theme.spacing(7),
@@ -179,7 +176,7 @@ export default function MenuAppBar(props) {
  }
  function renderRolesInModal(){
   let RenderRoles=[];
-  var RolesList=Roles[0];
+
   
   if(PossibleRoles.length==1){
     RenderRoles=(<h2>Sorry, You just have 1 role.</h2>);
