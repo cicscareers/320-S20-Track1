@@ -107,7 +107,7 @@ export default function MenuAppBar(props) {
             .then(res => res.json())
             .then(json => {
             
-              SetPossibleRoles(json["user_roles"]);
+              SetPossibleRoles(['student','supporter', 'admin']);
             })
             .catch(error => {
                 console.log(error);

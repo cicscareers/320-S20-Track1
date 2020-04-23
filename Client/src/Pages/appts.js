@@ -83,7 +83,9 @@ const ResponsiveDrawer = (props) => {
   }
   if(role !== 'Student'){
     var filteredAppointmentList = (appointments.filter(
-      appt => String((appt.studentFN + " " + appt.studentLN).toLowerCase()).includes(search.toLowerCase())))
+      appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
+    
+    
   }
   const updateList = (val) => {
     setName(val);
@@ -129,29 +131,35 @@ const ResponsiveDrawer = (props) => {
         setAppointments(json.body);
       })
     }
-    else if(role == 'Supporter'){
-      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
+    else if(role == 'supporter'){
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/supporters/1')
+      
         .then(res => res.json())
         .then(json => {
-          
+          console.log(role)
           setLoaded(true);
           setAppointments(json.body);
         })
       }
     else{
-      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
-        .then(res => res.json())
+      
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments')
+        .then(res => {
+          console.log("Got response");
+          return res.json();
+        })
         .then(json => {
           
           setLoaded(true);
           setAppointments(json.body);
+          
         })
       
     }
   },[]);
 
   function convertDate(time, duration){
-    var hours = parseInt(time.substring(11,13));
+    var hours = parseInt(time.substring(11,13)) * 60;
     var minutes = parseInt(time.substring(14,16));
     return convertTime(hours + minutes + duration);
   }
@@ -205,7 +213,7 @@ const ResponsiveDrawer = (props) => {
                   <Grid lg = {12}>
                     <AppointmentCard 
                       upcoming = {true}
-                      role = {role}
+                      role = {role.toLowerCase()}
                       subject = {appointment.type}
                       location = {appointment.location}
                       medium = {appointment.method}
@@ -224,14 +232,15 @@ const ResponsiveDrawer = (props) => {
                 ))}
         <br/>
         <br/>
+        {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Previous Appointments</Typography>}
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today > new Date(appointment.date) &&
+                today > new Date(appointment.time_scheduled) &&
                 <Grid lg = {12}>
                   <AppointmentCard 
                     upcoming = {true}
-                    role = {role}
+                    role = {role.toLowerCase()}
                     subject = {appointment.type}
                     location = {appointment.location}
                     medium = {appointment.method}

@@ -89,6 +89,7 @@ const PreviousAppointmentCard = (props) => {
     function supporterViewAppointmentCard(){
             
             return (
+          
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -267,13 +268,13 @@ const PreviousAppointmentCard = (props) => {
         );
     }
 
-    if(props.role == 'Supporter'){
+    if(props.role == 'supporter'){
       return supporterViewAppointmentCard();
     }
-    if(props.role == 'Student'){
+    if(props.role == 'student'){
       return studentViewAppointmentCard();
     }
-    if(props.role == 'Admin'){
+    if(props.role == 'admin'){
       return adminViewAppointmentCard();
     }
     else return null;
