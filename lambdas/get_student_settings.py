@@ -1,5 +1,4 @@
 from package.query_db import query
-from package
 
 def get_student_settings_handler(event, context):
 
@@ -61,8 +60,11 @@ def get_student_settings_handler(event, context):
             except Exception as e:
                 error_messages.append(str(e))
 
+    except Exception as e:
+        error_messages.append(str(e))
 
-    majors_sql = "SELECT * FROM student_majors WHERE student_id = :student_id;"
+
+    majors_sql = "SELECT major_id FROM student_majors WHERE student_id = :student_id;"
     try:
         student_major_ids = query(majors_sql, student_id_param)['records'][0]
         major_ids = student_major_ids[0]['longValue']
@@ -81,8 +83,11 @@ def get_student_settings_handler(event, context):
         except Exception as e:
             error_messages.append(str(e))
 
+    except Exception as e:
+        error_messages.append(str(e))
 
-    minors_sql = "SELECT * FROM student_minors WHERE student_id = :student_id;"
+
+    minors_sql = "SELECT minor_id FROM student_minors WHERE student_id = :student_id;"
     try:
         student_minor_ids = query(minors_sql, student_id_param)['records'][0]
         minor_ids = student_minor_ids[0]['longValue']
@@ -100,6 +105,9 @@ def get_student_settings_handler(event, context):
 
         except Exception as e:
             error_messages.append(str(e))
+
+    except Exception as e:
+        error_messages.append(str(e))
 
 
     notification_sql = "SELECT notification_type_id FROM notification_preferenced WHERE user_id = :student_id;"
@@ -120,7 +128,10 @@ def get_student_settings_handler(event, context):
 
         except Exception as e:
             error_messages.append(str(e))
-            
+
+    except Exception as e:
+        error_messages.append(str(e))
+
 
 
     if len(error_messages) > 0:
