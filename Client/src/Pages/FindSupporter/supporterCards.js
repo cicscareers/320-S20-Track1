@@ -76,6 +76,7 @@ const SupporterCard = (props) => {
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
   const [time, setTime] = React.useState("");
+  const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
@@ -136,12 +137,14 @@ const SupporterCard = (props) => {
           duration: 30,
           method: "In Person",
           location: "Somewhere",
-          comment: "No Comment"
+          comment: comment
         })
       }
     )
       .then(response => {
         if (response.status >= 200 && response.status < 300) {
+          setOpen(false)
+          setOpenCreated(true)
           console.log(response)
           return response.json();
         } else {
@@ -299,6 +302,7 @@ const SupporterCard = (props) => {
                 fullWidth
                 rows="4"
                 variant="outlined"
+                onChange={e => setComment(e.target.value)}
               />
             </DialogContent>
             <DialogActions>
