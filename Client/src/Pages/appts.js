@@ -79,6 +79,9 @@ const ResponsiveDrawer = (props) => {
     var filteredAppointmentList = (appointments.filter(
       appt => String(appt.supporter.toLowerCase()).includes(search.toLowerCase())))
   }
+  if(role !== 'Student'){
+    var filteredAppointmentList = []
+  }
   const updateList = (val) => {
     setName(val);
   };
