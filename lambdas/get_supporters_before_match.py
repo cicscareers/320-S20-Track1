@@ -2,6 +2,8 @@ import json
 import boto3
 
 from package.query_db import query
+from datetime import datetime
+from datetime import timedelta
 
 # This lambda fetches a JSON list of available appointments blocks from the database. 
 # the list is then filtered down by the front end. 
@@ -12,7 +14,9 @@ def get_supporters_before_match(event, context):
     date_start = event['start_date']
     date_end = event['end_date']
 
-    sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization_type, T.tags, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
+    date_format = "%Y-%m-%d %H:%M:%S"
+
+    blocks_sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization_type, T.tags, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
     FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
     specialization_type ST, supporter_specializations SS, tags T, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
     WHERE U.id = S.user_id\
@@ -25,12 +29,19 @@ def get_supporters_before_match(event, context):
     AND ST.specialization_type_id = SS.specialization_type_id\
     AND S.supporter_id = SS.supporter_id\
     AND start_date BETWEEN :date_start AND :date_end;"
+
+    scheduled_sql = "SELECT supporter_id, time_of_appt, duration\
+    FROM scheduled_appointments\
+    WHERE NOT cancelled\
+    AND time_of_appt BETWEEN :date_start AND :date_end;"
             
     params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
 
-    query_data = query(sql, params)
+    blocks_query_data = query(blocks_sql, params)
 
-    if query_data['records'] == []: #If response was empty
+    scheduled_query_data = query(scheduled_sql, params)
+
+    if blocks_query_data['records'] == []: #If response was empty
         print("There are no appointment blocks available")
         return {
             "statusCode": 404
@@ -38,7 +49,20 @@ def get_supporters_before_match(event, context):
     else:
         supporter_availibility = {}
     
-        for entry in query_data['records']:
+        for entry in blocks_query_data['records']:
+            scheduled_in = 0
+            entry_start_date = datetime.strptime(entry[7]['stringValue'], date_format)
+            entry_end_date = datetime.strptime(entry[8]['stringValue'], date_format)
+
+            for appt in scheduled_query_data['records']:
+                appt_start_date = datetime.strptime(appt[1]['stringValue'], date_format)
+                appt_end_date = appt_start_date + timedelta(minutes=appt[2]['longValue'])
+                if appt[0]['longValue'] == entry[0]['longValue'] and entry_start_date < appt_start_date < appt_end_date < entry_end_date:
+                    scheduled_in = scheduled_in + 1
+            
+            if scheduled_in >= 1:
+                continue
+
             if len(entry) != 14:
                 return {
                     "statusCode": 422
