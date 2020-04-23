@@ -1,135 +1,64 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField, Grid, Slider, Box } from '@material-ui/core';
+import React, { useEffect } from "react";
+import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import Menu from "../Navigation/appbar.js";
-import SupporterCard from "../components/supporterCards.js"
-import SimpleCard from "../components/test.js"
-import SupporterList from "../Data/match2consts.js"
-import topicsList from "../components/topics.js"
-import tagsList from "../components/tags.js"
-import convertTime from "../components/convertTime.js"
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
-const drawerWidth = "25%";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  inputs: {
-    marginLeft: "5%",
-    marginRight: "5%",
-    width:"90%"
-  },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  dayselect: {
-    marginLeft: "40%"
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  rating: {
-   align: "center",
-   alignItems: "center",
-  },
-}));
-
-function getList(event) {
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2000-01-01+12:00:00&end_date=2050-05-28+12:00:00",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-      }
-    )
-      .then(response => {
-        console.log(response);
-        return response.json();
-      })
-      .then(json => {
-        console.log(json);
-      })
-      .catch(error => {
-        alert("No Supporters Found");
-        console.log(error);
-      });
-  }
+import Menu from "../../Navigation/appbar.js";
+import SupporterCard from "./supporterCards.js"
+import topicsList from "./topics.js"
+import tagsList from "./tags.js"
+import convertTime from "./convertTime.js"
+import { DatePicker} from "@material-ui/pickers";
+import useStyles from "./MatchingStyles.js"
+import SupList from "./match2consts.js"
 
 const ResponsiveDrawer = (props) => {
-  const { container } = props;
+  const supporterList = SupList;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
-
-  //add a day to the date
-  var lambdaList=getList()
-
+  const [isLoaded, setLoaded] = React.useState(false);
+  const [supporters, setSupporters] = React.useState([])
+  useEffect(() => {
+    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00')
+            .then(res => res.json())
+            .then(json => {
+              if(json.body[0]!==undefined){
+                console.log(json)
+                setLoaded(true);
+                setSupporters(json.body)
+              }else{
+                throw new Error();
+              }
+            })
+            .catch(error => {
+              console.log("No Supporters Found")
+            });
+    }, [])
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
 
   const updateList = (val) => {
     setName(val);
   };
-  var newList = (SupporterList.filter(
+
+  //for hard filtering
+  var newList = (supporters.filter(
     supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
     supporter => supporter.rating>=rating).filter(
     supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
     supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-    supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));
+    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks))
+    /*.filter(
+      supporter => supporter.day.substring(6,10)===selectedDate.getFullYear().toString() && 
+      supporter.day.substring(3,5)===selectedDate.getDate().toString() && supporter.day.substring(0,2)===getTheMonth(selectedDate.getMonth()+1));*/
 
-  const getSupporterCard = supporterObj => {
-    return <SupporterCard {...supporterObj}/>;
-  };
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+  const getSupporterCard = (supporterObj, s) => {
+    console.log("score"+s)
+    return <SupporterCard {...supporterObj} score={s}/>;
   };
 
   const handleSliderChange = (event, newValue) => {
@@ -140,14 +69,56 @@ const ResponsiveDrawer = (props) => {
   }
   function getTheMonth(month){
     if (parseInt(month)>10){
-      console.log(month.toString())
       return month.toString();
     }
     else{
-      console.log("0".concat(month.toString()))
       return "0".concat(month.toString());
     }
   }
+  function score(supporter){
+    var supporterScore=0
+    var count=stateTopics.length+stateTags.length+3
+    if(supporter.name.toLowerCase().includes(name.toLowerCase())){
+      supporterScore++
+    }
+    if(supporter.rating>=rating){
+      supporterScore++
+    }
+    for(let i=0;i<stateTags.length;i++){
+      if(supporter.tags.includes(stateTags[i])){
+        console.log("added tag to count")
+        supporterScore++
+      }
+    }
+    for(let i=0;i<stateTopics.length;i++){
+      if(supporter.topics.includes(stateTopics[i])){
+        supporterScore++
+      }
+    }
+    if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
+      supporterScore++
+    }
+    return supporterScore/count
+  }
+  //{mapArray.map(supporterObj => getSupporterCard(supporterObj,scores[supporterObj.id]))}
+  var max=1
+  var scores = {}
+  supporters.map(supporter => scores[supporter.id]=score(supporter))
+  console.log(scores)
+  var yourArr=[]
+  for(let i=0;i<supporters.length;i++){
+    yourArr.push(supporters[i].id)
+  }
+  function compare(a,b) {
+    if (scores[a] < scores[b])
+      return 1;
+    if (scores[a] > scores[b])
+      return -1;
+    return 0;
+  }
+  yourArr.sort(compare)
+  console.log("sorted array")
+  console.log(yourArr)
 
   function checkTimeInRange(start,end, timeBlockArray){
     for(let i=0;i<timeBlockArray.length;i++){
@@ -157,9 +128,20 @@ const ResponsiveDrawer = (props) => {
     }
     return false
   }
+  var mapArray=[]
+  function returnSupporters(array){
+    for(let i=0;i<array.length;i++){
+      for(let j=0;j<supporters.length;j++){
+        if(supporters[j].id===array[i]){
+          mapArray.push(supporters[j]);
+        }
+      }
+    }
+    return mapArray
+  }
+  console.log("sorted json")
+  console.log(returnSupporters(yourArr))
 
-
-  
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -181,7 +163,6 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" variant="h5">Filters</Typography>
-        <br/>
         <TextField
           variant="outlined"
           margin="normal"
@@ -270,11 +251,11 @@ const ResponsiveDrawer = (props) => {
       </Drawer>
       <main className={classes.content}>
         
-        {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {supporters.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {supporters.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {newList.map(supporterObj => getSupporterCard(supporterObj))}
+        {newList.map(supporterObj => getSupporterCard(supporterObj,[]))}
       </main>
     </div>
   );

@@ -6,11 +6,23 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { Auth, Amplify } from "aws-amplify";
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Open Sans Light",
-    fontStyle: "normal",
+    fontFamily: [
+      'Open Sans Light',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
     button: {
       textTransform: 'none'
     }
@@ -26,6 +38,15 @@ const theme = createMuiTheme({
       main: "#71b2c9"
     }
   },
+});
+
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+    region: 'us-east-2',
+    userPoolId: 'us-east-2_TOeWJwIy0',
+    userPoolWebClientId: '7phnpqt6kfvfr9apoelke4hhm1'
+  }
 });
 
 ReactDOM.render(
