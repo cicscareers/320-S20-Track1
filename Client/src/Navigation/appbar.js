@@ -192,7 +192,7 @@ export default function MenuAppBar(props) {
       }
     
       
-      RenderRoles.push((<Button classname={classes.button}
+      RenderRoles.push((<Button key={i} className={classes.button}
       id={PossibleRoles[i]}
       
        

@@ -50,8 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const PreviousAppointmentCard = (props) => {
-    console.log(props.role);
-    console.log(props.student);
+
     const [cancelAppointmentModalOpen, setCancelAppointmentModalOpen] = React.useState(false);
     const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false);
 

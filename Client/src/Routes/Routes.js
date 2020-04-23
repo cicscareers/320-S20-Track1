@@ -10,7 +10,6 @@ import Account from "../Pages/account.js";
 import AdminSettings from "../Pages/adminSettings.js"
 import SupporterSettings from "../Pages/SupporterSettings.js"
 import Matching from "../Pages/FindSupporter/Matching.js"
-
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
@@ -34,7 +33,7 @@ export default function Routes() {
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />
-          <SupporterRoute path="/supporter-settings" exact component={SupporterSettings} />
+          <Route path="/supporter-settings" exact component={SupporterSettings} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <StudentRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />

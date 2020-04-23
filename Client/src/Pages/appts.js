@@ -1,10 +1,10 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme, TextField, Grid} from '@material-ui/core';
+import { makeStyles, TextField, Grid} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
 import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
@@ -63,16 +63,10 @@ const ResponsiveDrawer = (props) => {
   //get users role
 
   const today = new Date();
-  const { container } = props;
-  const [selectedDate, handleDateChange] = React.useState(new Date());
-  const [stateTopics, setStateTopics]=React.useState([]);
-  const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
-  const [rating,setRating]=React.useState(0);
   const [search,setSearch]=React.useState("");
   const [appointments, setAppointments]=React.useState([]);
   const [isLoaded, setLoaded]=React.useState(false);
@@ -237,8 +231,8 @@ const ResponsiveDrawer = (props) => {
         <br/>
         {filteredAppointmentList.map((appointment) => (
                 today < new Date(appointment.time_scheduled) &&
-                  <Grid lg = {12}>
-                    <AppointmentCard 
+                  <Grid item lg = {12}>
+                    <AppointmentCard
                       upcoming = {true}
                       role = {role.toLowerCase()}
                       subject = {appointment.type}
@@ -264,7 +258,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         {filteredAppointmentList.map((appointment) => (
                 today > new Date(appointment.time_scheduled) &&
-                <Grid lg = {12}>
+                <Grid item lg = {12}>
                   <AppointmentCard 
                     upcoming = {true}
                     role = {role.toLowerCase()}

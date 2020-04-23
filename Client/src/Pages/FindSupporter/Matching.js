@@ -8,16 +8,14 @@ import tagsList from "./tags.js"
 import convertTime from "./convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
 import useStyles from "./MatchingStyles.js"
-import SupList from "./match2consts.js"
+//import SupList from "./match2consts.js"
 
 const ResponsiveDrawer = (props) => {
-  const supporterList = SupList;
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
@@ -56,7 +54,7 @@ const ResponsiveDrawer = (props) => {
       supporter.day.substring(8,10)===selectedDate.getDate().toString() && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) );
 
   const getSupporterCard = (supporterObj, s) => {
-    console.log("score"+s)
+    //console.log("score"+s)
     return <SupporterCard {...supporterObj} score={s}/>;
   };
 

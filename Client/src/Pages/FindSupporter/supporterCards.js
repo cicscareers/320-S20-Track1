@@ -80,7 +80,7 @@ const SupporterCard = (props) => {
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
-  console.log(name + " " + score)
+  //console.log(name + " " + score)
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -91,7 +91,7 @@ const SupporterCard = (props) => {
     setTime(item);
   }
   const handleClick = (e) => {
-    console.info(e.target.getAttribute('color'));
+    //console.info(e.target.getAttribute('color'));
   };
   const handleChange = (event) => {
     setTime(event.target.value);
@@ -114,11 +114,11 @@ const SupporterCard = (props) => {
   function convertToMin(t){
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
   }
-  console.log(day+" "+timeToString(time)+":00")
-  console.log(apptTopic)
-  console.log("location" + location)
-  console.log(IntID)
-  console.log("supporter id" + supporter_id)
+  //console.log(day+" "+timeToString(time)+":00")
+  //console.log(apptTopic)
+  //console.log("location" + location)
+  //console.log(IntID)
+  //console.log("supporter id" + supporter_id)
   function handleCreateAppointment(){
   setOpen(false)
   setOpenCreated(true)
