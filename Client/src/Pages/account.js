@@ -237,15 +237,15 @@ export default function StudentSettings() {
   const [major, setMajor] = useState("");
   const [minor, setMinor] = useState("");
   const [gradYear, setGradYear] = useState("");
-  const url="";
+  const url = "";
 
   useEffect(() => {
     fetch(url)
-      .then(res => res.json())
-      .then(json => {
+      .then((res) => res.json())
+      .then((json) => {
         var info = json.body;
-      })
-
+        setFirstName(info.first_name);
+      });
   }, []);
 
   return (
