@@ -16,7 +16,7 @@ def get_supporters_before_match(event, context):
 
     date_format = "%Y-%m-%d %H:%M:%S"
 
-    blocks_sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization_type, T.tags, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id)\
+    blocks_sql = "SELECT S.supporter_id, U.first_name, U.last_name, U.picture, S.rating, S.employer, S.title, AB.start_date, AB.end_date, ST.specialization_type, T.tags, SPS.job_search, SPS.grad_student, (select major from major where major_id = SMP.major_id), AB.max_num_of_appts\
     FROM users U, supporters S, appointment_block AB, specializations_for_block SFB,\
     specialization_type ST, supporter_specializations SS, tags T, supporter_preferences_for_students SPS, supporter_major_preferences SMP\
     WHERE U.id = S.user_id\
@@ -50,6 +50,12 @@ def get_supporters_before_match(event, context):
         supporter_availibility = {}
     
         for entry in blocks_query_data['records']:
+
+            if len(entry) != 15:
+                return {
+                    "statusCode": 422
+                }
+
             scheduled_in = 0
             entry_start_date = datetime.strptime(entry[7]['stringValue'], date_format)
             entry_end_date = datetime.strptime(entry[8]['stringValue'], date_format)
@@ -60,13 +66,8 @@ def get_supporters_before_match(event, context):
                 if appt[0]['longValue'] == entry[0]['longValue'] and entry_start_date < appt_start_date < appt_end_date < entry_end_date:
                     scheduled_in = scheduled_in + 1
             
-            if scheduled_in >= 1:
+            if scheduled_in >= entry[14]['longValue']:
                 continue
-
-            if len(entry) != 14:
-                return {
-                    "statusCode": 422
-                }
             
             supporter_id = entry[0]['longValue']
             day = entry[7]['stringValue'][:10]
