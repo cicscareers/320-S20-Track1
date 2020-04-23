@@ -11,6 +11,8 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 const role = cookies.get("role");
+const id = cookies.get('id');
+//const id = 1;
 
 const drawerWidth = "25%";
 
@@ -78,12 +80,25 @@ const ResponsiveDrawer = (props) => {
 
   const blockTime=30;
   if(role == 'Student'){
-    var filteredAppointmentList = (appointments.filter(
-      appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
+    
+    if(!Array.isArray(appointments)){
+      var filteredAppointmentList = [];
+    }
+    else{
+      var filteredAppointmentList = (appointments.filter(
+        appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
+    }
   }
   if(role !== 'Student'){
-    var filteredAppointmentList = (appointments.filter(
+    if(!Array.isArray(appointments)){
+      var filteredAppointmentList = [];
+    }
+    else{
+      console.log(appointments);
+      var filteredAppointmentList = (appointments.filter(
       appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
+    }
+    
     
     
   }
@@ -123,22 +138,30 @@ const ResponsiveDrawer = (props) => {
   useEffect(() => {
     
     if(role == 'Student'){
-      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id='+id)
       .then(res => res.json())
       .then(json => {
         
         setLoaded(true);
         setAppointments(json.body);
       })
+      .catch(err => {
+        setAppointments([]);
+        setLoaded(true);
+      })
     }
     else if(role == 'supporter'){
-      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/supporters/1')
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/supporters/'+id)
       
         .then(res => res.json())
         .then(json => {
           console.log(role)
           setLoaded(true);
           setAppointments(json.body);
+        })
+        .catch(err => {
+          setAppointments([]);
+          setLoaded(true);
         })
       }
     else{
@@ -153,6 +176,10 @@ const ResponsiveDrawer = (props) => {
           setLoaded(true);
           setAppointments(json.body);
           
+        })
+        .catch(err => {
+          setAppointments([]);
+          setLoaded(true);
         })
       
     }
