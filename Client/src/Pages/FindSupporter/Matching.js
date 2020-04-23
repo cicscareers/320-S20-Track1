@@ -74,6 +74,7 @@ const ResponsiveDrawer = (props) => {
       return "0".concat(month.toString());
     }
   }
+  /*
   function score(supporter){
     var supporterScore=0
     var count=stateTopics.length+stateTags.length+3
@@ -118,7 +119,7 @@ const ResponsiveDrawer = (props) => {
   yourArr.sort(compare)
   console.log("sorted array")
   console.log(yourArr)
-
+  */
   function checkTimeInRange(start,end, timeBlockArray){
     for(let i=0;i<timeBlockArray.length;i++){
       if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime)) && start!==end){
@@ -127,7 +128,7 @@ const ResponsiveDrawer = (props) => {
     }
     return false
   }
-  var mapArray=[]
+  /*var mapArray=[]
   function returnSupporters(array){
     for(let i=0;i<array.length;i++){
       for(let j=0;j<supporters.length;j++){
@@ -140,7 +141,7 @@ const ResponsiveDrawer = (props) => {
   }
   console.log("sorted json")
   console.log(returnSupporters(yourArr))
-
+  */
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -216,7 +217,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-          What is your availability on {selectedDate.toDateString().substring(0,3)+"day,"+selectedDate.toDateString().substring(3)}?
+          What is your availability on {selectedDate.toDateString().substring(0,3)+selectedDate.toDateString().substring(3)}?
         </Typography>
         <Slider
           value={sliderTime}

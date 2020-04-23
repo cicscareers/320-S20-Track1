@@ -120,45 +120,44 @@ const SupporterCard = (props) => {
   console.log(IntID)
   console.log("supporter id" + supporter_id)
   function handleCreateAppointment(){
-
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          student_id: IntID,
-          supporter_id: supporter_id,
-          time_of_appt: day+" "+timeToString(time)+":00",
-          appt_type: apptTopic,
-          duration: 30,
-          method: "In Person",
-          location: "Somewhere",
-          comment: comment
-        })
+  setOpen(false)
+  setOpenCreated(true)
+  fetch(
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        student_id: IntID,
+        supporter_id: supporter_id,
+        time_of_appt: day+" "+timeToString(time)+":00",
+        appt_type: apptTopic,
+        duration: 30,
+        method: "In Person",
+        location: "Somewhere",
+        comment: comment
+      })
+    }
+  )
+    .then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response)
+        return response.json();
+      } else {
+        throw new Error("Server can't be reached!");
       }
-    )
-      .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          setOpen(false)
-          setOpenCreated(true)
-          console.log(response)
-          return response.json();
-        } else {
-          throw new Error("Server can't be reached!");
-        }
-      })
-      .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
-      })
-      .catch(error => {
-        alert("Appointment Not Created");
-        console.log(error);
-      });
+    })
+    .then(json => {
+      //setOpen(false);
+      //setOpenCreated(true);
+    })
+    .catch(error => {
+      //alert("Appointment Not Created");
+      console.log(error);
+    });
   }
   var startTimes = [];
   function generateTimeChip(st){
