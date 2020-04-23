@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
+import { Button, MenuItem, TextField, FormControlLabel, Link, Grid, Box, Typography, Container, Radio, RadioGroup, FormLabel, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import users from "../Data/users.json";
 import Cookies from "universal-cookie";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import { Auth } from "aws-amplify";
-
 
 
 
@@ -61,67 +62,60 @@ export default function SignIn() {
   var salt = bcrypt.genSaltSync(10);
 
   //Gets run when submit is pressed and handles authentication.
-  const handleSubmit = async event =>{
+  function handleSubmit(event) {
     event.preventDefault();
-    var username = email;
-      try{
-        const user = await Auth.signIn(email, password);
-        console.log(user);
-        if (user.signInUserSession.accessToken !== undefined) {
+
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          UserEmail: email,
+          Password: password
+        })
+      }
+    )
+      .then(response => {
+        console.log(response);
+        return response.json();
+      })
+      .then(json => {
+        console.log(json);
+        if (json.token !== undefined) {
+          alert("Login Successful!");
           console.log("hooray! we have json!");
-          // console.log(json);
+          console.log(json);
           const cookies = new Cookies();
-          var authToken = user.signInUserSession.idToken.jwtToken;
-          var base64Url = authToken.split('.')[1];
-          var json = JSON.parse(window.atob(base64Url));
-
-          console.log(json)
-          console.log("$$$$$$$$");
-
           cookies.remove("email");
           cookies.remove("firstName");
           cookies.remove("lastName");
           cookies.remove("role");
           cookies.remove("token");
-          cookies.remove("id");
-
           cookies.set("email", json.email, {
             path: "/"
           });
-          cookies.set("firstName", json.given_name, {
+          cookies.set("firstName", json.f_name, {
             path: "/"
           });
-          cookies.set("lastName", json.family_name, {
+          cookies.set("lastName", json.l_name, {
             path: "/"
           });
-          cookies.set("role", json.profile, { path: "/" });
-
-          cookies.set("id", json.preferred_username, { path: "/" });
-
-          cookies.set("token", user.signInUserSession.accessToken, { path: "/" });
+          cookies.set("role", json.role, { path: "/" });
+          cookies.set("token", json.token, { path: "/" });
           window.location.reload();
-        }
-      }catch(error){
+        }else {
+            throw new Error();
+          }
+      })
+      .catch(error => {
         alert("Invalid credentials");
         console.log(error);
-      }
-    }
-
-      // .then(response => {
-      //   console.log(response);
-      //   return response.json();
-      // })
-      // .then(json => {
-      //   console.log(json);
-      // else {
-      //       throw new Error();
-      //     }
-      // })
-      // .catch(error => {
-      //   alert("Invalid credentials");
-      //   console.log(error);
-      // });
-
+      });
+  }
 
 
   //checks if they put in an email and password
@@ -171,8 +165,26 @@ export default function SignIn() {
             onChange={e => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-
-
+          <Typography align="center">What type of user are you?</Typography>
+          <FormControl fullWidth className={classes.form}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={loginType}
+              onChange={handleChange}
+            >
+              <MenuItem value={"Student"}>
+                <Typography align="center" variant="h6">Student</Typography>
+              </MenuItem>
+              <MenuItem value={"Supporter"}>
+                <Typography align="center" variant="h6">Supporter</Typography>
+              </MenuItem>
+              <MenuItem value={"Admin"}>
+                <Typography align="center" variant="h6">Admin</Typography>
+              </MenuItem>
+            </Select>
+          </FormControl>
+          
           <Button
             margin="normal"
             fullWidth
@@ -204,3 +216,4 @@ export default function SignIn() {
     </Container>
   );
 }
+
