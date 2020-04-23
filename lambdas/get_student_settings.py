@@ -23,7 +23,7 @@ def get_student_settings_handler(event, context):
         response['phone'] = user_data[8]['stringValue']
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 26")
 
 
     students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id;"
@@ -37,7 +37,7 @@ def get_student_settings_handler(event, context):
         response['grad_student'] = student_data[4]['booleanValue']
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 40")
 
 
     links_sql = "SELECT link_id FROM user_link WHERE user_id = :student_id"
@@ -58,10 +58,10 @@ def get_student_settings_handler(event, context):
                 response['links'] = links
 
             except Exception as e:
-                error_messages.append(str(e))
+                error_messages.append(str(e) + " get_student_settings.py, line 61")
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 64")
 
 
     majors_sql = "SELECT major_id FROM student_majors WHERE student_id = :student_id;"
@@ -81,10 +81,10 @@ def get_student_settings_handler(event, context):
             response['major'] = majors
 
         except Exception as e:
-            error_messages.append(str(e))
+            error_messages.append(str(e) + " get_student_settings.py, line 84")
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 87")
 
 
     minors_sql = "SELECT minor_id FROM student_minors WHERE student_id = :student_id;"
@@ -104,10 +104,10 @@ def get_student_settings_handler(event, context):
             response['minor'] = minors 
 
         except Exception as e:
-            error_messages.append(str(e))
+            error_messages.append(str(e) + " get_student_settings.py, line 107")
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 110")
 
 
     notification_sql = "SELECT notification_type_id FROM notification_preferences WHERE user_id = :student_id;"
@@ -127,10 +127,10 @@ def get_student_settings_handler(event, context):
             response['notification_preferences'] = notification_prefs
 
         except Exception as e:
-            error_messages.append(str(e))
+            error_messages.append(str(e) + " get_student_settings.py, line 130")
 
     except Exception as e:
-        error_messages.append(str(e))
+        error_messages.append(str(e) + " get_student_settings.py, line 133")
 
 
 
