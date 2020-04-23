@@ -2,11 +2,6 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
 import Cookies from "universal-cookie";
-import Roles from'./role.json';
-import Chip from '@material-ui/core/Chip';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 // import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -181,7 +176,7 @@ export default function MenuAppBar(props) {
  }
  function renderRolesInModal(){
   let RenderRoles=[];
-  var RolesList=Roles[0];
+
   
   if(PossibleRoles.length==1){
     RenderRoles=(<h2>Sorry, You just have 1 role.</h2>);
