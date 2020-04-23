@@ -271,13 +271,13 @@ return RenderRoles;
     )}
     
  
-  <MenuItem onClick={handleModalOpen}>
+  {(PossibleRoles.length!=1)&&(<MenuItem onClick={handleModalOpen}>
   <Link >
       <Typography component="h6" variant="h6">
         Switch User
       </Typography>
       </Link>
-  </MenuItem>
+  </MenuItem>)}
   {/* <Dialog onClose={handleModalClose} aria-labelledby="customized-dialog-title" open={openModal}>
   </Dialog> */}
    {/* <Modal
