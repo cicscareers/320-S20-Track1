@@ -23,7 +23,7 @@ def get_student_settings_handler(event, context):
         response['phone'] = user_data[8]['stringValue']
 
     except Exception as e:
-        error_message.append(str(e))
+        error_messages.append(str(e))
 
 
     students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id;"
