@@ -3,6 +3,7 @@ import boto3
 client = boto3.client('cognito-idp')
 from package.query_db import query
 
+#Edit by Junshan Zeng
 
 def create_student_user(event, context):
     # print(event["request"]["userAttributes"])
