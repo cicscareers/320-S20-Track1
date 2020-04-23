@@ -110,7 +110,7 @@ def get_student_settings_handler(event, context):
         error_messages.append(str(e))
 
 
-    notification_sql = "SELECT notification_type_id FROM notification_preferenced WHERE user_id = :student_id;"
+    notification_sql = "SELECT notification_type_id FROM notification_preferences WHERE user_id = :student_id;"
     try:
         notification_type_ids = query(notification_sql, student_id_param)['records'][0]
         notification_ids = notification_type_ids[0]['longValue']
