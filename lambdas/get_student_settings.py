@@ -3,7 +3,7 @@ from package.query_db import query
 def get_student_settings_handler(event, context):
 
     student_id = int(event['student_id'])
-    student_id_param = [{'name' : 'student_id', 'value' : student_id}]
+    student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}]
 
     response = {}
     error_messages = []
