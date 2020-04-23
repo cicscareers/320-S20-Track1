@@ -12,6 +12,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import Cookies from "universal-cookie";
 import convertTime from "./convertTime.js"
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import timeToString from './timeToString.js'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,16 +68,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SupporterCard = (props) => {
-  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, id} = props;
+  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, supporter_id, score} = props;
   const classes = useStyles();
   const cookies = new Cookies();
+  const studentID = cookies.get("id")
+  const IntID=parseInt(studentID)
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
   const [time, setTime] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
-
+  console.log(name + " " + score)
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -93,8 +96,7 @@ const SupporterCard = (props) => {
     setTime(event.target.value);
   };
   const handleConfirm = (event) => {
-    setOpen(false);
-    setOpenCreated(true);
+    handleCreateAppointment()
   };
   const handleButton = (event) => {
     setOpen(true);
@@ -110,6 +112,50 @@ const SupporterCard = (props) => {
   };
   function convertToMin(t){
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
+  }
+  console.log(day+" "+timeToString(time)+":00")
+  console.log(apptTopic)
+  console.log("location" + location)
+  console.log(IntID)
+  console.log("supporter id" + supporter_id)
+  function handleCreateAppointment(){
+
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          student_id: IntID,
+          supporter_id: supporter_id,
+          time_of_appt: day+" "+timeToString(time)+":00",
+          appt_type: apptTopic,
+          duration: 30,
+          method: "In Person",
+          location: "Somewhere",
+          comment: "No Comment"
+        })
+      }
+    )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        alert("Appointment Not Created");
+        console.log(error);
+      });
   }
   var startTimes = [];
   function generateTimeChip(st){
@@ -128,6 +174,17 @@ const SupporterCard = (props) => {
     let et=convertToMin(e)
     for(let i=st;i<et;i+=30){
        startTimes.push(i);
+    }
+  }
+  function mapScore(s){
+    if(s>=.75){
+      return "Great Match"
+    }else if(s>=0.5){
+      return "Good Match"
+    }else if(s>=0.25){
+      return "OK Match"
+    }else{
+      return "Poor Match"
     }
   }
   function getSupporterCard(){

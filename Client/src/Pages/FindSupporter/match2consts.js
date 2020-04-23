@@ -95,7 +95,7 @@ export default [
 		timeBlocks: [{start: "08:00", end: "10:00"},{start: "13:00", end:"14:00"}],
 		day: "04/18/2020",
 		linkedin: "",
-		id:6
+		id:7
 	},
 	{
 		name:"Sam the Minuteman",
@@ -109,6 +109,6 @@ export default [
 		timeBlocks: [{start: "8:00", end: "10:00"},{start: "11:00", end:"13:00"}],
 		day: "04/18/2020",
 		linkedin: "",
-		id:7
+		id:9
 	},
 ]
