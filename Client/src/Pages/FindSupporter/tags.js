@@ -1,3 +1,2 @@
-export default ["Combinatorics","AWS","iOS","Networking","Microsoft","React","Machine Learning","Algorithms","Discrete Math",
-"Football","Basketball","Hockey","Industry","C++","HTML","CSS", "x86 Assembly","320","Project Managing", "UI Design","UX Design","Natrual Language Processing", 
-"Typography","OSX","Vim", "Git","Angular","Search Engines", "The Process", "Career Development","Masters","Bay State", "PhD", "Pitchfork vs Torch"]
+export default ["React","ML","iOS","C++","html","css","x86 assembly","AWS","microsoft","algorithms","Apple","Mac","Newton","Lisa","iMac","Swift",
+"Amazon","Money","Stacks","Divorce","Microsoft","Algorithms","Money","250","combinatorics","industry","networking","Networking","career development"]

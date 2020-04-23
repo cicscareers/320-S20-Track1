@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, TextField, Grid} from '@material-ui/core';
+import { makeStyles, TextField, Grid, CircularProgress} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
 import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
@@ -186,7 +186,15 @@ const ResponsiveDrawer = (props) => {
   }
 
   if(!isLoaded){
-    return <Typography>Loading...</Typography>
+    return (
+      <div align="center">
+        <br></br>
+        <Typography variant="h4">Loading...</Typography>
+        <br></br>
+        <CircularProgress />
+      </div>
+    
+    )
   }
   
   else {

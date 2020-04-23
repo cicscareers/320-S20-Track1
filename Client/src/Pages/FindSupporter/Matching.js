@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline} from '@material-ui/core';
+import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import Menu from "../../Navigation/appbar.js";
 import SupporterCard from "./supporterCards.js"
@@ -140,6 +140,18 @@ const ResponsiveDrawer = (props) => {
   console.log("sorted json")
   console.log(returnSupporters(yourArr))
   */
+ if(!isLoaded){
+  return (
+    <div align="center">
+      <br></br>
+      <Typography variant="h4">Loading...</Typography>
+      <br></br>
+      <CircularProgress />
+    </div>
+  
+  )
+}
+else{
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -256,7 +268,7 @@ const ResponsiveDrawer = (props) => {
         {newList.map(supporterObj => getSupporterCard(supporterObj,[]))}
       </main>
     </div>
-  );
+  );}
 }
 
 export default ResponsiveDrawer;

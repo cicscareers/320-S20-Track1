@@ -137,7 +137,7 @@ const SupporterCard = (props) => {
         appt_type: apptTopic,
         duration: 30,
         method: "In Person",
-        location: "Somewhere",
+        location: "Amazon HQ, Seattle WA",
         comment: comment
       })
     }
