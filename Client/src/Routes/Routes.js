@@ -7,9 +7,9 @@ import tos from "../Pages/TOS.js";
 import appts from "../Pages/appts.js";
 import NotFound from "../Pages/NotFound.js";
 import Account from "../Pages/account.js";
-import AdminSettings from "../Pages/adminSettings.js";
-import SupporterSettings from "../Pages/SupporterSettings.js";
-import Matching from "../Pages/Matching.js";
+import AdminSettings from "../Pages/adminSettings.js"
+import SupporterSettings from "../Pages/SupporterSettings.js"
+import Matching from "../Pages/FindSupporter/Matching.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";

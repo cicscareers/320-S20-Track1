@@ -11,8 +11,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from "@material-ui/core/Button";
-import Topics from "../components/topics.js"
-import Tags from "../components/tags.js"
+import Topics from "./FindSupporter/topics.js"
+import Tags from "./FindSupporter/tags.js"
 
 
 
