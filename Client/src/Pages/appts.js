@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
@@ -6,7 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, TextField, Grid} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
-import appointments from "../Data/appointments2.js"
+import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const ResponsiveDrawer = (props) => {
   //Gets info from the cookies
   //get users role
-  console.log(appointments)
+
   const today = new Date();
   const { container } = props;
   const [selectedDate, handleDateChange] = React.useState(new Date());
@@ -72,13 +72,20 @@ const ResponsiveDrawer = (props) => {
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
   const [search,setSearch]=React.useState("");
+  const [appointments, setAppointments]=React.useState([]);
+  const [isLoaded, setLoaded]=React.useState(false);
 
 
   const blockTime=30;
   if(role == 'Student'){
     var filteredAppointmentList = (appointments.filter(
-      appt => String(appt.supporter.toLowerCase()).includes(search.toLowerCase())))
+      appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
   }
+  if(role !== 'Student'){
+    var filteredAppointmentList = (appointments.filter(
+      appt => String((appt.studentFN + " " + appt.studentLN).toLowerCase()).includes(search.toLowerCase())))
+  }
+
   const updateList = (val) => {
     setName(val);
   };
@@ -112,8 +119,49 @@ const ResponsiveDrawer = (props) => {
     return false
   }
 
+  useEffect(() => {
+    
+    if(role == 'Student'){
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
+      .then(res => res.json())
+      .then(json => {
+        
+        setLoaded(true);
+        setAppointments(json.body);
+      })
+    }
+    else if(role == 'Supporter'){
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
+        .then(res => res.json())
+        .then(json => {
+          
+          setLoaded(true);
+          setAppointments(json.body);
+        })
+      }
+    else{
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id=1')
+        .then(res => res.json())
+        .then(json => {
+          
+          setLoaded(true);
+          setAppointments(json.body);
+        })
+      
+    }
+  },[]);
 
+  function convertDate(time, duration){
+    var hours = parseInt(time.substring(11,13));
+    var minutes = parseInt(time.substring(14,16));
+    return convertTime(hours + minutes + duration);
+  }
+
+  if(!isLoaded){
+    return <Typography>Loading...</Typography>
+  }
   
+  else {
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -154,21 +202,22 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today < new Date(appointment.date) &&
+                today < new Date(appointment.time_scheduled) &&
                   <Grid lg = {12}>
                     <AppointmentCard 
                       upcoming = {true}
                       role = {role}
-                      subject = {appointment.subject}
+                      subject = {appointment.type}
                       location = {appointment.location}
-                      medium = {appointment.medium}
-                      start = {appointment.start}
-                      end = {appointment.end}
-                      date = {appointment.date}
-                      supporter = {appointment.supporter}
-                      student = {appointment.student}
-                      supporterProfilePic = {appointment.supporterProfilePic}
-                      studentProfilePic = {appointment.studentProfilePic}
+                      medium = {appointment.method}
+                      start = {convertDate(appointment.time_scheduled, 0)}
+                      end = {convertDate(appointment.time_scheduled, appointment.duration)}
+                      date = {appointment.time_scheduled.substring(0,10)}
+                      supporter = {appointment.supporterFN + " " + appointment.supporterLN}
+                      student = {appointment.studentFN + " " + appointment.studentLN}
+                      supporterProfilePic = {appointment.supporterPic}
+                      studentProfilePic = {""}
+                      comments = {appointment.comment}
                     />
                   </Grid>
                 
@@ -182,24 +231,26 @@ const ResponsiveDrawer = (props) => {
                 today > new Date(appointment.date) &&
                 <Grid lg = {12}>
                   <AppointmentCard 
-                    upcoming = {false}
+                    upcoming = {true}
                     role = {role}
-                    subject = {appointment.subject}
+                    subject = {appointment.type}
                     location = {appointment.location}
-                    medium = {appointment.medium}
-                    start = {appointment.start}
-                    end = {appointment.end}
-                    date = {appointment.date}
-                    supporter = {appointment.supporter}
-                    student = {appointment.student}
-                    supporterProfilePic = {appointment.supporterProfilePic}
-                    studentProfilePic = {appointment.studentProfilePic}
+                    medium = {appointment.method}
+                    start = {convertDate(appointment.time_scheduled, 0)}
+                    end = {convertDate(appointment.time_scheduled, appointment.duration)}
+                    date = {appointment.time_scheduled.substring(0,10)}
+                    supporter = {appointment.supporterFN + " " + appointment.supporterLN}
+                    student = {appointment.studentFN + " " + appointment.studentLN}
+                    supporterProfilePic = {appointment.supporterPic}
+                    studentProfilePic = {""}
+                    comments = {appointment.comment}
                   />
                 </Grid>
               ))}
       </main>
     </div>
   );
+  }
 }
 
 export default ResponsiveDrawer;

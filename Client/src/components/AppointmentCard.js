@@ -87,6 +87,7 @@ const PreviousAppointmentCard = (props) => {
     };
     //Expansion panel for supporters view
     function supporterViewAppointmentCard(){
+            
             return (
           <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
           <ExpansionPanelSummary
@@ -102,7 +103,7 @@ const PreviousAppointmentCard = (props) => {
                   <Typography>{props.location}</Typography>
                   <Typography>{props.medium}</Typography>
                   <br/>
-                  <Typography className={classes.tagChip}>No Comments</Typography>
+                  <Typography className={classes.tagChip}>{props.comments}</Typography>
                   
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -165,7 +166,7 @@ const PreviousAppointmentCard = (props) => {
                   <Typography>{props.location}</Typography>
                   <Typography>{props.medium}</Typography>
                   <br/>
-                  <Typography className={classes.tagChip}>No Comments</Typography>
+                  <Typography className={classes.tagChip}>{props.comments}</Typography>
                   
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -252,7 +253,7 @@ const PreviousAppointmentCard = (props) => {
                   <Typography>{props.location}</Typography>
                   <Typography>{props.medium}</Typography>
                   <br/>
-                  <Typography className={classes.tagChip}>No Comments</Typography>
+                  <Typography className={classes.tagChip}>{props.comments}</Typography>
                   <Typography className={classes.secondaryHeading}>{props.date + ' from ' + props.start + ' to ' + props.end}</Typography>
                   <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
               </Grid>
