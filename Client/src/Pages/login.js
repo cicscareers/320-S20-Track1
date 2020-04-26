@@ -102,7 +102,7 @@ export default function SignIn() {
           window.location.reload();
         }
       }catch(error){
-        alert("Invalid credentials");
+        //alert("Invalid credentials");
         console.log(error);
       }
     }

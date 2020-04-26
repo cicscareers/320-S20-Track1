@@ -144,14 +144,14 @@ export default function MenuAppBar(props) {
  function renderNavBarButtonsBasedOnRole(){
    let RenderButtons=[];
    if(role.toLowerCase()==PossibleRoles[0]){
-     return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/match" className={classes.button}>Find A Supporter</Button>
-     <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+     return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/match" className={classes.button}>Create Appointment</Button>
+     <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
 
    }
   
     return(<div style={{width:'300px',float:'right'}}>>
-    <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+    <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
     
   
@@ -217,8 +217,8 @@ return RenderRoles;
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-         {role.toLowerCase()==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Find A Supporter</Button>}
-          <Button variant="text" href="/appointments" className={classes.button}>Appointments</Button>
+         {role.toLowerCase()==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Create Appointment</Button>}
+          <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 

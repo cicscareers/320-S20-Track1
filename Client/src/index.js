@@ -28,14 +28,14 @@ const theme = createMuiTheme({
     }
   },
   palette: {
+    //type: 'dark',
     primary: {
-      main: "#881c1c"
+      main: "#881c1c",
+      dark: "#ece9d4",
     },
     secondary: {
-      main: "#FFFFFF"
-    },
-    tertiary: {
-      main: "#71b2c9"
+      main: "#FFFFFF",
+      dark: "#000000",
     }
   },
 });

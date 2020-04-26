@@ -179,11 +179,11 @@ const SupporterCard = (props) => {
     }
   }
   function mapScore(s){
-    if(s>=.75){
+    if(s>.75){
       return "Great Match"
-    }else if(s>=0.5){
+    }else if(s>0.5){
       return "Good Match"
-    }else if(s>=0.25){
+    }else if(s>0.25){
       return "OK Match"
     }else{
       return "Poor Match"
@@ -203,7 +203,7 @@ const SupporterCard = (props) => {
               <Typography className={classes.heading}>{name}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={classes.heading}>Great Match</Typography>
+              <Typography className={classes.heading}>{mapScore(score)}</Typography>
             </Grid>
             <Grid item xs={5}>
               {!expanded && tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}

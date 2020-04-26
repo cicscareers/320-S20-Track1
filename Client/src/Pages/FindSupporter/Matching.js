@@ -22,19 +22,20 @@ const ResponsiveDrawer = (props) => {
   const [supporters, setSupporters] = React.useState([])
   useEffect(() => {
     fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=2020-01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00')
-            .then(res => res.json())
-            .then(json => {
-              if(json.body[0]!==undefined){
-                console.log(json)
-                setLoaded(true);
-                setSupporters(json.body)
-              }else{
-                throw new Error();
-              }
-            })
-            .catch(error => {
-              console.log("No Supporters Found")
-            });
+      .then(res => res.json())
+      .then(json => {
+        if(json.body[0]!==undefined){
+          console.log(json)
+          console.log("API was just called")
+          setLoaded(true);
+          setSupporters(json.body)
+        }else{
+          throw new Error();
+        }
+      })
+      .catch(error => {
+        console.log("No Supporters Found")
+      });
     }, [])
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -44,14 +45,13 @@ const ResponsiveDrawer = (props) => {
   };
 
   //for hard filtering
-  var newList = (supporters.filter(
-    supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
-    supporter => supporter.rating>=rating).filter(
-    supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
-    supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
-    supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter(
-      supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
-      supporter.day.substring(8,10)===selectedDate.getDate().toString() && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) );
+ var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
+ supporter.day.substring(8,10)===selectedDate.getDate().toString() && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
+    //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
+    //supporter => supporter.rating>=rating).filter(
+    //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
+    //supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
+    //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter
 
   const getSupporterCard = (supporterObj, s) => {
     //console.log("score"+s)
@@ -72,14 +72,25 @@ const ResponsiveDrawer = (props) => {
       return "0".concat(month.toString());
     }
   }
-  /*
-  function score(supporter){
-    var supporterScore=0
-    var count=stateTopics.length+stateTags.length+3
-    if(supporter.name.toLowerCase().includes(name.toLowerCase())){
-      supporterScore++
+  function checkTimeInRange(start,end, timeBlockArray){
+    for(let i=0;i<timeBlockArray.length;i++){
+      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime)) && start!==end){
+        return true
+      }
     }
-    if(supporter.rating>=rating){
+    return false
+  }
+  
+  ///////////////////////////
+  //This handles the sorting of the supporters
+  ///////////////////////////
+
+  function score(supporter){
+    
+    var supporterScore=0
+    var count=stateTopics.length+stateTags.length+2
+
+    if(supporter.name.toLowerCase().includes(name.toLowerCase())){
       supporterScore++
     }
     for(let i=0;i<stateTags.length;i++){
@@ -96,16 +107,23 @@ const ResponsiveDrawer = (props) => {
     if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
       supporterScore++
     }
-    return supporterScore/count
+
+    if(rating<=supporter.rating){
+      supporterScore++
+      count++
+    }else{
+      count+=(rating-(5-supporter.rating))
+    }
+
+    return (supporterScore/count)
   }
-  //{mapArray.map(supporterObj => getSupporterCard(supporterObj,scores[supporterObj.id]))}
-  var max=1
+
   var scores = {}
-  supporters.map(supporter => scores[supporter.id]=score(supporter))
+  newList.map(supporter => scores[supporter.supporter_id]=score(supporter))
   console.log(scores)
   var yourArr=[]
-  for(let i=0;i<supporters.length;i++){
-    yourArr.push(supporters[i].id)
+  for(let i=0;i<newList.length;i++){
+    yourArr.push(newList[i].supporter_id)
   }
   function compare(a,b) {
     if (scores[a] < scores[b])
@@ -117,29 +135,24 @@ const ResponsiveDrawer = (props) => {
   yourArr.sort(compare)
   console.log("sorted array")
   console.log(yourArr)
-  */
-  function checkTimeInRange(start,end, timeBlockArray){
-    for(let i=0;i<timeBlockArray.length;i++){
-      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime)) && start!==end){
-        return true
-      }
-    }
-    return false
-  }
-  /*var mapArray=[]
+  
+  var sortedList=[]
   function returnSupporters(array){
     for(let i=0;i<array.length;i++){
-      for(let j=0;j<supporters.length;j++){
-        if(supporters[j].id===array[i]){
-          mapArray.push(supporters[j]);
+      for(let j=0;j<newList.length;j++){
+        if(newList[j].supporter_id===array[i]){
+          sortedList.push(newList[j]);
         }
       }
     }
-    return mapArray
+    return sortedList
   }
-  console.log("sorted json")
-  console.log(returnSupporters(yourArr))
-  */
+  returnSupporters(yourArr)
+
+  /////////////////////////////////////////////////
+  //end
+  ////////////////////////////////////////////////
+  
  if(!isLoaded){
   return (
     <div align="center">
@@ -261,11 +274,11 @@ else{
       </Drawer>
       <main className={classes.content}>
         
-        {supporters.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-        {supporters.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+        {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+        {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
-        {newList.map(supporterObj => getSupporterCard(supporterObj,[]))}
+        {sortedList.map(supporterObj => getSupporterCard(supporterObj,scores[supporterObj.supporter_id]))}
       </main>
     </div>
   );}
