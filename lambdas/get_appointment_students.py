@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: student_id
 #Output: JSON object of current appointments that a student has in the format: 
-# "studentFN","studentLN","supporterFN","supporterLN","supporterPic","time_of_appt","type","duration","method","location","comment"
+# "studentFN","studentLN","supporterFN","supporterLN","supporterPic","time_of_appt","type","duration","method","location","comment","feedback","rating"
 
 def get_appointment_students(event, context):
     
@@ -22,7 +22,7 @@ def get_appointment_students(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT U1.first_name AS studentFN, U1.last_name AS studentLN, U2.first_name AS supporterFN, U2.last_name AS supporterLN, U2.picture AS supporterPic, SA.time_of_appt, SA.type,SA.duration, SA.method, SA.location, SR.comment \
+    sql = 'SELECT U1.first_name AS studentFN, U1.last_name AS studentLN, U2.first_name AS supporterFN, U2.last_name AS supporterLN, U2.picture AS supporterPic, SA.time_of_appt, SA.type,SA.duration, SA.method, SA.location, SR.comment, SR.feedback, SR.rating \
             FROM students S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
              WHERE S.student_id = SR.student_id AND SR.appointment_id = SA.appointment_id AND S.student_id = U1.id AND SA.supporter_id = U2.id AND S.student_id=:given_id' 
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
@@ -51,6 +51,9 @@ def get_appointment_students(event, context):
             block["method"] = entry[8].get("stringValue")
             block["location"] = entry[9].get("stringValue")
             block["comment"] = entry[10].get("stringValue")
+            block["feedback"] = entry[11].get("stringValue")
+            block["rating"] = entry[12].get("longValue")
+
             student_appointments.append(block)
 
         #Returns the query contents in JSON format
@@ -58,4 +61,3 @@ def get_appointment_students(event, context):
             'body': student_appointments,
             'statusCode': 200
         }
-    
