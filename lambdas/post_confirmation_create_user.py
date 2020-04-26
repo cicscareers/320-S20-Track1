@@ -37,7 +37,10 @@ def create_student_user(event, context):
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1"
     sql_parameters = []
     new_id_query = query(sql,sql_parameters)
-    new_id = new_id_query['records'][0][0]['longValue'] + 1
+    if((new_id_query['re']) == []):
+        new_id = 1
+    else:
+        new_id = new_id_query['records'][0][0]['longValue'] + 1
     
     # updating the preffered username with new_id
     update_response=client.admin_update_user_attributes(
