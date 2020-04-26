@@ -4,11 +4,11 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: supporter_id
 #Output: JSON object of current supporter appointments in the format: 
-# "supporterFN","supporterLN","studentFN","studentLN","supporterPic","time_of_appt","type","duration","method","location","comment"
+# "supporterFN","supporterLN","studentFN","studentLN","supporterPic","time_of_appt","type","duration","method","location","comment","feedback","rating"
 
 def get_appointment_supporter(event, context):
 
-    given_id = event['supporter_id']
+    given_id = int(event['supporter_id'])
 
     #Check to see if the ssupporter exists
     sql = 'SELECT supporter_id FROM supporters WHERE supporter_id=:given_id'
@@ -22,7 +22,7 @@ def get_appointment_supporter(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT U1.first_name AS supporterFN, U1.last_name AS supporterLN, U2.first_name AS studentFN, U2.last_name AS studentLN, U1.picture, SA.time_of_appt, SA.type, SA.duration, SA.method, SA.location, SR.comment \
+    sql = 'SELECT U1.first_name AS supporterFN, U1.last_name AS supporterLN, U2.first_name AS studentFN, U2.last_name AS studentLN, U1.picture, SA.time_of_appt, SA.type, SA.duration, SA.method, SA.location, SR.comment, SR.feedback, SR.rating \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA \
             WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND S.supporter_id=:given_id;'
     
@@ -52,6 +52,8 @@ def get_appointment_supporter(event, context):
             block["method"] = entry[8].get("stringValue")
             block["location"] = entry[9].get("stringValue")
             block["comment"] = entry[10].get("stringValue")
+            block["feedback"] = entry[11].get("stringValue")
+            block["rating"] = entry[12].get("longValue")
             supporter_appointments.append(block)
 
         #Returns the query contents in JSON format
