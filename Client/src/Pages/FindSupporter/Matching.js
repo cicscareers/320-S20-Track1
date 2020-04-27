@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress} from '@material-ui/core';
+import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid, Icon} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import Menu from "../../Navigation/appbar.js";
 import SupporterCard from "./supporterCards.js"
@@ -8,6 +8,8 @@ import tagsList from "./tags.js"
 import convertTime from "./convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
 import useStyles from "./MatchingStyles.js"
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 //import SupList from "./match2consts.js"
 
 const ResponsiveDrawer = (props) => {
@@ -54,9 +56,28 @@ const ResponsiveDrawer = (props) => {
     //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter
 
   const getSupporterCard = (supporterObj, s) => {
-    //console.log("score"+s)
     return <SupporterCard {...supporterObj} score={s}/>;
   };
+
+  function nextDay(){
+    console.log(selectedDate)
+    var newDate = new Date()
+    newDate.setMonth(selectedDate.getMonth())
+    newDate.setDate(selectedDate.getDate() + 1);
+    console.log(newDate)
+    
+    console.log(newDate)
+    handleDateChange(newDate)
+  }
+
+  function previousDay(){
+    console.log(selectedDate)
+    var newDate = new Date()
+    newDate.setMonth(selectedDate.getMonth())
+    newDate.setDate(selectedDate.getDate() - 1);
+    console.log(newDate)
+    handleDateChange(newDate)
+  }
 
   const handleSliderChange = (event, newValue) => {
     setSliderTime(newValue);
@@ -273,7 +294,29 @@ else{
       </div>
       </Drawer>
       <main className={classes.content}>
-        
+        <Grid container alignItems="center" spacing={2} justify="center">
+          <Grid item>
+            <Button onClick={previousDay}>
+              <NavigateBeforeIcon fontSize="large"></NavigateBeforeIcon>
+            </Button>
+          </Grid>
+          <Grid item>
+            <DatePicker
+            autoOk
+            align="center"
+            variant="inline"
+            value={selectedDate}
+            onChange={handleDateChange}
+          />
+          </Grid>
+          <Grid item>
+            <Button onClick={nextDay}>
+              <NavigateNextIcon fontSize="large"></NavigateNextIcon>
+            </Button>
+          </Grid>
+        </Grid>
+        <br/>
+        <br/>
         {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
         {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
         <br/>
