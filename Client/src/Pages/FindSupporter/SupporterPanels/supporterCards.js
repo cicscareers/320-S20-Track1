@@ -87,6 +87,11 @@ const SupporterCard = (props) => {
   function handleCreateAppointment(){
     setOpen(false)
     setOpenCreated(true)
+    var supporterComment=`Here is the list of tags the student wanted when making an appointment:\\n`
+    for(let i=0;i<has_tags.length;i++){
+      supporterComment=`${supporterComment + has_tags[i]}\\n`
+    }
+    supporterComment=supporterComment+comment
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
       {
@@ -103,7 +108,7 @@ const SupporterCard = (props) => {
           duration: 30,
           method: "In Person",
           location: "Amazon HQ, Seattle WA",
-          comment: comment
+          comment: supporterComment
         })
       }
     )
@@ -158,6 +163,7 @@ const SupporterCard = (props) => {
       return "Poor Match"
     }
   }
+
   return (
     <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
