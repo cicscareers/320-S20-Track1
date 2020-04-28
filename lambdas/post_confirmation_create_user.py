@@ -37,7 +37,7 @@ def create_student_user(event, context):
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1"
     sql_parameters = []
     new_id_query = query(sql,sql_parameters)
-    if((new_id_query['re']) == []):
+    if((new_id_query['records']) == []):
         new_id = 1
     else:
         new_id = new_id_query['records'][0][0]['longValue'] + 1
