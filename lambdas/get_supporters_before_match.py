@@ -5,6 +5,33 @@ from package.query_db import query
 from datetime import datetime
 from datetime import timedelta
 
+#Creates a dictionary of scheduled appointments in the form of:
+#Key: (supporter_id, day)
+#Value: List of {start, end} datetime objects sorted by starttime
+def generate_scheduled_appt_dict():
+
+#Create a list of objects representing supporter blocks with all supported topics and all scheduled times excluded
+#Available block: {
+#    supp_id,
+#    name,
+#    rating,
+#    employer,
+#    title,
+#    location,
+#    medium,
+#    linkedin,
+#    topics,
+#    tags,
+#    imgsrc,
+#    timeBlocks,
+#    day,
+#    preference
+#}
+def generate_appt_blocks(scheduled_appts):
+
+#Break up available blocks into chunked blocks with one topic each where available times are broken up into segments of that topic duration
+def chunk_blocks(available_blocks):
+
 # This lambda fetches a JSON list of available appointments blocks from the database. 
 # the list is then filtered down by the front end. 
 # Input: start_date, end_date
