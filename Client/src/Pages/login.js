@@ -75,30 +75,16 @@ export default function SignIn() {
           var base64Url = authToken.split('.')[1];
           var json = JSON.parse(window.atob(base64Url));
 
+
           console.log(json)
           console.log("$$$$$$$$");
 
-          cookies.remove("email");
-          cookies.remove("firstName");
-          cookies.remove("lastName");
-          cookies.remove("role");
-          cookies.remove("token");
-          cookies.remove("id");
-
-          cookies.set("email", json.email, {
-            path: "/"
-          });
-          cookies.set("firstName", json.given_name, {
-            path: "/"
-          });
-          cookies.set("lastName", json.family_name, {
-            path: "/"
-          });
-          cookies.set("role", json.profile, { path: "/" });
-
-          cookies.set("id", json.preferred_username, { path: "/" });
-
-          cookies.set("token", user.signInUserSession.accessToken, { path: "/" });
+          sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
+          sessionStorage.setItem("email", json.email);
+          sessionStorage.setItem("firstName", json.given_name);
+          sessionStorage.setItem("lastName", json.family_name);
+          sessionStorage.setItem("role", json.profile, { path: "/" });
+          sessionStorage.setItem("id", json.preferred_username, { path: "/" });
           window.location.reload();
         }
       }catch(error){

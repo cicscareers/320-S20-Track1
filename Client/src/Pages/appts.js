@@ -10,8 +10,8 @@ import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-const role = cookies.get("role");
-const id = cookies.get('id');
+const role = sessionStorage.getItem("role");
+const id = sessionStorage.getItem('id');
 //const id = 2;
 
 const drawerWidth = "25%";

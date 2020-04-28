@@ -82,15 +82,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function MenuAppBar(props) {
 
-  const [PossibleRoles,SetPossibleRoles] = React.useState([]);
-  //Gets info from the cookies
-  const cookies = new Cookies();
-  const token = cookies.get("token");
-  const name = cookies.get("firstName");
-  
-  var role = cookies.get("role");
 
-  const id = cookies.get("id");
+  const [PossibleRoles,SetPossibleRoles] = React.useState([]);
+
+  //Gets info from the session 
+  const token = sessionStorage.getItem("token");
+  const name = sessionStorage.getItem("firstName");
+  const role = sessionStorage.getItem("role");
+  const id = sessionStorage.getItem("id");
+
   //Sets the styling
   const classes = useStyles();
 
@@ -103,17 +103,18 @@ export default function MenuAppBar(props) {
   const [openModal, setOpen] = React.useState(false);
 
   useEffect(() => {
-    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
-            .then(res => res.json())
-            .then(json => {
-            
-              SetPossibleRoles(['student','supporter', 'admin']);
-            })
-            .catch(error => {
-                console.log(error);
-                console.log("No Supporters Found");
-            });
-    }, [])
+            fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + 1 + '/role')
+              .then(res => res.json())
+              .then(json => {
+                sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+                console.log("setting possible roles to: " + json.user_roles);
+                SetPossibleRoles(json.user_roles);
+              })
+              .catch(error => {
+                  console.log(error);
+                  console.log("No Supporters Found");
+              });
+      }, [])
    
     
   const handleModalOpen = () => {
@@ -134,11 +135,11 @@ export default function MenuAppBar(props) {
   
   //Function that handles log out by deleting the cookie and reloading
   function logout() {
-    cookies.remove("email");
-    cookies.remove("firstName");
-    cookies.remove("lastName");
-    cookies.remove("role");
-    cookies.remove("token");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("firstName");
+    sessionStorage.removeItem("lastName");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("token");
     window.location.reload();
   }
  function renderNavBarButtonsBasedOnRole(){
@@ -163,12 +164,12 @@ export default function MenuAppBar(props) {
 //   const RoleNameAdmin=PossibleRoles[2].charAt(0).toUpperCase() + PossibleRoles[2].slice(1);
  const SwitchUserHandle= event =>{
   if(event.currentTarget.id=='student'){
-    cookies.set('role',"Student");
+    sessionStorage.setItem('role', "Student")
   }
   else{
-  cookies.set('role',event.currentTarget.id);
+  sessionStorage.setItem('role',event.currentTarget.id);
   }
-  if(cookies.get('role')=='Student'){
+  if(sessionStorage.getItem('role')=='Student'){
     window.location.reload('/');
   }
  window.location.reload('/appointments');
@@ -249,7 +250,7 @@ return RenderRoles;
     </Link>
   </MenuItem>
 
-    {role===PossibleRoles[2] && (
+    {role.toLowerCase()===PossibleRoles[2] && (
       <MenuItem onClick={handleClose}>
         <Link href="/admin-settings">
           <Typography component="h6" variant="h6">
@@ -258,7 +259,7 @@ return RenderRoles;
         </Link>
       </MenuItem>
     )}
-      {(role===PossibleRoles[1]||role===PossibleRoles[2])  && (
+      {(role.toLowerCase()===PossibleRoles[1]||role.toLowerCase()===PossibleRoles[2])  && (
       <MenuItem onClick={handleClose}>
         <Link href="/supporter-settings">
           <Typography component="h6" variant="h6">
