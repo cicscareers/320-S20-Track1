@@ -268,7 +268,7 @@ const ResponsiveDrawer = (props) => {
                 today > new Date(appointment.time_scheduled) &&
                 <Grid item lg = {12}>
                   <AppointmentCard 
-                    upcoming = {true}
+                    upcoming = {false}
                     role = {role.toLowerCase()}
                     subject = {appointment.type}
                     location = {appointment.location}
@@ -281,6 +281,7 @@ const ResponsiveDrawer = (props) => {
                     supporterProfilePic = {appointment.supporterPic}
                     studentProfilePic = {""}
                     comments = {appointment.comment}
+                    feedbackLeft = {true}
                   />
                 </Grid>
               ))}

@@ -53,6 +53,8 @@ const PreviousAppointmentCard = (props) => {
 
     const [cancelAppointmentModalOpen, setCancelAppointmentModalOpen] = React.useState(false);
     const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false);
+    const [viewFeedbackModalOpen, setViewFeedbackModalOpen] = React.useState(false);
+
 
     const handleOpenAppointmentModal = () => {
         setCancelAppointmentModalOpen(true);
@@ -67,6 +69,14 @@ const PreviousAppointmentCard = (props) => {
     
     const handleCloseFeedbackModal = () => {
         setFeedbackModalOpen(false);
+      };
+
+    const handleOpenViewFeedbackModal = () => {
+        setViewFeedbackModalOpen(true);
+      };
+    
+    const handleCloseViewFeedbackModal = () => {
+        setViewFeedbackModalOpen(false);
       };
     
     const classes = useStyles();
@@ -185,17 +195,26 @@ const PreviousAppointmentCard = (props) => {
                   >
                     Cancel Appointment
                 </Button>
-                ) :
-                (
-                  <Button
-                    margin="normal"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleOpenFeedbackModal}
-                  >
-                    Submit Feedback
-                  </Button>
-                )}
+                ) : props.feedbackLeft ? (
+                      <Button
+                        margin="normal"
+                        variant="contained"
+                        color="primary"
+                        onClick={handleOpenViewFeedbackModal}
+                      >
+                        View Feedback
+                      </Button>
+                      ) : (
+                      <Button
+                        margin="normal"
+                        variant="contained"
+                        color="primary"
+                        onClick={handleOpenFeedbackModal}
+                      >
+                        Submit Feedback
+                      </Button>
+                      ) 
+              }
 
                 <Modal
                   open={cancelAppointmentModalOpen}
