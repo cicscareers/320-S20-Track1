@@ -9,7 +9,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import smileRate from "../../components/ratings"
 import DoneIcon from '@material-ui/icons/Done';
-import Cookies from "universal-cookie";
 import convertTime from "./convertTime.js"
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import timeToString from './timeToString.js'
@@ -70,10 +69,9 @@ const useStyles = makeStyles((theme) => ({
 const SupporterCard = (props) => {
   const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, supporter_id, score} = props;
   const classes = useStyles();
-  const cookies = new Cookies();
-  const studentID = cookies.get("id")
+  const studentID = sessionStorage.get("id")
   const IntID=parseInt(studentID)
-  const email = cookies.get("email");
+  const email = sessionStorage.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
   const [time, setTime] = React.useState("");
   const [comment, setComment] = React.useState("");

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Cookies from "universal-cookie";
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
 
@@ -59,7 +58,7 @@ export default function SignIn() {
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
-
+  
   //Gets run when submit is pressed and handles authentication.
   const handleSubmit = async event =>{
     event.preventDefault();
@@ -69,8 +68,7 @@ export default function SignIn() {
         console.log(user);
         if (user.signInUserSession.accessToken !== undefined) {
           console.log("hooray! we have json!");
-          // console.log(json);
-          const cookies = new Cookies();
+
           var authToken = user.signInUserSession.idToken.jwtToken;
           var base64Url = authToken.split('.')[1];
           var json = JSON.parse(window.atob(base64Url));
@@ -83,8 +81,9 @@ export default function SignIn() {
           sessionStorage.setItem("email", json.email);
           sessionStorage.setItem("firstName", json.given_name);
           sessionStorage.setItem("lastName", json.family_name);
-          sessionStorage.setItem("role", json.profile, { path: "/" });
-          sessionStorage.setItem("id", json.preferred_username, { path: "/" });
+          sessionStorage.setItem("role", json.profile);
+          sessionStorage.setItem("id", json.preferred_username);
+
           window.location.reload();
         }
       }catch(error){

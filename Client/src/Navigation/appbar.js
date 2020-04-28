@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
-import Cookies from "universal-cookie";
 // import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -144,7 +143,7 @@ export default function MenuAppBar(props) {
   }
  function renderNavBarButtonsBasedOnRole(){
    let RenderButtons=[];
-   if(role.toLowerCase()==PossibleRoles[0]){
+   if(role.toLowerCase()=='student'){
      return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/match" className={classes.button}>Create Appointment</Button>
      <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
@@ -169,7 +168,7 @@ export default function MenuAppBar(props) {
   else{
   sessionStorage.setItem('role',event.currentTarget.id);
   }
-  if(sessionStorage.getItem('role')=='Student'){
+  if(sessionStorage.getItem('role')==='Student'){
     window.location.reload('/');
   }
  window.location.reload('/appointments');
@@ -218,9 +217,10 @@ return RenderRoles;
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-         {role.toLowerCase()==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Create Appointment</Button>}
+         {role.toLowerCase()==='student' && 
+          <Button variant="text" href="/" className={classes.button}>Create Appointment</Button>}
           <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
-     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+          <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 
               src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
@@ -250,7 +250,7 @@ return RenderRoles;
     </Link>
   </MenuItem>
 
-    {role.toLowerCase()===PossibleRoles[2] && (
+    {role.toLowerCase()==='admin' && (
       <MenuItem onClick={handleClose}>
         <Link href="/admin-settings">
           <Typography component="h6" variant="h6">
@@ -259,7 +259,7 @@ return RenderRoles;
         </Link>
       </MenuItem>
     )}
-      {(role.toLowerCase()===PossibleRoles[1]||role.toLowerCase()===PossibleRoles[2])  && (
+      {(role.toLowerCase()==='supoprter'||role.toLowerCase()==='admin')  && (
       <MenuItem onClick={handleClose}>
         <Link href="/supporter-settings">
           <Typography component="h6" variant="h6">

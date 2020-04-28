@@ -13,7 +13,6 @@ import Matching from "../Pages/FindSupporter/Matching.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
 import AuthenticatedRoute from "./AuthenticatedRoute";
-import Cookies from "universal-cookie";
 import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
@@ -22,8 +21,8 @@ import Feedback from '../Pages/feedback';
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
 
-const cookies = new Cookies();
-const role = cookies.get("role");
+const role = sessionStorage.getItem("role");
+alert(role);
 
 export default function Routes() {
   return (
