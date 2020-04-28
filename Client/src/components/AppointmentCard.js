@@ -236,6 +236,13 @@ const PreviousAppointmentCard = (props) => {
                     profilepic = {props.profilepic}></Feedback>
                 </Modal>
 
+                <Modal 
+                  open={viewFeedbackModalOpen}
+                  onClose={handleCloseViewFeedbackModal}
+                >
+                Test
+                </Modal>
+
               </Grid>
             </Grid>
           </ExpansionPanelDetails>

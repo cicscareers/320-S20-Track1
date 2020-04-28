@@ -281,7 +281,7 @@ const ResponsiveDrawer = (props) => {
                     supporterProfilePic = {appointment.supporterPic}
                     studentProfilePic = {""}
                     comments = {appointment.comment}
-                    feedbackLeft = {true}
+                    feedbackLeft = {(appointment.feedback != null && appointment.rating != null)}
                   />
                 </Grid>
               ))}
