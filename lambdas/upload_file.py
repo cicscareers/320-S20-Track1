@@ -1,5 +1,6 @@
 import json
 import boto3
+from package.lambda_expection import LambdaException
 
 # Written by Dat Duong
 
@@ -20,16 +21,21 @@ def upload_files(event, context):
     # s_3 = boto3.client('s_3')
     s_3 = boto3.resource('s_3')
 
-    # actually uploading
-    # response = s_3.Bucket(bucket_name).upload_file(file_name, file_name)
-    response = s_3.meta.client.upload_file(file_name, bucket_name, file_name)
+    try:
+        # actually uploading
+        # response = s_3.Bucket(bucket_name).upload_file(file_name, file_name)
+        response = s_3.meta.client.upload_file(
+            file_name, bucket_name, file_name)
+
+    except Exception as e:
+        raise LambdaException("File failed to uploaded: ", str(e))
 
     # check if file was uploaded
-    if response['numberOfRecordsUpdated'] == 0:
-        return {
-            'statusCode': 404,
-            'body': json.dumps('Error uploading file')
-        }
+    # if response['numberOfRecordsUpdated'] == 0:
+    #     return {
+    #         'statusCode': 404,
+    #         'body': json.dumps('Error uploading file')
+    #     }
 
     return {
         'statusCode': 200,
