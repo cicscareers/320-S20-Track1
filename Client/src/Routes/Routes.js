@@ -21,6 +21,7 @@ import Feedback from '../Pages/feedback';
 //import Home from "../Pages/home.js";
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
+import Test from '../Pages/test'
 
 const cookies = new Cookies();
 const role = cookies.get("role");
@@ -38,6 +39,7 @@ export default function Routes() {
           <StudentRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />
           <AuthenticatedRoute path="/appointments" exact component={appts} />
+          <AuthenticatedRoute path="/test" exact component={Test} />
           <AuthenticatedRoute path="/account" exact component={Account} />
           <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
           <UnauthenticatedRoute path="/signup" exact component={SignUp} />
