@@ -82,8 +82,8 @@ def create_student_user(event, context):
         }
 
     # adds a user to the "students" table with the same user id
-    sql = """INSERT INTO students(student_id,user_id,college,grad_year,resume,grad_student) \
-    VALUES (:new_id,:new_id,'college',4000,'resume',false)"""
+    sql = """INSERT INTO students(student_id,user_id,grad_year,resume,grad_student) \
+    VALUES (:new_id,:new_id,4000,'resume',false)"""
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}}]
     
     create_students_instance = query(sql,sql_parameters)
@@ -106,7 +106,7 @@ def create_student_user(event, context):
 
         # Supporters table input
         employer = event["request"]["userAttributes"]['zoneinfo'] #zoneinfo=employer in cognito
-        title = event["request"]["userAttributes"]["nickname"] #nickname=employer in cognito
+        title = event["request"]["userAttributes"]["nickname"] #nickname=title in cognito
 
         # optional
         # if no input for team place empty
