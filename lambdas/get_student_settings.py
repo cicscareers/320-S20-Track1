@@ -50,7 +50,7 @@ def get_student_settings_handler(event, context):
         error_messages.append(str(e) + " get_student_settings.py, line 26")
 
 
-    students_sql = "SELECT college, grad_year, resume, job_search, grad_student FROM students WHERE student_id = :student_id;"
+    students_sql = "SELECT college, grad_year, resume, grad_student FROM students WHERE student_id = :student_id;"
     try:
         student_data = query(students_sql, student_id_param)['records'][0]
         
@@ -68,14 +68,9 @@ def get_student_settings_handler(event, context):
             response['resume'] = student_data[2]['stringValue']
         else:
             response['resume'] = None
-        
-        if 'stringValue' in student_data[3]:
-            response['job_search'] = student_data[3]['booleanValue']
-        else:
-            response['job_search'] = None
             
-        if 'stringValue' in student_data[4]:
-            response['grad_student'] = student_data[4]['booleanValue']
+        if 'stringValue' in student_data[3]:
+            response['grad_student'] = student_data[3]['booleanValue']
         else:
             response['grad_student'] = None
 
