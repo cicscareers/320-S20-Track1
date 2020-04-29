@@ -241,7 +241,7 @@ class AppointmentFormContainerBasic extends React.PureComponent {
             {!isNewAppointment && (
               <Button
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 className={classes.button}
                 onClick={() => {
                   visibleChange();
@@ -285,7 +285,7 @@ class Demo extends React.PureComponent {
     super(props);
     this.state = {
       data: appointments,
-      currentDate: '2018-06-27',
+      currentDate: Date.now(),
       confirmationVisible: false,
       editingFormVisible: false,
       deletedAppointmentId: undefined,
@@ -465,7 +465,7 @@ class Demo extends React.PureComponent {
             <Button onClick={this.toggleConfirmationVisible} color="primary" variant="outlined">
               Cancel
             </Button>
-            <Button onClick={this.commitDeletedAppointment} color="secondary" variant="outlined">
+            <Button onClick={this.commitDeletedAppointment} color="primary" variant="outlined">
               Delete
             </Button>
           </DialogActions>
