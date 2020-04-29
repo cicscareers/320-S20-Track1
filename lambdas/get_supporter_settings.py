@@ -9,11 +9,13 @@ import json
 #        phone, bio, picture, employer, title, team_name, professional_staff, student_staff,
 #        alumni, faculty, other, list of tags, list of specialization_types, 
 #        notification_type_name, feedback, list of supporter_preferences_for_student,
-#        list of appointment durations (for each specialization), max_students, google_doc_link, office, list of majors and major_id
+#        list of appointment durations (for each specialization), max_students, office, list of majors and major_id
 # ^^^ fix
 
 def get_supporter_settings(event, context):
     supporter_id = event['id']
+    supporter_id = int(supporter_id)
+    #For some reason postman is sending the id as a string, need to check on that
     block = {}
 
     #Check if supporter exists
@@ -28,7 +30,7 @@ def get_supporter_settings(event, context):
 
     #Execute parameterized query to get user info
     sql = 'SELECT first_name, preferred_name, last_name, email, pronouns, gender, phone, \
-           bio, picture, employer, title, team_name, feedback, office, google_doc_link FROM users, supporters \
+           bio, picture, employer, title, team_name, feedback, office FROM users, supporters \
            WHERE users.id = supporters.supporter_id AND users.id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     settings = query(sql, sql_parameters)['records']
@@ -51,11 +53,10 @@ def get_supporter_settings(event, context):
     block['team_name'] = settings[0][11].get('stringValue')
     block['feedback'] = settings[0][12].get('stringValue')
     block['office'] = settings[0][13].get('stringValue')
-    block['google_doc_link'] = settings[0][14].get('stringValue')
 
     #Execute parameterized query to get supporter types
     sql = 'SELECT professional_staff, student_staff, alumni, faculty, other \
-           FROM supporter_types WHERE supporter_id = :supporter_id;'
+           FROM supporter_type WHERE supporter_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     settings = query(sql, sql_parameters)['records']
     if(settings == []):
@@ -97,9 +98,9 @@ def get_supporter_settings(event, context):
     block['appointment_type_info'] = durations
 
     #Execute parameterized query to get supporter preferences for students
-    sql = 'SELECT S1.grad_student, S1.job_search, S2.major_id, M.major \
-           FROM supporter_preferences_for_students S1, supporter_major_preferences S2, major M \
-           WHERE S1.supporter_preferences_for_student_id = S2.supporter_id AND S2.major_id = M.major_id \
+    sql = 'SELECT S1.grad_student, S1.hours_before_appointment, S2.major_id, Ma.major \
+           FROM supporter_preferences_for_students S1, supporter_major_preferences S2, major Ma \
+           WHERE S1.supporter_preferences_for_student_id = S2.supporter_id AND S2.major_id = Ma.major_id \
            AND S1.supporter_preferences_for_student_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     prefs = query(sql, sql_parameters)['records']
@@ -110,21 +111,26 @@ def get_supporter_settings(event, context):
         }
     majors = []
     block['grad_student'] = prefs[0][0].get('booleanValue')
-    block['job_search'] = prefs[0][1].get('booleanValue')
+    block['hours_before_appointment'] = prefs[0][1].get('longValue')
     for entry in prefs:
-        temp_dict = {}
-        temp_dict['major_id'] = entry[2].get('longValue')
-        temp_dict['major'] = entry[3].get('longValue')
-        majors.append(temp_dict)
+        ma_dict = {}
+        ma_dict['major_id'] = entry[2].get('longValue')
+        ma_dict['major'] = entry[3].get('stringValue')
+        majors.append(ma_dict)
+    block['major_preferences'] = majors
 
     #Execute parameterized query to get tags
-    sql = 'SELECT tags FROM tags WHERE supporter_id = :supporter_id;'
+    sql = 'SELECT tag_type FROM supporter_tags, tag_type WHERE \
+           supporter_tags.tag_type_id = tag_type.tag_type_id AND supporter_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     settings = query(sql, sql_parameters)['records']
-    if(settings != []):
-        block['tags'] = settings[0][0].get('arrayValue')
     if(settings == []):
         block['tags'] = None
+    if(settings != []):
+        tags_list = []
+        for entry in settings:
+            tags_list.append(entry[0].get('stringValue'))
+        block['tags'] = tags_list
 
     #Execute parameterized query to get tags
     sql = 'SELECT N2.notification_type_name FROM notification_preferences N1, notification_type N2 \
@@ -137,7 +143,7 @@ def get_supporter_settings(event, context):
         block['notification_type_name'] = None
 
     #Execute parameterized query to get link
-    sql = 'SELECT L2.link FROM user_link L1, link L2 \
+    sql = 'SELECT L2.link_type FROM user_link L1, link L2 \
            WHERE L1.link_id = L2.link_id AND L1.user_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     settings = query(sql, sql_parameters)['records']
