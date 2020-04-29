@@ -25,7 +25,7 @@ def cancel_appointment(event, context):
     sql_select = """SELECT appointment_id FROM scheduled_appointments WHERE appointment_id = :appointment_id;"""
     sql_parameters = dictionary_to_list(appointment_id_dic)
     response = query(sql_select, sql_parameters)
-    if response == []:
+    if response['records'] == []:
         return{
             'statusCode': 404
         }
