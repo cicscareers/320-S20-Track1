@@ -78,6 +78,22 @@ def get_student_settings_handler(event, context):
         error_messages.append(str(e) + " get_student_settings.py, line 40")
 
 
+    colleges_sql = "SELECT college FROM college C, student_college SC WHERE SC.student_id = :student_id AND C.college_id = SC.college_id"    
+    try:
+        colleges_data = query(colleges_sql, student_id_param)['records']
+        colleges = []
+        for college in colleges_data:
+            colleged.append(college['stringValue'])
+
+        if len(colleges) > 0:
+            response['college'] = colleges
+        else:
+            response['college'] = None
+
+    except Exception as e:
+        error_messages.append(str(e) + " get_student_settings.py, line 86")
+
+
     links_sql = "SELECT link_id FROM user_link WHERE user_id = :student_id"
     try:
         student_link_ids = query(links_sql, student_id_param)['records']
@@ -109,6 +125,8 @@ def get_student_settings_handler(event, context):
             major_ids = student_major_ids[0]['longValue']
             for major_id in student_major_ids[1:]:
                 major_ids += " OR major_id = " + major_id['longValue']
+        else:
+            response['major'] = None
     
             student_majors_sql = "SELECT major FROM major WHERE major_id = " + major_ids + ";"
             try:
@@ -133,6 +151,8 @@ def get_student_settings_handler(event, context):
             minor_ids = student_minor_ids[0]['longValue']
             for minor_id in student_minor_ids[1:]:
                 minor_ids += " OR minor_id = " + minor_id['longValue']
+        else:
+            response['minor'] = None
     
             student_minors_sql = "SELECT minor FROM minor WHERE minor_id = " + minor_ids + ";"
             try:
