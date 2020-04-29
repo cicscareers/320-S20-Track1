@@ -22,3 +22,7 @@ def update_supporter_status(event, context):
 
     sql_update = """UPDATE supporters set is_pending = True WHERE supporter_id = :supporter_id"""
     response = query(sql_update, sql_paramters_dic)
+
+    return{
+        "statusCode": 200
+    }
