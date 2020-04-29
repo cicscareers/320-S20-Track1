@@ -18,6 +18,7 @@ import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
 import Feedback from '../Pages/feedback';
+import Calendar from '../Pages/Settings Pages/SupporterSettings/Calendar/Calendar.js'
 //import Home from "../Pages/home.js";
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
@@ -34,6 +35,7 @@ export default function Routes() {
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />
           <Route path="/supporter-settings" exact component={SupporterSettings} />
+          <Route path="/calendar" exact component={Calendar} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <StudentRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />
