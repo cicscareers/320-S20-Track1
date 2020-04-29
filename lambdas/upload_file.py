@@ -26,14 +26,7 @@ def upload_files(event, context):
             file_name, bucket_name, file_name)
 
     except Exception as e:
-        raise LambdaException("File failed to uploaded: " + str(e))
-
-    # check if file was uploaded
-    # if response['numberOfRecordsUpdated'] == 0:
-    #     return {
-    #         'statusCode': 404,
-    #         'body': json.dumps('Error uploading file')
-    #     }
+        raise LambdaException("400: File failed to uploaded")
 
     return {
         'statusCode': 200,
