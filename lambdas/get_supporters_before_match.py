@@ -9,6 +9,34 @@ from datetime import timedelta
 #Key: (supporter_id, day)
 #Value: List of {start, end} datetime objects sorted by starttime
 def generate_scheduled_appt_dict():
+    taken_days = {}
+
+    date_format = "%Y-%m-%d %H:%M:%S"
+
+    scheduled_sql = "SELECT supporter_id, time_of_appt, duration\
+    FROM scheduled_appointments\
+    WHERE NOT cancelled\
+    AND time_of_appt BETWEEN :date_start AND :date_end;"
+
+    params = [{'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}]
+
+    scheduled_query_data = query(scheduled_sql, params)
+
+    for entry in scheduled_query_data['records']:
+        start_datetime = datetime.strptime(entry[1]['stringValue'], date_format)
+        end_datetime = start_datetime + timedelta(minutes=entry[2]['longValue'])
+        supp_id = entry[0]['longValue']
+        day = start_datetime.date()
+
+        if (supp_id, day) in taken_days:
+            taken_days[(supp_id, day)].append([start_datetime, end_datetime])
+        else:
+            taken_days[(supp_id, day)] = [[start_datetime, end_datetime]]
+
+    for day in taken_days.values():
+        day.sort(key=lambda day: day[0])
+
+    return taken_days
 
 #Create a list of objects representing supporter blocks with all supported topics and all scheduled times excluded
 #Available block: {
