@@ -1,5 +1,6 @@
 import json
 import boto3
+import copy
 
 from package.query_db import query
 from datetime import datetime
@@ -59,6 +60,31 @@ def generate_appt_blocks(scheduled_appts):
 
 #Break up available blocks into chunked blocks with one topic each where available times are broken up into segments of that topic duration
 def chunk_blocks(available_blocks):
+
+    def break_block(start, end, duration):
+        currBegin = start
+        currEnd = start + duration
+        while currEnd < end:
+            yield [currBegin, currEnd]
+            currBegin += duration
+            currEnd += duration
+
+    broken_blocks = []
+    #hardcoded duration for now
+    duration = 30
+
+    for entry in available_blocks:
+        for topic in entry['topics']:
+            tmp_block = copy.deepcopy(entry)
+            tmp_block['topics'] = topic
+            tmp_block['timeBlocks'] = []
+            for block in entry['timeBlocks']:
+                for result in break_block(block[0], block[1], timedelta(minutes = duration)):
+                    tmp_block['timeBlocks'].append(result)
+            
+            broken_blocks.append(tmp_block)
+
+    return broken_blocks
 
 # This lambda fetches a JSON list of available appointments blocks from the database. 
 # the list is then filtered down by the front end. 
