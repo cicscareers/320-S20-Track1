@@ -3,6 +3,7 @@ from package.query_db import query
 from package.dictionary_to_list import dictionary_to_list
 
 def get_unverified_supporters(event, context):
+    sql_parameter_dic = {}
     sql_parameter_dic["val"] = 'false'
     sql_select = """
                 SELECT s.employer as s_employer, s.title as s_title, s.team_name as s_team_name, u.first_name as s_first_name, u.last_name as s_last_name, u.email as s_email\
