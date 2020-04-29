@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
@@ -56,46 +56,30 @@ const StyledRating = withStyles({
     value: PropTypes.number.isRequired,
   };
 
-function handlePress(){
-    
-}
 
-const Feedback = (props) => {
+const ViewFeedback = (props) => {
     const supporterfed = ['Experience of meeting', 'Effectiveness of meeting']
-    const [feedbackRating, setFeedbackRating] = useState(3);
-    const [feedbackText, setFeedbackText] = useState("");
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
           <Box component="fieldset" mb={3} borderColor="transparent">
-              <Typography component="legend">How likeley are you to recommend this Supporter
-                  to a friend?
+              <Typography component="legend">Appointment Rating:
               </Typography>
               <Rating
                 name="customized-icons"
-                defaultValue={2}
+                readOnly
+                defaultValue={props.rating}
                 getLabelText={(value) => customIcons[value].label}
                 IconContainerComponent={IconContainer}
-                onChange={e => setFeedbackRating(e.target.value)}
               />
           </Box>
           <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
-              <Typography>Additional Comments</Typography>
-              <TextField
-                style = {{width: 1100}}
-                id="outlined-multiline-static"
-                multiline
-                rows="6"
-                variant="outlined"
-                onChange={e => setFeedbackText(e.target.value)}
-              />
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
-              <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onPress={handlePress}>Submit Feedback</Button>
+              <Typography>Appointment Feedback:</Typography>
+              <Typography>{props.feedback}</Typography>
           </Grid>
         </Card>
     </Container>
     );
 }
 
-export default Feedback;
+export default ViewFeedback;

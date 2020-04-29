@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Cancel from './cancelAppt'
 import Feedback from './feedback'
+import ViewFeedback from './viewFeedback'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -240,7 +241,7 @@ const PreviousAppointmentCard = (props) => {
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
                 >
-                Test
+                <ViewFeedback rating = {props.rating} feedback = {props.feedback}/>
                 </Modal>
 
               </Grid>

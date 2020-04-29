@@ -1,33 +1,57 @@
-import { Typography } from "@material-ui/core";
+import { Typography, Button, Modal } from "@material-ui/core";
 import React, { Fragment } from "react";
 import AppointmentCard from '../components/AppointmentCard';
 import convertTime from "./FindSupporter/convertTime"
+import Feedback from '../components/feedback'
+import ViewFeedback from "../components/viewFeedback"
 
-function convertDate(time, duration){
-    var hours = parseInt(time.substring(11,13)) * 60;
-    var minutes = parseInt(time.substring(14,16));
-    return convertTime(hours + minutes + duration);
-  }
+
 
 const Test = (props) =>{
+    const handleOpenFeedbackModal = () => {
+        setFeedbackModalOpen(true);
+      };
+    
+    const handleCloseFeedbackModal = () => {
+        setFeedbackModalOpen(false);
+      };
+    
+    const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false);
+    const handleOpenViewFeedbackModal = () => {
+        setViewFeedbackModalOpen(true);
+      };
+    
+    const handleCloseViewFeedbackModal = () => {
+        setViewFeedbackModalOpen(false);
+      };
+    
+    const [viewFeedbackModalOpen, setViewFeedbackModalOpen] = React.useState(false);
     return(
         <Fragment>
-            <br/><br/><br/>
-            <AppointmentCard
-                upcoming = {true}
-                role = {'student'}
-                subject = {'subject'}
-                location = {'ya ass'}
-                medium = {'in person'}
-                start = {'04/17/2020 13:00'}
-                end = {'04/17/2020 13:30'}
-                date = {'04/17/2020'}
-                supporter = {'Bill Gates'}
-                student = {'Kyle O'}
-                supporterProfilePic = {""}
-                studentProfilePic = {""}
-                comments = {'pls'}
-            />
+            <Button onClick={handleOpenFeedbackModal}>Open Feedback</Button>
+            <Modal
+                  open={feedbackModalOpen}
+                  onClose={handleCloseFeedbackModal}
+                >
+                <Feedback subject = {props.subject}
+                    location = {props.location}
+                    medium = {props.medium}
+                    time = {props.time}
+                    date = {props.date}
+                    supporter = {props.supporter}
+                    profilepic = {props.profilepic}>
+                </Feedback>
+            </Modal>
+            <Button onClick={handleOpenViewFeedbackModal}>View Feedback</Button>
+            <Modal
+                  open={viewFeedbackModalOpen}
+                  onClose={handleCloseViewFeedbackModal}
+                >
+            <ViewFeedback 
+                rating = {5}
+                feedback = {"Test"}
+                />
+            </Modal>
         </Fragment>
     );
 }
