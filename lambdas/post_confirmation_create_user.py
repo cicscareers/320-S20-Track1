@@ -19,7 +19,7 @@ def create_student_user(event, context):
     first_name = event["request"]["userAttributes"]['given_name']
     last_name = event["request"]["userAttributes"]['family_name']
     email = event["request"]["userAttributes"]['email']
-    password = ""
+    #password = ""
     is_supporter= True if event["request"]["userAttributes"]["profile"]=="Supporter" else False
 
     #Need to check if email is already in DB
@@ -62,13 +62,13 @@ def create_student_user(event, context):
     #sets the is_student boolean to TRUE
 
     # adds a user to the "users" table with the new generated id
-    sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,hashed_password,salt_key,user_type,is_admin,is_supporter,is_student) \
-        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,:password,'salt','student',false, :is_supporter, true)""" #(last three fields) is_admin, is_supporter, is_student
+    sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,is_admin,is_supporter,is_student) \
+        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,false, :is_supporter, true)""" #(last three fields) is_admin, is_supporter, is_student
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}},
     {'name' : 'first_name', 'value': {'stringValue' : first_name}},
     {'name' : 'last_name', 'value': {'stringValue' : last_name}},
     {'name' : 'email', 'value': {'stringValue' : email}},
-    {'name' : 'password', 'value': {'stringValue' : password}},
+    #{'name' : 'password', 'value': {'stringValue' : password}},
     {'name': 'is_supporter', 'value':{'booleanValue': is_supporter}}] #changes is_supporter to true if it is supporter
 
 
@@ -82,8 +82,8 @@ def create_student_user(event, context):
         }
 
     # adds a user to the "students" table with the same user id
-    sql = """INSERT INTO students(student_id,user_id,college,grad_year,resume,job_search,grad_student) \
-    VALUES (:new_id,:new_id,'college',4000,'resume',false,false)"""
+    sql = """INSERT INTO students(student_id,user_id,college,grad_year,resume,grad_student) \
+    VALUES (:new_id,:new_id,'college',4000,'resume',false)"""
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}}]
     
     create_students_instance = query(sql,sql_parameters)
@@ -182,8 +182,8 @@ def create_student_user(event, context):
         #     }
 
         # inserts user into supporters table with same user_id
-        sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name, is_pending, office, google_doc_link) \
-                VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name',false,'office', 'google_doc_link')""" #(LAST THREE) is_pending, office, google_doc_link
+        sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name, is_pending, office) \
+                VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, false,'office')""" 
 
         sql_parameters = [
             {'name': 'new_id', 'value': {'longValue': new_id}},
@@ -203,8 +203,8 @@ def create_student_user(event, context):
             }
 
         # inserts specific supporter types into suppoert types table with same id
-        sql = """INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
-                VALUES (:new_id, :new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
+        sql = """INSERT INTO supporter_type(supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+                VALUES (:new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
 
         sql_parameters = [
             {'name': 'new_id', 'value': {'longValue': new_id}},

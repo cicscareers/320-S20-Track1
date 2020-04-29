@@ -95,8 +95,8 @@ def create_supporter(event, context):
     #     }
 
     # inserts user into supporters table with same user_id
-    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name,is_pending, office, google_doc_link) \
-            VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name', true,'office', 'google_doc_link')"""
+    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name,is_pending, office) \
+            VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, true,'office')"""
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
@@ -115,8 +115,8 @@ def create_supporter(event, context):
         }
 
     # inserts specific supporter types into suppoert types table with same id
-    sql = """INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
-            VALUES (:new_id, :new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
+    sql = """INSERT INTO supporter_type(supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+            VALUES (:new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
