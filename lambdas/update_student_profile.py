@@ -30,9 +30,9 @@ def update_student_profile(event, context):
         first_name = event['first_name']
     else:
         sql = "SELECT first_name FROM users WHERE id= :student_id"
-        first_name_data = query(sql, student_id_param)['records']
-        if len(first_name_data) > 0:
-            first_name = first_name_data[0][0]['stringValue']
+        first_name_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in first_name_data:
+            first_name = first_name_data['stringValue']
         else:
             first_name = None
     updated_user_vals += "first_name='%s', " % (first_name)
@@ -41,9 +41,9 @@ def update_student_profile(event, context):
         last_name = event['last_name']
     else:
         sql = "SELECT last_name FROM users WHERE id= :student_id"
-        last_name_data = query(sql, student_id_param)['records']
-        if len(last_name_data) > 0:
-            last_name = last_name_data[0][0]['stringValue']
+        last_name_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in last_name_data:
+            last_name = last_name_data['stringValue']
         else:
             last_name = None
     updated_user_vals += "last_name='%s', " % (last_name)
@@ -52,9 +52,9 @@ def update_student_profile(event, context):
         preferred_name = event['preferred_name']
     else:
         sql = "SELECT preferred_name FROM users WHERE id= :student_id"
-        preferred_name_data = query(sql, student_id_param)['records']
-        if len(preferred_name_data) > 0:
-            preferred_name = preferred_name_data[0][0]['stringValue']
+        preferred_name_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in preferred_name_data:
+            preferred_name = preferred_name_data['stringValue']
         else:
             preferred_name = None
     updated_user_vals += "preferred_name='%s', " % (preferred_name)
@@ -63,9 +63,9 @@ def update_student_profile(event, context):
         picture = event['picture']
     else:
         sql = "SELECT picture FROM users WHERE id= :student_id"
-        picture_data = query(sql, student_id_param)['records']
-        if len(picture_data) > 0:
-            picture = picture_data[0][0]['stringValue']
+        picture_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in picture_data:
+            picture = picture_data['stringValue']
         else:
             picture = None
     updated_user_vals += "picture='%s', " % (picture)
@@ -74,9 +74,9 @@ def update_student_profile(event, context):
         bio = event['bio']
     else:
         sql = "SELECT bio FROM users WHERE id= :student_id"
-        bio_data = query(sql, student_id_param)['records']
-        if len(bio_data) > 0:
-            bio = bio_data[0][0]['stringValue']
+        bio_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue']:
+            bio = bio_data['stringValue']
         else:
             bio = None
     updated_user_vals += "bio='%s', " % (bio)
@@ -85,9 +85,9 @@ def update_student_profile(event, context):
         pronouns = event['pronouns']
     else:
         sql = "SELECT pronouns FROM users WHERE id= :student_id"
-        pronouns_data = query(sql, student_id_param)['records']
-        if len(pronouns_data) > 0:
-            pronouns = pronouns_data[0][0]['stringValue']
+        pronouns_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in pronouns_data:
+            pronouns = pronouns_data['stringValue']
         else:
             pronouns = None
     updated_user_vals += "pronouns='%s', " % (pronouns)
@@ -96,9 +96,9 @@ def update_student_profile(event, context):
         phone = event['phone']
     else:
         sql = "SELECT phone FROM users WHERE id= :student_id"
-        phone_data = query(sql, student_id_param)['records']
-        if len(phone_data) > 0:
-            phone = phone_data[0][0]['stringValue']
+        phone_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in phone_data:
+            phone = phone_data['stringValue']
         else:
             phone = None
     updated_user_vals += "phone='%s'" % (phone)
@@ -111,9 +111,9 @@ def update_student_profile(event, context):
         grad_student = event['grad_student']
     else:
         sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
-        grad_student_data = query(sql, student_id_param)['records']
-        if len(grad_student_data) > 0:
-            grad_student = grad_student_data[0][0]['booleanValue']
+        grad_student_data = query(sql, student_id_param)['records'][0][0]
+        if ['booleanValue'] in grad_student_data:
+            grad_student = grad_student_data['booleanValue']
         else:
             grad_student = None
     updated_student_vals += "grad_student='%s', " % (grad_student)
@@ -122,9 +122,9 @@ def update_student_profile(event, context):
         grad_year= event['grad_year']
     else:
         sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
-        grad_year_data = query(sql, student_id_param)['records']
-        if len(grad_year_data) > 0:
-            grad_year = grad_year_data[0][0]['longValue']
+        grad_year_data = query(sql, student_id_param)['records'][0][0]
+        if ['longValue'] in grad_year_data:
+            grad_year = grad_year_data['longValue']
         else:
             grad_year = None
     updated_student_vals += "grad_year='%s', " % (grad_year)
@@ -133,9 +133,9 @@ def update_student_profile(event, context):
         resume = event['resume']
     else:
         sql = "SELECT resume FROM students WHERE student_id= :student_id"
-        resume_data = query(sql, student_id_param)['records']
-        if len(resume_data) > 0:
-            resume = resume_data[0][0]['stringValue']
+        resume_data = query(sql, student_id_param)['records'][0][0]
+        if ['stringValue'] in resume_data:
+            resume = resume_data['stringValue']
         else:
             resume = None
     updated_student_vals += "resume='%s'" % (resume)
