@@ -1,5 +1,5 @@
 # Written by Maeve Newman
-# Updated 4/22/2020
+# Updated 4/30/2020
 
 import json
 from package.query_db import query
@@ -119,17 +119,23 @@ def lambda_handler(event, context):
 
 
     # generate and set time_scheduled
-    timestamp = time.time() - 240
-    time_scheduled = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = time.time()
+    currtimestamp = datetime.datetime.fromtimestamp(timestamp) - datetime.timedelta(hours=4)
+    time_scheduled = currtimestamp.strftime('%Y-%m-%d %H:%M:%S')
+    
 
     # perform standard checks, if no 'override' parameter
     if not override:
         # Check that date is not in the past
-        #if TO_TIMESTAMP(time_of_appt, 'YYYY-MM-DD HH24:MI:SS') > TO_TIMESTAMP(time_scheduled, 'YYYY-MM-DD HH24:MI:SS'):
-            #raise LambdaException("404: Invalid time.")
+        appt_timestamp = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
+        print(appt_timestamp)
+
+        difference = appt_timestamp - currtimestamp
+        if difference.total_seconds() < 0:
+            raise LambdaException("404: Invalid time: timestamp is in the past.")
 
         # Check that time is within a supporter appointment block
-        sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS')"
+        sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
         sql_parameters = [
             {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
             {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}}
@@ -137,13 +143,15 @@ def lambda_handler(event, context):
         appt_block_query = query(sql,sql_parameters)
         if appt_block_query['records'] == []:
             raise LambdaException("404: Appointment not in supporter's timeblock.")
-        block_id = appt_block_query['records'][0][0]['longValue']
-        max_appts = supporter_schedule_query['records'][0][1]['longValue']
-        block_start = supporter_schedule_query['records'][0][2]['stringValue']
-        block_end = supporter_schedule_query['records'][0][3]['stringValue']
+        response = appt_block_query['records'][0][0]['stringValue']
+        responseList = response.strip('()').split(',')
+        block_id = int(responseList[0])
+        max_appts = int(responseList[1])
+        block_start = responseList[2]
+        block_end = responseList[3]
         
         # Check supporter's maximum number of appointments has not  been met
-        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>:block_start AND time_of_appt<:block_end"
+        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt<TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS');"
         sql_parameters = [
             {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
             {'name' : 'block_start', 'value':{'stringValue': block_start}},
@@ -151,7 +159,6 @@ def lambda_handler(event, context):
         ]
         block_appts_query = query(sql,sql_parameters)
         num_appts = len(block_appts_query['records'])
-
         if num_appts+1 > max_appts:
             raise LambdaException("404: Exceeds supporter's maximum number of appointments.")
     
