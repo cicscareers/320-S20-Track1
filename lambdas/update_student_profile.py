@@ -30,49 +30,77 @@ def update_student_profile(event, context):
         first_name = event['first_name']
     else:
         sql = "SELECT first_name FROM users WHERE id= :student_id"
-        first_name = query(sql, student_id_param)['records'][0][0]['stringValue']
+        first_name_data = query(sql, student_id_param)['records']
+        if len(first_name_data) > 0:
+            first_name = first_name_data[0][0]['stringValue']
+        else:
+            first_name = None
     updated_user_vals += "first_name='%s', " % (first_name)
 
     if 'last_name' in event:        
         last_name = event['last_name']
     else:
         sql = "SELECT last_name FROM users WHERE id= :student_id"
-        last_name = query(sql, student_id_param)['records'][0][0]['stringValue']
+        last_name_data = query(sql, student_id_param)['records']
+        if len(last_name_data) > 0:
+            last_name = last_name_data[0][0]['stringValue']
+        else:
+            last_name = None
     updated_user_vals += "last_name='%s', " % (last_name)
 
     if 'preferred_name' in event:
         preferred_name = event['preferred_name']
     else:
         sql = "SELECT preferred_name FROM users WHERE id= :student_id"
-        preferred_name = query(sql, student_id_param)['records'][0][0]['stringValue']
+        preferred_name_data = query(sql, student_id_param)['records']
+        if len(preferred_name_data) > 0:
+            preferred_name = preferred_name_data[0][0]['stringValue']
+        else:
+            preferred_name = None
     updated_user_vals += "preferred_name='%s', " % (preferred_name)
 
     if 'picture' in event:
         picture = event['picture']
     else:
         sql = "SELECT picture FROM users WHERE id= :student_id"
-        picture = query(sql, student_id_param)['records'][0][0]['stringValue']
+        picture_data = query(sql, student_id_param)['records']
+        if len(picture_data) > 0:
+            picture = picture_data[0][0]['stringValue']
+        else:
+            picture = None
     updated_user_vals += "picture='%s', " % (picture)
 
     if 'bio' in event:
         bio = event['bio']
     else:
         sql = "SELECT bio FROM users WHERE id= :student_id"
-        bio = query(sql, student_id_param)['records'][0][0]['stringValue']
+        bio_data = query(sql, student_id_param)['records']
+        if len(bio_data) > 0:
+            bio = bio_data[0][0]['stringValue']
+        else:
+            bio = None
     updated_user_vals += "bio='%s', " % (bio)
 
     if 'pronouns' in event:
         pronouns = event['pronouns']
     else:
         sql = "SELECT pronouns FROM users WHERE id= :student_id"
-        pronouns = query(sql, student_id_param)['records'][0][0]['stringValue']
+        pronouns_data = query(sql, student_id_param)['records']
+        if len(pronouns_data) > 0:
+            pronouns = pronouns_data[0][0]['stringValue']
+        else:
+            pronouns = None
     updated_user_vals += "pronouns='%s', " % (pronouns)
 
     if 'phone' in event:
         phone = event['phone']
     else:
         sql = "SELECT phone FROM users WHERE id= :student_id"
-        phone = query(sql, student_id_param)['records'][0][0]['stringValue']
+        phone_data = query(sql, student_id_param)['records']
+        if len(phone_data) > 0:
+            phone = phone_data[0][0]['stringValue']
+        else:
+            phone = None
     updated_user_vals += "phone='%s'" % (phone)
 
     
@@ -83,36 +111,99 @@ def update_student_profile(event, context):
         grad_student = event['grad_student']
     else:
         sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
-        grad_student = query(sql, student_id_param)['records'][0][0]['booleanValue']
+        grad_student_data = query(sql, student_id_param)['records']
+        if len(grad_student_data) > 0:
+            grad_student = grad_student_data[0][0]['booleanValue']
+        else:
+            grad_student = None
     updated_student_vals += "grad_student='%s', " % (grad_student)
-
-    if "job_search" in event:
-        job_search = event['job_search']
-    else:
-        sql = "SELECT job_search FROM students WHERE student_id= :student_id"
-        job_search = query(sql, student_id_param)['records'][0][0]['booleanValue']
-    updated_student_vals += "job_search='%s', " % (job_search)
-
-    if 'college' in event:
-        college = event['college']
-    else:
-        sql = "SELECT college FROM students WHERE student_id= :student_id"
-        college = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_student_vals += "college='%s', " % (college)
 
     if 'grad_year' in event:
         grad_year= event['grad_year']
     else:
         sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
-        grad_year = query(sql, student_id_param)['records'][0][0]['longValue']
+        grad_year_data = query(sql, student_id_param)['records']
+        if len(grad_year_data) > 0:
+            grad_year = grad_year_data[0][0]['longValue']
+        else:
+            grad_year = None
     updated_student_vals += "grad_year='%s', " % (grad_year)
 
     if 'resume' in event: 
         resume = event['resume']
     else:
         sql = "SELECT resume FROM students WHERE student_id= :student_id"
-        resume = query(sql, student_id_param)['records'][0][0]['stringValue']
+        resume_data = query(sql, student_id_param)['records']
+        if len(resume_data) > 0:
+            resume = resume_data[0][0]['stringValue']
+        else:
+            resume = None
     updated_student_vals += "resume='%s'" % (resume)
+
+
+    update_error_messages = []
+
+
+    #User links
+    if 'linkedin' in event:
+        linkedin_link = event['linkedin']
+        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :linkedin_link WHERE link.link_type = 'linkedin'"
+        linkedin_param = deepcopy(student_id_param)
+        linkedin_param.append({'name' : 'linkedin_link', 'value' : {'stringValue' : linkedin_link}})
+        try:
+            update_linkedin = query(sql, linkedin_param)
+        except Exception as e:
+            update_error_messages.append("Failed to update linkedin: " + str(e))
+
+    if 'github' in event:
+        github_link = event['github']
+        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :github_link WHERE link.link_type = 'github'"
+        github_param = deepcopy(student_id_param)
+        github_param.append({'name' : 'github_link', 'value' : {'stringValue' : github_link}})
+        try:
+            update_github = query(sql, github_param)
+        except Exception as e:
+            update_error_messages.append("Failed to update github: " + str(e))
+
+    if 'personal_site' in event:
+        personal_site_link = event['personal_site']
+        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :personal_site_link WHERE link.link_type = 'personal_site'"
+        personal_site_param = deepcopy(student_id_param)
+        personal_site_param.append({'name' : 'personal_site_link', 'value' : {'stringValue' : personal_site_link}})
+        try:
+            update_personal_site = query(sql, personal_site_param)
+        except Exception as e:
+            update_error_messages.append("Failed to update personal site: " + str(e))
+
+
+    #notification preferences table
+
+    #notifications_queries stores sql queries and their parameters as tuples
+    #As of 4/29 only email notifications are supported
+    notifications_queries = []
+
+
+    #student_colleges table
+
+    #college_queries stores sql queries and their parameters as tuples
+    college_queries = []
+
+    if 'colleges' in event:
+        colleges = event['colleges']
+
+        for college in colleges:
+            college_sql = "SELECT college_id FROM college WHERE college= :college"
+            college_param = [{'name' : 'college', 'value' : {'stringValue' : college}}]
+            try:
+                college_id = query(college_sql, college_param)['records'][0][0]['longValue']
+
+                college_id_sql = "INSERT INTO student_college VALUES (:student_id, :college_id)"
+                college_id_param = deepcopy(student_id_param)
+                college_id_param.append({'name' : 'college_id', 'value' : {'longValue' : college_id}})
+                college_queries.append((college_id_sql, college_id_param))
+
+            except Exception as e:
+                update_error_messages.append("Failed to retrieve college id for " + college + ": " + str(e))
 
 
     #student_majors table
@@ -126,12 +217,16 @@ def update_student_profile(event, context):
         for major in majors:
             major_sql = "SELECT major_id FROM major WHERE major= :major"
             major_param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
-            major_id = query(major_sql, major_param)['records'][0][0]['longValue']
+            try:
+                major_id = query(major_sql, major_param)['records'][0][0]['longValue']
 
-            major_id_sql = "INSERT INTO student_majors VALUES (:student_id, :major_id)"
-            major_id_param = deepcopy(student_id_param)
-            major_id_param.append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
-            majors_queries.append((major_id_sql, major_id_param))
+                major_id_sql = "INSERT INTO student_majors VALUES (:student_id, :major_id)"
+                major_id_param = deepcopy(student_id_param)
+                major_id_param.append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
+                majors_queries.append((major_id_sql, major_id_param))
+
+            except Exception as e:
+                update_error_messages.append("Failed to retrieve major id for " + major + ": " + str(e))
 
     
     #student_minors table
@@ -145,12 +240,16 @@ def update_student_profile(event, context):
         for minor in minors:
             minor_sql = "SELECT minor_id FROM minor WHERE minor= :minor"
             minor_param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
-            minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
+            try:
+                minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
 
-            minor_id_sql = "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
-            minor_id_param = deepcopy(student_id_param)
-            minor_id_param.append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
-            minors_queries.append((minor_id_sql, minor_id_param))         
+                minor_id_sql = "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
+                minor_id_param = deepcopy(student_id_param)
+                minor_id_param.append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
+                minors_queries.append((minor_id_sql, minor_id_param))        
+
+            except Exception as e:
+                update_error_messages.append("Failed to retrieve minor id for " + minor + ": " + str(e)) 
 
 
     #Check if student exists
@@ -174,11 +273,9 @@ def update_student_profile(event, context):
 
 
     #values that can not be null
-    if(first_name == None or last_name == None or job_search == None or grad_student == None):
+    if(first_name == None or last_name == None or grad_student == None):
         raise LambdaException("Unprocessable Entity")
 
-
-    update_error_messages = []
 
     #sql queries to update data in each table
     users_table_sql = (f"UPDATE users SET {updated_user_vals} WHERE id= :student_id")
@@ -192,6 +289,21 @@ def update_student_profile(event, context):
         update_student_data = query(students_table_sql, student_id_param)['numberOfRecordsUpdated']
     except Exception as e:
         update_error_messages.append("Student table update failed: " + str(e))
+
+
+    #Deleting pre-existing colleges, relevant colleges will be re-added
+    delete_colleges_sql = "DELETE FROM student_college WHERE student_id= :student_id"
+    try:
+        deleted_colleges = query(delete_colleges_sql, student_id_param)
+    except Exception as e:
+        update_error_messages.append("Deletion of colleges failed: " + str(e))
+
+    #Adding current colleges
+    for sql, params in college_queries:
+        try:
+            updated_colleges = query(sql, params)
+        except Exception as e:
+            update_error_messages.append("Student college update failed: " + str(e))
 
 
     #Deleting pre-existing majors, relevant majors will be re-added
