@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid, Icon, FormControlLabel, Checkbox} from '@material-ui/core';
-import Menu from "../../../../Navigation/appbar.js";
+import Menu from "../../../../../Navigation/appbar.js";
 //import SupporterCard from "../SupporterPanels/supporterCards.js"
 //import topicsList from "../topics.js"
 //import tagsList from "../tags.js"
-import convertTime from "../../../FindSupporter/convertTime.js"
+import convertTime from "../../../../FindSupporter/convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
 import useStyles from "./BlockStyles.js"
+import BlockCard from '../BlockCards/BlockCards.js'
+import BlockList from '../Blocks.js'
 
 
 
@@ -29,10 +31,10 @@ const ResponsiveDrawer = (props) => {
 
   
   //Creates a new supporter card a supporter
-  /*
-  const getSupporterCard = (supporterObj, s) => {
-    return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags}/>;
-  };*/
+  
+  const getBlockCard = (blockObj, s) => {
+    return <BlockCard {...blockObj}/>;
+  };
 
   //Increments day by one
   function nextDay(){
@@ -170,6 +172,7 @@ const ResponsiveDrawer = (props) => {
         </div>
         </Drawer>
         <main className={classes.content}>
+          {BlockList.map(blockObj => getBlockCard(blockObj))}
         </main>
       </div>
     );

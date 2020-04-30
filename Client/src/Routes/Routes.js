@@ -8,7 +8,7 @@ import appts from "../Pages/appts.js";
 import NotFound from "../Pages/NotFound.js";
 import Account from "../Pages/account.js";
 import AdminSettings from "../Pages/adminSettings.js"
-import SupporterSettings from "../Pages/SupporterSettings.js"
+import SupporterSettings from "../Pages/Settings Pages/SupporterSettings/SettingsMain/SupporterSettings.js"
 import Matching from "../Pages/FindSupporter/MatchingHome/Matching.js"
 import { Route, Switch, Redirect } from "react-router-dom";
 import UnauthenticatedRoute from "./UnauthenticatedRoute";
@@ -18,7 +18,7 @@ import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
 import Feedback from '../Pages/feedback';
-import SupporterBlocks from '../Pages/Settings Pages/SupporterSettings/AppointmentBlocks/BlockCreation.js'
+import SupporterBlocks from '../Pages/Settings Pages/SupporterSettings/AppointmentBlocks/Main/BlockCreation.js'
 //import Home from "../Pages/home.js";
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
