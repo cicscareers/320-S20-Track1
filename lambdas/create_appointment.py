@@ -130,8 +130,8 @@ def lambda_handler(event, context):
         appt_timestamp = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
 
         difference = appt_timestamp - currtimestamp
-        if difference.total_seconds() < 0:
-            raise LambdaException("404: Invalid time: timestamp is in the past.")
+        #if difference.total_seconds() < 0:
+            #raise LambdaException("404: Invalid time: timestamp is in the past.")
 
         # Check that time is within a supporter appointment block
         sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
@@ -150,14 +150,17 @@ def lambda_handler(event, context):
         block_end = responseList[3]
         
         # Check supporter's maximum number of appointments has not  been met
-        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt<TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS');"
-        sql_parameters = [
-            {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
-            {'name' : 'block_start', 'value':{'stringValue': block_start}},
-            {'name' : 'block_end', 'value':{'stringValue': block_end}}
-        ]
-        block_appts_query = query(sql,sql_parameters)
-        num_appts = len(block_appts_query['records'])
+        # query broken
+        #sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt<TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS');"
+        #sql_parameters = [
+            #{'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+            #{'name' : 'block_start', 'value':{'stringValue': block_start}},
+            #{'name' : 'block_end', 'value':{'stringValue': block_end}}
+        #]
+        #block_appts_query = query(sql,sql_parameters)
+        #num_appts = len(block_appts_query['records'])
+        # for testing
+        num_appts = 0
         if num_appts+1 > max_appts:
             raise LambdaException("404: Exceeds supporter's maximum number of appointments.")
     
@@ -198,19 +201,18 @@ def lambda_handler(event, context):
         sql = "SELECT duration FROM supporter_specializations WHERE supporter_id=:supporter_id AND specialization_type_id=:specialization;"
         sql_parameters = [
             {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
-            {'name' : 'specialization', 'value': {'stringValue' : specialization}}
+            {'name' : 'specialization', 'value': {'longValue' : specialization}}
         ]
         duration_query = query(sql,sql_parameters) 
         duration = duration_query['records'][0][0]['longValue']
         
         # get end time by advancing start time by 'duration'
-        appt_start_time = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
-        appt_type_advanced = appt_start_time + datetime.timedelta(minutes=duration)
-        end_timestamp = datetime.datetime.strptime(appt_type_advanced, '%Y-%m-%d %H:%M:%S')
-        appt_end = end_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        appt_start_time = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S') #convert start time to datetime
+        appt_type_advanced = appt_start_time + datetime.timedelta(minutes=duration) #advance by duration in minutes
+        appt_end = appt_type_advanced.strftime('%Y-%m-%d %H:%M:%S') #convert endtime to str
         
         # check if supporter has an appointment that starts between proposed start and end time
-        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>:time_of_appt AND time_of_appt<:appt_end"
+        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt<TO_TIMESTAMP(:appt_end, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt>=TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
         sql_parameters = [
             {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
             {'name' : 'appt_end', 'value': {'stringValue' : appt_end}},
