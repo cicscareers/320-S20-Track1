@@ -29,7 +29,27 @@ export default [
         start_date: '2020-05-01 8:00:00',
         end_date: '2020-05-01 14:00:00',
         max_appointments: 5,
-
+    },
+    {
+        appointment_id:4,
+        recurring_id:null,
+        start_date: '2020-05-01 8:00:00',
+        end_date: '2020-05-01 14:00:00',
+        max_appointments: 5,
+    },
+    {
+        appointment_id:4,
+        recurring_id:null,
+        start_date: '2020-05-01 8:00:00',
+        end_date: '2020-05-01 14:00:00',
+        max_appointments: 5,
+    },
+    {
+        appointment_id:4,
+        recurring_id:null,
+        start_date: '2020-05-01 8:00:00',
+        end_date: '2020-05-01 14:00:00',
+        max_appointments: 5,
     },
 
 ]

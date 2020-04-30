@@ -31,11 +31,9 @@ const theme = createMuiTheme({
     //type: 'dark',
     primary: {
       main: "#881c1c",
-      dark: "#ece9d4",
     },
     secondary: {
       main: "#FFFFFF",
-      dark: "#881c1c",
     }
   },
 });

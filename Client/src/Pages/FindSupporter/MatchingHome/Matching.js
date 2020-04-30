@@ -18,6 +18,7 @@ const ResponsiveDrawer = (props) => {
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
+  const [error, setError] = React.useState(false);
   const classes = useStyles();
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
@@ -48,9 +49,9 @@ const ResponsiveDrawer = (props) => {
         }
       })
       .catch(error => {
+        setError(true)
         console.log("No Supporters Found")
       });
-      alert("test")
     }, [])
 
   //This is temporary, will eventually be gotten from lambda
@@ -211,7 +212,18 @@ const ResponsiveDrawer = (props) => {
   ////////////////////////////////////////////////
 
   //Display a loading screen if the API is still being called
-  if(!isLoaded){
+  if(error){
+    return (
+      <div align="center">
+        <br/>
+        <br/>
+        <br/>
+        <Typography variant="h4">There was an error fetching supporters. The server may be down at the moment</Typography>
+      </div>
+    )
+  }
+
+  else if(!isLoaded){
     return (
       <div align="center">
         <br></br>
