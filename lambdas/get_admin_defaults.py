@@ -7,17 +7,25 @@ from package.query_db import query
 
 def get_admin_defaults(event,context):
 
-    sql = 'SELECT * FROM default'
+    sql = 'SELECT * FROM default_table'
     sql_parameters = []
     default_query = query(sql,sql_parameters)
 
+    #Check if table is empty
+    if(default_query['records'] == []):
+        return{
+            'body': json.dumps("default table empty"),
+            'statusCode': 500
+        }
+    
+    
     defaults = []
 
     block = dict()
-    block["medium_of_appt"] = default_query['records'][0].get("stringValue")
-    block["max_students_for_specialization"] = default_query['records'][1].get("stringValue")
-    block["duration_for_specialization"] = default_query['records'][2].get("stringValue")
-    block["hours_before_appointment_for_supporter"] = default_query['records'][3].get("stringValue")
+    block["medium_of_appt"] = default_query['records'][0][0]["longValue"]
+    block["max_students_for_specialization"] = default_query['records'][0][1]["longValue"]
+    block["duration_for_specialization"] = default_query['records'][0][2]["longValue"]
+    block["hours_before_appointment_for_supporter"] = default_query['records'][0][3]["longValue"]
 
     defaults.append(block)
 
