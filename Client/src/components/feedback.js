@@ -65,30 +65,34 @@ const Feedback = (props) => {
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
-          <Box component="fieldset" mb={3} borderColor="transparent">
-              <Typography component="legend">How likeley are you to recommend this Supporter
-                  to a friend?
-              </Typography>
-              <Rating
-                name="customized-icons"
-                defaultValue={2}
-                getLabelText={(value) => customIcons[value].label}
-                IconContainerComponent={IconContainer}
-              />
-          </Box>
-          <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
-              <Typography>Additional Comments</Typography>
-              <TextField
-                style = {{width: 1100}}
-                id="outlined-multiline-static"
-                multiline
-                rows="6"
-                variant="outlined"
-              />
-          </Grid>
-          <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
-              <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onPress={handlePress}>Submit Feedback</Button>
-          </Grid>
+            
+                
+                <Box component="fieldset" mb={3} borderColor="transparent">
+                    <Typography component="legend">How likeley are you to recommend this Supporter
+                        to a friend?</Typography>
+                    <Rating
+                    name="customized-icons"
+                    defaultValue={2}
+                    getLabelText={(value) => customIcons[value].label}
+                    IconContainerComponent={IconContainer}
+                    />
+                </Box>
+                <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
+                    <Typography>Additional Comments</Typography>
+                    <TextField
+                        style = {{width: 1100}}
+                        id="outlined-multiline-static"
+                        multiline
+                        rows="6"
+                        
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
+                    <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onPress={handlePress}>Submit Feedback</Button>
+                </Grid>
+             
+            
         </Card>
     </Container>
     );

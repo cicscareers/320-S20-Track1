@@ -50,6 +50,7 @@ const ResponsiveDrawer = (props) => {
       .catch(error => {
         console.log("No Supporters Found")
       });
+      alert("test")
     }, [])
 
   //This is temporary, will eventually be gotten from lambda
