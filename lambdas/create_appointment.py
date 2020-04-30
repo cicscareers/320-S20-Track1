@@ -17,7 +17,8 @@ def lambda_handler(event, context):
     student = int(event['student_id'])
     supporter = int(event['supporter_id'])
     time_of_appt = event['time_of_appt']
-    #selected_tags = event['selected_tags']
+    tags = event['selected_tags']
+    selected_tags_str = tags.strip('][').split(', ')
     medium_string = event['medium']
     location = event['location']
     override = event['override']
@@ -35,7 +36,7 @@ def lambda_handler(event, context):
     ]
     check_student = query(sql, sql_parameters)
     
-    # if student does not exist in DB, raise error
+    # if student does not exist in DB, raise exception
     if(check_student['records'] == []):
         raise LambdaException("404: Student does not exist.")
 
@@ -46,7 +47,7 @@ def lambda_handler(event, context):
     ]
     check_supporter = query(sql, sql_parameters)
     
-    # if supporter does not exist in DB, return error
+    # if supporter does not exist in DB, raise exception
     if(check_supporter['records'] == []):
         raise LambdaException("404: Supporter does not exist.")
     
@@ -61,9 +62,13 @@ def lambda_handler(event, context):
     # perform standard checks, if no 'override' parameter
     #if not override:
         # Check that date is not in the past
+
         # Check if provided time is already booked
+
         # Check if time is within supporter appointment block
+
         # Check supporter's maximum number of appointments
+
     
     # generate and set appointment_id 
     sql = "SELECT appointment_id FROM scheduled_appointments ORDER BY appointment_id DESC LIMIT 1"
@@ -75,38 +80,52 @@ def lambda_handler(event, context):
         appointment_id = id_query['records'][0][0]['longValue'] + 1
         
     # get appointment medium_id
-    sql = "SELECT medium_id FROM medium WHERE medium=:medium_string"
+    sql = "SELECT medium_id FROM medium WHERE medium=:medium_string;"
     sql_parameters = [
         {'name' : 'medium_string', 'value': {'stringValue' : medium_string}}
     ]
     medium_query = query(sql,sql_parameters)  
     if medium_query['records'] == []:
-        raise LambdaException("404: Medium type does not exist.")
+        raise LambdaException("404: Invalid medium type.")
     else:
         medium = medium_query['records'][0][0]['longValue']
     
-    """
     # get appointment specialization_id
-    sql = "SELECT specialization_type_id FROM specialization_type WHERE specialization_type=:spec_type"
+    sql = "SELECT specialization_type_id FROM specialization_type WHERE specialization_type=:spec_type;"
     sql_parameters = [
         {'name' : 'spec_type', 'value': {'stringValue' : spec_type}}
     ]
     specialization_query = query(sql,sql_parameters)  
     if specialization_query['records'] == []:
-        return{
-            'body': json.dumps("Specialization not found."),
-            'statusCode': 404
-        }
+        raise LambdaException("404: Invalid specialization.")
     else:
         specialization = specialization_query['records'][0][0]['longValue']
-    """
     
     # get appointment tags
-    
+    numTags = len(selected_tags_str)
+    tag_ints = []
+    sql = "SELECT tag_type_id FROM tag_type WHERE tag_type=%s" % selected_tags_str[0]
+    if numTags > 1:
+        for tag in range(1, numTags):
+            sql = sql + " OR tag_type=%s" % selected_tags_str[tag]
+    sql = sql + ";"
+    sql_parameters = []
+    tag_query = query(sql,sql_parameters)  
+    if len(tag_query['records']) != numTags:
+        raise LambdaException("404: Invalid tag.")
+    else:
+        intVal = tag_query['records'][0][0]['longValue']
+        tag_ints_str = "{%s" % intVal
+        if numTags > 1:
+            for x in range(1, numTags):
+                intVal = tag_query['records'][x][0]['longValue']
+                tag_ints.append(intVal)
+                tag_ints_str = tag_ints_str + ", %s" % intVal
+        tag_ints_str = tag_ints_str + "}"
 
     # format query
-    SQLquery = """INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, location, cancelled, time_scheduled, medium) \
-        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :location, false, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'), :medium)"""
+    SQLquery = "INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, location, cancelled, time_scheduled, medium, selected_tags) \
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :location, false, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'), :medium, %s);"% tag_ints_str
     
     # format query parameters
     query_parameters = [
@@ -114,14 +133,15 @@ def lambda_handler(event, context):
         {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
         {'name' : 'student_id', 'value':{'longValue': student_id}},
         {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
-        #{'name' : 'selected_tags', 'value':{'longValue': selected_tags}},
-        #{'name' : 'specialization', 'value':{'longValue': specialization}},
+        #{'name' : 'tag_ints', 'value':{'arrayValue': {'longValues' : tag_ints}}},
+        {'name' : 'specialization', 'value':{'longValue': specialization}},
         {'name' : 'location', 'value':{'stringValue': location}},
         {'name': 'medium', 'value':{'longValue': medium}},
         {'name' : 'time_scheduled', 'value': {'stringValue' : time_scheduled}},
         {'name' : 'comment', 'value':{'stringValue': comment}}
     ]
 
+    
     # make query
     try:
         response = query(SQLquery, query_parameters)
@@ -138,18 +158,16 @@ def lambda_handler(event, context):
         raise LambdaException("404: Update to student_appointment_relation failed: " + str(e))
 
     
-    """
     # query to specializations_for_appointment table
     sql = "INSERT INTO specializations_for_appointment (appointment_id, specialization_type_id) VALUES (:appointment_id, :specialization);"
-
+    
     # update specializations table
     try:
         response = query(sql, query_parameters)
     except Exception as e:
         raise LambdaException("404: Update to specializations_for_appointment failed: " + str(e))
 
-    """
-
+    
     """
     #addition by Kyle Noring 4/23/20
     #used to send ICS calendar invites to students and supporters upon appt creation
