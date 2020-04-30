@@ -6,7 +6,7 @@ def update_supporter_status(event, context):
     supporter_id = event['supporter_id']
     supporter_id_dic = {}
 
-    if suppprter_id == None:
+    if supporter_id == None:
         return{
             "statusCode": 404
         }
