@@ -1,0 +1,1 @@
+export default ["Professional Staff", "Student Staff", "Alumni", "Faculty", "Other"]
