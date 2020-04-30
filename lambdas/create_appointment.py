@@ -14,8 +14,6 @@ from package.email_ics import send_cal_email
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
-    student = int(event['student_id'])
-    supporter = int(event['supporter_id'])
     time_of_appt = event['time_of_appt']
     tags = event['selected_tags']
     selected_tags_str = tags.strip('][').split(', ')
@@ -23,42 +21,103 @@ def lambda_handler(event, context):
     location = event['location']
     spec_type = event['specialization']
     
-    if 'override' in event and event['override'] == "true":
-        override = True
-    else:
-        override = False
-    
     if 'comment' in event:
         comment = event['comment']
     else:
         comment = ""
     
-    # check that student is in DB
-    sql = "SELECT student_id FROM students WHERE student_id = :student"
-    sql_parameters = [
-        {'name' : 'student', 'value': {'longValue': student}}
-    ]
-    check_student = query(sql, sql_parameters)
+    if 'override' in event and event['override'] == "true":
+        override = True
+    else:
+        override = False
     
-    # if student does not exist in DB, raise exception
-    if(check_student['records'] == []):
-        raise LambdaException("404: Student does not exist.")
+    if override and event['student_id']=="":
+        # look up by email
+        if 'student_email' not in event:
+            raise LambdaException("404: Must provide student_id or email.")
+        # get student_email
+        student_email = event['student_email']
+        # query users table for user_id
+        sql = "SELECT id FROM users WHERE email=:student_email;"
+        sql_parameters = [
+            {'name' : 'student_email', 'value': {'stringValue' : student_email}}
+        ]
+        users_query = query(sql,sql_parameters)  
+        if users_query['records'] == []:
+            raise LambdaException("404: Invalid student email.")
+        else:
+            user_id = users_query['records'][0][0]['longValue']
+        # query students table for student_id
+        sql = "SELECT student_id FROM students WHERE user_id=:user_id;"
+        sql_parameters = [
+            {'name' : 'user_id', 'value': {'longValue' : user_id}}
+        ]
+        students_query = query(sql,sql_parameters)  
+        if students_query['records'] == []:
+            raise LambdaException("404: Email does not belong to a student.")
+        else:
+            student_id = students_query['records'][0][0]['longValue']
 
-    # check that supporter is in DB
-    sql = "SELECT supporter_id FROM supporters WHERE supporter_id = :supporter"
-    sql_parameters = [
-        {'name' : 'supporter', 'value': {'longValue': supporter}}
-    ]
-    check_supporter = query(sql, sql_parameters)
-    
-    # if supporter does not exist in DB, raise exception
-    if(check_supporter['records'] == []):
-        raise LambdaException("404: Supporter does not exist.")
-    
-    # set id variables
-    student_id = student
-    supporter_id = supporter
-    
+    else:
+        student = int(event['student_id'])
+        # check that student is in DB
+        sql = "SELECT student_id FROM students WHERE student_id = :student"
+        sql_parameters = [
+            {'name' : 'student', 'value': {'longValue': student}}
+        ]
+        check_student = query(sql, sql_parameters)
+        
+        # if student does not exist in DB, raise exception
+        if(check_student['records'] == []):
+            raise LambdaException("404: Student does not exist.")
+        
+        # set student_id variable
+        student_id = student
+
+    if override and event['supporter_id']=="":
+        #look up by email
+        if 'supporter_email' not in event:
+            raise LambdaException("404: Must provide supporter_id or email.")
+        # get supporter_email
+        supporter_email = event['supporter_email']
+        # query users table for user_id
+        sql = "SELECT id FROM users WHERE email=:supporter_email;"
+        sql_parameters = [
+            {'name' : 'supporter_email', 'value': {'stringValue' : supporter_email}}
+        ]
+        users_query = query(sql,sql_parameters)  
+        if users_query['records'] == []:
+            raise LambdaException("404: Invalid supporter email.")
+        else:
+            user_id = users_query['records'][0][0]['longValue']
+        # query supporters table for supporter_id
+        sql = "SELECT supporter_id FROM supporters WHERE user_id=:user_id;"
+        sql_parameters = [
+            {'name' : 'user_id', 'value': {'longValue' : user_id}}
+        ]
+        supporters_query = query(sql,sql_parameters)  
+        if supporters_query['records'] == []:
+            raise LambdaException("404: Email does not belong to a supporter.")
+        else:
+            supporter_id = supporters_query['records'][0][0]['longValue']
+
+    else:
+        supporter = int(event['supporter_id'])
+        # check that supporter is in DB
+        sql = "SELECT supporter_id FROM supporters WHERE supporter_id = :supporter"
+        sql_parameters = [
+            {'name' : 'supporter', 'value': {'longValue': supporter}}
+        ]
+        check_supporter = query(sql, sql_parameters)
+        
+        # if supporter does not exist in DB, raise exception
+        if(check_supporter['records'] == []):
+            raise LambdaException("404: Supporter does not exist.")
+        
+        # set supporter_id variable
+        supporter_id = supporter
+
+
     # generate and set time_scheduled
     timestamp = time.time() - 240
     time_scheduled = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
@@ -182,7 +241,6 @@ def lambda_handler(event, context):
         {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
         {'name' : 'student_id', 'value':{'longValue': student_id}},
         {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}},
-        #{'name' : 'tag_ints', 'value':{'arrayValue': {'longValues' : tag_ints}}},
         {'name' : 'specialization', 'value':{'longValue': specialization}},
         {'name' : 'location', 'value':{'stringValue': location}},
         {'name': 'medium', 'value':{'longValue': medium}},
@@ -192,7 +250,7 @@ def lambda_handler(event, context):
 
     # make query
     try:
-        response = query(SQLquery, query_parameters)
+        insert_query = query(SQLquery, query_parameters)
     except Exception as e:
         raise LambdaException("404: Update to scheduled_appointments failed: " + str(e))
 
