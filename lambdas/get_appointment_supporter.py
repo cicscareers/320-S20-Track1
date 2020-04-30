@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: supporter_id
 #Output: JSON object of current supporter appointments in the format: 
-# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","time_scheduled","medium","cancelled","cancel_reason","location","feedback","rating","comment","promoter_score","max_studnets","duration","specialization_type"
+# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","time_scheduled","medium","cancelled","cancel_reason","location","feedback","rating","comment","promoter_score","max_studnets","duration","specialization_type","appointment_id"
 
 def get_appointment_supporter(event, context):
 
@@ -22,9 +22,9 @@ def get_appointment_supporter(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture as studentPic, SA.time_of_appt, SA.time_scheduled, SA.medium,SA.cancelled, SA.cancel_reason,SA.location, SR.feedback, SR.rating, SR.comment, SR.promoter_score, SS.max_students, SS.duration, ST.specialization_type \
-          FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA, supporter_specializations SS, specialization_type ST \
-            WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND SA.supporter_id = SS.supporter_id AND ST.specialization_type_id = SS.specialization_type_id AND S.supporter_id=:given_id;'
+    sql = 'SELECT distinct U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture as studentPic, SA.time_of_appt, SA.time_scheduled, SA.medium,SA.cancelled, SA.cancel_reason,SA.location, SR.feedback, SR.rating, SR.comment, SR.promoter_score, SS.max_students, SS.duration, ST.specialization_type, SR.appointment_id \
+          FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA, supporter_specializations SS, specializations_for_appointment SF, specialization_type ST \
+            WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND SA.appointment_id = SF.appointment_id AND SF.appointment_id = ST.specialization_type_id AND ST.specialization_type_id = SS.specialization_type_id AND S.supporter_id=:given_id;'
     
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
     appointment_info = query(sql, sql_parameters)
@@ -60,6 +60,7 @@ def get_appointment_supporter(event, context):
             block["max_students"] = entry[16].get("longValue")
             block["duration"] = entry[17].get("longValue")
             block["specialization_type"] = entry[18].get("stringValue")
+            block["supporter_id"] = entry[19].get("long")
             supporter_appointments.append(block)
 
         #Returns the query contents in JSON format
