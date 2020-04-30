@@ -11,7 +11,7 @@ from package.lambda_exception import LambdaException
 
 # function deletes an appointment block 
 # Input: appointment_block_id, supporter_id
-# Output: 201 Created
+# Output: 200 OK
 def lambda_handler(event, context):
 
     #supporter identifier
@@ -61,5 +61,5 @@ def lambda_handler(event, context):
     # success
     return {
         'body': json.dumps("appointment block successfully created"),
-        'statusCode': 201
+        'statusCode': 200
     }
