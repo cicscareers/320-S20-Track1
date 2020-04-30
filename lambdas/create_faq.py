@@ -12,7 +12,7 @@ def handler(event, context):
     answer = event['answer']
     answer_param = {'name' : 'answer', 'value' : {'stringValue' : answer}}
 
-    faq_id_sql = "SELECT FAQ_id FROM FAQ ORDER BY FAQ_id DESCENDING LIMIT 1;"
+    faq_id_sql = "SELECT FAQ_id FROM FAQ ORDER BY FAQ_id DESC LIMIT 1;"
     try:
         faq_id = query(faq_id_sql)['records'][0]
         if 'longValue' in faq_id:
