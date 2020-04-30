@@ -11,7 +11,7 @@ const BlockCard = (props) => {
   Block_Date.setYear(parseInt(start_date.substring(0,4)))
   Block_Date.setMonth(parseInt(start_date.substring(5,7))-1)
   Block_Date.setDate(parseInt(start_date.substring(8,10)))
-  console.log(Block_Date.getDay())
+  const week_day= days_of_week[Block_Date.getDay()].toString()
 
   return (
     <div>
@@ -20,16 +20,15 @@ const BlockCard = (props) => {
             <Grid container>
                 <Grid item xs={6}>
                     <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom component="h2">
-                        Start Time: {start_date}
+                        Start Time: {start_date.substring(11,16)}
                     </Typography>
                     <Typography variant="h6" className={classes.title} color="textSecondary" gutterBottom component="h2">
-                        End Time: {end_date}
+                        End Time: {end_date.substring(11,16)}
                     </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                    <Typography variant="h6" component="h2">
-                    {recurring_id && "This block is recurring"}
-                    </Typography>
+                    {recurring_id && (<Typography variant="h6" component="h2">This block occurs every {week_day}</Typography>)}
+                    {!recurring_id && (<Typography variant="h6" component="h2">This block occurs on {week_day} , {start_date.substring(0,10)}</Typography>)}
                     <Typography className={classes.pos} color="textSecondary">
                         The maximum number of appointments in this block is {max_appointments}
                     </Typography>
@@ -37,7 +36,7 @@ const BlockCard = (props) => {
             </Grid>
         </CardContent>
         <CardActions>
-            <Button size="small">Learn More</Button>
+            <Button size="small">Delete Block</Button>
         </CardActions>
         </Card>
         <br/>
