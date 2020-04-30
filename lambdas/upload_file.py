@@ -10,10 +10,12 @@ print("OOF")
 
 
 def upload_files(event, context):
-    print("hello")
 
     # get the file name
     file_name = event['file_name']
+
+    # considering adding types for resume/picture
+    #file_type = event['file_type']
 
     # s_3 bucket
     bucket_name = 't1-s3-us-east-1'  # not sure if thats the bucket name ?????
@@ -25,6 +27,8 @@ def upload_files(event, context):
         # actually uploading
         response = s_3.meta.client.upload_file(
             file_name, bucket_name, file_name)
+
+        # 3rd parameter (key) is where we put the files in folders  i.e "folder/image.jpg"
 
         # with open(file_name, 'rb') as data:
         #     s_3.upload_fileobj(data, bucket_name, file_name)
