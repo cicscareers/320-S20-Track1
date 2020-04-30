@@ -49,8 +49,8 @@ def lambda_handler(event, context):
             block = dict()
             block["start_date"] = entry[0].get("stringValue")
             block["end_date"] = entry[1].get("stringValue")
-            block["appointment_block_id"] = entry[2].get("stringValue")
-            block["recurring_id"] = entry[3].get("stringValue")
+            block["appointment_block_id"] = entry[2].get("longValue")
+            block["recurring_id"] = entry[3].get("longValue")
             appointment_data.append(block)
 
     #Returns query contents in json format, success
