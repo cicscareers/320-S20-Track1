@@ -238,7 +238,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today < new Date(appointment.time_of_appt) &&
+                today < new Date(appointment.time_scheduled) &&
                   <Grid item lg = {12}>
                     <AppointmentCard
                       upcoming = {true}
@@ -246,9 +246,9 @@ const ResponsiveDrawer = (props) => {
                       subject = {appointment.type}
                       location = {appointment.location}
                       medium = {appointment.method}
-                      start = {convertDate(appointment.time_of_appt, 0)}
-                      end = {convertDate(appointment.time_of_appt, appointment.duration)}
-                      date = {appointment.time_of_appt.substring(0,10)}
+                      start = {convertDate(appointment.time_scheduled, 0)}
+                      end = {convertDate(appointment.time_scheduled, appointment.duration)}
+                      date = {appointment.time_scheduled.substring(0,10)}
                       supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                       student = {appointment.studentFN + " " + appointment.studentLN}
                       supporterProfilePic = {appointment.supporterPic}
@@ -265,7 +265,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today > new Date(appointment.time_of_appt) &&
+                today > new Date(appointment.time_scheduled) &&
                 <Grid item lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
@@ -273,9 +273,9 @@ const ResponsiveDrawer = (props) => {
                     subject = {appointment.type}
                     location = {appointment.location}
                     medium = {appointment.method}
-                    start = {convertDate(appointment.time_of_appt, 0)}
-                    end = {convertDate(appointment.time_of_appt, appointment.duration)}
-                    date = {appointment.time_of_appt.substring(0,10)}
+                    start = {convertDate(appointment.time_scheduled, 0)}
+                    end = {convertDate(appointment.time_scheduled, appointment.duration)}
+                    date = {appointment.time_scheduled.substring(0,10)}
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}

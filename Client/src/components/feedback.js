@@ -56,9 +56,34 @@ const StyledRating = withStyles({
     value: PropTypes.number.isRequired,
   };
 
-function handlePress(key, rating, text){
-    console.log(key, rating, text)
-    console.log("WHY")
+function handleSubmitFeedback(key, feedbackRate, feedbackString){
+    console.log(key, feedbackRate, feedbackString)
+    // fetch(
+    //   "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       appointment_id: key,
+    //       rating: feedbackRate,
+    //       feedback: feedbackString
+    //     })
+    //   }
+    // )
+    // .then(response => {
+    //   if (response.status >= 200 && response.status < 300) {
+    //     console.log(response)
+    //     return response.json();
+    //   } else {
+    //     throw new Error("Server can't be reached!");
+    //   }
+    // })
+    // .catch(error => {
+    //   console.log(error);
+    // });
 };
 
 const Feedback = (props) => {
@@ -83,18 +108,18 @@ const Feedback = (props) => {
           <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
               <Typography>Additional Comments</Typography>
               <TextField
-                style = {{width: 1100}}
                 id="outlined-multiline-static"
                 multiline
                 rows="6"
                 variant="outlined"
+                fullWidth
                 onChange={e => setFeedbackText(e.target.value)}
               />
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
               <Button 
                style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} 
-               onPress={handlePress(props.appt_id, feedbackRating, feedbackText)}>
+               onPress={handleSubmitFeedback(props.appt_id, feedbackRating, feedbackText)}>
                  Submit
               </Button>
           </Grid>

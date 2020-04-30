@@ -47,10 +47,12 @@ const Test = (props) =>{
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
                 >
-            <ViewFeedback 
-                rating = {5}
-                feedback = {"Test"}
-                />
+            <Fragment>
+              <ViewFeedback 
+                  rating = {5}
+                  feedback = {"TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest"}
+              />
+            </Fragment>
             </Modal>
         </Fragment>
     );

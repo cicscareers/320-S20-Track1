@@ -177,8 +177,7 @@ const PreviousAppointmentCard = (props) => {
                   <Typography>{props.location}</Typography>
                   <Typography>{props.medium}</Typography>
                   <br/>
-                  <Typography className={classes.tagChip}>{props.comments}</Typography>
-                  
+                  <Typography className={classes.tagChip}>{props.comments}</Typography>                  
               </Grid>
               <Grid item xs={12} sm={6}>
                 
