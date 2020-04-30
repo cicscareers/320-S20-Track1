@@ -20,8 +20,8 @@ def lambda_handler(event, context):
     else:
         raise LambdaException("Invalid input: No user Id")
 
-    start_date = event['startDate']
-    end_date = event['endDate']
+    start_date = event['start_date']
+    end_date = event['end_date']
     is_recurring = event['isReccuring']
     if 'max_num_of_appts' in event:
         max_num_of_appts = event['max_num_of_appts']
