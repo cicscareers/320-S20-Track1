@@ -14,7 +14,7 @@ def handler(event, context):
 
     faq_id_sql = "SELECT FAQ_id FROM FAQ ORDER BY FAQ_id DESC LIMIT 1;"
     try:
-        faq_id = query(faq_id_sql)['records'][0]
+        faq_id = query(faq_id_sql)['records']
         if 'longValue' in faq_id:
             faq_id += 1
         else:
@@ -29,5 +29,9 @@ def handler(event, context):
 
     try:
         query(add_faq_sql, params)
+
+        return {
+            'body' : "FAQ successfully created"
+        }
     except Exception as e:
         raise LambdaException("Failed to add FAQ: " + str(e))
