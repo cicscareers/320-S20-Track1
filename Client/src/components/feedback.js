@@ -14,6 +14,7 @@ import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import {Grid, Button, TextField} from '@material-ui/core';
+import Cookies from "universal-cookie";
 
 
 const StyledRating = withStyles({
@@ -57,33 +58,36 @@ const StyledRating = withStyles({
   };
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
-    console.log(key, feedbackRate, feedbackString)
-    // fetch(
-    //   "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       appointment_id: key,
-    //       rating: feedbackRate,
-    //       feedback: feedbackString
-    //     })
-    //   }
-    // )
-    // .then(response => {
-    //   if (response.status >= 200 && response.status < 300) {
-    //     console.log(response)
-    //     return response.json();
-    //   } else {
-    //     throw new Error("Server can't be reached!");
-    //   }
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // });
+  const cookies = new Cookies();
+  const id = cookies.get('id');
+  console.log(key, feedbackRate, feedbackString, id)
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          appointment_id: key,
+          rating: feedbackRate,
+          feedback: feedbackString,
+          student_id: id
+        })
+      }
+    )
+    .then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response)
+        return response.json();
+      } else {
+        throw new Error("Server can't be reached!");
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 const Feedback = (props) => {
