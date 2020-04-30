@@ -281,30 +281,6 @@ def lambda_handler(event, context):
         response = query(sql, query_parameters)
     except Exception as e:
         raise LambdaException("404: Update to specializations_for_appointment failed: " + str(e))
-
-    
-    """
-    #addition by Kyle Noring 4/23/20
-    #used to send ICS calendar invites to students and supporters upon appt creation
-    sql = "SELECT first_name, last_name, email FROM users WHERE id = :student"
-    sql_parameters = [
-        {'name' : 'student', 'value': {'longValue': student}}
-    ]
-    stud_info = query(sql, sql_parameters)['records'][0]
-    studs = []
-    studs.append(stud_info[0].get("stringValue")+" "+stud_info[1].get("stringValue"))
-    stud_emails = []
-    stud_emails.append(stud_info[2].get("stringValue"))
-    sql = "SELECT first_name, last_name, email from users WHERE id = :supporter"
-    sql_parameters = [
-        {'name' : 'supporter', 'value': {'longValue': supporter}}
-    ]
-    supp_info = query(sql, sql_parameters)['records'][0]
-    supp = supp_info[0].get("stringValue")+" "+supp_info[1].get("stringValue")
-    supp_email = supp_info[2].get("stringValue")
-    send_cal_email(supp, supp_email, studs, stud_emails, time_of_appt, duration, location, appt_type)
-    #end of addition
-    """
     
     # if no error, return 201 Created
     return {
