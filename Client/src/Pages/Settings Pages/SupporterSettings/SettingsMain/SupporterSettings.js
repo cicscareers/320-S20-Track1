@@ -7,6 +7,8 @@ import { makeStyles, ListItem, ListItemText, List} from '@material-ui/core';
 import Menu from "../../../../Navigation/appbar.js";
 import Cookies from "universal-cookie";
 import Blocks from "../AppointmentBlocks/Main/BlockCreation.js"
+import Profile from "../ProfileSettings/ProfileSettings.js"
+import SupporterInfo from "../SupporterInformation/SupporterInformation.js"
 
 const drawerWidth = "25%";
 
@@ -82,9 +84,6 @@ const SupporterSettings = (props) => {
               <ListItem button onClick={() => setPage("Supporter Information")} key={2}>
                 <ListItemText primary={"Supporter Information"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Email Settings")} key={3}>
-                <ListItemText primary={"Email Settings"} />
-              </ListItem>
               <ListItem button onClick={() => setPage("Appointment Blocks")} key={4}>
                 <ListItemText primary={"Appointment Blocks"} />
               </ListItem>
@@ -93,6 +92,8 @@ const SupporterSettings = (props) => {
         </Drawer>
         <main className={classes.content}>
             {page==="Appointment Blocks" && (<Blocks/>)}
+            {page==="Profile Information" && (<Profile/>)}
+            {page==="Supporter Information" && (<SupporterInfo/>)}
         </main>
       </div>
       );

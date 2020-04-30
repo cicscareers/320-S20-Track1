@@ -34,7 +34,7 @@ export default function Routes() {
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />
-          <Route path="/supporter-settings" exact component={SupporterSettings} />
+          <SupporterRoute Route path="/supporter-settings" exact component={SupporterSettings} />
           <Route path="/create-block" exact component={SupporterBlocks} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
           <StudentRoute path="/match" exact component={Matching} />

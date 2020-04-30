@@ -36,6 +36,21 @@ const ResponsiveDrawer = (props) => {
     return <BlockCard {...blockObj}/>;
   };
 
+  const uniqueBlocksDict={}
+  
+  function populateUniqueBlocks(){
+    for(let i =0;i<BlockList.length;i++){
+      var curr=BlockList[i]
+      BlockList.splice(i,i+1)
+      if(!uniqueBlocksDict[curr.recurring_id]){
+        BlockList.unshift(curr)
+        uniqueBlocksDict[curr.recurring_id]=curr.recurring_id
+      }
+    }
+  }
+
+  populateUniqueBlocks()
+
   //Increments day by one
   function nextDay(){
     var newDate = new Date()
