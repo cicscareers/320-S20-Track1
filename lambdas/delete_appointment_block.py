@@ -43,23 +43,34 @@ def lambda_handler(event, context):
     if(existing_appointment_block['records'] == []):
         print("No existing appointment block")
         raise LambdaException("No existing appointment block")
-
-    #delete appt block sql
-    sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
-    sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
-        {'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}] 
+        
+    sql = """DELETE FROM specializations_for_block WHERE appointment_block_id= :appnt_blck_id"""
+    sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}}] 
 
     delete_appmnt_blck = query(sql,sql_parameters)
 
     # check if delete successfull
     if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
         return {
-            'body': json.dumps("appointment block not deleted"),
+            'body': json.dumps("appointment block not deleted from specializations_for_block"),
+            'statusCode': 404
+        }
+
+    #delete appt block sql
+    sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
+    sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
+        {'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}] 
+    delete_appmnt_blck = query(sql,sql_parameters)
+    
+    # check if delete successfull
+    if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
+        return {
+            'body': json.dumps("appointment block not deleted from appointment_block"),
             'statusCode': 404
         }
 
     # success
     return {
-        'body': json.dumps("appointment block successfully created"),
+        'body': json.dumps("appointment block successfully deleted"),
         'statusCode': 200
     }
