@@ -128,7 +128,6 @@ def lambda_handler(event, context):
     if not override:
         # Check that date is not in the past
         appt_timestamp = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
-        print(appt_timestamp)
 
         difference = appt_timestamp - currtimestamp
         if difference.total_seconds() < 0:
@@ -195,6 +194,7 @@ def lambda_handler(event, context):
 
     if not override:
         # Check if provided time is already booked for supporter
+        # get duration of appointment
         sql = "SELECT duration FROM supporter_specializations WHERE supporter_id=:supporter_id AND specialization_type_id=:specialization;"
         sql_parameters = [
             {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
@@ -202,9 +202,14 @@ def lambda_handler(event, context):
         ]
         duration_query = query(sql,sql_parameters) 
         duration = duration_query['records'][0][0]['longValue']
-        end_timestamp = TO_TIMESTAMP(time_of_appt, 'YYYY-MM-DD HH24:MI:SS') + duration
-        appt_end = datetime.datetime.fromtimestamp(end_timestamp).strftime('%Y-%m-%d %H:%M:%S')
         
+        # get end time by advancing start time by 'duration'
+        appt_start_time = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
+        appt_type_advanced = appt_start_time + datetime.timedelta(minutes=duration)
+        end_timestamp = datetime.datetime.strptime(appt_type_advanced, '%Y-%m-%d %H:%M:%S')
+        appt_end = end_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        
+        # check if supporter has an appointment that starts between proposed start and end time
         sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>:time_of_appt AND time_of_appt<:appt_end"
         sql_parameters = [
             {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
