@@ -33,13 +33,9 @@ const Test = (props) =>{
                   open={feedbackModalOpen}
                   onClose={handleCloseFeedbackModal}
                 >
-                <Feedback subject = {props.subject}
-                    location = {props.location}
-                    medium = {props.medium}
-                    time = {props.time}
-                    date = {props.date}
-                    supporter = {props.supporter}
-                    profilepic = {props.profilepic}>
+                <Feedback 
+                    appt_id = {1}
+                >
                 </Feedback>
             </Modal>
             <Button onClick={handleOpenViewFeedbackModal}>View Feedback</Button>

@@ -59,35 +59,35 @@ const StyledRating = withStyles({
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
   const cookies = new Cookies();
-  const id = cookies.get('id');
+  const id = parseInt(cookies.get('id'));
   console.log(key, feedbackRate, feedbackString, id)
-    fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          appointment_id: key,
-          rating: feedbackRate,
-          feedback: feedbackString,
-          student_id: id
-        })
-      }
-    )
-    .then(response => {
-      if (response.status >= 200 && response.status < 300) {
-        console.log(response)
-        return response.json();
-      } else {
-        throw new Error("Server can't be reached!");
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  fetch(
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        appointment_id: key,
+        rating: feedbackRate,
+        feedback: feedbackString,
+        student_id: id
+      })
+    }
+  )
+  .then(response => {
+    if (response.status >= 200 && response.status < 300) {
+      console.log(response)
+      return response.json();
+    } else {
+      throw new Error("Server can't be reached!");
+    }
+  })
+  .catch(error => {
+    console.log(error);
+  });
 };
 
 const Feedback = (props) => {
@@ -123,7 +123,7 @@ const Feedback = (props) => {
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
               <Button 
                style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} 
-               onPress={handleSubmitFeedback(props.appt_id, feedbackRating, feedbackText)}>
+               onClick={() => handleSubmitFeedback(props.appt_id, parseInt(feedbackRating), feedbackText)}>
                  Submit
               </Button>
           </Grid>
