@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: 
 #Output: JSON object of current supporter appointments in the format: 
-# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","type","duration","method","location","comment", "feedback","rating","promoter_score"
+# "supporterFN","supporterLN","supporterPic", "studentFN","studentLN","studentPic","time_of_appt","time_scheduled","medium","cancelled","cancel_reason","location","feedback","rating","comment","promoter_score","max_students","duration","specialization_type","appointment_id"
 
 def get_all_appointments(event, context):
 
@@ -21,14 +21,13 @@ def get_all_appointments(event, context):
     else:
         #There are appointments scheduled, so fetch appointments
         sql = 'SELECT distinct U1.first_name AS studentFN, U1.last_name AS studentLN, U1.picture AS studentPic, U2.first_name AS supporterFN, U2.last_name AS supporterLN, U2.picture as supporterPic, SA.time_of_appt, SA.time_scheduled, SA.medium, SA.cancelled, SA.cancel_reason, SA.location, SR.feedback, SR.rating, SR.comment, SR.promoter_score, SS.max_students, SS.duration, ST.specialization_type, SR.appointment_id \
-                FROM students S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA, supporter_specializations SS, specializations_for_appointment SFA, specialization_type ST \
-                WHERE S.student_id = SR.student_id \
-                AND S.student_id = U1.id \
+                FROM users U1, users U2, student_appointment_relation SR, scheduled_appointments SA, supporter_specializations SS, specializations_for_appointment SFA, specialization_type ST \
+                WHERE SR.student_id = U1.id \
                 AND SR.supporter_id = U2.id \
-                AND ST.specialization_type_id = SS.specialization_type_id \
                 AND SA.appointment_id = SFA.appointment_id \
+                AND SFA.specialization_type_id = ST.specialization_type_id \
                 AND SR.appointment_id = SA.appointment_id \
-                AND SFA.appointment_id = ST.specialization_type_id;'
+                AND ST.specialization_type_id = SS.specialization_type_id;'
     
         sql_parameters = []
         appointment_info = query(sql, sql_parameters)
