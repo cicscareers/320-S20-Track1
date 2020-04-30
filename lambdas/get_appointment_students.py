@@ -4,7 +4,7 @@ from package.query_db import query
 #Written by Matt Hill
 #Input: student_id
 #Output: JSON object of current appointments that a student has in the format: 
-# "studentFN","studentLN","studentPic","supporterFN","supporterLN","supporterPic","time_of_appt","time_scheduled","medium","cancelled","cancel_reason","location","feedback","rating","comment","promoter_score","max_students","duration","specialization_type"
+# "studentFN","studentLN","studentPic","supporterFN","supporterLN","supporterPic","time_of_appt","time_scheduled","medium","cancelled","cancel_reason","location","feedback","rating","comment","promoter_score","max_students","duration","specialization_type","appointment_id"
 
 def get_appointment_students(event, context):
     
@@ -29,10 +29,10 @@ def get_appointment_students(event, context):
             AND S.student_id = U1.id \
             AND SR.supporter_id = U2.id \
             AND SA.appointment_id = SF.appointment_id \
-            AND SF.appointment_id = ST.specialization_type_id \
+            AND SF.specialization_type_id = ST.specialization_type_id \
             AND ST.specialization_type_id = SS.specialization_type_id \
             AND S.student_id=:given_id;' 
-    
+            
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
     appointment_info = query(sql, sql_parameters)
 
@@ -63,10 +63,11 @@ def get_appointment_students(event, context):
             block["feedback"] = entry[12].get("stringValue")
             block["rating"] = entry[13].get("longValue")
             block["comment"] = entry[14].get("stringValue")
-            block["promoter_score"] = entry[15].get("booleanValue")
+            block["promoter_score"] = entry[15].get("bValue")
             block["max_students"] = entry[16].get("longValue")
             block["duration"] = entry[17].get("longValue")
             block["specialization_type"] = entry[18].get("stringValue")
+            block["appointment_id"] = entry[19].get("longValue")
 
 
             student_appointments.append(block)
@@ -76,3 +77,4 @@ def get_appointment_students(event, context):
             'body': student_appointments,
             'statusCode': 200
         }
+    
