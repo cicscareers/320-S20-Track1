@@ -22,9 +22,16 @@ def get_appointment_supporter(event, context):
         }
 
     #The user does exist, so fetch appointments
-    sql = 'SELECT distinct U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture as studentPic, SA.time_of_appt, SA.time_scheduled, SA.medium,SA.cancelled, SA.cancel_reason,SA.location, SR.feedback, SR.rating, SR.comment, SR.promoter_score, SS.max_students, SS.duration, ST.specialization_type, SR.appointment_id \
+     sql = 'SELECT distinct U1.first_name AS supporterFN, U1.last_name AS supporterLN, U1.picture AS supporterPic, U2.first_name AS studentFN, U2.last_name AS studentLN, U2.picture as studentPic, SA.time_of_appt, SA.time_scheduled, SA.medium,SA.cancelled, SA.cancel_reason,SA.location, SR.feedback, SR.rating, SR.comment, SR.promoter_score, SS.max_students, SS.duration, ST.specialization_type, SR.appointment_id \
           FROM supporters S, users U1, users U2, student_appointment_relation SR, scheduled_appointments SA, supporter_specializations SS, specializations_for_appointment SF, specialization_type ST \
-            WHERE S.supporter_id = SR.supporter_id AND SR.appointment_id = SA.appointment_id AND S.supporter_id = U1.id AND SR.student_id = U2.id AND SA.appointment_id = SF.appointment_id AND SF.appointment_id = ST.specialization_type_id AND ST.specialization_type_id = SS.specialization_type_id AND S.supporter_id=:given_id;'
+            WHERE S.supporter_id = SR.supporter_id \
+            AND SR.appointment_id = SA.appointment_id \
+            AND S.supporter_id = U1.id \
+            AND SR.student_id = U2.id \
+            AND SA.appointment_id = SF.appointment_id \
+            AND SF.appointment_id = ST.specialization_type_id \
+            AND ST.specialization_type_id = SS.specialization_type_id \
+            AND S.supporter_id=:given_id;'
     
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
     appointment_info = query(sql, sql_parameters)
