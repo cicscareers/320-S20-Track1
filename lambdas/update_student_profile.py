@@ -31,7 +31,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT first_name FROM users WHERE id= :student_id"
         first_name_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in first_name_data:
+        if 'stringValue' in first_name_data:
             first_name = first_name_data['stringValue']
         else:
             first_name = None
@@ -42,7 +42,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT last_name FROM users WHERE id= :student_id"
         last_name_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in last_name_data:
+        if 'stringValue' in last_name_data:
             last_name = last_name_data['stringValue']
         else:
             last_name = None
@@ -53,7 +53,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT preferred_name FROM users WHERE id= :student_id"
         preferred_name_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in preferred_name_data:
+        if 'stringValue' in preferred_name_data:
             preferred_name = preferred_name_data['stringValue']
         else:
             preferred_name = None
@@ -64,7 +64,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT picture FROM users WHERE id= :student_id"
         picture_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in picture_data:
+        if 'stringValue' in picture_data:
             picture = picture_data['stringValue']
         else:
             picture = None
@@ -75,7 +75,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT bio FROM users WHERE id= :student_id"
         bio_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue']:
+        if 'stringValue' in bio_data:
             bio = bio_data['stringValue']
         else:
             bio = None
@@ -86,7 +86,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT pronouns FROM users WHERE id= :student_id"
         pronouns_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in pronouns_data:
+        if 'stringValue' in pronouns_data:
             pronouns = pronouns_data['stringValue']
         else:
             pronouns = None
@@ -97,7 +97,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT phone FROM users WHERE id= :student_id"
         phone_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in phone_data:
+        if 'stringValue' in phone_data:
             phone = phone_data['stringValue']
         else:
             phone = None
@@ -112,7 +112,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
         grad_student_data = query(sql, student_id_param)['records'][0][0]
-        if ['booleanValue'] in grad_student_data:
+        if 'booleanValue' in grad_student_data:
             grad_student = grad_student_data['booleanValue']
         else:
             grad_student = None
@@ -123,7 +123,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
         grad_year_data = query(sql, student_id_param)['records'][0][0]
-        if ['longValue'] in grad_year_data:
+        if 'longValue' in grad_year_data:
             grad_year = grad_year_data['longValue']
         else:
             grad_year = None
@@ -134,7 +134,7 @@ def update_student_profile(event, context):
     else:
         sql = "SELECT resume FROM students WHERE student_id= :student_id"
         resume_data = query(sql, student_id_param)['records'][0][0]
-        if ['stringValue'] in resume_data:
+        if 'stringValue' in resume_data:
             resume = resume_data['stringValue']
         else:
             resume = None
