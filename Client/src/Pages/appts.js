@@ -135,7 +135,7 @@ const ResponsiveDrawer = (props) => {
       fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id='+id)
       .then(res => res.json())
       .then(json => {
-        
+        console.log(json.body)
         setLoaded(true);
         setAppointments(json.body);
       })
@@ -166,7 +166,7 @@ const ResponsiveDrawer = (props) => {
           return res.json();
         })
         .then(json => {
-          
+          console.log(json.body)
           setLoaded(true);
           setAppointments(json.body);
           
@@ -238,7 +238,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today < new Date(appointment.time_scheduled) &&
+                today < new Date(appointment.time_of_appt) &&
                   <Grid item lg = {12}>
                     <AppointmentCard
                       upcoming = {true}
@@ -246,9 +246,9 @@ const ResponsiveDrawer = (props) => {
                       subject = {appointment.type}
                       location = {appointment.location}
                       medium = {appointment.method}
-                      start = {convertDate(appointment.time_scheduled, 0)}
-                      end = {convertDate(appointment.time_scheduled, appointment.duration)}
-                      date = {appointment.time_scheduled.substring(0,10)}
+                      start = {convertDate(appointment.time_of_appt, 0)}
+                      end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                      date = {appointment.time_of_appt.substring(0,10)}
                       supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                       student = {appointment.studentFN + " " + appointment.studentLN}
                       supporterProfilePic = {appointment.supporterPic}
@@ -265,7 +265,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today > new Date(appointment.time_scheduled) &&
+                today > new Date(appointment.time_of_appt) &&
                 <Grid item lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
@@ -273,9 +273,9 @@ const ResponsiveDrawer = (props) => {
                     subject = {appointment.type}
                     location = {appointment.location}
                     medium = {appointment.method}
-                    start = {convertDate(appointment.time_scheduled, 0)}
-                    end = {convertDate(appointment.time_scheduled, appointment.duration)}
-                    date = {appointment.time_scheduled.substring(0,10)}
+                    start = {convertDate(appointment.time_of_appt, 0)}
+                    end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                    date = {appointment.time_of_appt.substring(0,10)}
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
@@ -284,6 +284,7 @@ const ResponsiveDrawer = (props) => {
                     rating = {appointment.rating}
                     feedback = {appointment.feedback}
                     feedbackLeft = {(appointment.feedback != null && appointment.rating != null)}
+                    appt_id = {appointment.appointment_id}
                   />
                 </Grid>
               ))}

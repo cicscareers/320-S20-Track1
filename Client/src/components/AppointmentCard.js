@@ -228,20 +228,17 @@ const PreviousAppointmentCard = (props) => {
                   open={feedbackModalOpen}
                   onClose={handleCloseFeedbackModal}
                 >
-                <Feedback subject = {props.subject}
-                    location = {props.location}
-                    medium = {props.medium}
-                    time = {props.time}
-                    date = {props.date}
-                    supporter = {props.supporter}
-                    profilepic = {props.profilepic}></Feedback>
+                <Feedback appt_id = {props.appt_id}/>
                 </Modal>
 
                 <Modal 
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
                 >
-                <ViewFeedback rating = {props.rating} feedback = {props.feedback}/>
+                <ViewFeedback 
+                  rating = {props.rating} 
+                  feedback = {props.feedback}
+                  appt_id = {props.appt_id}/>
                 </Modal>
 
               </Grid>

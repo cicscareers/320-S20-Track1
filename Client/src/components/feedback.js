@@ -56,9 +56,10 @@ const StyledRating = withStyles({
     value: PropTypes.number.isRequired,
   };
 
-function handlePress(){
-    
-}
+function handlePress(key, rating, text){
+    console.log(key, rating, text)
+    console.log("WHY")
+};
 
 const Feedback = (props) => {
     const supporterfed = ['Experience of meeting', 'Effectiveness of meeting']
@@ -68,12 +69,12 @@ const Feedback = (props) => {
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
           <Box component="fieldset" mb={3} borderColor="transparent">
-              <Typography component="legend">How likeley are you to recommend this Supporter
+              <Typography component="legend">How likely are you to recommend this Supporter
                   to a friend?
               </Typography>
               <Rating
                 name="customized-icons"
-                defaultValue={2}
+                defaultValue={3}
                 getLabelText={(value) => customIcons[value].label}
                 IconContainerComponent={IconContainer}
                 onChange={e => setFeedbackRating(e.target.value)}
@@ -91,7 +92,11 @@ const Feedback = (props) => {
               />
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
-              <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onPress={handlePress}>Submit Feedback</Button>
+              <Button 
+               style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} 
+               onPress={handlePress(props.appt_id, feedbackRating, feedbackText)}>
+                 Submit
+              </Button>
           </Grid>
         </Card>
     </Container>
