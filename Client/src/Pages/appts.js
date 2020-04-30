@@ -4,10 +4,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, TextField, Grid, CircularProgress} from '@material-ui/core';
+import { makeStyles, TextField, Grid, CircularProgress, Button, Fab, Modal} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
 import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
+import CreateAppointmentModal from '../components/CreateAppointmentModal';
 
 const cookies = new Cookies();
 const role = cookies.get("role");
@@ -56,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
    align: "center",
    alignItems: "center",
   },
+  modal: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+  }
 }));
 
 const ResponsiveDrawer = (props) => {
@@ -70,6 +76,7 @@ const ResponsiveDrawer = (props) => {
   const [search,setSearch]=React.useState("");
   const [appointments, setAppointments]=React.useState([]);
   const [isLoaded, setLoaded]=React.useState(false);
+  const [createAppointmentModal, setCreateAppointmentModal] = React.useState(false);
 
 
   const blockTime=30;
@@ -92,13 +99,16 @@ const ResponsiveDrawer = (props) => {
       var filteredAppointmentList = (appointments.filter(
       appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
     }
-    
-    
-    
   }
+
+  const handleCreateAppointmentModalToggle = () => {
+    setCreateAppointmentModal(!createAppointmentModal);
+  };
+
   const updateList = (val) => {
     setName(val);
   };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -106,9 +116,11 @@ const ResponsiveDrawer = (props) => {
   const handleSliderChange = (event, newValue) => {
     setSliderTime(newValue);
   };
+
   function convertToMin(t){
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
   }
+
   function getTheMonth(month){
     if (parseInt(month)>10){
       console.log(month.toString())
@@ -127,6 +139,10 @@ const ResponsiveDrawer = (props) => {
       }
     }
     return false
+  }
+
+  function OnCreateAppointment() {
+
   }
 
   useEffect(() => {
@@ -232,11 +248,32 @@ const ResponsiveDrawer = (props) => {
       </div> 
       </Drawer>
       <main className={classes.content}>
-        
+        {role!=="Student" && <div style={{ display: "flex" }}>
+          <Fab
+          variant="extended"
+          size="small"
+          color="primary"
+          aria-label="add"
+          className={classes.margin}
+          style={{marginLeft: "auto"}}
+          onClick={handleCreateAppointmentModalToggle}
+          >
+          Create Appointment
+        </Fab>
+      </div>}
+      <Modal
+        className={classes.modal}
+        open={createAppointmentModal}
+        onClose={handleCreateAppointmentModalToggle}
+      >
+      <CreateAppointmentModal>
+      </CreateAppointmentModal>
+      </Modal>
         {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
         {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
+        
         {filteredAppointmentList.map((appointment) => (
                 today < new Date(appointment.time_of_appt) &&
                   <Grid item lg = {12}>
@@ -256,8 +293,6 @@ const ResponsiveDrawer = (props) => {
                       comments = {appointment.comment}
                     />
                   </Grid>
-                
-                  
                 ))}
         <br/>
         <br/>
