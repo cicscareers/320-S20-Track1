@@ -22,14 +22,14 @@ def lambda_handler(event, context):
 
     start_date = event['start_date']
     end_date = event['end_date']
-    is_recurring = event['isReccuring']
+    is_recurring = event['isReccuring'].lower()
     if 'max_num_of_appts' in event:
-        max_num_of_appts = event['max_num_of_appts']
+        max_num_of_appts = int(event['max_num_of_appts'])
     else:
         max_num_of_appts = 1
 
     if 'recurring_num_weeks' in event:
-        recurring_num_weeks = event['recurring_num_weeks']
+        recurring_num_weeks = int(event['recurring_num_weeks'])
     else:
         recurring_num_weeks = 13
 
@@ -48,36 +48,42 @@ def lambda_handler(event, context):
     appointment_block_id = query(sql, sql_parameters)['records'][0][0]['longValue'] + 1
 
     #create new appt block sql
-    if(is_recurring == True):
-        start_date
+    if(is_recurring == "true"):
+
         reccuring_id = appointment_block_id
         for week in range(recurring_num_weeks):
 
-            start_date = datetime.datetime(start_date[0:3], start_date[5,6], start_date[8,9], start_date[11,12], start_date[14,15], start_date[16,17])
-            end_date = datetime.datetime(end_date[0:3], end_date[5,6], end_date[8,9], end_date[11,12], end_date[14,15], end_date[16,17])
-
-            sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) \
-                VALUES (:appnt_blck_id,:supp_id,TO_TIMESTAMP(:start_date, 'YYYY-MM-DD HH24:MI:SS'),TO_TIMESTAMP(:end_date, 'YYYY-MM-DD HH24:MI:SS'):max_num,:recurr)"""
+            sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
+                VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,:recurr) WHERE NOT EXISTS ( 
+                SELECT start_date, end_date FROM appointment_block WHERE supporter_id = :supporter_id)"""
             sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
             {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
-            {'name' : 's_date', 'value': {'stringValue' : start_date}},
-            {'name' : 'e_date', 'value': {'stringValue' : end_date}},
+            {'name' : 's_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : start_date}},
+            {'name' : 'e_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : end_date}},
             {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}},
-            {'name' : 'recurr', 'value': {'longValue' : reccuring_id}}] 
-
+            {'name' : 'recurr', 'value': {'longValue' : reccuring_id}}]
+            
+            create_appmnt_blck = query(sql,sql_parameters)
+            
+            start_date = datetime.datetime(int(start_date[:4]), int(start_date[5:7]), int(start_date[8:10]), int(start_date[11:13]), int(start_date[14:16]), int(start_date[17:]))
+            end_date = datetime.datetime(int(end_date[:4]), int(end_date[5:7]), int(end_date[8:10]), int(end_date[11:13]), int(end_date[14:16]), int(end_date[17:]))
             start_date += datetime.timedelta(days=7)
             end_date += datetime.timedelta(days=7) 
+            start_date = start_date.strftime('%Y-%m-%d %H:%M:%S')
+            end_date = end_date.strftime('%Y-%m-%d %H:%M:%S')
+            appointment_block_id += 1
  
     else:
-        sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) \
-            VALUES (:appnt_blck_id,:supp_id,TO_TIMESTAMP(:start_date, 'YYYY-MM-DD HH24:MI:SS'),TO_TIMESTAMP(:end_date, 'YYYY-MM-DD HH24:MI:SS'):max_num,NULL)"""
+        sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
+            VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,NULL) WHERE NOT EXISTS ( 
+            SELECT start_date, end_date FROM appointment_block WHERE supporter_id = :supporter_id)"""
         sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
         {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
-        {'name' : 's_date', 'value': {'stringValue' : start_date}},
-        {'name' : 'e_date', 'value': {'stringValue' : end_date}},
+        {'name' : 's_date','typeHint' : 'TIMESTAMP','value': {'stringValue' : start_date}},
+        {'name' : 'e_date', 'typeHint' : 'TIMESTAMP','value': {'stringValue' : end_date}},
         {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}}]
-
-    create_appmnt_blck = query(sql,sql_parameters)
+        create_appmnt_blck = query(sql,sql_parameters)
+        
     # check if supporter types successfully loaded
     if create_appmnt_blck['numberOfRecordsUpdated'] == 0:
         return {
