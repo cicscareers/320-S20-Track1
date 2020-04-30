@@ -21,8 +21,12 @@ def lambda_handler(event, context):
     selected_tags_str = tags.strip('][').split(', ')
     medium_string = event['medium']
     location = event['location']
-    override = event['override']
     spec_type = event['specialization']
+    
+    if 'override' in event and event['override'] == "true":
+        override = True
+    else:
+        override = False
     
     if 'comment' in event:
         comment = event['comment']
@@ -60,15 +64,37 @@ def lambda_handler(event, context):
     time_scheduled = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
     # perform standard checks, if no 'override' parameter
-    #if not override:
+    if not override:
         # Check that date is not in the past
+        #if TO_TIMESTAMP(time_of_appt, 'YYYY-MM-DD HH24:MI:SS') > TO_TIMESTAMP(time_scheduled, 'YYYY-MM-DD HH24:MI:SS'):
+            #raise LambdaException("404: Invalid time.")
 
-        # Check if provided time is already booked
+        # Check that time is within a supporter appointment block
+        sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS')"
+        sql_parameters = [
+            {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+            {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}}
+        ]
+        appt_block_query = query(sql,sql_parameters)
+        if appt_block_query['records'] == []:
+            raise LambdaException("404: Appointment not in supporter's timeblock.")
+        block_id = appt_block_query['records'][0][0]['longValue']
+        max_appts = supporter_schedule_query['records'][0][1]['longValue']
+        block_start = supporter_schedule_query['records'][0][2]['stringValue']
+        block_end = supporter_schedule_query['records'][0][3]['stringValue']
+        
+        # Check supporter's maximum number of appointments has not  been met
+        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>:block_start AND time_of_appt<:block_end"
+        sql_parameters = [
+            {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+            {'name' : 'block_start', 'value':{'stringValue': block_start}},
+            {'name' : 'block_end', 'value':{'stringValue': block_end}}
+        ]
+        block_appts_query = query(sql,sql_parameters)
+        num_appts = len(block_appts_query['records'])
 
-        # Check if time is within supporter appointment block
-
-        # Check supporter's maximum number of appointments
-
+        if num_appts+1 > max_appts:
+            raise LambdaException("404: Exceeds supporter's maximum number of appointments.")
     
     # generate and set appointment_id 
     sql = "SELECT appointment_id FROM scheduled_appointments ORDER BY appointment_id DESC LIMIT 1"
@@ -100,7 +126,29 @@ def lambda_handler(event, context):
         raise LambdaException("404: Invalid specialization.")
     else:
         specialization = specialization_query['records'][0][0]['longValue']
-    
+
+    if not override:
+        # Check if provided time is already booked for supporter
+        sql = "SELECT duration FROM supporter_specializations WHERE supporter_id=:supporter_id AND specialization_type_id=:specialization;"
+        sql_parameters = [
+            {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
+            {'name' : 'specialization', 'value': {'stringValue' : specialization}}
+        ]
+        duration_query = query(sql,sql_parameters) 
+        duration = duration_query['records'][0][0]['longValue']
+        end_timestamp = TO_TIMESTAMP(time_of_appt, 'YYYY-MM-DD HH24:MI:SS') + duration
+        appt_end = datetime.datetime.fromtimestamp(end_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        
+        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>:time_of_appt AND time_of_appt<:appt_end"
+        sql_parameters = [
+            {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
+            {'name' : 'appt_end', 'value': {'stringValue' : appt_end}},
+            {'name' : 'time_of_appt', 'value': {'stringValue' : time_of_appt}}
+        ]
+        conflict_query = query(sql,sql_parameters)
+        if conflict_query['records'] != []:
+            raise LambdaException("404: Supporter has a conflicting appointment.")
+
     # get appointment tags
     numTags = len(selected_tags_str)
     tag_ints = []
@@ -124,8 +172,9 @@ def lambda_handler(event, context):
         tag_ints_str = tag_ints_str + "}"
 
     # format query
-    SQLquery = "INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, location, cancelled, time_scheduled, medium, selected_tags) \
-        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :location, false, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'), :medium, %s);"% tag_ints_str
+    # tags taken out as of now
+    SQLquery = "INSERT INTO scheduled_appointments(appointment_id, supporter_id, time_of_appt, location, cancelled, time_scheduled, medium) \
+        VALUES (:appointment_id, :supporter_id, TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS'), :location, false, TO_TIMESTAMP(:time_scheduled, 'YYYY-MM-DD HH24:MI:SS'), :medium);"
     
     # format query parameters
     query_parameters = [
@@ -141,12 +190,20 @@ def lambda_handler(event, context):
         {'name' : 'comment', 'value':{'stringValue': comment}}
     ]
 
-    
     # make query
     try:
         response = query(SQLquery, query_parameters)
     except Exception as e:
         raise LambdaException("404: Update to scheduled_appointments failed: " + str(e))
+
+    # query for selected_tags
+    sql = "UPDATE scheduled_appointments SET selected_tags='%s' WHERE appointment_id=:appointment_id;"% tag_ints_str
+    
+    try:
+        tags_query = query(sql, query_parameters)
+    except Exception as e:
+        raise LambdaException("404: Update to selected_tags field failed: " + str(e))
+
 
     # query to update student_appointment_relation
     sql = "INSERT INTO student_appointment_relation (student_id, appointment_id, supporter_id, comment) VALUES (:student_id, :appointment_id, :supporter_id, :comment);"
