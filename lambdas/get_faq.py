@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_faq_sql = "SELECT question, answer FROM FAQ;"
+    get_faq_sql = "SELECT faq_id, question, answer FROM FAQ;"
 
     try:
         faqs = query(get_faq_sql)['records']
@@ -15,9 +15,9 @@ def handler(event, context):
     }
 
     if len(faqs) > 0:
-        for q, a in faqs:
+        for f_id, q, a in faqs:
             curr_faqs = response['faqs']
-            curr_faqs.append({'question' : q['stringValue'], 'answer' : a['stringValue']})
+            curr_faqs.append({'faq_id': f_id['longValue'], 'question' : q['stringValue'], 'answer' : a['stringValue']})
             response['faqs'] = curr_faqs
             
     else:
