@@ -58,7 +58,6 @@ const SupporterSettings = (props) => {
 
     const classes = useStyles();
     const [page, setPage]=React.useState("Profile Information")
-
     return (
       <div className={classes.root}>
         <CssBaseline />
