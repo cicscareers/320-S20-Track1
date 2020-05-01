@@ -29,8 +29,7 @@ def verify_admin(event, context):
     else:
         sql_update = """UPDATE users SET is_admin = true WHERE users.id = :user_id"""
         response = query(sql_update, sql_parameters)
-        sql_insert = """INSERT INTO admins(admin_id, user_id, is_pending)\ 
-                        VALUES(:user_id, :user_id, false)
+        sql_insert = """INSERT INTO admins(admin_id, user_id, is_pending) VALUES(:user_id, :user_id, false)
                         """
         response = query(sql_insert, sql_parameters)
         return{
