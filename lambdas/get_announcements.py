@@ -3,7 +3,8 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_announcements_sql = "SELECT announcement_id, title, announcement FROM announcements;"
+    #announcement_id is misspelled in the DB
+    get_announcements_sql = "SELECT announcement_id, title, accouncement_id FROM announcements;"
 
     try:
         announcements = query(get_announcements_sql)['records']
