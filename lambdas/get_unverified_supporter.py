@@ -7,7 +7,7 @@ def get_unverified_supporters(event, context):
     sql_parameter_dic["val"] = 'true'
     sql_select ="""SELECT s.employer as s_employer, s.title as s_title, s.team_name as s_team_name, u.first_name as s_first_name, u.last_name as s_last_name, u.email as s_email \
                 FROM supporters s, users u \
-                WHERE s.is_pending = true AND s.user_id = u.id;"""
+                WHERE (s.is_pending = true or s.is_pending is NULL) AND s.user_id = u.id;"""
 
     sql_parameters = dictionary_to_list(sql_parameter_dic)
     response = query(sql_select, sql_parameters)
