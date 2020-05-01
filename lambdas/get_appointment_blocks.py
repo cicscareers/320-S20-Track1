@@ -37,10 +37,7 @@ def lambda_handler(event, context):
         
     # check if supporter types successfully loaded
     if (appointment_info['records'] == []):
-        return {
-            'body': json.dumps("There are no appointment blocks for supporter"),
-            'statusCode': 404
-        }
+        raise LambdaException("There are no appointment blocks for supporter")
     else:
         appointment_data = []
 
