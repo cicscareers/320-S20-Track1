@@ -23,7 +23,7 @@ def cancel_appointment(event, context):
     sql_parameters = dictionary_to_list(appointment_id_dic)
     response = query(sql_select, sql_parameters)
     if response['records'] == []:
-        raise LambdaException("404: No appointments available to cancel")
+        raise LambdaException("404: This appointment does not exist")
 
 
     sql_update = """ UPDATE scheduled_appointments SET cancelled = True, cancel_reason = :cancel_reason WHERE appointment_id = :appointment_id"""
