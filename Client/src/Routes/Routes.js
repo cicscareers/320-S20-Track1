@@ -7,7 +7,7 @@ import tos from "../Pages/TOS.js";
 import appts from "../Pages/appts.js";
 import NotFound from "../Pages/NotFound.js";
 import Account from "../Pages/account.js";
-import AdminSettings from "../Pages/adminSettings.js"
+import AdminSettings from "../Pages/Settings Pages/AdminSettings/SettingsMain/AdminSettings.js"
 import SupporterSettings from "../Pages/Settings Pages/SupporterSettings/SettingsMain/SupporterSettings.js"
 import Matching from "../Pages/FindSupporter/MatchingHome/Matching.js"
 import { Route, Switch, Redirect } from "react-router-dom";
