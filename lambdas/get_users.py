@@ -3,12 +3,16 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    if 'is_admin' not in event and 'is_supporter' not in event and 'is_student' not in event:
+    is_admin = event['is_admin']
+    is_supporter = event['is_supporter']
+    is_student = event['is_student']
+
+    if is_admin == "" and is_supporter == "" and is_student == "":
         get_users_sql = "SELECT id, first_name, last_name, email FROM users;"
         params = []
 
     else:  
-        if 'is_admin' in event:
+        if is_admin != "":
             is_admin = event['is_admin'].lower()
             if is_admin == "true":
                 is_admin = True
@@ -17,7 +21,7 @@ def handler(event, context):
         else:
             is_admin = False    
 
-        if 'is_supporter' in event:
+        if is_supporter != "":
             is_supporter = event['is_supporter'].lower()
             if is_supporter == "true":
                 is_supporter = True
@@ -26,14 +30,14 @@ def handler(event, context):
         else:
             is_supporter = False       
 
-        if 'is_student' in event:
+        if is_student != "":
             is_student = event['is_student'].lower()
             if is_student == "true":
                 is_student = True
             else:
                 is_student = False
         else:
-            is_student = False 
+            is_student = True 
 
         is_admin_param = {'name' : 'is_admin', 'value' : {'booleanValue' : is_admin}}
         is_supporter_param = {'name' : 'is_supporter', 'value' : {'booleanValue' : is_supporter}}
