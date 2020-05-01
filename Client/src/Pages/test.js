@@ -46,7 +46,7 @@ const Test = (props) =>{
             <Fragment>
               <ViewFeedback 
                   rating = {5}
-                  feedback = {"TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest"}
+                  feedback = {"TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest"}
               />
             </Fragment>
             </Modal>

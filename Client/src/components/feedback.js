@@ -60,6 +60,7 @@ const StyledRating = withStyles({
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
   const cookies = new Cookies();
   const id = parseInt(cookies.get('id'));
+  // const id = 12;
   console.log(key, feedbackString, feedbackRate, id)
   fetch(
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
