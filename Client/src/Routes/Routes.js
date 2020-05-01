@@ -17,11 +17,7 @@ import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
 import Feedback from '../Pages/feedback';
-<<<<<<< HEAD
 import SupporterBlocks from '../Pages/Settings Pages/SupporterSettings/AppointmentBlocks/Main/BlockCreation.js'
-=======
-import Cookies from "universal-cookie";
->>>>>>> 017382b96f9f6cdd792074045dc9ac3e2e199c43
 //import Home from "../Pages/home.js";
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
