@@ -48,9 +48,8 @@ const CreateAppointmentModal = (props) => {
     let month = getTheMonth((selectedDate.getMonth() + 1));
     let day = getTheMonth(selectedDate.getDate()).toString();
     let time = selectedDate.toString().substring(16,21);
-    alert(year+"-"+month+"-"+day+" "+time+":00")
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
         method: "POST",
         headers: {
@@ -58,17 +57,17 @@ const CreateAppointmentModal = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_email: "powellsl99@gmail.com",
-          supporter_email: "cspatil@umass.edu",
-          selected_tags: [],
-          specialization: "Resume Review",
-          time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
-          duration: 30,
-          medium: "In Person",
-          location: "Hadleys house",
-          comment: "",
-          override: "true",
-        })
+          "student_email": studentEmail,
+          "supporter_email": supporterEmail,
+          "selected_tags": [],
+          "specialization": "Mock Interview",
+          "time_of_appt": year+"-"+month+"-"+day+" "+time+":00",
+          "duration": 30,
+          "medium": "in-person",
+          "location": location,
+          "comment": "",
+          "override": "true",
+      })
       }
     )
     .then(response => {
@@ -231,7 +230,7 @@ const CreateAppointmentModal = (props) => {
         rows="4"
       />
         <Grid className={classes.createAppointmentButton}>
-          <Button onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
+          <Button href='/appointments' onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
         </Grid>
     </Container>
   );
