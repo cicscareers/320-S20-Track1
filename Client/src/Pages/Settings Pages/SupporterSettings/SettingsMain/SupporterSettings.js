@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, ListItem, ListItemText, List} from '@material-ui/core';
+import { makeStyles, ListItem, ListItemText, List, CircularProgress} from '@material-ui/core';
 import Menu from "../../../../Navigation/appbar.js";
 import Cookies from "universal-cookie";
 import Blocks from "../AppointmentBlocks/Main/BlockCreation.js"
@@ -54,10 +54,72 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SupporterSettings = (props) => {
 
+const SupporterSettings = (props) => {
     const classes = useStyles();
     const [page, setPage]=React.useState("Profile Information")
+    const [loaded, setLoaded]=React.useState(false)
+    const [settings, setSettings]=React.useState([])
+    const [error, setError]=React.useState(false)
+
+    const initial_fetch_url = formatFetchURL();
+
+    //Calls the API
+    useEffect(() => {
+      fetchSupporterList(initial_fetch_url);
+    }, [])
+
+    // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
+    async function myFetch(url) {
+      let response = await fetch(url);
+      let json = await response.json();
+      return json;
+    }
+
+    function fetchSupporterList(url) {
+      setLoaded(false);
+      myFetch(url).then((json) => {
+        if(json.body !== undefined) {
+          setSettings(json.body);
+          setLoaded(true);
+        } else {
+          throw new Error();
+          setLoaded(true);
+        }
+      })
+      .catch(error => {
+          setError(true)
+          setLoaded(true);
+          console.log("Supporter settings could not be fetched")
+        });
+    }
+
+    function formatFetchURL(startDate, endDate) {
+      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/15";
+    }
+
+    if(error){
+      return (
+        <div align="center">
+          <br/>
+          <br/>
+          <br/>
+          <Typography variant="h4">There was an error fetching supporters. The server may be down at the moment</Typography>
+        </div>
+      )
+    }
+  
+    else if(!loaded){
+      return (
+        <div align="center">
+          <br></br>
+          <Typography variant="h4">Loading...</Typography>
+          <br></br>
+          <CircularProgress />
+        </div>
+      )
+    }
+
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -96,6 +158,6 @@ const SupporterSettings = (props) => {
         </main>
       </div>
       );
-  }
+}
 
-  export default SupporterSettings
+export default SupporterSettings
