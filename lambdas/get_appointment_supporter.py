@@ -61,13 +61,15 @@ def get_appointment_supporter(event, context):
             block["cancel_reason"] = entry[10].get("stringValue")
             block["location"] = entry[11].get("stringValue")
             block["feedback"] = entry[12].get("stringValue")
-            block["rating"] = entry[13].get("longValue")
+            block["rating"] = entry[13].get("stringValue")
+            if block["rating"] is not None:
+                block["rating"] = float(block["rating"])
             block["comment"] = entry[14].get("stringValue")
             block["promoter_score"] = entry[15].get("booleanValue")
             block["max_students"] = entry[16].get("longValue")
             block["duration"] = entry[17].get("longValue")
             block["specialization_type"] = entry[18].get("stringValue")
-            block["supporter_id"] = entry[19].get("long")
+            block["appointment_id"] = entry[19].get("longValue")
             supporter_appointments.append(block)
 
         #Returns the query contents in JSON format
