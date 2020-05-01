@@ -30,7 +30,7 @@ function Copyright() {
         color="inherit"
         href="https://github.com/david-fisher/320-S20-Track1/"
       >
-        King Codras
+        CS 320 Track 1
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
