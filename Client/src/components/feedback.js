@@ -60,7 +60,7 @@ const StyledRating = withStyles({
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
   const cookies = new Cookies();
   const id = parseInt(cookies.get('id'));
-  console.log(key, feedbackRate, feedbackString, id)
+  console.log(key, feedbackString, feedbackRate, id)
   fetch(
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
     {
@@ -71,8 +71,8 @@ function handleSubmitFeedback(key, feedbackRate, feedbackString){
       },
       body: JSON.stringify({
         appointment_id: key,
-        rating: feedbackRate,
         feedback: feedbackString,
+        rating: feedbackRate,
         student_id: id
       })
     }
@@ -88,6 +88,7 @@ function handleSubmitFeedback(key, feedbackRate, feedbackString){
   .catch(error => {
     console.log(error);
   });
+
 };
 
 const Feedback = (props) => {

@@ -137,22 +137,26 @@ const PreviousAppointmentCard = (props) => {
                     margin="normal"
                     variant="contained"
                     color="primary"
-                    onClick={handleOpenFeedbackModal}
+                    onClick={handleOpenViewFeedbackModal}
+                    disabled={!props.feedbackLeft}
                   >
-                    Submit Feedback
+                    View Feedback
                   </Button>
                 )}
                 <Modal
-                  open={feedbackModalOpen}
-                  onClose={handleCloseFeedbackModal}
+                  open={cancelAppointmentModalOpen}
+                  onClose={handleCloseAppointmentModal}
                 >
-                <Feedback subject = {props.subject}
-                    location = {props.location}
-                    medium = {props.medium}
-                    time = {props.time}
-                    date = {props.date}
-                    supporter = {props.supporter}
-                    profilepic = {props.profilepic}></Feedback>
+                  <Cancel></Cancel>
+                </Modal>
+                <Modal 
+                  open={viewFeedbackModalOpen}
+                  onClose={handleCloseViewFeedbackModal}
+                >
+                <ViewFeedback 
+                  rating = {props.rating} 
+                  feedback = {props.feedback}
+                  appt_id = {props.appt_id}/>
                 </Modal>
               </Grid>
             </Grid>
@@ -215,12 +219,11 @@ const PreviousAppointmentCard = (props) => {
                       </Button>
                       ) 
               }
-
                 <Modal
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
                 >
-                  <Cancel></Cancel>
+                  <Cancel/>
                 </Modal>
 
                 <Modal
@@ -281,8 +284,46 @@ const PreviousAppointmentCard = (props) => {
                   <Typography className={classes.secondaryHeading} style={{marginLeft: '20%'}}>{props.subject}</Typography> 
               </Grid>
               <Grid item xs={12} sm={6}>
-  
-                  
+
+        
+              </Grid>
+              <Grid item xs={12} align="center">
+                {props.upcoming ? (
+                <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenAppointmentModal}
+                  >
+                    Cancel Appointment
+                </Button>
+                ) :
+                (
+                  <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenViewFeedbackModal}
+                    disabled={!props.feedbackLeft}
+                  >
+                    View Feedback
+                  </Button>
+                )}
+                <Modal
+                  open={cancelAppointmentModalOpen}
+                  onClose={handleCloseAppointmentModal}
+                >
+                  <Cancel></Cancel>
+                </Modal>
+                <Modal 
+                  open={viewFeedbackModalOpen}
+                  onClose={handleCloseViewFeedbackModal}
+                >
+                <ViewFeedback 
+                  rating = {props.rating} 
+                  feedback = {props.feedback}
+                  appt_id = {props.appt_id}/>
+                </Modal>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>

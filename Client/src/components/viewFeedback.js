@@ -59,6 +59,7 @@ const StyledRating = withStyles({
 
 const ViewFeedback = (props) => {
     const supporterfed = ['Experience of meeting', 'Effectiveness of meeting']
+    const rating = ((props.rating) === null) ? 3 : props.rating
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
@@ -68,7 +69,7 @@ const ViewFeedback = (props) => {
               <Rating
                 name="customized-icons"
                 readOnly
-                defaultValue={props.rating}
+                defaultValue={rating}
                 getLabelText={(value) => customIcons[value].label}
                 IconContainerComponent={IconContainer}
               />
