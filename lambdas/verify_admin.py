@@ -5,7 +5,7 @@ from package.dictionary_to_list import dictionary_to_list
 def verify_admin(event, context):
     user_id = event['user_id']
     user_id_dic = {}
-    if user_id == None:
+    if user_id == None: #Making sure user_id was passed
         return{
             "statusCode": 404
         }
@@ -34,6 +34,6 @@ def verify_admin(event, context):
                         """
         response = query(sql_insert, sql_parameters)
         return{
-            "statusCode": 404
+            "statusCode": 200
         }
 
