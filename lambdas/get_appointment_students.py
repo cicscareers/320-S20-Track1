@@ -61,9 +61,11 @@ def get_appointment_students(event, context):
             block["cancel_reason"] = entry[10].get("stringValue")
             block["location"] = entry[11].get("stringValue")
             block["feedback"] = entry[12].get("stringValue")
-            block["rating"] = entry[13].get("longValue")
+            block["rating"] = entry[13].get("stringValue")
+            if block["rating"] is not None:
+                block["rating"] = float(block["rating"])
             block["comment"] = entry[14].get("stringValue")
-            block["promoter_score"] = entry[15].get("bValue")
+            block["promoter_score"] = entry[15].get("booleanValue")
             block["max_students"] = entry[16].get("longValue")
             block["duration"] = entry[17].get("longValue")
             block["specialization_type"] = entry[18].get("stringValue")
@@ -77,4 +79,5 @@ def get_appointment_students(event, context):
             'body': student_appointments,
             'statusCode': 200
         }
+    
     
