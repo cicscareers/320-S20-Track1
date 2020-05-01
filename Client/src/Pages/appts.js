@@ -10,7 +10,7 @@ import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-const role = sessionStorage.getItem("role");
+const role = cookies.get("role");
 const id = sessionStorage.getItem('id');
 //const id = 2;
 

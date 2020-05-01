@@ -17,12 +17,13 @@ import AdminRoute from "./AdminRoute";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
 import Feedback from '../Pages/feedback';
+import Cookies from "universal-cookie";
 //import Home from "../Pages/home.js";
 import resetPassAfterEmail from "../Pages/restPassAfterEmail";
 import FAQ from '../Pages/faq';
 
-const role = sessionStorage.getItem("role");
-alert(role);
+const cookies = new Cookies();
+var role = cookies.get("role");
 
 export default function Routes() {
   return (
