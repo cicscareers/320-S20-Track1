@@ -4,9 +4,7 @@ from package.lambda_exception import LambdaException
 def handler(event, context):
 
     if 'is_admin' not in event and 'is_supporter' not in event and 'is_student' not in event:
-        is_admin = True
-        is_supporter = True
-        is_student = True
+        get_users_sql = "SELECT id, first_name, last_name, email FROM users;"
 
     else:  
         if 'is_admin' in event:
@@ -34,13 +32,14 @@ def handler(event, context):
             else:
                 is_student = False
         else:
-            is_student = False        
+            is_student = False 
 
-    is_admin_param = {'name' : 'is_admin', 'value' : {'booleanValue' : is_admin}}
-    is_supporter_param = {'name' : 'is_supporter', 'value' : {'booleanValue' : is_supporter}}
-    is_student_param = {'name' : 'is_student', 'value' : {'booleanValue' : is_student}}
+        is_admin_param = {'name' : 'is_admin', 'value' : {'booleanValue' : is_admin}}
+        is_supporter_param = {'name' : 'is_supporter', 'value' : {'booleanValue' : is_supporter}}
+        is_student_param = {'name' : 'is_student', 'value' : {'booleanValue' : is_student}}  
 
-    get_users_sql = "SELECT id, first_name, last_name, email FROM users WHERE is_admin = :is_admin AND is_supporter = :is_supporter AND is_student = :is_student"
+        get_users_sql = "SELECT id, first_name, last_name, email FROM users WHERE is_admin = :is_admin AND is_supporter = :is_supporter AND is_student = :is_student;"     
+
     params = [is_admin_param, is_supporter_param, is_student_param]
 
     try:
