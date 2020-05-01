@@ -5,9 +5,7 @@ from package.dictionary_to_list import dictionary_to_list
 def get_unverified_supporters(event, context):
     sql_parameter_dic = {}
     sql_parameter_dic["val"] = 'true'
-    sql_select ="""SELECT s.employer as s_employer, s.title as s_title, s.team_name as s_team_name, u.first_name as s_first_name,\ 
-                u.last_name as s_last_name, u.email as s_email, s.feedback as s_feedback, s.rating as s_rating, s.is_pending as s_is_pending,\
-                 s.office as s_office, s.professional_staff as s_professional_staff, s.almuni as s_alumni, s.faculty as s_faculty, s.other as s_other, s.supporter_id as s_supporter_id\
+    sql_select ="""SELECT s.employer as s_employer, s.title as s_title, s.team_name as s_team_name, u.first_name as s_first_name, u.last_name as s_last_name, u.email as s_email, s.feedback as s_feedback, s.rating as s_rating, s.is_pending as s_is_pending, s.office as s_office, st.professional_staff as s_professional_staff, st.alumni as s_alumni, st.faculty as s_faculty, st.other as s_other, s.supporter_id as s_supporter_id, st.student_staff as s_student_staff\
                 FROM supporters s, users u, supporter_type st \
                 WHERE (s.is_pending = true or s.is_pending is NULL) AND s.user_id = u.id AND s.supporter_id = st.supporter_id;"""
 
@@ -36,7 +34,8 @@ def get_unverified_supporters(event, context):
             block["s_alumni"] = entry[11].get("booleanValue")
             block["s_faculty"] = entry[12].get("booleanValue")
             block["s_other"] = entry[13].get("booleanValue")
-            bloc["s_supporter_id"] = entry[14].get("longValue")
+            block["s_supporter_id"] = entry[14].get("longValue")
+            block["s_student_staff"] = entry[15].get("booleanValue")
             unverified_supporter_information.append(block)
 
     #Returns the query contents in JSON format
