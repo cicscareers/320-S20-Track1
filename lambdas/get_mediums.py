@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_mediums_sql = "SELECT medium FROM medium;"
+    get_mediums_sql = "SELECT medium_id, medium FROM medium;"
 
     try:
         mediums = query(get_mediums_sql)
@@ -14,9 +14,10 @@ def handler(event, context):
         "mediums" : []
     }
 
-    for medium in mediums:
+    for m_id, medium in mediums:
         curr_mediums = response["mediums"]
-        curr_mediums.append(medium['stringValue'])
+        next_medium = {'medium_id' : m_id, 'medium' : medium}
+        curr_mediums.append(next_medium)
         records['mediums'] = curr_mediums
 
     return response

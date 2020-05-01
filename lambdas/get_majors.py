@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_majors_sql = "SELECT major FROM major;"
+    get_majors_sql = "SELECT major_id, major FROM major;"
 
     try:
         majors = query(get_majors_sql)['records']
@@ -14,9 +14,10 @@ def handler(event, context):
         "majors" : []
     }
 
-    for major in majors:
+    for m_id, major in majors:
         curr_majors = response["majors"]
-        curr_majors.append(major['stringValue'])
+        next_major = {'major_id' : m_id, 'major' : major}
+        curr_majors.append(next_major)
         records['majors'] = curr_majors
 
     return response

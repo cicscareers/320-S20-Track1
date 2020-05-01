@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_colleges_sql = "SELECT college FROM college;"
+    get_colleges_sql = "SELECT college_id, college FROM college;"
 
     try:
         colleges = query(get_colleges_sql)['records']
@@ -14,9 +14,10 @@ def handler(event, context):
         "colleges" : []
     }
 
-    for college in colleges:
+    for c_id, college in colleges:
         curr_colleges = response["colleges"]
-        curr_colleges.append(college['stringValue'])
+        next_college = {'college_id' : c_id, 'college' : college}
+        curr_colleges.append(next_college)
         records['colleges'] = curr_colleges
 
     return response

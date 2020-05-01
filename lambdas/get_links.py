@@ -3,7 +3,7 @@ from package.lambda_exception import LambdaException
 
 def handler(event, context):
 
-    get_links_sql = "SELECT link_type FROM link;"
+    get_links_sql = "SELECT link_id, link_type FROM link;"
 
     try:
         links = query(get_links_sql)['records']
@@ -14,9 +14,10 @@ def handler(event, context):
         "links" : []
     }
 
-    for link in links:
+    for l_id, link in links:
         curr_links = response["links"]
-        curr_links.append(link['stringValue'])
+        next_link = {'link_id' : l_id, 'link_type' : link}
+        curr_links.append(next_link)
         records['links'] = curr_links
 
     return response
