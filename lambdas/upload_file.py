@@ -21,8 +21,8 @@ def upload_files(event, context):
     bucket_name_images = 't1-s3-us-east-1-images'
     bucket_name_resumes = 't1-s3-us-east-1-storage'
 
-    s_3 = boto3.resource('s_3')
-    # s_3 = boto3.client('s_3')
+    s_3 = boto3.resource('s3')
+    # s_3 = boto3.client('s3')
 
     # if picture assign to appropiate bucket
     if file_type == 'picture':
