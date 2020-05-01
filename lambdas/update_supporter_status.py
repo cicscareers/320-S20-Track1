@@ -20,7 +20,7 @@ def update_supporter_status(event, context):
             "statusCode": 404
         }
 
-    sql_update = """UPDATE supporters set is_pending = True WHERE supporter_id = :supporter_id"""
+    sql_update = """UPDATE supporters set is_pending = False WHERE supporter_id = :supporter_id"""
     response = query(sql_update, sql_paramters_dic)
 
     return{
