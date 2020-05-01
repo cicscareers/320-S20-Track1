@@ -193,6 +193,7 @@ const ResponsiveDrawer = (props) => {
           
         })
         .catch(err => {
+          console.log('WTFFF')
           setAppointments([]);
           setLoaded(true);
         })

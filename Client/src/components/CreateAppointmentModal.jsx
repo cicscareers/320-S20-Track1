@@ -58,15 +58,14 @@ const CreateAppointmentModal = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_email: studentEmail,
-          supporter_email: supporterEmail,
+          student_email: "powellsl99@gmail.com",
+          supporter_email: "cspatil@umass.edu",
           selected_tags: [],
-          specialization: "Resume",
+          specialization: "Resume Review",
           time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
-          appt_type: appointmentType,
           duration: 30,
-          medium: "In person",
-          location: location,
+          medium: "In Person",
+          location: "Hadleys house",
           comment: "",
           override: "true",
         })
@@ -232,7 +231,7 @@ const CreateAppointmentModal = (props) => {
         rows="4"
       />
         <Grid className={classes.createAppointmentButton}>
-          <Button href='/appointments' onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
+          <Button onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
         </Grid>
     </Container>
   );
