@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems:'center',
     justifyContent:'center',
   },
+  createAppointmentFab: {
+    right: theme.spacing(1)*3,
+    bottom: theme.spacing(1)*4,
+    position: 'fixed',
+  }
 }));
 
 const ResponsiveDrawer = (props) => {
@@ -254,19 +259,6 @@ const ResponsiveDrawer = (props) => {
       </div> 
       </Drawer>
       <main className={classes.content}>
-        {role!=="Student" && <div style={{ display: "flex" }}>
-          <Fab
-          variant="extended"
-          size="small"
-          color="primary"
-          aria-label="add"
-          className={classes.margin}
-          style={{marginLeft: "auto"}}
-          onClick={handleCreateAppointmentModalToggle}
-          >
-          Create Appointment
-        </Fab>
-      </div>}
       <Dialog
         className={classes.modal}
         open={createAppointmentModal}
@@ -330,6 +322,18 @@ const ResponsiveDrawer = (props) => {
                 </Grid>
               ))}
       </main>
+      {role!=="Student" && <div style={{ display: "flex" }}>
+          <Fab
+            variant="extended"
+            size="small"
+            color="primary"
+            aria-label="add"
+            className={classes.createAppointmentFab}
+            onClick={handleCreateAppointmentModalToggle}
+          >
+          Create Appointment
+        </Fab>
+      </div>}
     </div>
   );
   }
