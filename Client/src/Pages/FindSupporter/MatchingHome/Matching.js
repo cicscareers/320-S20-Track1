@@ -31,7 +31,7 @@ const ResponsiveDrawer = (props) => {
   const today = new Date()
   const today_year=today.getFullYear().toString()
   const today_month=getTheMonth(today.getMonth()+1)
-  const today_day=today.getDate().toString()
+  const today_day='01'
   const nextWeek=new Date()
   nextWeek.setDate(today.getDate()+7)
   const next_year=nextWeek.getFullYear().toString()
@@ -47,7 +47,7 @@ const ResponsiveDrawer = (props) => {
   console.log(next_day)
   //Calls the API to get the list of supporters
   useEffect(() => {
-    fetch(`https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=${today_year}-${today_month}-${today_day}%2000%3A00%3A00&end_date=${next_year}-${next_month}-${next_day}%2000%3A00%3A00`)
+    fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date="+ "2020" + "-" + "01-01%2000%3A00%3A00&end_date=2021-01-01%2000%3A00%3A00")
       .then(res => res.json())
       .then(json => {
         if(json.body[0]!==undefined){

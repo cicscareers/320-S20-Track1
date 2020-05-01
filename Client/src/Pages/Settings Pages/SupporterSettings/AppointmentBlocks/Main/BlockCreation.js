@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, } from '@material-ui/core';
+import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Checkbox, TextField, FormControlLabel } from '@material-ui/core';
 import useStyles from "./BlockStyles.js"
 import BlockCard from '../BlockCards/BlockCards.js'
 import BlockList from '../Blocks.js'
 import AddIcon from '@material-ui/icons/Add';
 import convertTime from "../../../../FindSupporter/convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
+import AppointmentTypesList from '../../SupporterInformation/Specializations'
+import {Autocomplete} from '@material-ui/lab'
 
 
 
@@ -16,6 +18,10 @@ const ResponsiveDrawer = (props) => {
   const [isLoaded, setLoaded] = React.useState(true);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const [selectedDate, handleDateChange] = React.useState(new Date());
+  const [isRecurring, setIsRecurring]=React.useState(false);
+  const [maxAppointents, setMaxAppointents]=React.useState(1);
+  const [numberOfWeeks, setNumberOfWeeks]=React.useState(1)
+  const [appointmentTypes, setAppointmentTypes]=React.useState([])
 
   useEffect(() => {
     
@@ -67,11 +73,11 @@ const ResponsiveDrawer = (props) => {
           </Fab>
 
           <Dialog onClose={() => setOpen(false)} aria-labelledby="customized-dialog-title" open={open}>
-            <DialogTitle id="customized-dialog-title" onClose={() => setOpen(false)}>
+            <DialogTitle id="customized-dialog-title" align="center" onClose={() => setOpen(false)}>
                 Create a new appointment block
             </DialogTitle>
             <DialogContent dividers>
-              <Typography align="center">What day would you like an appointment on?</Typography>
+              <Typography align="center">What day should the block be created on?</Typography>
               <br/>
               <Box align="center">
                 <DatePicker
@@ -83,8 +89,8 @@ const ResponsiveDrawer = (props) => {
                 />
               </Box>
               <br/>
-              <Typography gutterBottom>
-                What Time?
+              <Typography align="center" gutterBottom>
+                What time should the block be created at?
               </Typography>
               <Slider
                 value={sliderTime}
@@ -95,12 +101,54 @@ const ResponsiveDrawer = (props) => {
                 defaultValue={[540, 1020]}
                 valueLabelDisplay="off"
                 aria-labelledby="range-slider"
-                className={classes.inputs}
                 getAriaValueText={convertTime}
               />
-              <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+              <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
                 {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
               </Typography>
+              <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
+                Maximum number of appointments during this block: {maxAppointents}
+              </Typography>
+              <Slider
+                value={typeof maxAppointents === 'number' ? maxAppointents : 0}
+                onChange={(event, newValue) => setMaxAppointents(newValue)}
+                step={1}
+                min={1}
+                max={10}
+              />
+              <br/>
+              <br/>
+              <Autocomplete
+                multiple
+                className={classes.form}
+                options={AppointmentTypesList}
+                renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Appointment Types"
+                />
+                )}
+                onChange={(e,v) => setAppointmentTypes(v)}
+                />
+              <br/>
+              <br/>
+              <FormControlLabel
+                control={<Checkbox checked={isRecurring} color="primary" onChange={() => setIsRecurring(!isRecurring)} />}
+                label="Repeat Weekly?"
+              />
+              {isRecurring && (
+                <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
+                  Times this block will repeat: {numberOfWeeks}
+                </Typography>
+              )}
+              {isRecurring && (<Slider
+                value={typeof numberOfWeeks === 'number' ? numberOfWeeks : 0}
+                onChange={(event, newValue) => setNumberOfWeeks(newValue)}
+                step={1}
+                min={1}
+                max={16}
+              />)}
             </DialogContent>
             <DialogActions>
                 <Button autoFocus color="primary" variant="contained">
