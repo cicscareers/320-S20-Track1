@@ -16,8 +16,8 @@ def handler(event, context):
     try:
         faq_id = query(faq_id_sql)['records']
         if len(faq_id) > 0:
-            if 'longValue' in faq_id:
-                faq_id += 1
+            if 'longValue' in faq_id[0][0]:
+                faq_id = faq_id[0][0]['longValue'] + 1
             else:
                 raise LambdaException("500: FAQ_id is invalid")
         else:
