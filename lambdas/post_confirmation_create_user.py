@@ -5,7 +5,16 @@ from package.query_db import query
 
 #Edit by Junshan Zeng
 
+def delete_user(email):
+        delete_response=client.admin_delete_user(
+            UserPoolId='us-east-2_TOeWJwIy0',
+            Username=email
+        )
+
 def create_student_user(event, context):
+
+    if event["triggerSource"]!= "PostConfirmation_ConfirmSignUp": return event
+
     # print(event["request"]["userAttributes"])
     
 
@@ -18,7 +27,7 @@ def create_student_user(event, context):
     
     first_name = event["request"]["userAttributes"]['given_name']
     last_name = event["request"]["userAttributes"]['family_name']
-    email = event["request"]["userAttributes"]['email']
+    email = event["request"]["userAttributes"]['email'].lower()
     #password = ""
     is_supporter= True if event["request"]["userAttributes"]["profile"]=="Supporter" else False
 
@@ -28,10 +37,12 @@ def create_student_user(event, context):
     check_email = query(sql, sql_parameters)
 
     if(check_email['records'] != []):
-        return{
-            'body': json.dumps("email is already being used"),
-            'statusCode': 409
-        }
+        # return{
+        #     'body': json.dumps("email is already being used"),
+        #     'statusCode': 409
+        # }
+        delete_user(event["request"]["userAttributes"]["email"])
+        raise Exception("Email already exist!")
 
     # generates a new id 
     sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1"
@@ -76,10 +87,12 @@ def create_student_user(event, context):
 
     # Check to see if the users table was updated
     if(create_users_instance['numberOfRecordsUpdated'] == 0): 
-        return {
-            'body': json.dumps("User not created"),
-            'statusCode': 500
-        }
+        # return {
+        #     'body': json.dumps("User not created"),
+        #     'statusCode': 500
+        # }
+        delete_user(event["request"]["userAttributes"]["email"])
+        raise Exception("User table was not updated!")
 
     # adds a user to the "students" table with the same user id
     sql = """INSERT INTO students(student_id,user_id,grad_year,resume,grad_student) \
@@ -90,10 +103,12 @@ def create_student_user(event, context):
 
     # Check to see if the students table was updated
     if(create_students_instance['numberOfRecordsUpdated'] == 0): 
-        return {
-            'body': json.dumps("Student not created"),
-            'statusCode': 500
-    }
+    #     return {
+    #         'body': json.dumps("Student not created"),
+    #         'statusCode': 500
+    # }
+        delete_user(event["request"]["userAttributes"]["email"])
+        raise Exception("Student table was not updated!")
 
 ######################################################################################################################################
     #checks if the role of the user is supporter and then creates supporter with is_pending=True
@@ -198,9 +213,11 @@ def create_student_user(event, context):
         # check if supporter data successfully loaded
         if new_supp['numberOfRecordsUpdated'] == 0:
             # print("Supporter was not created")
-            return {
-                'statusCode': 404
-            }
+            # return {
+            #     'statusCode': 404
+            # }
+            delete_user(event["request"]["userAttributes"]["email"])
+            raise Exception("Supporter table was not updated!")
 
         # inserts specific supporter types into suppoert types table with same id
         sql = """INSERT INTO supporter_type(supporter_id, professional_staff, student_staff, alumni, faculty, other) \
@@ -221,9 +238,11 @@ def create_student_user(event, context):
         # check if supporter types successfully loaded
         if supp_types['numberOfRecordsUpdated'] == 0:
             # print("Supporter types not loaded")
-            return {
-                'statusCode': 404
-            }
+            # return {
+            #     'statusCode': 404
+            # }
+            delete_user(event["request"]["userAttributes"]["email"])
+            raise Exception("Supporter type table was not updated!")
 
         # finish
         # print("the student has been created")
