@@ -5,6 +5,7 @@ def handler(event, context):
 
     if 'is_admin' not in event and 'is_supporter' not in event and 'is_student' not in event:
         get_users_sql = "SELECT id, first_name, last_name, email FROM users;"
+        params = []
 
     else:  
         if 'is_admin' in event:
@@ -39,8 +40,7 @@ def handler(event, context):
         is_student_param = {'name' : 'is_student', 'value' : {'booleanValue' : is_student}}  
 
         get_users_sql = "SELECT id, first_name, last_name, email FROM users WHERE is_admin = :is_admin AND is_supporter = :is_supporter AND is_student = :is_student;"     
-
-    params = [is_admin_param, is_supporter_param, is_student_param]
+        params = [is_admin_param, is_supporter_param, is_student_param]
 
     try:
         users = query(get_users_sql, params)['records']
