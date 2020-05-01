@@ -58,10 +58,7 @@ def lambda_handler(event, context):
         
         # check if delete successfull
         if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
-            return {
-                'body': json.dumps("appointment block not deleted from specializations_for_block"),
-                'statusCode': 404
-            }
+            raise LambdaException("appointment block not deleted from specializations_for_block")
 
     #delete appt block sql
     sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
@@ -71,10 +68,7 @@ def lambda_handler(event, context):
     
     # check if delete successfull
     if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
-        return {
-            'body': json.dumps("appointment block not deleted from appointment_block"),
-            'statusCode': 404
-        }
+        raise LambdaException("appointment block not deleted from appointment_block table")
 
     # success
     return {
