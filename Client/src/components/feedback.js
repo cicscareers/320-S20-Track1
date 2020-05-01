@@ -89,7 +89,7 @@ function handleSubmitFeedback(key, feedbackRate, feedbackString){
   .catch(error => {
     console.log(error);
   });
-
+  window.location.reload()
 };
 
 const Feedback = (props) => {
