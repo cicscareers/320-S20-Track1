@@ -3,6 +3,7 @@ from package.query_db import query
 from package.dictionary_to_list import dictionary_to_list
 from package.lambda_exception import LambdaException
 
+#author: Sanjay Rajasekaran
 def verify_admin(event, context):
     user_id = int(event['user_id'])
     user_id_dic = {}
@@ -22,10 +23,10 @@ def verify_admin(event, context):
         raise LambdaException("405: user is already an admin")
     else:
         sql_update = """UPDATE users SET is_admin = true WHERE users.id = :user_id"""
-        response = query(sql_update, sql_parameters)
+        response = query(sql_update, sql_parameters) #updating is_admin to true on users table
         sql_insert = """INSERT INTO admins(admin_id, user_id, is_pending) VALUES(:user_id, :user_id, false)
                         """
-        response = query(sql_insert, sql_parameters)
+        response = query(sql_insert, sql_parameters) #adding new admin to admin table
         return{
             "statusCode": 200
         }
