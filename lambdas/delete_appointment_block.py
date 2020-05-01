@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     if 'supporter_id' in event:
         supporter_id = int(event['supporter_id'])
     else:
-        raise LambdaException("Invalid input: No user Id")
+        raise LambdaException("422 : Invalid input: No supporter_id")
 
     #Check if supporter exists
     sql = "SELECT supporter_id FROM supporters WHERE supporter_id= :supporter_id"
@@ -26,14 +26,13 @@ def lambda_handler(event, context):
     existing_supporter = query(sql, supporter_id_param)
 
     if(existing_supporter['records'] == []):
-        print("No existing Supporter")
-        raise LambdaException("No existing Supporter")
+        raise LambdaException("404 : No existing Supporter")
 
     #appointment block identifier
     if 'appointment_block_id' in event:
         appointment_block_id = int(event['appointment_block_id'])
     else:
-        raise LambdaException("Invalid input: No appointment Id")
+        raise LambdaException("422 : Invalid input: No appointment_block_id")
 
     #Check if appointment_block_id exists in appointment_block
     sql = "SELECT appointment_block_id FROM appointment_block WHERE supporter_id= :supporter_id"
@@ -41,8 +40,7 @@ def lambda_handler(event, context):
     existing_appointment_block = query(sql, supporter_id_param)
 
     if(existing_appointment_block['records'] == []):
-        print("No existing appointment block")
-        raise LambdaException("No existing appointment block")
+        raise LambdaException("404 : No existing appointment block")
 
     #Check if appointment_block_id exists in specializations_for_block
     sql = "SELECT appointment_block_id FROM specializations_for_block WHERE appointment_block_id= :appointment_block_id"
@@ -58,7 +56,7 @@ def lambda_handler(event, context):
         
         # check if delete successfull
         if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
-            raise LambdaException("appointment block not deleted from specializations_for_block")
+            raise LambdaException("404 : appointment block not deleted from specializations_for_block")
 
     #delete appt block sql
     sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
@@ -68,10 +66,10 @@ def lambda_handler(event, context):
     
     # check if delete successfull
     if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
-        raise LambdaException("appointment block not deleted from appointment_block table")
+        raise LambdaException("404 : appointment block not deleted from appointment_block table")
 
     # success
     return {
-        'body': json.dumps("appointment block successfully deleted"),
+        'body': json.dumps("200 : appointment block successfully deleted"),
         'statusCode': 200
     }
