@@ -3,7 +3,7 @@ from package.query_db import query
 from package.dictionary_to_list import dictionary_to_list
 
 def verify_admin(event, context):
-    user_id = event['user_id']
+    user_id = int(event['user_id'])
     user_id_dic = {}
     if user_id == None: #Making sure user_id was passed
         return{
