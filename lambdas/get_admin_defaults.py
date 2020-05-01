@@ -7,7 +7,9 @@ from package.query_db import query
 
 def get_admin_defaults(event,context):
 
-    sql = 'SELECT * FROM default_table'
+    sql = 'SELECT max_students_for_specialization, duration_for_specialization, hours_before_appointment_for_supporter, M.medium \
+    FROM default_table, medium M\
+    WHERE M.medium_id = default_table.medium_of_appt'
     sql_parameters = []
     default_query = query(sql,sql_parameters)
 
@@ -22,10 +24,10 @@ def get_admin_defaults(event,context):
     defaults = []
 
     block = dict()
-    block["medium_of_appt"] = default_query['records'][0][0]["longValue"]
-    block["max_students_for_specialization"] = default_query['records'][0][1]["longValue"]
-    block["duration_for_specialization"] = default_query['records'][0][2]["longValue"]
-    block["hours_before_appointment_for_supporter"] = default_query['records'][0][3]["longValue"]
+    block["max_students_for_specialization"] = default_query['records'][0][0]["longValue"]
+    block["duration_for_specialization"] = default_query['records'][0][1]["longValue"]
+    block["hours_before_appointment_for_supporter"] = default_query['records'][0][2]["longValue"]
+    block["medium_of_appt"] = default_query['records'][0][3]["stringValue"]
 
     defaults.append(block)
 
