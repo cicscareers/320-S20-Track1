@@ -4,7 +4,7 @@ from package.dictionary_to_list import dictionary_to_list
 from package.lambda_exception import LambdaException
 
 def cancel_appointment(event, context):
-    appointment_id_to_delete = event['appointment_id']
+    appointment_id_to_delete = int(event['appointment_id'])
     cancel_reason = event['cancel_reason']
 
     appointment_id_dic = {}
