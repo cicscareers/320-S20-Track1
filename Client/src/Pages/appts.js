@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, TextField, Grid, CircularProgress, Button, Fab, Modal} from '@material-ui/core';
+import { makeStyles, TextField, Grid, CircularProgress, Dialog, DialogContent, DialogTitle, Button, Fab, Modal} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
 import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
@@ -61,7 +61,12 @@ const useStyles = makeStyles((theme) => ({
     display:'flex',
     alignItems:'center',
     justifyContent:'center',
-  }
+  },
+  createAppointmentDialogTitle: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+  },
 }));
 
 const ResponsiveDrawer = (props) => {
@@ -261,14 +266,18 @@ const ResponsiveDrawer = (props) => {
           Create Appointment
         </Fab>
       </div>}
-      <Modal
+      <Dialog
         className={classes.modal}
         open={createAppointmentModal}
         onClose={handleCreateAppointmentModalToggle}
       >
-      <CreateAppointmentModal>
-      </CreateAppointmentModal>
-      </Modal>
+        <DialogTitle className={classes.createAppointmentDialogTitle}>Create New Appointment</DialogTitle>
+        <DialogContent
+          dividers
+        >
+        <CreateAppointmentModal/>
+        </DialogContent>
+      </Dialog>
         {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
         {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>

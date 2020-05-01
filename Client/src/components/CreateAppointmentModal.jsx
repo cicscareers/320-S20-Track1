@@ -1,86 +1,239 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
-import {Grid, Button, Box, TextField} from '@material-ui/core';
+import {Grid, Button, Box, TextField, CardContent} from '@material-ui/core';
 import { DatePicker, KeyboardTimePicker} from "@material-ui/pickers";
 import {makeStyles} from '@material-ui/core';
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+const role = cookies.get("role");
 
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
     },
     inputs: {
-      marginLeft: "5%",
-      marginRight: "5%",
-      width:"50%"
+    },
+    createAppointmentdatePicker: {
+      top: theme.spacing(4.1),
+      marginLeft: "2%",
+      marginRight: "2%",
+    },
+    createAppointmentButton: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
     },
 }));
 
 const CreateAppointmentModal = (props) => {
-  const [name,setName]=React.useState("");
-  const [selectedDate, setSelectedDate] = React.useState(new Date(Date.now()));
+  const [selectedDate, setSelectedDate] = useState(roundTime(new Date(Date.now())));
+  const [medium, setMedium] = useState("In person");
+  const [location, setLocation] = useState("");
+  const [comment, setComment] = useState("");
+  const [supporterEmail, setSupporterEmail] = useState("");
+  const [studentEmail, setStudentEmail] = useState("");
+  const [appointmentType, setappointmentType] = useState("");
+
+  //Creates an appointment
+  //Calls the API
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //TODO: always switches to confirmed modal no matter what, because lambda does not retrun status codes
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function handleCreateAppointment(){
+    let year = selectedDate.getFullYear().toString();
+    let month = getTheMonth((selectedDate.getMonth() + 1));
+    let day = getTheMonth(selectedDate.getDate()).toString();
+    let time = selectedDate.toString().substring(16,21);
+    alert(year+"-"+month+"-"+day+" "+time+":00")
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          student_email: studentEmail,
+          supporter_email: supporterEmail,
+          selected_tags: [],
+          specialization: "Resume",
+          time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
+          appt_type: appointmentType,
+          duration: 30,
+          medium: "In person",
+          location: location,
+          comment: "",
+          override: "true",
+        })
+      }
+    )
+    .then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response)
+        return response.json();
+      } else {
+        throw new Error("Server can't be reached!");
+      }
+    })
+    .then(json => {
+      //setOpen(false);
+      //setOpenCreated(true);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  function getTheMonth(month){
+    if (parseInt(month)>10){
+      return month.toString();
+    }
+    else{
+      return "0".concat(month.toString());
+    }
+  }
 
   function roundTime(date) {
-    var minutes = date.getMinutes();
-    var hours = date.getHours();
-
-    var roundedMinutes = (parseInt((minutes + 7.5)/15) * 15) % 60;
-    var roundedHours = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
-
-    return date;
+    let minutes = date.getMinutes();
+    let rem = minutes % 15;
+    let hours = date.getHours();
+    let roundedDate = date;
+    if(minutes < 15) {
+      if(rem < 15/2) {
+        roundedDate = new Date(date.setMinutes(0));
+      } else {
+        roundedDate = new Date(date.setMinutes(15));
+      }
+    }
+    else if(minutes < 30) {
+      if(rem < 15/2) {
+        roundedDate = new Date(date.setMinutes(15));
+      } else {
+        roundedDate = new Date(date.setMinutes(30));
+      }
+    }
+    else if(minutes < 45) {
+      if(rem < 15/2) {
+        roundedDate = new Date(date.setMinutes(30));
+      } else {
+        roundedDate = new Date(date.setMinutes(45));
+      }
+    }
+    else if(minutes < 60) {
+      if(rem < 15/2) {
+        roundedDate = new Date(date.setMinutes(45));
+      } else {
+        roundedDate = new Date(date.setMinutes(60));
+      }
+    }
+    return roundedDate;
   }
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(roundTime(date));
   };
 
   const classes = useStyles();
 
   return (
-    <Container component = 'main'>
-      <Card style={{padding: 20, margin: 30}}>
-        <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
-        <div align="center">
+    <Container>
+        <Grid container lg = {12}>
+          <Grid item xs={5}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder="Student Email"
+              onChange={e => setStudentEmail(e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={5}>
+            {role==="admin" && <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder="Supporter Email"
+              onChange={e => setSupporterEmail(e.target.value)}
+              fullWidth
+            >
+            </TextField>}
+        </Grid>
+      </Grid>
+
+      <Grid container>
+        <Grid item xs={5}>
+          <DatePicker
+            autoOk
+            align="center"
+            variant="inline"
+            value={selectedDate}
+            onChange={handleDateChange}
+            className={classes.createAppointmentdatePicker}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={5}>
+          <KeyboardTimePicker
+            margin="normal"
+            id="time-picker"
+            label="Time picker"
+            value={selectedDate}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              'aria-label': 'change time',
+            }}
+            fullWidth
+          />
+        </Grid>
+      </Grid>
+        
+      <Grid container>
+        <Grid item xs={5} className='location'>
           <TextField
             variant="outlined"
             margin="normal"
             className={classes.inputs}
             align="center"
-            placeholder="Student Email"
-            onChange={e => setName(e.target.value)}
+            placeholder="Location"
+            onChange={e => setLocation(e.target.value)}
           />
-          </div>
         </Grid>
-        <br/>
-        <Box align="center">
-            <DatePicker
-              autoOk
-              align="center"
-              variant="inline"
-              value={selectedDate}
-              onChange={handleDateChange}
-            />
-        </Box>
-        <br/>
-        <div align="center">
-        <KeyboardTimePicker
-          margin="normal"
-          id="time-picker"
-          label="Time picker"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change time',
-          }}
-        />
-        </div>
-        <Grid lg = {12} style = {{display: 'flex', justifyContent: 'marginLeft'}}>
-          <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}}>Create Appointment</Button>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={5} className='medium'>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            className={classes.inputs}
+            align="center"
+            placeholder="Medium"
+            onChange={e => setMedium(e.target.value)}
+          />
         </Grid>
-      </Card>
+      </Grid>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        className={classes.inputs}
+        align="center"
+        placeholder="Comments (Optional)"
+        onChange={e => setComment(e.target.value)}
+        fullWidth
+        multiline
+        rows="4"
+      />
+        <Grid className={classes.createAppointmentButton}>
+          <Button href='/appointments' onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
+        </Grid>
     </Container>
   );
 }
