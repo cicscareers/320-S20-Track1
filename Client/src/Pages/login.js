@@ -3,6 +3,7 @@ import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, Fo
 import { makeStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
+import Cookies from "universal-cookie";
 
 
 
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   //sets styling
   const classes = useStyles();
-
+  
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +73,7 @@ export default function SignIn() {
           var authToken = user.signInUserSession.idToken.jwtToken;
           var base64Url = authToken.split('.')[1];
           var json = JSON.parse(window.atob(base64Url));
-
+          const cookies = new Cookies();
 
           console.log(json)
           console.log("$$$$$$$$");
@@ -83,6 +84,7 @@ export default function SignIn() {
           sessionStorage.setItem("lastName", json.family_name);
           sessionStorage.setItem("role", json.profile);
           sessionStorage.setItem("id", json.preferred_username);
+          cookies.set("role", json.profile, { path: "/" });
 
           window.location.reload();
         }

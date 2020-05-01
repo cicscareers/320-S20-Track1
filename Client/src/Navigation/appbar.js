@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import Cookies from "universal-cookie";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -83,11 +84,11 @@ export default function MenuAppBar(props) {
 
 
   const [PossibleRoles,SetPossibleRoles] = React.useState([]);
-
+  const cookies = new Cookies();
   //Gets info from the session 
   const token = sessionStorage.getItem("token");
   const name = sessionStorage.getItem("firstName");
-  const role = sessionStorage.getItem("role");
+  const role = cookies.get("role");
   const id = sessionStorage.getItem("id");
 
   //Sets the styling
@@ -102,7 +103,7 @@ export default function MenuAppBar(props) {
   const [openModal, setOpen] = React.useState(false);
 
   useEffect(() => {
-            fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + 1 + '/role')
+            fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
               .then(res => res.json())
               .then(json => {
                 sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
@@ -138,6 +139,7 @@ export default function MenuAppBar(props) {
     sessionStorage.removeItem("firstName");
     sessionStorage.removeItem("lastName");
     sessionStorage.removeItem("role");
+    cookies.remove("role");
     sessionStorage.removeItem("token");
     window.location.reload();
   }
@@ -163,12 +165,12 @@ export default function MenuAppBar(props) {
 //   const RoleNameAdmin=PossibleRoles[2].charAt(0).toUpperCase() + PossibleRoles[2].slice(1);
  const SwitchUserHandle= event =>{
   if(event.currentTarget.id=='student'){
-    sessionStorage.setItem('role', "Student")
+    cookies.set('role', "Student")
   }
   else{
-  sessionStorage.setItem('role',event.currentTarget.id);
+  cookies.set('role',event.currentTarget.id);
   }
-  if(sessionStorage.getItem('role')==='Student'){
+  if(cookies.get('role')==='Student'){
     window.location.reload('/');
   }
  window.location.reload('/appointments');

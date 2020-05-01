@@ -11,7 +11,7 @@ import Cookies from "universal-cookie";
 import CreateAppointmentModal from '../components/CreateAppointmentModal';
 
 const cookies = new Cookies();
-const role = sessionStorage.getItem("role");
+const role = cookies.get("role");
 const id = sessionStorage.getItem('id');
 //const id = 2;
 
