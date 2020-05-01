@@ -1,6 +1,6 @@
 import json
 import boto3
-from package.lambda_expection import LambdaException
+from package.lambda_exception import LambdaException
 
 # Written by Dat Duong
 
