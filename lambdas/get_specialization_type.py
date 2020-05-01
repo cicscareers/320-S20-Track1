@@ -18,6 +18,6 @@ def handler(event, context):
         curr_specialization_types = response["specialization_types"]
         next_spec_types = {'specialization_type_id' : spec_type_id, 'specialization_type' : specialization_type}
         curr_specialization_types.append(next_spec_types)
-        records['specialization_types'] = curr_specialization_types
+        response['specialization_types'] = curr_specialization_types
 
     return response

@@ -18,6 +18,6 @@ def handler(event, context):
         curr_links = response["links"]
         next_link = {'link_id' : l_id, 'link_type' : link}
         curr_links.append(next_link)
-        records['links'] = curr_links
+        response['links'] = curr_links
 
     return response

@@ -18,6 +18,6 @@ def handler(event, context):
         curr_tags = response["tags"]
         next_tag = {'tag_type_id' : t_id, 'tag_type' : tag}
         curr_tags.append(next_tag)
-        records['tags'] = curr_tags
+        response['tags'] = curr_tags
 
     return response

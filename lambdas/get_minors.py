@@ -18,6 +18,6 @@ def handler(event, context):
         curr_minors = response["minors"]
         next_minor = {'minor_id' : m_id, 'minor' : minor}
         curr_minors.append(next_minor)
-        records['minors'] = curr_minors
+        response['minors'] = curr_minors
 
     return response

@@ -18,6 +18,6 @@ def handler(event, context):
         curr_colleges = response["colleges"]
         next_college = {'college_id' : c_id, 'college' : college}
         curr_colleges.append(next_college)
-        records['colleges'] = curr_colleges
+        response['colleges'] = curr_colleges
 
     return response
