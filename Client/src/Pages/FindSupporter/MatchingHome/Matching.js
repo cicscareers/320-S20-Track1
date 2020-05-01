@@ -30,13 +30,24 @@ const ResponsiveDrawer = (props) => {
   const tagsList=[]
   const today = new Date()
   const today_year=today.getFullYear().toString()
-  const today_month=getTheMonth(today.getMonth())
+  const today_month=getTheMonth(today.getMonth()+1)
   const today_day=today.getDate().toString()
-  const next_year=(today.getFullYear()+1).toString()
+  const nextWeek=new Date()
+  nextWeek.setDate(today.getDate()+7)
+  const next_year=nextWeek.getFullYear().toString()
+  const next_month=getTheMonth(nextWeek.getMonth()+1)
+  const next_day=getTheMonth(nextWeek.getDate())
+  console.log("Today" + today)
+  console.log("Next Week" + nextWeek)
+  console.log(today_year)
+  console.log(today_month)
+  console.log(today_day)
   console.log(next_year)
+  console.log(next_month)
+  console.log(next_day)
   //Calls the API to get the list of supporters
   useEffect(() => {
-    fetch(`https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=${today_year}-${today_month}-${today_day}%2000%3A00%3A00&end_date=${next_year}-${today_month}-${today_day}%2000%3A00%3A00`)
+    fetch(`https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=${today_year}-${today_month}-${today_day}%2000%3A00%3A00&end_date=${next_year}-${next_month}-${next_day}%2000%3A00%3A00`)
       .then(res => res.json())
       .then(json => {
         if(json.body[0]!==undefined){
@@ -50,6 +61,7 @@ const ResponsiveDrawer = (props) => {
       })
       .catch(error => {
         setError(true)
+        console.log(error)
         console.log("No Supporters Found")
       });
     }, [])
