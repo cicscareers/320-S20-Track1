@@ -49,8 +49,9 @@ def lambda_handler(event, context):
         raise LambdaException("404 : No existing Supporter")
 
     #Check if appointment_block_id exists in appointment_block
-    sql = "SELECT appointment_block_id FROM appointment_block WHERE supporter_id= :supporter_id"
-    supporter_id_param = [{'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}]
+    sql = "SELECT appointment_block_id FROM appointment_block WHERE supporter_id= :supporter_id AND appointment_block_id= :appointment_block_id"
+    supporter_id_param = [{'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}},
+    {'name' : 'appointment_block_id', 'value' : {'longValue' : appointment_block_id}}]
     existing_appointment_block = query(sql, supporter_id_param)
 
     if(existing_appointment_block['records'] == []):
