@@ -38,6 +38,7 @@ const CreateAppointmentModal = (props) => {
   const [supporterEmail, setSupporterEmail] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
   const [appointmentType, setappointmentType] = useState("");
+  const [disableButton, setDisableButton] = useState(false);
 
   //Creates an appointment
   //Calls the API
@@ -49,7 +50,7 @@ const CreateAppointmentModal = (props) => {
     let month = getTheMonth((selectedDate.getMonth() + 1));
     let day = getTheMonth(selectedDate.getDate()).toString();
     let time = selectedDate.toString().substring(16,21);
-
+    setDisableButton(true);
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
@@ -231,7 +232,12 @@ const CreateAppointmentModal = (props) => {
         rows="4"
       />
         <Grid className={classes.createAppointmentButton}>
-          <Button onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
+          <Button 
+            onClick={handleCreateAppointment}
+            disabled={disableButton} 
+            variant="contained"
+            color="primary">Create Appointment
+          </Button>
         </Grid>
     </Container>
   );
