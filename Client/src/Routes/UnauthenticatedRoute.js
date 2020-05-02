@@ -1,18 +1,16 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import Cookies from "universal-cookie";
 
 export default function UnauthenticatedRoute({
   component: C,
   appProps,
   ...rest
 }) {
-  const cookies = new Cookies();
   return (
     <Route
       {...rest}
       render={props =>
-        cookies.get("token") === undefined ? (
+        sessionStorage.getItem("token") === null ? (
           <C {...props} {...appProps} />
         ) : (
           <Redirect to="/" />

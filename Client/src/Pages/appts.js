@@ -12,7 +12,7 @@ import CreateAppointmentModal from '../components/CreateAppointmentModal';
 
 const cookies = new Cookies();
 const role = cookies.get("role");
-const id = cookies.get('id');
+const id = sessionStorage.getItem('id');
 //const id = 2;
 
 const drawerWidth = "25%";
