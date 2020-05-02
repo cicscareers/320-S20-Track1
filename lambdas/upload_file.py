@@ -7,6 +7,7 @@ from datetime import datetime
 # Written by Dat Duong
 
 # input: file_name
+# input: file_obj
 # input: user_id
 # input: file_type "resume" or "picture"
 
@@ -17,6 +18,9 @@ def upload_files(event, context):
 
     # get the file name
     file_name = event['file_name']
+
+    # get data of file
+    file_obj = event['file_obj']
 
     # getting the type of file
     file_type = event['file_type']
@@ -49,9 +53,8 @@ def upload_files(event, context):
     try:
         # actually uploading
         # creating/adding user_id folder and adding timestamp to file_name
-
-        with open(file_name, 'rb') as data:
-            s_3.upload_fileobj(data, bucket_name, key)
+        # with open(file_name, 'rb') as data:
+        s_3.upload_fileobj(file_obj, bucket_name, key)
 
     except Exception as e:
         raise LambdaException("400: File failed to uploaded")
