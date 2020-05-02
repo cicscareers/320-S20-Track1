@@ -1,5 +1,5 @@
 # Written by Maeve Newman
-# Updated 4/30/2020
+# Updated 5/2/2020
 
 import json
 from package.query_db import query
@@ -16,7 +16,7 @@ def lambda_handler(event, context):
     # take in lambda input
     time_of_appt = event['time_of_appt']
     tags = event['selected_tags']
-    selected_tags_str = tags.strip('][').split(', ')
+    #selected_tags_str = tags.strip('][').split(', ')
     selected_tags_str = tags
     medium_string = event['medium']
     location = event['location']
@@ -164,10 +164,10 @@ def lambda_handler(event, context):
 
         difference = appt_timestamp - currtimestamp
         #if difference.total_seconds() < 0:
-            #raise LambdaException("404: Invalid time: timestamp is in the past.")
+            #raise LambdaException("404: Invalid time: Appointment time is in the past.")
 
         # Check that time is within a supporter appointment block
-        sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
+        sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<=TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
         sql_parameters = [
             {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
             {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}}
@@ -295,13 +295,15 @@ def lambda_handler(event, context):
             raise LambdaException("404: Supporter has a conflicting appointment.")
 
     # get appointment tags
-    numTags = len(selected_tags_str)
+    #numTags = len(selected_tags_str)
     if selected_tags_str != "[]":
         tag_ints = []
-        sql = "SELECT tag_type_id FROM tag_type WHERE tag_type=%s" % selected_tags_str[0]
+        input_tag_list = tags.strip('][').split(', ')
+        numTags = len(input_tag_list)
+        sql = "SELECT tag_type_id FROM tag_type WHERE tag_type=%s" % input_tag_list[0]
         if numTags > 1:
             for tag in range(1, numTags):
-                sql = sql + " OR tag_type=%s" % selected_tags_str[tag]
+                sql = sql + " OR tag_type=%s" % input_tag_list[tag]
         sql = sql + ";"
         sql_parameters = []
         
