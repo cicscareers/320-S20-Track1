@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAppointmentModal = (props) => {
+
   const [selectedDate, setSelectedDate] = useState(roundTime(new Date(Date.now())));
   const [medium, setMedium] = useState("In person");
   const [location, setLocation] = useState("");
@@ -48,6 +49,7 @@ const CreateAppointmentModal = (props) => {
     let month = getTheMonth((selectedDate.getMonth() + 1));
     let day = getTheMonth(selectedDate.getDate()).toString();
     let time = selectedDate.toString().substring(16,21);
+
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
@@ -57,34 +59,33 @@ const CreateAppointmentModal = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "student_email": studentEmail,
-          "supporter_email": supporterEmail,
-          "selected_tags": [],
-          "specialization": "Mock Interview",
-          "time_of_appt": year+"-"+month+"-"+day+" "+time+":00",
-          "duration": 30,
-          "medium": "in-person",
-          "location": location,
-          "comment": "",
-          "override": "true",
+          student_email: studentEmail,
+          supporter_email: supporterEmail,
+          selected_tags: [],
+          specialization: "Mock Interview",
+          time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
+          duration: 30,
+          medium: "in-person",
+          location: location,
+          comment: "",
+          override: "true"
       })
       }
     )
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
-        console.log(response)
         return response.json();
       } else {
         throw new Error("Server can't be reached!");
       }
     })
     .then(json => {
-      //setOpen(false);
-      //setOpenCreated(true);
+      window.location.reload();
     })
     .catch(error => {
       console.log(error);
     });
+
   }
 
   function getTheMonth(month){
@@ -230,7 +231,7 @@ const CreateAppointmentModal = (props) => {
         rows="4"
       />
         <Grid className={classes.createAppointmentButton}>
-          <Button href='/appointments' onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
+          <Button onClick={handleCreateAppointment} style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c'}}>Create Appointment</Button>
         </Grid>
     </Container>
   );
