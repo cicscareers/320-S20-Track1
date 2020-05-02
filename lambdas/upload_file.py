@@ -33,7 +33,7 @@ def upload_files(event, context):
     s_3 = boto3.client('s3')
 
     # get timestamp
-    now = str(datetime.now().time())
+    now = str(datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
 
     # if picture assign to appropiate bucket
     if file_type == 'picture':
@@ -49,7 +49,7 @@ def upload_files(event, context):
         # actually uploading
         with open(file_name, 'rb') as data:
             s_3.upload_fileobj(data, bucket_name, str(
-                user_id) + '/' + now + file_name)
+                user_id) + '/' + now + '_' + file_name)
 
         # response = s_3.meta.client.upload_file(
         #     file_name, bucket_name, "gen2_folder/" + file_name) # maybe timestamp
