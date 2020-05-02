@@ -8,9 +8,20 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Cookies from "universal-cookie";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const cookies = new Cookies();
+const role = cookies.get('role')
+var primary_color="#881c1c"
+if (role==='supporter'){
+  primary_color="#003b5c"
+}else if (role==='admin'){
+  primary_color="#41273b"
+}
+
 const useStyles = makeStyles(theme => ({
 
   root: {
@@ -32,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 80,
   },
   logo: {
-    color: "#881c1c",
+    color: primary_color,
     fontSize: "255%",
     borderRadius: "40em",
     "&:hover": {
@@ -44,11 +55,11 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(3),
 
     marginLeft: "1%",
-    color: '#881c1c',
+    color: primary_color,
     fontSize: '120%',
     borderRadius: "40em",
     "&:hover": {
-      backgroundColor: "#881c1c",
+      backgroundColor: primary_color,
       color: "#FFF",
     },
   },
@@ -56,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "1%",
     borderRadius: "100em",
     "&:hover": {
-      backgroundColor: "#881c1c",
+      backgroundColor: primary_color,
     },
   },
   large: {
@@ -84,11 +95,9 @@ export default function MenuAppBar(props) {
 
 
   const [PossibleRoles,SetPossibleRoles] = React.useState([]);
-  const cookies = new Cookies();
   //Gets info from the session 
   const token = sessionStorage.getItem("token");
   const name = sessionStorage.getItem("firstName");
-  const role = cookies.get("role");
   const id = sessionStorage.getItem("id");
 
   //Sets the styling
@@ -103,10 +112,11 @@ export default function MenuAppBar(props) {
   const [openModal, setOpen] = React.useState(false);
 
   useEffect(() => {
-            fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
+    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
               .then(res => res.json())
               .then(json => {
                 sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+                console.log(json.user_roles)
                 console.log("setting possible roles to: " + json.user_roles);
                 SetPossibleRoles(json.user_roles);
               })
@@ -261,7 +271,7 @@ return RenderRoles;
         </Link>
       </MenuItem>
     )}
-      {(role.toLowerCase()==='supoprter'||role.toLowerCase()==='admin')  && (
+      {(role.toLowerCase()==='supporter')  && (
       <MenuItem onClick={handleClose}>
         <Link href="/supporter-settings">
           <Typography component="h6" variant="h6">
@@ -275,7 +285,7 @@ return RenderRoles;
   {(PossibleRoles.length!=1)&&(<MenuItem onClick={handleModalOpen}>
   <Link >
       <Typography component="h6" variant="h6">
-        Switch User
+        Switch Role
       </Typography>
       </Link>
   </MenuItem>)}

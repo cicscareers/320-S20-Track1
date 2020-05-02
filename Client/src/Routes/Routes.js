@@ -33,7 +33,7 @@ export default function Routes() {
           {role!=="Student" && <Redirect exact from="/" to="/appointments" />}
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
           <AuthenticatedRoute path="/feedback" exact component={Feedback} />
-          <AuthenticatedRoute path="/admin-settings" exact component={AdminSettings} />
+          <AdminRoute path="/admin-settings" exact component={AdminSettings} />
           <SupporterRoute Route path="/supporter-settings" exact component={SupporterSettings} />
           <Route path="/create-block" exact component={SupporterBlocks} />
           <UnauthenticatedRoute path="/login" exact component={Login} />
