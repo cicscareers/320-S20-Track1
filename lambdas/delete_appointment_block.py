@@ -20,17 +20,25 @@ def lambda_handler(event, context):
     else:
         raise LambdaException("422 : Invalid input: No supporter_id")
 
-    if 'delete_recurring' in event:
-        delete_recurring = event['delete_recurring'].lower()
+    #appointment block identifier
+    if 'appointment_block_id' in event:
+        appointment_block_id = int(event['appointment_block_id'])
     else:
-        raise LambdaException("422 : Invalid input: No delete_recurring")
+        raise LambdaException("422 : Invalid input: No appointment_block_id")
 
     if 'recurring_id' in event:
-        recurring_id = event['delete_recurring']
+        recurring_id = event['recurring_id']
         if recurring_id != "NULL":
             recurring_id = int(recurring_id)
     else:
         raise LambdaException("422 : Invalid input: No recurring_id")
+        
+    if 'delete_recurring' in event:
+        delete_recurring = event['delete_recurring'].lower()
+        if recurring_id == "NULL":
+            delete_recurring = "false"
+    else:
+        raise LambdaException("422 : Invalid input: No delete_recurring")
 
     #Check if supporter exists
     sql = "SELECT supporter_id FROM supporters WHERE supporter_id= :supporter_id"
@@ -39,12 +47,6 @@ def lambda_handler(event, context):
 
     if(existing_supporter['records'] == []):
         raise LambdaException("404 : No existing Supporter")
-
-    #appointment block identifier
-    if 'appointment_block_id' in event:
-        appointment_block_id = int(event['appointment_block_id'])
-    else:
-        raise LambdaException("422 : Invalid input: No appointment_block_id")
 
     #Check if appointment_block_id exists in appointment_block
     sql = "SELECT appointment_block_id FROM appointment_block WHERE supporter_id= :supporter_id"
