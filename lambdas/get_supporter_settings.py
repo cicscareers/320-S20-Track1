@@ -143,16 +143,22 @@ def get_supporter_settings(event, context):
         block['notification_type_name'] = None
 
     #Execute parameterized query to get link
-    sql = 'SELECT L2.link_type FROM user_link L1, link L2 \
+    sql = 'SELECT L2.link_type, L1.link FROM user_link L1, link L2 \
            WHERE L1.link_id = L2.link_id AND L1.user_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     settings = query(sql, sql_parameters)['records']
     if(settings != []):
-        block['link'] = settings[0][0].get('stringValue')
+        links = []
+        for entry in settings:
+            temp_dict = {}
+            temp_dict['link_type'] = entry[0].get('stringValue')
+            temp_dict['link'] = entry[1].get('stringValue')
+            links.append(temp_dict)
+        block['link'] = links
     if(settings == []):
         block['link'] = None
 
     return {
-        'body': json.dumps(block),
+        'body': block,
         'statusCode': 200
     }
