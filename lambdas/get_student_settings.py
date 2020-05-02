@@ -70,7 +70,7 @@ def get_student_settings_handler(event, context):
             response['grad_student'] = None
 
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 78")
+        error_messages.append(str(e) + " get_student_settings.py, line 73")
 
 
     colleges_sql = "SELECT college FROM college C, student_college SC WHERE SC.student_id = :student_id AND C.college_id = SC.college_id"    
@@ -86,110 +86,122 @@ def get_student_settings_handler(event, context):
             response['college'] = None
 
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 94")
+        error_messages.append(str(e) + " get_student_settings.py, line 89")
 
 
     links_sql = "SELECT link_id FROM user_link WHERE user_id = :student_id"
     try:
         student_link_ids = query(links_sql, student_id_param)['records'][0]
-        if len(student_link_ids) > 0:
-            link_ids = str(student_link_ids[0]['longValue'])
-            for link_id in student_link_ids[1:]:
-                link_ids += " OR link_id" + str(link_id['longValue'])
-
-            student_links_sql = "SELECT link_type FROM link WHERE link_id = " + link_ids + ";"
-            print(student_links_sql)
-            try:
-                student_links = query(student_links_sql)['records'][0]
-                links = []
-                for link in student_links:
-                    links.append(link['stringValue'])
-
-                response['links'] = links
-
-            except Exception as e:
-                error_messages.append(str(e) + " get_student_settings.py, line 111")
 
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 114")
+        error_messages.append(str(e) + " get_student_settings.py, line 97")
+
+    if len(student_link_ids) > 0:
+        link_ids = str(student_link_ids[0]['longValue'])
+        for link_id in student_link_ids[1:]:
+            link_ids += " OR link_id" + str(link_id['longValue'])
+
+        student_links_sql = "SELECT link_type FROM link WHERE link_id = " + link_ids + ";"
+        print(student_links_sql)
+        try:
+            student_links = query(student_links_sql)['records'][0]
+
+        except Exception as e:
+            error_messages.append(str(e) + " get_student_settings.py, line 110")
+
+        links = []
+        for link in student_links:
+            links.append(link['stringValue'])
+
+        response['links'] = links
 
 
     majors_sql = "SELECT major_id FROM student_majors WHERE student_id = :student_id;"
+    student_major_ids = []
     try:
         student_major_ids = query(majors_sql, student_id_param)['records']
-        if len(student_major_ids) > 0:
-            major_ids = student_major_ids[0]['longValue']
+        
+    except Exception as e:
+        error_messages.append(str(e) + " get_student_settings.py, line 124")
+
+    if len(student_major_ids) > 0:
+            student_major_ids = student_major_ids[0]
+            major_ids = str(student_major_ids[0]['longValue'])
             for major_id in student_major_ids[1:]:
-                major_ids += " OR major_id = " + major_id['longValue']
+                major_ids += " OR major_id = " + str(major_id['longValue'])
                 
             student_majors_sql = "SELECT major FROM major WHERE major_id = " + major_ids + ";"
             try:
-                student_majors = query(student_majors_sql)['records'] 
-                majors = []
-                for major in student_majors:
-                    majors.append(major['stringValue'])
-    
-                response['major'] = majors
+                student_majors = query(student_majors_sql)['records'][0] 
     
             except Exception as e:
-                error_messages.append(str(e) + " get_student_settings.py, line 137")
-                
-        else:
-            response['major'] = None
+                error_messages.append(str(e) + " get_student_settings.py, line 136")
 
-    except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 140")
+            majors = []
+            for major in student_majors:
+                majors.append(major['stringValue'])
+
+            response['major'] = majors
+                
+    else:
+        response['major'] = None
 
 
     minors_sql = "SELECT minor_id FROM student_minors WHERE student_id = :student_id;"
+    student_minor_ids = []
     try:
         student_minor_ids = query(minors_sql, student_id_param)['records']
-        if len(student_minor_ids) > 0:
-            minor_ids = student_minor_ids[0]['longValue']
-            for minor_id in student_minor_ids[1:]:
-                minor_ids += " OR minor_id = " + minor_id['longValue']
-                
-            student_minors_sql = "SELECT minor FROM minor WHERE minor_id = " + minor_ids + ";"
-            try:
-                student_minors = query(student_minors_sql)['records']
-                minors = []
-                for minor in student_minors:
-                    minors.append(minor['stringValue'])
-    
-                response['minor'] = minors 
-    
-            except Exception as e:
-                error_messages.append(str(e) + " get_student_settings.py, line 161")
-                
-        else:
-            response['minor'] = None
 
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 166")
+        error_messages.append(str(e) + " get_student_settings.py, line 153")
+
+    if len(student_minor_ids) > 0:
+        student_minor_ids = student_minor_ids[0]
+        minor_ids = str(student_minor_ids[0]['longValue'])
+        for minor_id in student_minor_ids[1:]:
+            minor_ids += " OR minor_id = " + str(minor_id['longValue'])
+            
+        student_minors_sql = "SELECT minor FROM minor WHERE minor_id = " + minor_ids + ";"
+        try:
+            student_minors = query(student_minors_sql)['records'][0]
+
+        except Exception as e:
+            error_messages.append(str(e) + " get_student_settings.py, line 165")
+
+        minors = []
+        for minor in student_minors:
+            minors.append(minor['stringValue'])
+
+        response['minor'] = minors 
+                
+    else:
+        response['minor'] = None
 
 
     notification_sql = "SELECT notification_type_id FROM notification_preferences WHERE user_id = :student_id;"
     try:
         notification_type_ids = query(notification_sql, student_id_param)['records']
-        if len(notification_type_ids) > 0:
-            notification_ids = notification_type_ids[0]['longValue']
+
+    except Exception as e:
+        error_messages.append(str(e) + " get_student_settings.py, line 182")
+
+    if len(notification_type_ids) > 0:
+            notification_ids = str(notification_type_ids[0]['longValue'])
             for notification_id in notification_type_ids[1:]:
-                notification_ids += " OR notification_type_id = " + notification_id['longValue']
+                notification_ids += " OR notification_type_id = " + str(notification_id['longValue'])
     
             student_notification_pref_sql = "SELECT notification_type_name FROM notification_type WHERE notification_type_id = " + notification_ids + ";"
             try:
                 student_notification_prefs = query(student_notification_pref_sql)['records']
-                notification_prefs = []
-                for pref in notification_prefs:
-                    notification_prefs.append(pref['stringValue'])
-    
-                response['notification_preferences'] = notification_prefs
     
             except Exception as e:
-                error_messages.append(str(e) + " get_student_settings.py, line 187")
+                error_messages.append(str(e) + " get_student_settings.py, line 194")
 
-    except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 190")
+            notification_prefs = []
+            for pref in notification_prefs:
+                notification_prefs.append(pref['stringValue'])
+
+            response['notification_preferences'] = notification_prefs
 
 
 
