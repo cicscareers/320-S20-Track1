@@ -16,7 +16,7 @@ def handler(event, context):
 
     for m_id, medium in mediums:
         curr_mediums = response["mediums"]
-        next_medium = {'medium_id' : m_id, 'medium' : medium}
+        next_medium = {'medium_id' : m_id['longValue'], 'medium' : medium['stringValue']}
         curr_mediums.append(next_medium)
         response['mediums'] = curr_mediums
 

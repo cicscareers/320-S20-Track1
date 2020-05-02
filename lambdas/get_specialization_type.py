@@ -16,7 +16,7 @@ def handler(event, context):
 
     for spec_type_id, specialization_type in specialization_types:
         curr_specialization_types = response["specialization_types"]
-        next_spec_types = {'specialization_type_id' : spec_type_id, 'specialization_type' : specialization_type}
+        next_spec_types = {'specialization_type_id' : spec_type_id['longValue'], 'specialization_type' : specialization_type['stringValue']}
         curr_specialization_types.append(next_spec_types)
         response['specialization_types'] = curr_specialization_types
 

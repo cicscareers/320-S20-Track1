@@ -16,7 +16,7 @@ def handler(event, context):
 
     for c_id, college in colleges:
         curr_colleges = response["colleges"]
-        next_college = {'college_id' : c_id, 'college' : college}
+        next_college = {'college_id' : c_id['longValue'], 'college' : college['stringValue']}
         curr_colleges.append(next_college)
         response['colleges'] = curr_colleges
 

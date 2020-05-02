@@ -16,7 +16,7 @@ def handler(event, context):
 
     for m_id, minor in minors:
         curr_minors = response["minors"]
-        next_minor = {'minor_id' : m_id, 'minor' : minor}
+        next_minor = {'minor_id' : m_id['longValue'], 'minor' : minor['stringValue']}
         curr_minors.append(next_minor)
         response['minors'] = curr_minors
 

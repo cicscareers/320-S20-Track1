@@ -16,7 +16,7 @@ def handler(event, context):
 
     for l_id, link in links:
         curr_links = response["links"]
-        next_link = {'link_id' : l_id, 'link_type' : link}
+        next_link = {'link_id' : l_id['longValue'], 'link_type' : link['stringValue']}
         curr_links.append(next_link)
         response['links'] = curr_links
 

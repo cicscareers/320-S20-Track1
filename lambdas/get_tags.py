@@ -16,7 +16,7 @@ def handler(event, context):
 
     for t_id, tag in tags:
         curr_tags = response["tags"]
-        next_tag = {'tag_type_id' : t_id, 'tag_type' : tag}
+        next_tag = {'tag_type_id' : t_id['longValue'], 'tag_type' : tag['stringValue']}
         curr_tags.append(next_tag)
         response['tags'] = curr_tags
 
