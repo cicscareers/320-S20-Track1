@@ -10,9 +10,9 @@ import {Grid, Button, TextField} from '@material-ui/core';
 function handlePress(id, reason){
     console.log(id, reason)
     fetch(
-    "",
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/cancel",
     {
-      method: "POST",
+      method: "PATCH",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -40,15 +40,14 @@ function handlePress(id, reason){
 }
 
 const CancelAppt = (props) => {
-    const {subject, location, medium, time, date, supporter, profilepic} = props;
     const [cancelReason, setCancelReason] = useState("");
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>  
           <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
-              <Typography variant="h5"> Are you sure you want to cancel your appointment with {supporter}?</Typography>
+              <Typography variant="h5"> Are you sure you want to cancel your appointment with {props.supporter}?</Typography>
               <br/>
-              <Typography>Please state your reason for cancellation</Typography>
+              <Typography>Please state your reason for cancellation.</Typography>
               <TextField
                   style = {{width: 1100}}
                   id="outlined-multiline-static"

@@ -293,6 +293,7 @@ const ResponsiveDrawer = (props) => {
                       supporterProfilePic = {appointment.supporterPic}
                       studentProfilePic = {""}
                       comments = {appointment.comment}
+                      appt_id = {appointment.appointment_id}
                     />
                   </Grid>
                 ))}
