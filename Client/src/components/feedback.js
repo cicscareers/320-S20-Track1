@@ -58,7 +58,7 @@ const StyledRating = withStyles({
   };
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
-  const id = sessionStorage.getItem('id');
+  const id = parseInt(sessionStorage.getItem('id'));
   // const id = 12;
   console.log(key, feedbackString, feedbackRate, id)
   fetch(
