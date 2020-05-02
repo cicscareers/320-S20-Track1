@@ -82,9 +82,9 @@ export default function SignIn() {
           sessionStorage.setItem("email", json.email);
           sessionStorage.setItem("firstName", json.given_name);
           sessionStorage.setItem("lastName", json.family_name);
-          sessionStorage.setItem("role", json.profile);
+          sessionStorage.setItem("role", "Student");
           sessionStorage.setItem("id", json.preferred_username);
-          cookies.set("role", json.profile, { path: "/" });
+          cookies.set("role", "Student", { path: "/" });
 
           window.location.reload();
         }

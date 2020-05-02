@@ -1,5 +1,5 @@
 import React from "react"
-import {makeStyles, Typography, Button, Container, TextField, Grid} from "@material-ui/core";
+import {makeStyles, Typography, Button, Avatar, Container, Box, TextField, Grid} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -18,7 +18,13 @@ const useStyles = makeStyles(theme => ({
       width: "100%",
       marginTop: theme.spacing(2),
       align: "center",
-    }
+    },
+    avatar: {
+        marginLeft: "42%",
+        marginRight: "50%",
+        width: theme.spacing(25),
+        height: theme.spacing(25)
+    },
 }));
 
 function handleSubmit(){
@@ -27,12 +33,14 @@ function handleSubmit(){
 
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const [firstName, setFirstName]=React.useState("")
-    const [prefName, setPrefName]=React.useState("")
-    const [lastName, setLastName]=React.useState("")
-    const [pronouns, setPronouns]=React.useState("")
-    const [phoneNumber, setPhoneNumber]=React.useState("")
-    const [email, setEmail]=React.useState("")
+    const {settings} = props
+    const [firstName, setFirstName]=React.useState(settings.first_name)
+    const [prefName, setPrefName]=React.useState(settings.preferred_name)
+    const [lastName, setLastName]=React.useState(settings.last_name)
+    const [pronouns, setPronouns]=React.useState(settings.pronouns)
+    const [phoneNumber, setPhoneNumber]=React.useState(settings.phone)
+    const [email, setEmail]=React.useState(settings.email)
+    const [linkedIn, setLinkedIn]=React.useState(settings.link)
     const [bio, setBio]=React.useState("")
     return (
         <Container component="main">
@@ -41,6 +49,8 @@ const ProfileInformation = (props) => {
                 Profile Information
             </Typography>
             <form className={classes.form}>
+                <Avatar className={classes.avatar} src={settings.picture}/>
+                <br/>
                 <Grid container>
                     <Grid item xs={3}>
                         <TextField
@@ -50,6 +60,7 @@ const ProfileInformation = (props) => {
                             required
                             label="First Name"
                             autoFocus
+                            defaultValue={firstName}
                             form className={classes.form}
                             onChange={e => setFirstName(e.target.value)}
                         />
@@ -61,6 +72,7 @@ const ProfileInformation = (props) => {
                             fullWidth
                             label="Preferred Name"
                             autoFocus
+                            defaultValue={prefName}
                             form className={classes.form}
                             onChange={e => setPrefName(e.target.value)}
                         />
@@ -73,6 +85,7 @@ const ProfileInformation = (props) => {
                             required
                             label="Last Name"
                             autoFocus
+                            defaultValue={lastName}
                             form className={classes.form}
                             onChange={e => setLastName(e.target.value)}
                         />
@@ -84,6 +97,7 @@ const ProfileInformation = (props) => {
                             fullWidth
                             label="Pronouns"
                             autoFocus
+                            defaultValue={pronouns}
                             form className={classes.form}
                             onChange={e => setPronouns(e.target.value)}
                         />
@@ -99,6 +113,7 @@ const ProfileInformation = (props) => {
                             required
                             label="Email Address"
                             autoFocus
+                            defaultValue={email}
                             form className={classes.form}
                             onChange={e => setEmail(e.target.value)}
                         />
@@ -110,6 +125,7 @@ const ProfileInformation = (props) => {
                             fullWidth
                             label="Phone Number"
                             autoFocus
+                            defaultValue={phoneNumber}
                             form className={classes.form}
                             onChange={e => setPhoneNumber(e.target.value)}
                         />
@@ -119,10 +135,22 @@ const ProfileInformation = (props) => {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    required
+                    label="LinkedIn"
+                    autoFocus
+                    defaultValue={linkedIn}
+                    form className={classes.form}
+                    onChange={e => setLinkedIn(e.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
                     label="Personal Biography"
                     autoFocus
                     multiline
                     rows={4}
+                    defaultValue={bio}
                     form className={classes.form}
                     onChange={e => setBio(e.target.value)}
                 />

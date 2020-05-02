@@ -11,6 +11,9 @@ import ChangeTags from "../TopicsTags/tags.js";
 import ViewBlocked from "../BlockUnblock/blockUnblock.js";
 import DownloadData from "../DownloadData/downloadData.js";
 import FieldDefaults from "../FieldDefaults/fieldDefaults.js";
+import AdminApproval from "../AdminApproval/adminApproval.js";
+import SupporterApproval from "../SupporterApproval/SupporterApproval";
+import FaqSettings from "../FAQ/faqPage.js";
 
 const drawerWidth = "25%";
 
@@ -85,14 +88,23 @@ const SupporterSettings = (props) => {
               <ListItem button onClick={() => setPage("View Blocked Accounts")} key={2}>
                 <ListItemText primary={"View Blocked Accounts"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Download Data")} key={4}>
+              <ListItem button onClick={() => setPage("Download Data")} key={3}>
                 <ListItemText primary={"Download Data"} />
               </ListItem>
               <ListItem button onClick={() => setPage("Edit Tags")} key={4}>
                 <ListItemText primary={"Edit Tags"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Edit Topics")} key={4}>
+              <ListItem button onClick={() => setPage("Edit Topics")} key={5}>
                 <ListItemText primary={"Edit Topics"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Admin Approval")} key={6}>
+                <ListItemText primary={"Admin Approval"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Supporter Approval")} key={7}>
+                <ListItemText primary={"Supporter Approval"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("FAQ Settings")} key={8}>
+                <ListItemText primary={"FAQ Settings"} />
               </ListItem>
             </List>
           </div>
@@ -103,9 +115,13 @@ const SupporterSettings = (props) => {
             {page==="Download Data" && (<DownloadData/>)}
             {page==="Edit Tags" && (<ChangeTags/>)}
             {page==="Edit Topics" && (<ChangeTopics/>)}
+            
+            {page==="Admin Approval" && (<AdminApproval/>)}
+            {page==="Supporter Approval" && (<SupporterApproval/>)}
+            {page==="FAQ Settings" && (<FaqSettings/>)}
         </main>
       </div>
       );
   }
 
-  export default SupporterSettings
+  export default SupporterSettings;
