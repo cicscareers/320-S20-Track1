@@ -1,6 +1,5 @@
 import json
 import boto3
-import mimetypes
 from package.lambda_exception import LambdaException
 from package.query_db import query
 from datetime import datetime
@@ -9,7 +8,7 @@ from datetime import datetime
 
 # input: file_name
 # input: user_id
-# input: file_type ??????????????????
+# input: file_type "resume" or "picture"
 
 print("OOF")
 
@@ -29,7 +28,6 @@ def upload_files(event, context):
     bucket_name_images = 't1-s3-us-east-1-images'
     bucket_name_resumes = 't1-s3-us-east-1-storage'
 
-    # s_3 = boto3.resource('s3')
     s_3 = boto3.client('s3')
 
     # get timestamp
@@ -45,27 +43,20 @@ def upload_files(event, context):
 
         bucket_name = bucket_name_resumes
 
-    # new file name going into s3
+    # new folder and file name with timestamp going into s3
     key = str(user_id) + '/' + now + '_' + file_name
 
     try:
         # actually uploading
         # creating/adding user_id folder and adding timestamp to file_name
-        # with open(file_name, 'rb') as data:
-        #     s_3.upload_fileobj(data, bucket_name, str(
-        #         user_id) + '/' + now + '_' + file_name)
 
         with open(file_name, 'rb') as data:
             s_3.upload_fileobj(data, bucket_name, key)
 
-        # response = s_3.meta.client.upload_file(
-        #     file_name, bucket_name, file_name)
-
     except Exception as e:
         raise LambdaException("400: File failed to uploaded")
 
-    # maybe update in database
-
+    # update in database
     if file_type == 'picture':
 
         sql = 'UPDATE users SET picture = :picture WHERE id = :user_id'
