@@ -10,7 +10,7 @@ export default function AuthenticatedRoute({
     <Route
       {...rest}
       render={props =>
-        sessionStorage.getItem("token") === null ? (
+        sessionStorage.getItem("token") !== null ? (
           <C {...props} {...appProps} />
         ) : (
           <Redirect to="/login" />
