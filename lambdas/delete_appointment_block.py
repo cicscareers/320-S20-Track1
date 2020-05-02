@@ -20,6 +20,18 @@ def lambda_handler(event, context):
     else:
         raise LambdaException("422 : Invalid input: No supporter_id")
 
+    if 'delete_recurring' in event:
+        delete_recurring = event['delete_recurring'].lower()
+    else:
+        raise LambdaException("422 : Invalid input: No delete_recurring")
+
+    if 'recurring_id' in event:
+        recurring_id = event['delete_recurring']
+        if recurring_id != "NULL":
+            recurring_id = int(recurring_id)
+    else:
+        raise LambdaException("422 : Invalid input: No recurring_id")
+
     #Check if supporter exists
     sql = "SELECT supporter_id FROM supporters WHERE supporter_id= :supporter_id"
     supporter_id_param = [{'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}]
@@ -59,10 +71,16 @@ def lambda_handler(event, context):
             raise LambdaException("404 : appointment block not deleted from specializations_for_block")
 
     #delete appt block sql
-    sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
-    sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
-        {'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}] 
-    delete_appmnt_blck = query(sql,sql_parameters)
+    if(delete_recurring == "true"):
+        sql = """DELETE FROM appointment_block WHERE recurring_id= :recurring_id AND supporter_id= :supporter_id"""
+        sql_parameters = [{'name' : 'recurring_id', 'value': {'longValue' : recurring_id}},
+            {'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}] 
+        delete_appmnt_blck = query(sql,sql_parameters) 
+    else:
+        sql = """DELETE FROM appointment_block WHERE appointment_block_id= :appnt_blck_id AND supporter_id= :supporter_id"""
+        sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
+            {'name' : 'supporter_id', 'value' : {'longValue' : supporter_id}}] 
+        delete_appmnt_blck = query(sql,sql_parameters)
     
     # check if delete successfull
     if delete_appmnt_blck['numberOfRecordsUpdated'] == 0:
