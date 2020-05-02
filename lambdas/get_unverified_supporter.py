@@ -40,7 +40,7 @@ def get_unverified_supporters(event, context):
 
         #Returns the query contents in JSON format
         return{ 
-            'body': json.dumps(unverified_supporter_information),
+            'body': unverified_supporter_information,
             'statusCode': 200
         }
     
