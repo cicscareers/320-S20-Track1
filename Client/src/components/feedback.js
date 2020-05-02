@@ -85,10 +85,12 @@ function handleSubmitFeedback(key, feedbackRate, feedbackString){
       throw new Error("Server can't be reached!");
     }
   })
+  .then(json => {
+    window.location.reload();
+  })
   .catch(error => {
     console.log(error);
   });
-  window.location.reload()
 };
 
 const Feedback = (props) => {
