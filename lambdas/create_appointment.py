@@ -11,12 +11,12 @@ from package.email_ics import send_cal_email
 # function puts the appointment details in the database
 # Inputs: supporter_id, time_of_appt, medium, selected_tags, location, 
 #         specialization, comment (optional), override (boolean)
+#         supporter_email(optional), student_email (optional)
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
     time_of_appt = event['time_of_appt']
     tags = event['selected_tags']
-    #selected_tags_str = tags.strip('][').split(', ')
     selected_tags_str = tags
     medium_string = event['medium']
     location = event['location']
@@ -163,8 +163,8 @@ def lambda_handler(event, context):
         appt_timestamp = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S')
 
         difference = appt_timestamp - currtimestamp
-        #if difference.total_seconds() < 0:
-            #raise LambdaException("404: Invalid time: Appointment time is in the past.")
+        if difference.total_seconds() < 0:
+            raise LambdaException("404: Invalid time: Appointment time is in the past.")
 
         # Check that time is within a supporter appointment block
         sql = "SELECT (appointment_block_id, max_num_of_appts, start_date, end_date) FROM appointment_block WHERE supporter_id=:supporter_id AND start_date<=TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS') AND end_date>TO_TIMESTAMP(:time_of_appt, 'YYYY-MM-DD HH24:MI:SS');"
@@ -185,21 +185,21 @@ def lambda_handler(event, context):
         responseList = response.strip('()').split(',')
         block_id = int(responseList[0])
         max_appts = int(responseList[1])
-        block_start = responseList[2]
-        block_end = responseList[3]
+        block_start = responseList[2].strip('"')
+        block_end = responseList[3].strip('"')
         
         # Check supporter's maximum number of appointments has not  been met
-        # query broken
-        #sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt<TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS');"
-        #sql_parameters = [
-            #{'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
-            #{'name' : 'block_start', 'value':{'stringValue': block_start}},
-            #{'name' : 'block_end', 'value':{'stringValue': block_end}}
-        #]
-        #block_appts_query = query(sql,sql_parameters)
-        #num_appts = len(block_appts_query['records'])
-        # temporary fix for testing
-        num_appts = 0
+        sql = "SELECT appointment_id FROM scheduled_appointments WHERE supporter_id=:supporter_id AND cancelled=false AND time_of_appt>=TO_TIMESTAMP(:block_start, 'YYYY-MM-DD HH24:MI:SS') AND time_of_appt<TO_TIMESTAMP(:block_end, 'YYYY-MM-DD HH24:MI:SS');"
+        sql_parameters = [
+            {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
+            {'name' : 'block_start', 'value':{'stringValue': block_start}},
+            {'name' : 'block_end', 'value':{'stringValue': block_end}}
+        ]
+        try:
+            block_appts_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to scheduled_appointments table to check num_appts failed: " + str(e))
+        num_appts = len(block_appts_query['records'])
         if num_appts+1 > max_appts:
             raise LambdaException("404: Exceeds supporter's maximum number of appointments.")
     
@@ -295,7 +295,6 @@ def lambda_handler(event, context):
             raise LambdaException("404: Supporter has a conflicting appointment.")
 
     # get appointment tags
-    #numTags = len(selected_tags_str)
     if selected_tags_str != "[]":
         tag_ints = []
         input_tag_list = tags.strip('][').split(', ')
@@ -353,7 +352,6 @@ def lambda_handler(event, context):
 
     # query for selected_tags
     sql = "UPDATE scheduled_appointments SET selected_tags='%s' WHERE appointment_id=:appointment_id;"% tag_ints_str
-    
     try:
         tags_query = query(sql, query_parameters)
     except Exception as e:
