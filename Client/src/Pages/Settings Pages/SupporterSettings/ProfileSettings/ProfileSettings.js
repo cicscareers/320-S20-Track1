@@ -27,13 +27,16 @@ function handleSubmit(){
 
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const [firstName, setFirstName]=React.useState("")
+    const {settings} = props
+    const [firstName, setFirstName]=React.useState(settings.first_name)
     const [prefName, setPrefName]=React.useState("")
     const [lastName, setLastName]=React.useState("")
     const [pronouns, setPronouns]=React.useState("")
     const [phoneNumber, setPhoneNumber]=React.useState("")
     const [email, setEmail]=React.useState("")
     const [bio, setBio]=React.useState("")
+    console.log(settings)
+    console.log(typeof(settings))
     return (
         <Container component="main">
         <div className={classes.paper}>

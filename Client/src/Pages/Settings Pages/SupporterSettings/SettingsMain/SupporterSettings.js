@@ -80,6 +80,7 @@ const SupporterSettings = (props) => {
       setLoaded(false);
       myFetch(url).then((json) => {
         if(json.body !== undefined) {
+          console.log(typeof(json.body))
           setSettings(json.body);
           setLoaded(true);
         } else {
@@ -95,7 +96,7 @@ const SupporterSettings = (props) => {
     }
 
     function formatFetchURL(startDate, endDate) {
-      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/15";
+      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/1";
     }
 
     if(error){
@@ -153,7 +154,7 @@ const SupporterSettings = (props) => {
         </Drawer>
         <main className={classes.content}>
             {page==="Appointment Blocks" && (<Blocks/>)}
-            {page==="Profile Information" && (<Profile/>)}
+            {page==="Profile Information" && (<Profile settings={settings}/>)}
             {page==="Supporter Information" && (<SupporterInfo/>)}
         </main>
       </div>

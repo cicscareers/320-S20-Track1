@@ -52,6 +52,7 @@ const ResponsiveDrawer = (props) => {
     setLoaded(false);
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
+        console.log(typeof(json.body))
         setSupporters(json.body);
         setLoaded(true);
       } else {
