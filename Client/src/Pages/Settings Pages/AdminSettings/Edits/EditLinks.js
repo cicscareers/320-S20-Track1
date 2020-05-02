@@ -5,8 +5,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
+    const [selectedLink, setSelectedLink] = useState("");
+    const [addLink, setAddLink] = useState("");
     const [topics, setTopics] = useState([]);
     const [isLoaded, setLoaded] = useState(true);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Links
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
@@ -71,15 +71,15 @@ export default function ChangeTags() {
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Links"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedLink(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Link
                     </Button>
                   </Grid>
                 </Grid>
@@ -89,14 +89,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Link to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddLink(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Link
                   </Button>
                 </Grid>
                 </Grid>
@@ -110,11 +110,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Link
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Link?
+                        </DialogContentText>
+                        <DialogContentText>
+                            {selectedLink}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -133,14 +136,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Link
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Link?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addLink}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

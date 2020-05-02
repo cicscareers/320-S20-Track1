@@ -1,12 +1,14 @@
 import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
-        DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
+        DialogContent, DialogContentText, DialogActions, Input} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
+import { InputLabel } from '@material-ui/core';
+import FileSelector from './FileSelector';
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
+    const [selectedMedium, setSelectedMedium] = useState("");
+    const [addMedium, setAddMedium] = useState("");
     const [topics, setTopics] = useState([]);
     const [isLoaded, setLoaded] = useState(true);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -57,7 +59,7 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Mediums
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
@@ -71,15 +73,15 @@ export default function ChangeTags() {
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Mediums"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedMedium(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Medium
                     </Button>
                   </Grid>
                 </Grid>
@@ -89,14 +91,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Medium to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddMedium(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Medium
                   </Button>
                 </Grid>
                 </Grid>
@@ -110,11 +112,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Medium
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Medium?
+                        </DialogContentText>
+                        <DialogContentText>
+                            {selectedMedium}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -133,14 +138,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Medium
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Medium?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addMedium}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

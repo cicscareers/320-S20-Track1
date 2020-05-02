@@ -14,6 +14,12 @@ import FieldDefaults from "../FieldDefaults/fieldDefaults.js";
 import AdminApproval from "../AdminApproval/adminApproval.js";
 import SupporterApproval from "../SupporterApproval/SupporterApproval";
 import FaqSettings from "../FAQ/faqPage.js";
+import ChangeColleges from "../Academics/EditColleges"
+import ChangeMajors from "../Academics/EditMajors"
+import ChangeMinors from "../Academics/EditMinors"
+import ChangeLinks from "../Edits/EditLinks"
+import ChangeMediums from "../Edits/EditMedium"
+
 
 const drawerWidth = "25%";
 
@@ -106,6 +112,21 @@ const SupporterSettings = (props) => {
               <ListItem button onClick={() => setPage("FAQ Settings")} key={8}>
                 <ListItemText primary={"FAQ Settings"} />
               </ListItem>
+              <ListItem button onClick={() => setPage("Edit Colleges")} key={8}>
+                <ListItemText primary={"Edit Colleges"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Edit Majors")} key={8}>
+                <ListItemText primary={"Edit Majors"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Edit Minors")} key={8}>
+                <ListItemText primary={"Edit Minors"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Edit Links")} key={8}>
+                <ListItemText primary={"Edit Links"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Edit Mediums")} key={8}>
+                <ListItemText primary={"Edit Mediums"} />
+              </ListItem>
             </List>
           </div>
         </Drawer>
@@ -115,10 +136,14 @@ const SupporterSettings = (props) => {
             {page==="Download Data" && (<DownloadData/>)}
             {page==="Edit Tags" && (<ChangeTags/>)}
             {page==="Edit Topics" && (<ChangeTopics/>)}
-            
             {page==="Admin Approval" && (<AdminApproval/>)}
             {page==="Supporter Approval" && (<SupporterApproval/>)}
             {page==="FAQ Settings" && (<FaqSettings/>)}
+            {page==="Edit Colleges" && (<ChangeColleges/>)}
+            {page==="Edit Majors" && (<ChangeMajors/>)}
+            {page==="Edit Minors" && (<ChangeMinors/>)}
+            {page==="Edit Links" && (<ChangeLinks/>)}
+            {page==="Edit Mediums" && (<ChangeMediums/>)}
         </main>
       </div>
       );

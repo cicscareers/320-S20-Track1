@@ -5,8 +5,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
+    const [selectedMinor, setSelectedMinor] = useState("");
+    const [addMinor, setAddMinor] = useState("");
     const [topics, setTopics] = useState([]);
     const [isLoaded, setLoaded] = useState(true);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -57,7 +57,7 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Minors
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
@@ -71,15 +71,15 @@ export default function ChangeTags() {
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Minors"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedMinor(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Minor
                     </Button>
                   </Grid>
                 </Grid>
@@ -89,14 +89,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Minor to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddMinor(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Minor
                   </Button>
                 </Grid>
                 </Grid>
@@ -110,11 +110,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Minor
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Minor?
+                        </DialogContentText>
+                        <DialogContentText>
+                            {selectedMinor}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -133,14 +136,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Minor
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Minor?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addMinor}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
