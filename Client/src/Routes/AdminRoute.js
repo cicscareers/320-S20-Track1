@@ -12,7 +12,7 @@ export default function AdminRoute({
     <Route
       {...rest}
       render={props =>
-        cookies.get("role") === "Admin" ? (
+        cookies.get("role") === "admin" ? (
           <C {...props} {...appProps} />
         ) : (
           <Redirect to="/login" />
