@@ -71,16 +71,18 @@ def create_student_user(event, context):
     # )
     # print(ret)  
     #sets the is_student boolean to TRUE
-
+    
+    #changed by Dhru 5/2 to make is_suporter false for unapproved supporters
     # adds a user to the "users" table with the new generated id
     sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio,pronouns,gender,phone,is_blocked,GCal_permission,is_admin,is_supporter,is_student) \
-        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,false, :is_supporter, true)""" #(last three fields) is_admin, is_supporter, is_student
+        VALUES (:new_id,:first_name,:last_name,:email,'pn','pic','bio','pro','gen','pho',false,true,false, false, true)""" #(last three fields) is_admin, is_supporter, is_student
     sql_parameters = [{'name' : 'new_id', 'value': {'longValue' : new_id}},
     {'name' : 'first_name', 'value': {'stringValue' : first_name}},
     {'name' : 'last_name', 'value': {'stringValue' : last_name}},
     {'name' : 'email', 'value': {'stringValue' : email}},
     #{'name' : 'password', 'value': {'stringValue' : password}},
-    {'name': 'is_supporter', 'value':{'booleanValue': is_supporter}}] #changes is_supporter to true if it is supporter
+    #{'name': 'is_supporter', 'value':{'booleanValue': is_supporter}}
+    ] #changes is_supporter to true if it is supporter
 
 
     create_users_instance = query(sql,sql_parameters)
@@ -198,7 +200,7 @@ def create_student_user(event, context):
 
         # inserts user into supporters table with same user_id
         sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name, is_pending, office) \
-                VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, false,'office')""" 
+                VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, true,'office')""" 
 
         sql_parameters = [
             {'name': 'new_id', 'value': {'longValue': new_id}},
