@@ -1,76 +1,90 @@
 from package.query_db import query
+from package.lambda_exception import LambdaException
 
 def get_student_settings_handler(event, context):
 
     student_id = int(event['student_id'])
     student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}}]
 
+    student_sql = "SELECT user_id FROM students WHERE student_id = :student_id"
+    try:
+        existing_student = query(student_sql, student_id_param)['records']
+
+    except Exception as e:
+        raise LambdaException("500: Unable to confirm that student exists, " + str(e))
+
+    if len(existing_student) <= 0:
+            raise LambdaException("404: Student does not exist")
+        
+
     response = {}
     error_messages = []
 
     users_sql = "SELECT first_name, last_name, email, preferred_name, picture, bio, pronouns, gender, phone FROM users WHERE id = :student_id;"
+    user_data = []
     try:
         user_data = query(users_sql, student_id_param)['records'][0]
 
-        response['first_name'] = user_data[0]['stringValue']
-        response['last_name'] = user_data[1]['stringValue']
-        response['email'] = user_data[2]['stringValue']
-        
-        if 'stringValue' in user_data[3]:
-            response['preferred_name'] = user_data[3]['stringValue']
-        else:
-            response['preferred_name'] = None
-            
-        if 'stringValue' in user_data[4]: 
-            response['picture'] = user_data[4]['stringValue']
-        else:
-            response['picture'] = None
-            
-        if 'stringValue' in user_data[5]: 
-            response['bio'] = user_data[5]['stringValue']
-        else:
-            response['bio'] = None
-        
-        if 'stringValue' in user_data[6]:    
-            response['pronouns'] = user_data[6]['stringValue']
-        else:
-            response['pronouns'] = None
-            
-        if 'stringValue' in user_data[7]:    
-            response['gender'] = user_data[7]['stringValue']
-        else:
-            response['pronouns'] = None
-            
-        if 'stringValue' in user_data[8]:    
-            response['phone'] = user_data[8]['stringValue']
-        else:
-            response['phone'] = None
-
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 50")
+        error_messages.append(str(e) + " get_student_settings.py, line 16")
+
+    response['first_name'] = user_data[0]['stringValue']
+    response['last_name'] = user_data[1]['stringValue']
+    response['email'] = user_data[2]['stringValue']
+    
+    if 'stringValue' in user_data[3]:
+        response['preferred_name'] = user_data[3]['stringValue']
+    else:
+        response['preferred_name'] = None
+        
+    if 'stringValue' in user_data[4]: 
+        response['picture'] = user_data[4]['stringValue']
+    else:
+        response['picture'] = None
+        
+    if 'stringValue' in user_data[5]: 
+        response['bio'] = user_data[5]['stringValue']
+    else:
+        response['bio'] = None
+    
+    if 'stringValue' in user_data[6]:    
+        response['pronouns'] = user_data[6]['stringValue']
+    else:
+        response['pronouns'] = None
+        
+    if 'stringValue' in user_data[7]:    
+        response['gender'] = user_data[7]['stringValue']
+    else:
+        response['pronouns'] = None
+        
+    if 'stringValue' in user_data[8]:    
+        response['phone'] = user_data[8]['stringValue']
+    else:
+        response['phone'] = None    
 
 
     students_sql = "SELECT grad_year, resume, grad_student FROM students WHERE student_id = :student_id;"
+    student_data = []
     try:
         student_data = query(students_sql, student_id_param)['records'][0]
-            
-        if 'longValue' in student_data[0]:    
-            response['grad_year'] = student_data[0]['longValue']
-        else:
-            response['grad_year'] = None
-            
-        if 'stringValue' in student_data[1]:
-            response['resume'] = student_data[1]['stringValue']
-        else:
-            response['resume'] = None
-            
-        if 'booleanValue' in student_data[2]:
-            response['grad_student'] = student_data[2]['booleanValue']
-        else:
-            response['grad_student'] = None
 
     except Exception as e:
-        error_messages.append(str(e) + " get_student_settings.py, line 73")
+        error_messages.append(str(e) + " get_student_settings.py, line 60")
+
+    if 'longValue' in student_data[0]:    
+        response['grad_year'] = student_data[0]['longValue']
+    else:
+        response['grad_year'] = None
+        
+    if 'stringValue' in student_data[1]:
+        response['resume'] = student_data[1]['stringValue']
+    else:
+        response['resume'] = None
+        
+    if 'booleanValue' in student_data[2]:
+        response['grad_student'] = student_data[2]['booleanValue']
+    else:
+        response['grad_student'] = None
 
 
     colleges_sql = "SELECT college FROM college C, student_college SC WHERE SC.student_id = :student_id AND C.college_id = SC.college_id"    
