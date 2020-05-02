@@ -17,6 +17,7 @@ def lambda_handler(event, context):
     time_of_appt = event['time_of_appt']
     tags = event['selected_tags']
     selected_tags_str = tags.strip('][').split(', ')
+    selected_tags_str = tags
     medium_string = event['medium']
     location = event['location']
     spec_type = event['specialization']
@@ -31,7 +32,7 @@ def lambda_handler(event, context):
     else:
         override = False
     
-    if override and event['student_id']=="":
+    if override and event['student_id'] == "":
         # look up by email
         if 'student_email' not in event:
             raise LambdaException("404: Must provide student_id or email.")
@@ -42,7 +43,12 @@ def lambda_handler(event, context):
         sql_parameters = [
             {'name' : 'student_email', 'value': {'stringValue' : student_email}}
         ]
-        users_query = query(sql,sql_parameters)  
+        # make query
+        try:
+            users_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to users table for student's user_id failed: " + str(e))
+
         if users_query['records'] == []:
             raise LambdaException("404: Invalid student email.")
         else:
@@ -52,7 +58,12 @@ def lambda_handler(event, context):
         sql_parameters = [
             {'name' : 'user_id', 'value': {'longValue' : user_id}}
         ]
-        students_query = query(sql,sql_parameters)  
+        # make query
+        try:
+            students_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to students table for student_id failed: " + str(e))
+
         if students_query['records'] == []:
             raise LambdaException("404: Email does not belong to a student.")
         else:
@@ -65,7 +76,11 @@ def lambda_handler(event, context):
         sql_parameters = [
             {'name' : 'student', 'value': {'longValue': student}}
         ]
-        check_student = query(sql, sql_parameters)
+        # make query
+        try:
+            check_student = query(sql, sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to verify student_id failed: " + str(e))
         
         # if student does not exist in DB, raise exception
         if(check_student['records'] == []):
@@ -74,7 +89,7 @@ def lambda_handler(event, context):
         # set student_id variable
         student_id = student
 
-    if override and event['supporter_id']=="":
+    if override and event['supporter_id'] == "":
         #look up by email
         if 'supporter_email' not in event:
             raise LambdaException("404: Must provide supporter_id or email.")
@@ -85,17 +100,30 @@ def lambda_handler(event, context):
         sql_parameters = [
             {'name' : 'supporter_email', 'value': {'stringValue' : supporter_email}}
         ]
-        users_query = query(sql,sql_parameters)  
+        
+        # make query
+        try:
+            users_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to users table for supporter's user_id failed: " + str(e))
+
         if users_query['records'] == []:
             raise LambdaException("404: Invalid supporter email.")
         else:
             user_id = users_query['records'][0][0]['longValue']
+        
         # query supporters table for supporter_id
         sql = "SELECT supporter_id FROM supporters WHERE user_id=:user_id;"
         sql_parameters = [
             {'name' : 'user_id', 'value': {'longValue' : user_id}}
         ]
-        supporters_query = query(sql,sql_parameters)  
+        
+        # make query
+        try:
+            supporters_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to supporters table for supporter_id failed: " + str(e))
+
         if supporters_query['records'] == []:
             raise LambdaException("404: Email does not belong to a supporter.")
         else:
@@ -108,7 +136,12 @@ def lambda_handler(event, context):
         sql_parameters = [
             {'name' : 'supporter', 'value': {'longValue': supporter}}
         ]
-        check_supporter = query(sql, sql_parameters)
+        
+        # make query
+        try:
+            check_supporter = query(sql, sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to supporters table to verify supporter_id failed: " + str(e))
         
         # if supporter does not exist in DB, raise exception
         if(check_supporter['records'] == []):
@@ -139,7 +172,13 @@ def lambda_handler(event, context):
             {'name' : 'supporter_id', 'value':{'longValue': supporter_id}},
             {'name' : 'time_of_appt', 'value':{'stringValue': time_of_appt}}
         ]
-        appt_block_query = query(sql,sql_parameters)
+        
+        # make query
+        try:
+            appt_block_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to appointment_block table failed: " + str(e))
+
         if appt_block_query['records'] == []:
             raise LambdaException("404: Appointment not in supporter's timeblock.")
         response = appt_block_query['records'][0][0]['stringValue']
@@ -159,7 +198,7 @@ def lambda_handler(event, context):
         #]
         #block_appts_query = query(sql,sql_parameters)
         #num_appts = len(block_appts_query['records'])
-        # for testing
+        # temporary fix for testing
         num_appts = 0
         if num_appts+1 > max_appts:
             raise LambdaException("404: Exceeds supporter's maximum number of appointments.")
@@ -167,7 +206,13 @@ def lambda_handler(event, context):
     # generate and set appointment_id 
     sql = "SELECT appointment_id FROM scheduled_appointments ORDER BY appointment_id DESC LIMIT 1"
     sql_parameters = []
-    id_query = query(sql,sql_parameters)
+    
+    # make query
+    try:
+        id_query = query(sql,sql_parameters)
+    except Exception as e:
+        raise LambdaException("404: Query to scheduled_appointments table for appointment_id failed: " + str(e))
+
     if id_query['records'] == []:
         appointment_id = 0
     else:
@@ -178,7 +223,13 @@ def lambda_handler(event, context):
     sql_parameters = [
         {'name' : 'medium_string', 'value': {'stringValue' : medium_string}}
     ]
-    medium_query = query(sql,sql_parameters)  
+    
+    # make query
+    try:
+        medium_query = query(sql,sql_parameters)
+    except Exception as e:
+        raise LambdaException("404: Query to medium table failed: " + str(e))
+    
     if medium_query['records'] == []:
         raise LambdaException("404: Invalid medium type.")
     else:
@@ -189,7 +240,13 @@ def lambda_handler(event, context):
     sql_parameters = [
         {'name' : 'spec_type', 'value': {'stringValue' : spec_type}}
     ]
-    specialization_query = query(sql,sql_parameters)  
+    
+    # make query
+    try:
+        specialization_query = query(sql,sql_parameters)
+    except Exception as e:
+        raise LambdaException("404: Query to specialization_type table failed: " + str(e))
+
     if specialization_query['records'] == []:
         raise LambdaException("404: Invalid specialization.")
     else:
@@ -203,8 +260,17 @@ def lambda_handler(event, context):
             {'name' : 'supporter_id', 'value': {'longValue' : supporter_id}},
             {'name' : 'specialization', 'value': {'longValue' : specialization}}
         ]
-        duration_query = query(sql,sql_parameters) 
-        duration = duration_query['records'][0][0]['longValue']
+        
+        # make query
+        try:
+            duration_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to supporter_specializations table failed: " + str(e))
+        
+        if duration_query['records'] == []:
+            raise LambdaException("404: Specialization type has no specified appointment duration.")
+        else:
+            duration = duration_query['records'][0][0]['longValue']
         
         # get end time by advancing start time by 'duration'
         appt_start_time = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S') #convert start time to datetime
@@ -218,31 +284,46 @@ def lambda_handler(event, context):
             {'name' : 'appt_end', 'value': {'stringValue' : appt_end}},
             {'name' : 'time_of_appt', 'value': {'stringValue' : time_of_appt}}
         ]
-        conflict_query = query(sql,sql_parameters)
+        
+        # make query
+        try:
+            conflict_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to scheduled_appointments table for supporter's appointments failed: " + str(e))
+
         if conflict_query['records'] != []:
             raise LambdaException("404: Supporter has a conflicting appointment.")
 
     # get appointment tags
     numTags = len(selected_tags_str)
-    tag_ints = []
-    sql = "SELECT tag_type_id FROM tag_type WHERE tag_type=%s" % selected_tags_str[0]
-    if numTags > 1:
-        for tag in range(1, numTags):
-            sql = sql + " OR tag_type=%s" % selected_tags_str[tag]
-    sql = sql + ";"
-    sql_parameters = []
-    tag_query = query(sql,sql_parameters)  
-    if len(tag_query['records']) != numTags:
-        raise LambdaException("404: Invalid tag.")
-    else:
-        intVal = tag_query['records'][0][0]['longValue']
-        tag_ints_str = "{%s" % intVal
+    if selected_tags_str != "[]":
+        tag_ints = []
+        sql = "SELECT tag_type_id FROM tag_type WHERE tag_type=%s" % selected_tags_str[0]
         if numTags > 1:
-            for x in range(1, numTags):
-                intVal = tag_query['records'][x][0]['longValue']
-                tag_ints.append(intVal)
-                tag_ints_str = tag_ints_str + ", %s" % intVal
-        tag_ints_str = tag_ints_str + "}"
+            for tag in range(1, numTags):
+                sql = sql + " OR tag_type=%s" % selected_tags_str[tag]
+        sql = sql + ";"
+        sql_parameters = []
+        
+        # make query
+        try:
+            tag_query = query(sql,sql_parameters)
+        except Exception as e:
+            raise LambdaException("404: Query to tag_type table failed: " + str(e))
+
+        if len(tag_query['records']) != numTags:
+            raise LambdaException("404: Invalid tag.")
+        else:
+            intVal = tag_query['records'][0][0]['longValue']
+            tag_ints_str = "{%s" % intVal
+            if numTags > 1:
+                for x in range(1, numTags):
+                    intVal = tag_query['records'][x][0]['longValue']
+                    tag_ints.append(intVal)
+                    tag_ints_str = tag_ints_str + ", %s" % intVal
+            tag_ints_str = tag_ints_str + "}"
+    else:
+        tag_ints_str = "{}"
 
     # format query
     # tags taken out as of now
