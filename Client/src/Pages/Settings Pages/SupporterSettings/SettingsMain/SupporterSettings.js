@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 import Blocks from "../AppointmentBlocks/Main/BlockCreation.js"
 import Profile from "../ProfileSettings/ProfileSettings.js"
 import SupporterInfo from "../SupporterInformation/SupporterInformation.js"
+import BlockSettings from '../BlockSettings/BlockSettingsMain.js'
 
 const drawerWidth = "25%";
 
@@ -80,7 +81,6 @@ const SupporterSettings = (props) => {
       setLoaded(false);
       myFetch(url).then((json) => {
         if(json.body !== undefined) {
-          console.log(typeof(json.body))
           setSettings(json.body);
           setLoaded(true);
         } else {
@@ -146,16 +146,20 @@ const SupporterSettings = (props) => {
               <ListItem button onClick={() => setPage("Supporter Information")} key={2}>
                 <ListItemText primary={"Supporter Information"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Appointment Blocks")} key={4}>
-                <ListItemText primary={"Appointment Blocks"} />
+              <ListItem button onClick={() => setPage("Appointment Block Settings")} key={4}>
+                <ListItemText primary={"Appointment Blocks Settings"} />
+              </ListItem>
+              <ListItem button onClick={() => setPage("Create Appointment Blocks")} key={4}>
+                <ListItemText primary={"Create Appointment Blocks"} />
               </ListItem>
             </List>
           </div>
         </Drawer>
         <main className={classes.content}>
-            {page==="Appointment Blocks" && (<Blocks/>)}
+            {page==="Create Appointment Blocks" && (<Blocks/>)}
             {page==="Profile Information" && (<Profile settings={settings}/>)}
-            {page==="Supporter Information" && (<SupporterInfo/>)}
+            {page==="Supporter Information" && (<SupporterInfo settings={settings}/>)}
+            {page==="Appointment Block Settings" && (<BlockSettings settings={settings}/>)}
         </main>
       </div>
       );
