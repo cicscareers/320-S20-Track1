@@ -58,8 +58,7 @@ const StyledRating = withStyles({
   };
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
-  const cookies = new Cookies();
-  const id = parseInt(cookies.get('id'));
+  const id = sessionStorage.getItem('id');
   // const id = 12;
   console.log(key, feedbackString, feedbackRate, id)
   fetch(

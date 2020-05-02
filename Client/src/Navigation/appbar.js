@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {AppBar, Avatar, Toolbar, Typography, MenuItem, Button, Menu, Link,Dialog} from "@material-ui/core";
-import Cookies from "universal-cookie";
 // import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import Cookies from "universal-cookie";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -82,15 +82,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function MenuAppBar(props) {
 
-  const [PossibleRoles,SetPossibleRoles] = React.useState([]);
-  //Gets info from the cookies
-  const cookies = new Cookies();
-  const token = cookies.get("token");
-  const name = cookies.get("firstName");
-  
-  var role = cookies.get("role");
 
-  const id = cookies.get("id");
+  const [PossibleRoles,SetPossibleRoles] = React.useState([]);
+  const cookies = new Cookies();
+  //Gets info from the session 
+  const token = sessionStorage.getItem("token");
+  const name = sessionStorage.getItem("firstName");
+  const role = cookies.get("role");
+  const id = sessionStorage.getItem("id");
+
   //Sets the styling
   const classes = useStyles();
 
@@ -103,17 +103,18 @@ export default function MenuAppBar(props) {
   const [openModal, setOpen] = React.useState(false);
 
   useEffect(() => {
-    fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
-            .then(res => res.json())
-            .then(json => {
-            
-              SetPossibleRoles(['student','supporter', 'admin']);
-            })
-            .catch(error => {
-                console.log(error);
-                console.log("No Supporters Found");
-            });
-    }, [])
+            fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
+              .then(res => res.json())
+              .then(json => {
+                sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+                console.log("setting possible roles to: " + json.user_roles);
+                SetPossibleRoles(json.user_roles);
+              })
+              .catch(error => {
+                  console.log(error);
+                  console.log("No Supporters Found");
+              });
+      }, [])
    
     
   const handleModalOpen = () => {
@@ -134,16 +135,17 @@ export default function MenuAppBar(props) {
   
   //Function that handles log out by deleting the cookie and reloading
   function logout() {
-    cookies.remove("email");
-    cookies.remove("firstName");
-    cookies.remove("lastName");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("firstName");
+    sessionStorage.removeItem("lastName");
+    sessionStorage.removeItem("role");
     cookies.remove("role");
-    cookies.remove("token");
+    sessionStorage.removeItem("token");
     window.location.reload();
   }
  function renderNavBarButtonsBasedOnRole(){
    let RenderButtons=[];
-   if(role.toLowerCase()==PossibleRoles[0]){
+   if(role.toLowerCase()=='student'){
      return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/match" className={classes.button}>Create Appointment</Button>
      <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
@@ -163,12 +165,12 @@ export default function MenuAppBar(props) {
 //   const RoleNameAdmin=PossibleRoles[2].charAt(0).toUpperCase() + PossibleRoles[2].slice(1);
  const SwitchUserHandle= event =>{
   if(event.currentTarget.id=='student'){
-    cookies.set('role',"Student");
+    cookies.set('role', "Student")
   }
   else{
   cookies.set('role',event.currentTarget.id);
   }
-  if(cookies.get('role')=='Student'){
+  if(cookies.get('role')==='Student'){
     window.location.reload('/');
   }
  window.location.reload('/appointments');
@@ -217,9 +219,10 @@ return RenderRoles;
           </Button>
           <Typography className={classes.spacer}>
           </Typography>
-         {role.toLowerCase()==PossibleRoles[0] &&<Button variant="text" href="/" className={classes.button}>Create Appointment</Button>}
+         {role.toLowerCase()==='student' && 
+          <Button variant="text" href="/" className={classes.button}>Create Appointment</Button>}
           <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
-     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
+          <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 
               src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
@@ -249,7 +252,7 @@ return RenderRoles;
     </Link>
   </MenuItem>
 
-    {role===PossibleRoles[2] && (
+    {role.toLowerCase()==='admin' && (
       <MenuItem onClick={handleClose}>
         <Link href="/admin-settings">
           <Typography component="h6" variant="h6">
@@ -258,7 +261,7 @@ return RenderRoles;
         </Link>
       </MenuItem>
     )}
-      {(role===PossibleRoles[1]||role===PossibleRoles[2])  && (
+      {(role.toLowerCase()==='supoprter'||role.toLowerCase()==='admin')  && (
       <MenuItem onClick={handleClose}>
         <Link href="/supporter-settings">
           <Typography component="h6" variant="h6">
