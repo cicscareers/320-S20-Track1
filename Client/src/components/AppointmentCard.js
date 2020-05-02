@@ -147,8 +147,10 @@ const PreviousAppointmentCard = (props) => {
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
                 >
-                  <Cancel></Cancel>
+                  <Cancel appt_id = {props.appt_id}
+                          supporter = {props.supporter}/>
                 </Modal>
+
                 <Modal 
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
@@ -156,7 +158,7 @@ const PreviousAppointmentCard = (props) => {
                 <ViewFeedback 
                   rating = {props.rating} 
                   feedback = {props.feedback}
-                  appt_id = {props.appt_id}/>
+                  />
                 </Modal>
               </Grid>
             </Grid>
@@ -223,7 +225,8 @@ const PreviousAppointmentCard = (props) => {
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
                 >
-                  <Cancel/>
+                  <Cancel appt_id = {props.appt_id}
+                          supporter = {props.supporter}/>
                 </Modal>
 
                 <Modal
@@ -239,8 +242,7 @@ const PreviousAppointmentCard = (props) => {
                 >
                 <ViewFeedback 
                   rating = {props.rating} 
-                  feedback = {props.feedback}
-                  appt_id = {props.appt_id}/>
+                  feedback = {props.feedback}/>
                 </Modal>
 
               </Grid>
@@ -313,7 +315,8 @@ const PreviousAppointmentCard = (props) => {
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
                 >
-                  <Cancel></Cancel>
+                  <Cancel appt_id = {props.appt_id}
+                          supporter = {props.supporter}/>
                 </Modal>
                 <Modal 
                   open={viewFeedbackModalOpen}
@@ -321,8 +324,7 @@ const PreviousAppointmentCard = (props) => {
                 >
                 <ViewFeedback 
                   rating = {props.rating} 
-                  feedback = {props.feedback}
-                  appt_id = {props.appt_id}/>
+                  feedback = {props.feedback}/>
                 </Modal>
               </Grid>
             </Grid>

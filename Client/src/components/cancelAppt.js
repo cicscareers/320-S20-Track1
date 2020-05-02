@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -7,12 +7,41 @@ import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import {Grid, Button, TextField} from '@material-ui/core';
   
-function handlePress(){
-    
+function handlePress(id, reason){
+    console.log(id, reason)
+    fetch(
+    "",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        appointment_id: id,
+        cancel_reason: reason,
+      })
+    }
+  )
+  .then(response => {
+    if (response.status >= 200 && response.status < 300) {
+      console.log(response)
+      return response.json();
+    } else {
+      throw new Error("Server can't be reached!");
+    }
+  })
+  .then(json => {
+    window.location.reload();
+  })
+  .catch(error => {
+    console.log(error);
+  });
 }
 
 const CancelAppt = (props) => {
     const {subject, location, medium, time, date, supporter, profilepic} = props;
+    const [cancelReason, setCancelReason] = useState("");
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>  
@@ -25,12 +54,12 @@ const CancelAppt = (props) => {
                   id="outlined-multiline-static"
                   multiline
                   rows="6"
-                  
+                  onChange={e => setCancelReason(e.target.value)}
                   variant="outlined"
               />
           </Grid>
           <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
-              <Button href='/appointments' style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onPress={handlePress}>Confirm Cancellation</Button>
+              <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}} onClick={() => handlePress(props.appt_id, cancelReason)}>Confirm Cancellation</Button>
           </Grid>
         </Card>
     </Container>
