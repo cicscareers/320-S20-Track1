@@ -2,12 +2,14 @@ import json
 import boto3
 import mimetypes
 from package.lambda_exception import LambdaException
+from datetime import datetime
 
 # Written by Dat Duong
 
 # input: file_name
 # input: user_id
 # input: file_type ??????????????????
+
 
 print("OOF")
 
@@ -30,6 +32,9 @@ def upload_files(event, context):
     # s_3 = boto3.resource('s3')
     s_3 = boto3.client('s3')
 
+    # get timestamp
+    now = str(datetime.now().time())
+
     # if picture assign to appropiate bucket
     if file_type == 'picture':
 
@@ -43,7 +48,9 @@ def upload_files(event, context):
     try:
         # actually uploading
         with open(file_name, 'rb') as data:
-            s_3.upload_fileobj(data, bucket_name, file_name)
+            s_3.upload_fileobj(data, bucket_name, str(
+                user_id) + '/' + now + file_name)
+
         # response = s_3.meta.client.upload_file(
         #     file_name, bucket_name, "gen2_folder/" + file_name) # maybe timestamp
 
