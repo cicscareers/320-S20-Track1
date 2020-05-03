@@ -117,10 +117,8 @@ export default function SignIn() {
 
    function  handleSubmitButton(event){
     Auth.forgotPasswordSubmit(email, code, password)
-    .then(data => console.log(data))
+    .then(data => handleClickOpen())
     .catch(err => handleError(err));
-
-    handleClickOpen();
 
   }
 
@@ -250,7 +248,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
           <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            <DialogTitle id="customized-dialog-title">
               Password Changed
             </DialogTitle>
             <DialogContent dividers>

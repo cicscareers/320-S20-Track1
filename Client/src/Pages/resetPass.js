@@ -180,7 +180,7 @@ export default function ResetPass() {
             Request Password Reset
           </Button>
           <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            <DialogTitle id="customized-dialog-title" >
               Password Reset Requested
             </DialogTitle>
             <DialogContent dividers>
