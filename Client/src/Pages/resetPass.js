@@ -123,15 +123,15 @@ export default function ResetPass() {
     try {
       console.log("Email Sent to ", email)
       await Auth.forgotPassword(email)
+      handleClickOpen()
     }catch(error){
       console.log(error)
       alert(error.message)
     }
-    handleClickOpen()
   }
 
   function validateForm() {
-   email.length > 0 && validEmail(email);
+   return email.length > 0 && validEmail(email);
   }
 
   function validEmail(address) {
@@ -174,6 +174,7 @@ export default function ResetPass() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={!validateForm()}
             onClick={handleSubmitButton()}
           >
             Request Password Reset

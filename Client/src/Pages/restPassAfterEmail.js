@@ -120,7 +120,7 @@ export default function SignIn() {
     .then(data => console.log(data))
     .catch(err => handleError(err));
 
-  //  handleClickOpen();
+    handleClickOpen();
 
   }
 
@@ -136,7 +136,7 @@ export default function SignIn() {
 
 
   function validateForm() {
-    return password===password2 && password.length > 0 && password2.length > 0 && code.length > 0 & email.length > 0;
+    return password===password2 && password.length > 0 && password2.length > 0 && code.length > 0 & email.length > 0 && validEmail(email);
   }
 
   function hasLowerCase(str) {
@@ -155,6 +155,10 @@ export default function SignIn() {
     }
   function samePass(pass, pass2){
     return password===password2;
+  }
+
+  function validEmail(address) {
+    return !! address.match(/.+@.+/);
   }
 
   function handleKeyPress(event){

@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   //sets styling
   const classes = useStyles();
-  
+
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +59,7 @@ export default function SignIn() {
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
-  
+
   //Gets run when submit is pressed and handles authentication.
   const handleSubmit = async event =>{
     event.preventDefault();
@@ -89,7 +89,7 @@ export default function SignIn() {
           window.location.reload();
         }
       }catch(error){
-        //alert("Invalid credentials");
+        alert(error.message);
         console.log(error);
       }
     }
