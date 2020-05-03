@@ -59,7 +59,7 @@ const StyledRating = withStyles({
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString){
   const id = parseInt(sessionStorage.getItem('id'));
-  // const id = 12;
+  // const id = 1;
   console.log(key, feedbackString, feedbackRate, id)
   fetch(
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback",
@@ -100,6 +100,9 @@ const Feedback = (props) => {
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
+          <Typography variant='h4' align='center'>
+            Submit Feedback
+          </Typography>
           <Box component="fieldset" mb={3} borderColor="transparent">
               <Typography component="legend">How likely are you to recommend this Supporter
                   to a friend?

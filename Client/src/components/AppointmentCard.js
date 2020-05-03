@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Cancel from './cancelAppt'
 import Feedback from './feedback'
 import ViewFeedback from './viewFeedback'
+import ViewCancelReason from './viewCancelReason.js'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +56,7 @@ const PreviousAppointmentCard = (props) => {
     const [cancelAppointmentModalOpen, setCancelAppointmentModalOpen] = React.useState(false);
     const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false);
     const [viewFeedbackModalOpen, setViewFeedbackModalOpen] = React.useState(false);
+    const [viewCancelReasonOpen, setViewCancelReason] = React.useState(false);
 
 
     const handleOpenAppointmentModal = () => {
@@ -78,6 +80,14 @@ const PreviousAppointmentCard = (props) => {
     
     const handleCloseViewFeedbackModal = () => {
         setViewFeedbackModalOpen(false);
+      };
+
+    const handleOpenViewCancelReason = () => {
+        setViewCancelReason(true);
+      };
+    
+    const handleCloseViewCancelReason = () => {
+        setViewCancelReason(false);
       };
     
     const classes = useStyles();
@@ -122,7 +132,16 @@ const PreviousAppointmentCard = (props) => {
                    className={classes.large} />       
               </Grid>
               <Grid item xs={12} align="center">
-              {props.upcoming ? (
+              {props.cancelled ? (
+                <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenViewCancelReason}
+                  >
+                    View Cancel Reason
+                </Button>
+                ) : props.upcoming ? (
                 <Button
                     margin="normal"
                     variant="contained"
@@ -146,6 +165,7 @@ const PreviousAppointmentCard = (props) => {
                 <Modal
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                   <Cancel appt_id = {props.appt_id}
                           supporter = {props.supporter}/>
@@ -154,12 +174,22 @@ const PreviousAppointmentCard = (props) => {
                 <Modal 
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                 <ViewFeedback 
                   rating = {props.rating} 
                   feedback = {props.feedback}
                   />
                 </Modal>
+
+                <Modal
+                  open={viewCancelReasonOpen}
+                  onClose={handleCloseViewCancelReason}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+                >
+                  <ViewCancelReason cancel_reason={props.cancel_reason}/>
+                </Modal>
+
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
@@ -192,7 +222,16 @@ const PreviousAppointmentCard = (props) => {
                
               </Grid>
               <Grid item xs={12} align="center">
-              {props.upcoming ? (
+              {props.cancelled ? (
+                <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenViewCancelReason}
+                  >
+                    View Cancel Reason
+                </Button>
+                ) : props.upcoming ? (
                 <Button
                     margin="normal"
                     variant="contained"
@@ -224,6 +263,7 @@ const PreviousAppointmentCard = (props) => {
                 <Modal
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                   <Cancel appt_id = {props.appt_id}
                           supporter = {props.supporter}/>
@@ -232,6 +272,7 @@ const PreviousAppointmentCard = (props) => {
                 <Modal
                   open={feedbackModalOpen}
                   onClose={handleCloseFeedbackModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                 <Feedback appt_id = {props.appt_id}/>
                 </Modal>
@@ -239,10 +280,20 @@ const PreviousAppointmentCard = (props) => {
                 <Modal 
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                 <ViewFeedback 
                   rating = {props.rating} 
-                  feedback = {props.feedback}/>
+                  feedback = {props.feedback}
+                  />
+                </Modal>
+
+                <Modal
+                  open={viewCancelReasonOpen}
+                  onClose={handleCloseViewCancelReason}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+                >
+                  <ViewCancelReason cancel_reason={props.cancel_reason}/>
                 </Modal>
 
               </Grid>
@@ -290,7 +341,16 @@ const PreviousAppointmentCard = (props) => {
         
               </Grid>
               <Grid item xs={12} align="center">
-                {props.upcoming ? (
+                {props.cancelled ? (
+                <Button
+                    margin="normal"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenViewCancelReason}
+                  >
+                    View Cancel Reason
+                </Button>
+                ) : props.upcoming ? (
                 <Button
                     margin="normal"
                     variant="contained"
@@ -314,6 +374,7 @@ const PreviousAppointmentCard = (props) => {
                 <Modal
                   open={cancelAppointmentModalOpen}
                   onClose={handleCloseAppointmentModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                   <Cancel appt_id = {props.appt_id}
                           supporter = {props.supporter}/>
@@ -321,10 +382,19 @@ const PreviousAppointmentCard = (props) => {
                 <Modal 
                   open={viewFeedbackModalOpen}
                   onClose={handleCloseViewFeedbackModal}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
                 >
                 <ViewFeedback 
                   rating = {props.rating} 
                   feedback = {props.feedback}/>
+                </Modal>
+
+                <Modal
+                  open={viewCancelReasonOpen}
+                  onClose={handleCloseViewCancelReason}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+                >
+                  <ViewCancelReason cancel_reason={props.cancel_reason}/>
                 </Modal>
               </Grid>
             </Grid>

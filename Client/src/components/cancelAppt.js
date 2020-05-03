@@ -18,8 +18,8 @@ function handlePress(id, reason){
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        appointment_id: id,
-        cancel_reason: reason,
+        "appointment_id": id,
+        "cancel_reason": reason
       })
     }
   )
@@ -44,6 +44,9 @@ const CancelAppt = (props) => {
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>  
+            <Typography variant='h4' align='center'>
+                    Cancel Appointment
+            </Typography>
           <Grid lg = {12} style={{marginLeft: 18, marginTop: 30}}>
               <Typography variant="h5"> Are you sure you want to cancel your appointment with {props.supporter}?</Typography>
               <br/>

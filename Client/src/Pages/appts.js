@@ -13,7 +13,7 @@ import CreateAppointmentModal from '../components/CreateAppointmentModal';
 const cookies = new Cookies();
 const role = cookies.get("role");
 const id = sessionStorage.getItem('id');
-//const id = 2;
+// const id = 1;
 
 const drawerWidth = "25%";
 
@@ -278,6 +278,7 @@ const ResponsiveDrawer = (props) => {
         
         {filteredAppointmentList.map((appointment) => (
                 today < new Date(appointment.time_of_appt) &&
+                !appointment.cancelled &&
                   <Grid item lg = {12}>
                     <AppointmentCard
                       upcoming = {true}
@@ -304,6 +305,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         {filteredAppointmentList.map((appointment) => (
                 today > new Date(appointment.time_of_appt) &&
+                !appointment.cancelled &&
                 <Grid item lg = {12}>
                   <AppointmentCard 
                     upcoming = {false}
@@ -323,6 +325,37 @@ const ResponsiveDrawer = (props) => {
                     feedback = {appointment.feedback}
                     feedbackLeft = {(appointment.feedback != null || appointment.rating != null)}
                     appt_id = {appointment.appointment_id}
+                  />
+                </Grid>
+              ))}
+        <br/>
+        <br/>
+        {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Cancelled Appointments</Typography>}
+        <br/>
+        <br/>
+        {filteredAppointmentList.map((appointment) => (
+                appointment.cancelled &&
+                <Grid item lg = {12}>
+                  <AppointmentCard 
+                    upcoming = {false}
+                    role = {role.toLowerCase()}
+                    subject = {appointment.type}
+                    location = {appointment.location}
+                    medium = {appointment.method}
+                    start = {convertDate(appointment.time_of_appt, 0)}
+                    end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                    date = {appointment.time_of_appt.substring(0,10)}
+                    supporter = {appointment.supporterFN + " " + appointment.supporterLN}
+                    student = {appointment.studentFN + " " + appointment.studentLN}
+                    supporterProfilePic = {appointment.supporterPic}
+                    studentProfilePic = {""}
+                    comments = {appointment.comment}
+                    rating = {appointment.rating}
+                    feedback = {appointment.feedback}
+                    feedbackLeft = {(appointment.feedback != null || appointment.rating != null)}
+                    appt_id = {appointment.appointment_id}
+                    cancelled = {appointment.cancelled}
+                    cancel_reason = {appointment.cancel_reason}
                   />
                 </Grid>
               ))}

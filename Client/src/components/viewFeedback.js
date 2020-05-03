@@ -63,6 +63,9 @@ const ViewFeedback = (props) => {
     return (
     <Container component = 'main'>
         <Card style={{padding: 20, margin: 30}}>
+            <Typography variant='h4' align='center'>
+                    View Feedback
+            </Typography>
           <Box component="fieldset" mb={3} borderColor="transparent">
               <Typography component="legend">Appointment Rating:
               </Typography>
