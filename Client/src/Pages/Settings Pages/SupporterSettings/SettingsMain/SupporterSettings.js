@@ -62,42 +62,37 @@ const SupporterSettings = (props) => {
     const [loaded, setLoaded]=React.useState(false)
     const [settings, setSettings]=React.useState([])
     const [error, setError]=React.useState(false)
+    const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
 
-    const initial_fetch_url = formatFetchURL();
 
-    //Calls the API
+
     useEffect(() => {
-      fetchSupporterList(initial_fetch_url);
-    }, [])
 
-    // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
-    async function myFetch(url) {
-      let response = await fetch(url);
-      let json = await response.json();
-      return json;
-    }
-
-    function fetchSupporterList(url) {
       setLoaded(false);
-      myFetch(url).then((json) => {
-        if(json.statusCode >= 200 && json.statusCode <400) {
-          setSettings(json.body);
+      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/1"), 
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
+
+      .then(([res1, res2]) => { 
+         return Promise.all([res1.json(), res2.json()]) 
+      })
+      .then(([res1, res2]) => {
+        if(res1.statusCode >= 200 && res1.statusCode <400 && res2.specialization_types !== undefined){
+          setSettings(res1.body);
+          setAppointmentTypesList(res2.specialization_types);
+          console.log(res2)
           setLoaded(true);
-        } else {
-          throw new Error();
-          setLoaded(true);
+        }else{
+          throw new Error()
         }
       })
       .catch(error => {
-          setError(true)
-          setLoaded(true);
-          console.log("Supporter settings could not be fetched")
-        });
-    }
+        setError(true)
+        setLoaded(true);
+        console.log("Error Connectting to API")
+      });
+    }, [])
 
-    function formatFetchURL(startDate, endDate) {
-      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + sessionStorage.getItem("id");
-    }
+  
 
     if(error){
       return (
@@ -156,7 +151,7 @@ const SupporterSettings = (props) => {
           </div>
         </Drawer>
         <main className={classes.content}>
-            {page==="Create Appointment Blocks" && (<Blocks settings={settings}/>)}
+            {page==="Create Appointment Blocks" && (<Blocks typesList = {appointmentTypesList} settings={settings}/>)}
             {page==="Profile Information" && (<Profile settings={settings}/>)}
             {page==="Supporter Information" && (<SupporterInfo settings={settings}/>)}
             {page==="Appointment Block Settings" && (<BlockSettings settings={settings}/>)}

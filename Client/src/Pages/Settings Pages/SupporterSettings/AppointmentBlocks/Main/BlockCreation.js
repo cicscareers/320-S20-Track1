@@ -6,7 +6,6 @@ import BlockCard from '../BlockCards/BlockCards.js'
 import AddIcon from '@material-ui/icons/Add';
 import convertTime from "../../../../FindSupporter/convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
-import AppointmentTypesList from '../../SupporterInformation/Specializations';
 import {Autocomplete} from '@material-ui/lab';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
@@ -40,6 +39,18 @@ const ResponsiveDrawer = (props) => {
     let json = await response.json();
     return json;
   }
+
+  function populateTypeArray(json){
+    console.log(json)
+    var arr = []
+    for(let i=0;i<json.length;i++){
+      arr.push(json[i].specialization_type)
+    }
+    console.log(arr)
+    return arr
+  }
+
+  const typeArray = populateTypeArray(props.typesList)
 
   function fetchSupporterList(url) {
     setLoaded(false);
@@ -184,9 +195,11 @@ const ResponsiveDrawer = (props) => {
                   Create a new appointment block
               </DialogTitle>
               <DialogContent dividers>
-                <Typography align="center">What day should the block be created on?</Typography>
-                <br/>
-                <Box align="center">
+              <Grid container>
+                <Grid item xs={5}>
+                  <Typography className={classes.dateName} inline>Block Date: </Typography>
+                </Grid>
+                <Grid item xs={7}>
                   <DatePicker
                     autoOk
                     align="center"
@@ -194,69 +207,75 @@ const ResponsiveDrawer = (props) => {
                     value={createBlockSelectedDate}
                     onChange={handleCreateBlockDateChange}
                   />
-                </Box>
-                <br/>
-                <Typography align="center" gutterBottom>
-                  What time should the block be created at?
-                </Typography>
-                <Slider
-                  value={sliderTime}
-                  onChange={handleSliderChange}
-                  step={30}
-                  min={420}
-                  max={1140}
-                  defaultValue={[540, 1020]}
-                  valueLabelDisplay="off"
-                  aria-labelledby="range-slider"
-                  getAriaValueText={convertTime}
+                </Grid>
+              </Grid>
+              <br/>
+              <Typography align="center" gutterBottom>
+                Block Time: {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
+              </Typography>
+              <Slider
+                value={sliderTime}
+                onChange={handleSliderChange}
+                step={30}
+                min={420}
+                max={1140}
+                defaultValue={[540, 1020]}
+                valueLabelDisplay="off"
+                aria-labelledby="range-slider"
+                getAriaValueText={convertTime}
+              />
+              <br/>
+              <br/>
+              <Autocomplete
+                multiple
+                className={classes.form}
+                options={typeArray}
+                renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Appointment Types"
                 />
-                <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
-                  {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
-                </Typography>
-                <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
-                  Maximum number of appointments during this block: {maxAppointents}
-                </Typography>
-                <Slider
-                  value={typeof maxAppointents === 'number' ? maxAppointents : 0}
-                  onChange={(event, newValue) => setMaxAppointents(newValue)}
-                  step={1}
-                  min={1}
-                  max={10}
-                />
-                <br/>
-                <br/>
-                <Autocomplete
-                  multiple
-                  className={classes.form}
-                  options={AppointmentTypesList}
-                  renderInput={(params) => (
-                  <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Appointment Types"
-                  />
-                  )}
-                  onChange={(e,v) => setAppointmentTypes(v)}
-                  />
-                <br/>
-                <br/>
-                <FormControlLabel
-                  control={<Checkbox checked={isRecurring} color="primary" onChange={() => setIsRecurring(!isRecurring)} />}
-                  label="Repeat Weekly?"
-                />
-                {isRecurring && (
-                  <Typography align="center" className={classes.content} id="range-slider" gutterBottom>
-                    Times this block will repeat: {numberOfWeeks}
-                  </Typography>
                 )}
-                {isRecurring && (<Slider
-                  value={typeof numberOfWeeks === 'number' ? numberOfWeeks : 0}
-                  onChange={(event, newValue) => setNumberOfWeeks(newValue)}
-                  step={1}
-                  min={1}
-                  max={16}
-                />)}
-              </DialogContent>
+                onChange={(e,v) => setAppointmentTypes(v)}
+                />
+              <br/>
+              <br/>
+              <FormControl fullWidth>
+                  <InputLabel fullWidth>Maximum number of appointments</InputLabel>
+                  <Select
+                    value={maxAppointents}
+                    onChange={(e) => setMaxAppointents(e.target.value)}
+                    input={<Input />}
+                    fullWidth
+                  >
+                    {["1","2","3","4","5","6","7","8","9","10"].map((number) => (
+                      <MenuItem value={number}>{number}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              <br/>
+              <br/>
+              <FormControlLabel
+                control={<Checkbox checked={isRecurring} color="primary" onChange={() => setIsRecurring(!isRecurring)} />}
+                label="Repeat Weekly?"
+              />
+              <br/>
+              <br/>
+              {isRecurring && (<FormControl fullWidth>
+                  <InputLabel fullWidth>Times this block will repeat</InputLabel>
+                  <Select
+                    value={numberOfWeeks}
+                    onChange={(e) => setNumberOfWeeks(e.target.value)}
+                    input={<Input />}
+                    fullWidth
+                  >
+                    {["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"].map((number) => (
+                      <MenuItem value={number}>{number}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>)}
+            </DialogContent>
               <DialogActions>
                   <Button autoFocus color="primary" variant="contained">
                     Create block
