@@ -164,7 +164,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <Grid container item xs={12} align="center" className={classes.blockList}>
           <main className={classes.content}>
-            {BlockList.map(blockObj => getBlockCard(blockObj))}
+            {blockList.map(blockObj => getBlockCard(blockObj))}
             <Fab onClick={() => setOpen(true)} color="primary" className={classes.fab}>
               <AddIcon />
             </Fab>
