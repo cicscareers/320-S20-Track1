@@ -132,7 +132,7 @@ export default function SignIn() {
   //So the user can press enter rather than click the button
   function handleKeyPress(event){
     if(event.key === 'Enter' && validateForm()){
-      handleSubmit(event)
+      //{handleSubmit}
     }
   }
 
