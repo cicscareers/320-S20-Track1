@@ -166,7 +166,6 @@ attributeList.push(new CognitoUserAttribute(last_name));*/}
           setOpen(true);
 
         }catch(error){
-          console.log("AHHHHHHHHHHWOIPOQIWPU0930838-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
           console.log(error)
           alert(error.message)
         }
@@ -175,7 +174,7 @@ attributeList.push(new CognitoUserAttribute(last_name));*/}
 
   function handleKeyPress(event){
     if(event.key === 'Enter'){
-    //  handleSubmit();
+    const press = handleSubmit
     }
   }
 
