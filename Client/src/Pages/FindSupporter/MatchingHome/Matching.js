@@ -18,39 +18,69 @@ const ResponsiveDrawer = (props) => {
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
+  const [error, setError] = React.useState(false);
   const classes = useStyles();
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
-  const [supporters, setSupporters] = React.useState([])
+  const [supporters, setSupporters] = React.useState([]);
+  var today = new Date();
+  var nextWeek = new Date();
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const [beginDate, setBeginDate] = React.useState(today);
+  const [endDate, setEndDate] = React.useState(nextWeek);
   const scores = {}
   const sortedList=[]
   const topicsList=[]
   const tagsList=[]
-  const today = new Date()
-  const today_year=today.getFullYear().toString()
-  const today_month=getTheMonth(today.getMonth())
-  const today_day=today.getDate().toString()
-  const next_year=(today.getFullYear()+1).toString()
-  console.log(next_year)
+
+  const initial_fetch_url = formatFetchURL(beginDate, endDate);
+
   //Calls the API to get the list of supporters
   useEffect(() => {
-    fetch(`https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=${today_year}-${today_month}-${today_day}%2000%3A00%3A00&end_date=${next_year}-${today_month}-${today_day}%2000%3A00%3A00`)
-      .then(res => res.json())
-      .then(json => {
-        if(json.body[0]!==undefined){
-          console.log(json)
-          console.log("API was just called")
-          setLoaded(true);
-          setSupporters(json.body)
-        }else{
-          throw new Error();
-        }
-      })
-      .catch(error => {
+    fetchSupporterList(initial_fetch_url);
+    }, [])
+
+  // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
+  async function myFetch(url) {
+    let response = await fetch(url);
+    let json = await response.json();
+    return json;
+  }
+
+  function fetchSupporterList(url) {
+    setLoaded(false);
+    myFetch(url).then((json) => {
+      if(json.body !== undefined) {
+        console.log(typeof(json.body))
+        setSupporters(json.body);
+        setLoaded(true);
+      } else {
+        throw new Error();
+        setLoaded(true);
+      }
+    })
+    .catch(error => {
+        setLoaded(true);
         console.log("No Supporters Found")
       });
-    }, [])
+  }
+
+  function formatFetchURL(startDate, endDate) {
+    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + formatDateForFetch(startDate) + "%2000%3A00%3A00&end_date=" + formatDateForFetch(endDate) + "%2000%3A00%3A00";
+  }
+
+  function processDateChange(date) {
+    var newDate = new Date(date);
+    if(date < beginDate || date > endDate) {
+      const newBeginDate = new Date(newDate.setDate(date.getDate() - 3));
+      setBeginDate(newBeginDate);
+      const newEndDate = new Date(newDate.setDate(date.getDate() + 7));
+      setEndDate(newEndDate);
+      fetchSupporterList(formatFetchURL(newBeginDate, newEndDate));
+    }
+    handleDateChange(date);
+  }
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
@@ -70,12 +100,20 @@ const ResponsiveDrawer = (props) => {
     return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags}/>;
   };
 
+  function formatDateForFetch(date) {
+    const next_week_year = date.getFullYear().toString();
+    const next_week_month = getTheMonth((date.getMonth() + 1)).toString();
+    const next_week_day = getTheMonth(date.getDate().toString());
+    const formattedDate = next_week_year + "-" + next_week_month + "-" + next_week_day;
+    return formattedDate;
+  }
+
   //Increments day by one
   function nextDay(){
     var newDate = new Date()
     newDate.setMonth(selectedDate.getMonth())
     newDate.setDate(selectedDate.getDate() + 1);
-    handleDateChange(newDate)
+    processDateChange(newDate)
   }
 
   //Decrements day by one
@@ -83,7 +121,7 @@ const ResponsiveDrawer = (props) => {
     var newDate = new Date()
     newDate.setMonth(selectedDate.getMonth())
     newDate.setDate(selectedDate.getDate() - 1);
-    handleDateChange(newDate)
+    processDateChange(newDate)
   }
 
   //Sets time based on the slider
@@ -148,7 +186,6 @@ const ResponsiveDrawer = (props) => {
     }
     for(let i=0;i<stateTags.length;i++){
       if(supporter.tags.includes(stateTags[i])){
-        console.log("added tag to count")
         supporterScore++
       }
     }
@@ -210,7 +247,18 @@ const ResponsiveDrawer = (props) => {
   ////////////////////////////////////////////////
 
   //Display a loading screen if the API is still being called
-  if(!isLoaded){
+  if(error){
+    return (
+      <div align="center">
+        <br/>
+        <br/>
+        <br/>
+        <Typography variant="h4">There was an error fetching supporters. The server may be down at the moment</Typography>
+      </div>
+    )
+  }
+
+  else if(!isLoaded){
     return (
       <div align="center">
         <br></br>
@@ -294,7 +342,7 @@ const ResponsiveDrawer = (props) => {
               align="center"
               variant="inline"
               value={selectedDate}
-              onChange={handleDateChange}
+              onChange={processDateChange}
             />
           </Box>
           <br/>
@@ -346,7 +394,7 @@ const ResponsiveDrawer = (props) => {
               align="center"
               variant="inline"
               value={selectedDate}
-              onChange={handleDateChange}
+              onChange={processDateChange}
             />
             </Grid>
             <Grid item>
@@ -358,7 +406,7 @@ const ResponsiveDrawer = (props) => {
           <br/>
           <br/>
           {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-          {newList.length===0 && <Typography align="center" variant="h4">We couldnt find a supporter with those attributes. Please try widening your search.</Typography>}
+          {newList.length===0 && <Typography align="center" variant="h4">We couldn't find a supporter with those attributes. Please try widening your search.</Typography>}
           <br/>
           <br/>
           {/*Maps each supporter to a card*/}

@@ -1,5 +1,17 @@
 import React from 'react';
 import {Typography, Container, Card, TextField, Grid, Button, ButtonGroup, CardHeader} from '@material-ui/core';
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies();
+const role = cookies.get('role')
+var primary_color="#881c1c"
+if (role === 'Student'){
+  primary_color="#881c1c"  
+}else if (role==='supporter'){
+  primary_color="#003b5c"
+}else if (role==='admin'){
+  primary_color="#41273b"
+}
 
 
 const MyApp = () => {
@@ -50,7 +62,7 @@ const MyApp = () => {
                 />
             </Grid>
             <Grid lg = {12} style = {{display: 'flex', justifyContent: 'center'}}>
-                <Button style={{width: 150, color: '#FFFFFF', backgroundColor: '#881c1c', marginTop: 50}}>Submit Feedback</Button>
+                <Button style={{width: 150, color: '#FFFFFF', backgroundColor: primary_color, marginTop: 50}}>Submit Feedback</Button>
             </Grid>
             
             

@@ -4,15 +4,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppointmentCard from '../components/AppointmentCard';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, TextField, Grid, CircularProgress} from '@material-ui/core';
+import { makeStyles, TextField, Grid, CircularProgress, Dialog, DialogContent, DialogTitle, Button, Fab, Modal} from '@material-ui/core';
 import Menu from "../Navigation/appbar.js";
 import convertTime from "./FindSupporter/convertTime"
 import Cookies from "universal-cookie";
+import CreateAppointmentModal from '../components/CreateAppointmentModal';
 
 const cookies = new Cookies();
 const role = cookies.get("role");
-const id = cookies.get('id');
-//const id = 2;
+const id = sessionStorage.getItem('id');
+// const id = 1;
 
 const drawerWidth = "25%";
 
@@ -56,6 +57,21 @@ const useStyles = makeStyles((theme) => ({
    align: "center",
    alignItems: "center",
   },
+  modal: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  createAppointmentDialogTitle: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+  },
+  createAppointmentFab: {
+    right: theme.spacing(1)*3,
+    bottom: theme.spacing(1)*4,
+    position: 'fixed',
+  }
 }));
 
 const ResponsiveDrawer = (props) => {
@@ -70,6 +86,7 @@ const ResponsiveDrawer = (props) => {
   const [search,setSearch]=React.useState("");
   const [appointments, setAppointments]=React.useState([]);
   const [isLoaded, setLoaded]=React.useState(false);
+  const [createAppointmentModal, setCreateAppointmentModal] = React.useState(false);
 
 
   const blockTime=30;
@@ -92,13 +109,16 @@ const ResponsiveDrawer = (props) => {
       var filteredAppointmentList = (appointments.filter(
       appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
     }
-    
-    
-    
   }
+
+  const handleCreateAppointmentModalToggle = () => {
+    setCreateAppointmentModal(!createAppointmentModal);
+  };
+
   const updateList = (val) => {
     setName(val);
   };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -106,9 +126,11 @@ const ResponsiveDrawer = (props) => {
   const handleSliderChange = (event, newValue) => {
     setSliderTime(newValue);
   };
+
   function convertToMin(t){
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
   }
+
   function getTheMonth(month){
     if (parseInt(month)>10){
       console.log(month.toString())
@@ -129,13 +151,17 @@ const ResponsiveDrawer = (props) => {
     return false
   }
 
+  function OnCreateAppointment() {
+
+  }
+
   useEffect(() => {
     
     if(role == 'Student'){
       fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students/%7Bid%7D?student_id='+id)
       .then(res => res.json())
       .then(json => {
-        
+        console.log(json.body)
         setLoaded(true);
         setAppointments(json.body);
       })
@@ -166,12 +192,13 @@ const ResponsiveDrawer = (props) => {
           return res.json();
         })
         .then(json => {
-          
+          console.log(json.body)
           setLoaded(true);
           setAppointments(json.body);
           
         })
         .catch(err => {
+          console.log('WTFFF')
           setAppointments([]);
           setLoaded(true);
         })
@@ -232,13 +259,26 @@ const ResponsiveDrawer = (props) => {
       </div> 
       </Drawer>
       <main className={classes.content}>
-        
+      <Dialog
+        className={classes.modal}
+        open={createAppointmentModal}
+        onClose={handleCreateAppointmentModalToggle}
+      >
+        <DialogTitle className={classes.createAppointmentDialogTitle}>Create New Appointment</DialogTitle>
+        <DialogContent
+          dividers
+        >
+        <CreateAppointmentModal/>
+        </DialogContent>
+      </Dialog>
         {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
         {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
         <br/>
         <br/>
+        
         {filteredAppointmentList.map((appointment) => (
-                today < new Date(appointment.time_scheduled) &&
+                today < new Date(appointment.time_of_appt) &&
+                !appointment.cancelled &&
                   <Grid item lg = {12}>
                     <AppointmentCard
                       upcoming = {true}
@@ -246,18 +286,17 @@ const ResponsiveDrawer = (props) => {
                       subject = {appointment.type}
                       location = {appointment.location}
                       medium = {appointment.method}
-                      start = {convertDate(appointment.time_scheduled, 0)}
-                      end = {convertDate(appointment.time_scheduled, appointment.duration)}
-                      date = {appointment.time_scheduled.substring(0,10)}
+                      start = {convertDate(appointment.time_of_appt, 0)}
+                      end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                      date = {appointment.time_of_appt.substring(0,10)}
                       supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                       student = {appointment.studentFN + " " + appointment.studentLN}
                       supporterProfilePic = {appointment.supporterPic}
                       studentProfilePic = {""}
                       comments = {appointment.comment}
+                      appt_id = {appointment.appointment_id}
                     />
                   </Grid>
-                
-                  
                 ))}
         <br/>
         <br/>
@@ -265,26 +304,74 @@ const ResponsiveDrawer = (props) => {
         <br/>
         <br/>
         {filteredAppointmentList.map((appointment) => (
-                today > new Date(appointment.time_scheduled) &&
+                today > new Date(appointment.time_of_appt) &&
+                !appointment.cancelled &&
                 <Grid item lg = {12}>
                   <AppointmentCard 
-                    upcoming = {true}
+                    upcoming = {false}
                     role = {role.toLowerCase()}
                     subject = {appointment.type}
                     location = {appointment.location}
                     medium = {appointment.method}
-                    start = {convertDate(appointment.time_scheduled, 0)}
-                    end = {convertDate(appointment.time_scheduled, appointment.duration)}
-                    date = {appointment.time_scheduled.substring(0,10)}
+                    start = {convertDate(appointment.time_of_appt, 0)}
+                    end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                    date = {appointment.time_of_appt.substring(0,10)}
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
                     studentProfilePic = {""}
                     comments = {appointment.comment}
+                    rating = {appointment.rating}
+                    feedback = {appointment.feedback}
+                    feedbackLeft = {(appointment.feedback != null || appointment.rating != null)}
+                    appt_id = {appointment.appointment_id}
+                  />
+                </Grid>
+              ))}
+        <br/>
+        <br/>
+        {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Cancelled Appointments</Typography>}
+        <br/>
+        <br/>
+        {filteredAppointmentList.map((appointment) => (
+                appointment.cancelled &&
+                <Grid item lg = {12}>
+                  <AppointmentCard 
+                    upcoming = {false}
+                    role = {role.toLowerCase()}
+                    subject = {appointment.type}
+                    location = {appointment.location}
+                    medium = {appointment.method}
+                    start = {convertDate(appointment.time_of_appt, 0)}
+                    end = {convertDate(appointment.time_of_appt, appointment.duration)}
+                    date = {appointment.time_of_appt.substring(0,10)}
+                    supporter = {appointment.supporterFN + " " + appointment.supporterLN}
+                    student = {appointment.studentFN + " " + appointment.studentLN}
+                    supporterProfilePic = {appointment.supporterPic}
+                    studentProfilePic = {""}
+                    comments = {appointment.comment}
+                    rating = {appointment.rating}
+                    feedback = {appointment.feedback}
+                    feedbackLeft = {(appointment.feedback != null || appointment.rating != null)}
+                    appt_id = {appointment.appointment_id}
+                    cancelled = {appointment.cancelled}
+                    cancel_reason = {appointment.cancel_reason}
                   />
                 </Grid>
               ))}
       </main>
+      {role!=="Student" && <div style={{ display: "flex" }}>
+          <Fab
+            variant="extended"
+            size="small"
+            color="primary"
+            aria-label="add"
+            className={classes.createAppointmentFab}
+            onClick={handleCreateAppointmentModalToggle}
+          >
+          Create Appointment
+        </Fab>
+      </div>}
     </div>
   );
   }

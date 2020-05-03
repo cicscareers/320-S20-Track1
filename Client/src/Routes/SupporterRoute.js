@@ -12,7 +12,7 @@ export default function SupporterRoute({
     <Route
       {...rest}
       render={props =>
-        cookies.get("role") === "Supporter" ? (
+        (cookies.get("role") === "supporter") ? (
           <C {...props} {...appProps} />
         ) : (
           <Redirect to="/login" />

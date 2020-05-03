@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Cookies from "universal-cookie";
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
+import Cookies from "universal-cookie";
 
 
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   //sets styling
   const classes = useStyles();
-
+  
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,7 +59,7 @@ export default function SignIn() {
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
-
+  
   //Gets run when submit is pressed and handles authentication.
   const handleSubmit = async event =>{
     event.preventDefault();
@@ -69,36 +69,23 @@ export default function SignIn() {
         console.log(user);
         if (user.signInUserSession.accessToken !== undefined) {
           console.log("hooray! we have json!");
-          // console.log(json);
-          const cookies = new Cookies();
+
           var authToken = user.signInUserSession.idToken.jwtToken;
           var base64Url = authToken.split('.')[1];
           var json = JSON.parse(window.atob(base64Url));
+          const cookies = new Cookies();
 
           console.log(json)
           console.log("$$$$$$$$");
 
-          cookies.remove("email");
-          cookies.remove("firstName");
-          cookies.remove("lastName");
-          cookies.remove("role");
-          cookies.remove("token");
-          cookies.remove("id");
+          sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
+          sessionStorage.setItem("email", json.email);
+          sessionStorage.setItem("firstName", json.given_name);
+          sessionStorage.setItem("lastName", json.family_name);
+          sessionStorage.setItem("role", "Student");
+          sessionStorage.setItem("id", json.preferred_username);
+          cookies.set("role", "Student", { path: "/" });
 
-          cookies.set("email", json.email, {
-            path: "/"
-          });
-          cookies.set("firstName", json.given_name, {
-            path: "/"
-          });
-          cookies.set("lastName", json.family_name, {
-            path: "/"
-          });
-          cookies.set("role", json.profile, { path: "/" });
-
-          cookies.set("id", json.preferred_username, { path: "/" });
-
-          cookies.set("token", user.signInUserSession.accessToken, { path: "/" });
           window.location.reload();
         }
       }catch(error){

@@ -93,7 +93,7 @@ const SupporterCard = (props) => {
     }
     supporterComment=supporterComment+comment
     fetch(
-      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/students",
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
         method: "POST",
         headers: {
@@ -104,11 +104,12 @@ const SupporterCard = (props) => {
           student_id: IntID,
           supporter_id: supporter_id,
           time_of_appt: day+" "+timeToString(time)+":00",
-          appt_type: apptTopic,
           duration: 30,
-          method: "In Person",
-          location: "Amazon HQ, Seattle WA",
-          comment: supporterComment
+          medium: "in-person",
+          location: location,
+          comment: supporterComment,
+          specialization: apptTopic,
+          selected_tags: filtered_tags
         })
       }
     )
