@@ -18,6 +18,10 @@ const useStyles = makeStyles((theme) => ({
     spacer: {
       flexGrow: 1,
     },
+    calendarView: {
+    },
+    blockList: {
+    }
   }));
 
   export default useStyles;
