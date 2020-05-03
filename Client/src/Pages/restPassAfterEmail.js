@@ -130,9 +130,11 @@ export default function SignIn() {
     console.log(error)
     if (error.code == "CodeMismatchException"){
         setCodeCorrect(false)
+        return
     }
     if (error.code == "ExpiredCodeException"){
       setEmailCorrect(false);
+      return
     }
     else{
       alert(error.message)
