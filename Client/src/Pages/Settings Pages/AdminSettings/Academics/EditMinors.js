@@ -7,8 +7,8 @@ import Topics from "../../../FindSupporter/topics"
 export default function ChangeTags() {
     const [selectedMinor, setSelectedMinor] = useState("");
     const [addMinor, setAddMinor] = useState("");
-    const [topics, setTopics] = useState([]);
-    const [isLoaded, setLoaded] = useState(true);
+    const [minors, setMinors] = useState([]);
+    const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
 
@@ -17,6 +17,35 @@ export default function ChangeTags() {
     }
 
     function handleDeleteConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors",
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              minor_id: selectedMinor.minor_id
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setDeleteOpen(false)
     }
 
@@ -29,6 +58,35 @@ export default function ChangeTags() {
     }
 
     function handleAddConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              minor: addMinor
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setAddOpen(false)
     }
 
@@ -36,15 +94,14 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    // useEffect(() => {
-    //   fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags')
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     console.log(json)
-    //     setTags(json.tags)
-    //     setLoaded(true)
-    //   })
-    // },[])
+    useEffect(() => {
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors")
+      .then(res => res.json())
+      .then(json => {
+        setMinors(json.minors)
+        setLoaded(true)
+      })
+    },[])
 
     if(!isLoaded){
       return <Typography>Loading.....</Typography>
@@ -64,9 +121,9 @@ export default function ChangeTags() {
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {Topics}
+                    options= {minors}
                     style={{width: 300}}
-                    
+                    getOptionLabel={option => option.minor}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -117,7 +174,7 @@ export default function ChangeTags() {
                             Are you sure you want to Delete this Minor?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedMinor}
+                            {selectedMinor.minor}
                         </DialogContentText>
                         
                     </DialogContent>

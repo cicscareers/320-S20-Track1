@@ -7,16 +7,55 @@ import Topics from "../../../FindSupporter/topics"
 export default function ChangeTags() {
     const [selectedCollege, setSelectedCollege] = useState("");
     const [addCollege, setAddCollege] = useState("");
-    const [topics, setTopics] = useState([]);
-    const [isLoaded, setLoaded] = useState(true);
+    const [colleges, setColleges] = useState([]);
+    const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
+
+    useEffect(() => {
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges")
+      .then(res => res.json())
+      .then(json => {
+        setColleges(json.colleges)
+        setLoaded(true)
+      })
+    },[])
 
     function handleDeleteClose(){
       setDeleteOpen(false);
     }
 
     function handleDeleteConfirm(){
+      fetch(
+        " https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges",
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              college_id: selectedCollege.college_id,
+              college: selectedCollege.college
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setDeleteOpen(false)
     }
 
@@ -29,6 +68,35 @@ export default function ChangeTags() {
     }
 
     function handleAddConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              college: addCollege
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setAddOpen(false)
     }
 
@@ -36,15 +104,7 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    // useEffect(() => {
-    //   fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags')
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     console.log(json)
-    //     setTags(json.tags)
-    //     setLoaded(true)
-    //   })
-    // },[])
+   
 
     if(!isLoaded){
       return <Typography>Loading.....</Typography>
@@ -64,9 +124,9 @@ export default function ChangeTags() {
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {Topics}
+                    options= {colleges}
                     style={{width: 300}}
-                    
+                    getOptionLabel={(option)=> option.college}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -117,7 +177,7 @@ export default function ChangeTags() {
                             Are you sure you want to Delete this College?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedCollege}
+                            {selectedCollege.college}
                         </DialogContentText>
                         
                     </DialogContent>

@@ -17,6 +17,34 @@ export default function ChangeTags() {
     }
 
     function handleDeleteConfirm(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags",
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              tag_type_id: selectedTag.tag_type_id
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setDeleteOpen(false)
     }
 
@@ -29,6 +57,35 @@ export default function ChangeTags() {
     }
 
     function handleAddConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              tag_type: addTag
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setAddOpen(false)
     }
 
@@ -115,6 +172,9 @@ export default function ChangeTags() {
                     <DialogContent>
                         <DialogContentText>
                             Are you sure you want to Delete this Tag item?
+                        </DialogContentText>
+                        <DialogContentText>
+                            {selectedTag.tag_type}
                         </DialogContentText>
                         
                     </DialogContent>

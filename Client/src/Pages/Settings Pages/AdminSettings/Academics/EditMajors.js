@@ -2,13 +2,12 @@ import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
         DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
     const [selectedMajor, setSelectedMajor] = useState("");
     const [addMajor, setAddMajor] = useState("");
-    const [topics, setTopics] = useState([]);
-    const [isLoaded, setLoaded] = useState(true);
+    const [majors, setMajors] = useState([]);
+    const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
 
@@ -17,6 +16,35 @@ export default function ChangeTags() {
     }
 
     function handleDeleteConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors",
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              major_id: selectedMajor.major_id
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setDeleteOpen(false)
     }
 
@@ -29,12 +57,51 @@ export default function ChangeTags() {
     }
 
     function handleAddConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              major: addMajor
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setAddOpen(false)
     }
 
     function handleAddOpen(){
       setAddOpen(true)
     }
+
+    useEffect(() => {
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors")
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        setMajors(json.majors)
+        setLoaded(true)
+      })
+    },[])
 
     // useEffect(() => {
     //   fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags')
@@ -64,9 +131,9 @@ export default function ChangeTags() {
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {Topics}
+                    options= {majors}
                     style={{width: 300}}
-                    
+                    getOptionLabel={option => option.major}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -117,7 +184,7 @@ export default function ChangeTags() {
                             Are you sure you want to Delete this Major?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedMajor}
+                            {selectedMajor.major}
                         </DialogContentText>
                         
                     </DialogContent>

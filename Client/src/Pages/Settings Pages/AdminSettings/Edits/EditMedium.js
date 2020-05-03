@@ -4,13 +4,13 @@ import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 import { InputLabel } from '@material-ui/core';
-import FileSelector from './FileSelector';
+
 
 export default function ChangeTags() {
     const [selectedMedium, setSelectedMedium] = useState("");
     const [addMedium, setAddMedium] = useState("");
-    const [topics, setTopics] = useState([]);
-    const [isLoaded, setLoaded] = useState(true);
+    const [mediums, setMediums] = useState([]);
+    const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
 
@@ -19,6 +19,35 @@ export default function ChangeTags() {
     }
 
     function handleDeleteConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums",
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              medium_id: selectedMedium.medium_id
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setDeleteOpen(false)
     }
 
@@ -31,6 +60,35 @@ export default function ChangeTags() {
     }
 
     function handleAddConfirm(){
+      fetch(
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              medium: addMedium
+          })
+       
+        }
+      )
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response)
+          return response.json();
+        } else {
+          throw new Error("Server can't be reached!");
+        }
+      })
+      .then(json => {
+        //setOpen(false);
+        //setOpenCreated(true);
+      })
+      .catch(error => {
+        console.log(error);
+      });
       setAddOpen(false)
     }
 
@@ -38,15 +96,14 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    // useEffect(() => {
-    //   fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags')
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     console.log(json)
-    //     setTags(json.tags)
-    //     setLoaded(true)
-    //   })
-    // },[])
+    useEffect(() => {
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums")
+      .then(res => res.json())
+      .then(json => {
+        setMediums(json.mediums)
+        setLoaded(true)
+      })
+    },[])
 
     if(!isLoaded){
       return <Typography>Loading.....</Typography>
@@ -66,9 +123,9 @@ export default function ChangeTags() {
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {Topics}
+                    options= {mediums}
                     style={{width: 300}}
-                    
+                    getOptionLabel= {option => option.medium}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -119,7 +176,7 @@ export default function ChangeTags() {
                             Are you sure you want to Delete this Medium?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedMedium}
+                            {selectedMedium.medium}
                         </DialogContentText>
                         
                     </DialogContent>
