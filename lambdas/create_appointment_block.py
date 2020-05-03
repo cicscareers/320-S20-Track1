@@ -10,7 +10,7 @@ from package.lambda_exception import LambdaException
 # Author: Victoria Caruso
 
 # function creates an appointment block 
-# Input: supporter_id, start_date, end_date, max_num_of_appts, isReccuring
+# Input: supporter_id, start_date, end_date, max_num_of_appts, isReccuring, reccuring num weeks
 # Output: 201 Created
 def lambda_handler(event, context):
 
@@ -53,17 +53,24 @@ def lambda_handler(event, context):
         reccuring_id = appointment_block_id
         for week in range(recurring_num_weeks):
 
-            sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
-                VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,:recurr) WHERE NOT EXISTS ( 
-                SELECT start_date, end_date FROM appointment_block WHERE supporter_id = :supporter_id)"""
-            sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
-            {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
+            sql = """SELECT start_date, end_date FROM appointment_block WHERE start_date =:s_date AND end_date = :e_date AND supporter_id =:supp_id"""
+            sql_parameters = [{'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
             {'name' : 's_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : start_date}},
-            {'name' : 'e_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : end_date}},
-            {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}},
-            {'name' : 'recurr', 'value': {'longValue' : reccuring_id}}]
+            {'name' : 'e_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : end_date}}]
+
+            check_blck_exist = query(sql,sql_parameters)
+
+            if(check_blck_exist['records'] == []):
+                sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
+                    VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,:recurr)"""
+                sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
+                {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
+                {'name' : 's_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : start_date}},
+                {'name' : 'e_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : end_date}},
+                {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}},
+                {'name' : 'recurr', 'value': {'longValue' : reccuring_id}}]
             
-            create_appmnt_blck = query(sql,sql_parameters)
+                create_appmnt_blck = query(sql,sql_parameters)
             
             start_date = datetime.datetime(int(start_date[:4]), int(start_date[5:7]), int(start_date[8:10]), int(start_date[11:13]), int(start_date[14:16]), int(start_date[17:]))
             end_date = datetime.datetime(int(end_date[:4]), int(end_date[5:7]), int(end_date[8:10]), int(end_date[11:13]), int(end_date[14:16]), int(end_date[17:]))
@@ -74,22 +81,30 @@ def lambda_handler(event, context):
             appointment_block_id += 1
  
     else:
-        sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
-            VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,NULL) WHERE NOT EXISTS ( 
-            SELECT start_date, end_date FROM appointment_block WHERE supporter_id = :supporter_id)"""
-        sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
-        {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
-        {'name' : 's_date','typeHint' : 'TIMESTAMP','value': {'stringValue' : start_date}},
-        {'name' : 'e_date', 'typeHint' : 'TIMESTAMP','value': {'stringValue' : end_date}},
-        {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}}]
-        create_appmnt_blck = query(sql,sql_parameters)
+
+        sql = """SELECT start_date, end_date FROM appointment_block WHERE start_date =:s_date AND end_date = :e_date AND supporter_id =:supp_id"""
+        sql_parameters = [{'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
+        {'name' : 's_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : start_date}},
+        {'name' : 'e_date', 'typeHint' : 'TIMESTAMP', 'value': {'stringValue' : end_date}}]
+
+        check_blck_exist = query(sql,sql_parameters)
+
+        if(check_blck_exist['records'] == []):
+            sql = """INSERT INTO appointment_block(appointment_block_id, supporter_id, start_date, end_date, max_num_of_appts, recurring_id) 
+                VALUES (:appnt_blck_id,:supp_id,:s_date,:e_date,:max_num,NULL)"""
+            sql_parameters = [{'name' : 'appnt_blck_id', 'value': {'longValue' : appointment_block_id}},
+            {'name' : 'supp_id', 'value': {'longValue' : supporter_id}},
+            {'name' : 's_date','typeHint' : 'TIMESTAMP','value': {'stringValue' : start_date}},
+            {'name' : 'e_date', 'typeHint' : 'TIMESTAMP','value': {'stringValue' : end_date}},
+            {'name' : 'max_num', 'value': {'longValue' : max_num_of_appts}}]
+            create_appmnt_blck = query(sql,sql_parameters)
         
-    # check if supporter types successfully loaded
-    if create_appmnt_blck['numberOfRecordsUpdated'] == 0:
-        return {
-            'body': json.dumps("appointment block not created"),
-            'statusCode': 404
-        }
+            # check if supporter types successfully loaded
+            if create_appmnt_blck['numberOfRecordsUpdated'] == 0:
+                return {
+                    'body': json.dumps("appointment block not created"),
+                    'statusCode': 404
+                }
 
     # success
     return {
