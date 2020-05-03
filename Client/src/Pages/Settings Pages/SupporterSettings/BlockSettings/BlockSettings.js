@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Typography, makeStyles, Slider} from '@material-ui/core';
+import {Card, Typography, makeStyles, Grid, Select, Input, MenuItem, FormControl, InputLabel} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -22,8 +22,10 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        paddingRight: theme.spacing(100),
     },
+    leftInput: {
+      paddingRight: theme.spacing(6),
+    }
 }));
 
 function assertInt(num){
@@ -38,24 +40,41 @@ const BlockCard = (props) => {
   return (
     <div>
         <Card className={classes.content}>
-            <Typography variant="h6">Appointment Block Type: {specialization_type}</Typography>
+            <Typography align="center"><b>Appointment Block Type: </b>{specialization_type}</Typography>
             <br/>
-            <Typography variant="h6">Appointment Duration: {length} minutes</Typography>
-            <Slider
-                value={typeof length === 'number' ? length : 0}
-                onChange={(event, newValue) => setLength(newValue)}
-                step={15}
-                min={15}
-                max={120}
-            />
-            <Typography variant="h6">Maximum Number of Students: {max}</Typography>
-            <Slider
-                value={typeof max === 'number' ? max : 0}
-                onChange={(event, newValue) => setMax(newValue)}
-                step={1}
-                min={1}
-                max={10}
-            />
+            <Grid container>
+              <Grid item xs={6} className={classes.leftInput}>
+                
+                <FormControl fullWidth>
+                  <InputLabel fullWidth>Appointment Duration</InputLabel>
+                  <Select
+                    value={length}
+                    onChange={(e) => setLength(e.target.value)}
+                    input={<Input />}
+                    fullWidth
+                  >
+                    {["15","30","45","60","75","90","105","120"].map((number) => (
+                      <MenuItem value={number}>{number}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+              <FormControl fullWidth>
+                  <InputLabel fullWidth>Maximum Number of Students</InputLabel>
+                  <Select
+                    value={max}
+                    onChange={(e) => setMax(e.target.value)}
+                    input={<Input />}
+                    fullWidth
+                  >
+                    {["1","2","3","4","5","6","7","8","9","10"].map((number) => (
+                      <MenuItem value={number}>{number}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
         </Card>
         <br/>
     </div>
