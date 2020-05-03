@@ -2,6 +2,7 @@ import React , {useEffect} from "react"
 import {makeStyles, Typography, Button, Container, CircularProgress, TextField, Grid} from "@material-ui/core";
 import {Autocomplete} from '@material-ui/lab';
 import SupporterTypes from './SupporterTypes.js'
+import SubmitButton from './SubmitButton.js'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -29,6 +30,9 @@ function handleSubmit(){
 
 function extractSpecializationTypes(spec){
     var arr=[]
+    if(!spec){
+        return arr
+    }
     for(let i=0;i<spec.length;i++){
         arr.push(spec[i]["specialization_type"])
     }
@@ -37,10 +41,13 @@ function extractSpecializationTypes(spec){
 
 function extractTags(tags){
     var arr=[]
+    if (!tags){
+        return arr
+    }
     for(let i=0;i<tags.length;i++){
         arr.push(tags[i].tag_type)
     }
-    console.log(arr)
+    //console.log(arr)
     return arr
 }
 
@@ -64,40 +71,91 @@ function extractSupporterTypes(settings){
 const ProfileInformation = (props) => {
     const classes=useStyles();
     const {settings} = props
-    const spec_types = extractSpecializationTypes(settings.specialization_types)
+    const [error, setError] = React.useState(false)
+    const spec_types = extractSpecializationTypes(settings.specialization_types ? settings.specialization_types : [] )
     const supporter_types=extractSupporterTypes(settings)
-    var tags_list = []
     const [supporterTypes, setSupporterTypes]=React.useState(supporter_types);
     const [teams, setTeams]=React.useState(settings.team_name);
+    const [office, setOffice]=React.useState(settings.office);
     const [specializations, setSpecializations]=React.useState(spec_types);
     const [employer, setEmployer]=React.useState(settings.employer);
     const [title, setTitle]=React.useState(settings.title);
-    const [tags, setTags]=React.useState(settings.tags)
+    const [tags, setTags]=React.useState(settings.tags ? settings.tags : [])
     const [tagsList, setTagsList]=React.useState([])
     const [typesList, setTypesList]=React.useState([])
     const [loaded, setLoaded]=React.useState(false)
+    const [majorList, setMajorList] = React.useState([])
+    const [prefMajors, setPrefMajors]=React.useState(extractMajors(settings.major_preferences))
+    const [minorList, setMinorList] = React.useState([])
+    const [prefMinors, setPrefMinors]=React.useState([])
+
+    function extractMajors(m){
+        if(m === undefined){
+          return []
+        }
+        var arr=[]
+        for(let i=0;i<m.length;i++){
+          arr.push(m[i].major)
+        }
+        return arr
+    }
+
+    function extractMinors(m){
+        if(m === undefined){
+          return []
+        }
+        var arr=[]
+        for(let i=0;i<m.length;i++){
+          arr.push(m[i].minor)
+        }
+        return arr
+    }
 
     useEffect(() => {
         //fetchSupporterList(initial_fetch_url);
         setLoaded(false);
         Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/tags"), 
-        fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
+        fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types"),
+        fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/majors"),
+        fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/minors")])
   
-        .then(([res1, res2]) => { 
-           return Promise.all([res1.json(), res2.json()]) 
+        .then(([res1, res2, res3, res4]) => { 
+           return Promise.all([res1.json(), res2.json(), res3.json(), res4.json()]) 
         })
-        .then(([res1, res2]) => {
-          setTagsList(extractTags(res1.tags));
-          setTypesList(extractSpecializationTypes(res2.specialization_types));
-          console.log(res2)
-          setLoaded(true);
-        });
+        .then(([res1, res2, res3, res4]) => {
+            if(res1.tags && res2.specialization_types && res3.majors && res4.minors ){
+                setTagsList(extractTags(res1.tags));
+                setTypesList(extractSpecializationTypes(res2.specialization_types));
+                setMajorList(extractMajors(res3.majors))
+                setMinorList(extractMinors(res4.minors))
+                //console.log(res2)
+                setLoaded(true);
+            }else{
+          throw new Error()
+        }
+      })
+      .catch(error => {
+        setError(true)
+        setLoaded(true);
+        console.log("Error Connectting to API")
+      });
       }, [])
 
     //console.log(tagsList)
     //console.log(typesList)
 
-    if(!loaded){
+    if(error){
+        return (
+          <div align="center">
+            <br/>
+            <br/>
+            <br/>
+            <Typography variant="h4">There was an error fetching your settings</Typography>
+          </div>
+        )
+      }
+    
+      else if(!loaded){
         return (
           <div align="center">
             <br></br>
@@ -141,6 +199,32 @@ const ProfileInformation = (props) => {
                         />   
                     </Grid>
                 </Grid>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            label="Team"
+                            autoFocus
+                            defaultValue={teams}
+                            form className={classes.form}
+                            onChange={e => setTeams(e.target.value)}
+                        />   
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            label="Office"
+                            autoFocus
+                            defaultValue={office}
+                            form className={classes.form}
+                            onChange={e => setOffice(e.target.value)}
+                        />   
+                    </Grid>
+                </Grid>
                 <Autocomplete
                     multiple
                     className={classes.form}
@@ -155,16 +239,6 @@ const ProfileInformation = (props) => {
                     )}
                     onChange={(e,v) => setSupporterTypes(v)}
                 />
-                <TextField
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    label="Team"
-                    autoFocus
-                    defaultValue={teams}
-                    form className={classes.form}
-                    onChange={e => setTeams(e.target.value)}
-                />   
                 <Autocomplete
                     multiple
                     className={classes.form}
@@ -194,15 +268,44 @@ const ProfileInformation = (props) => {
                     )}
                     onChange={(e,v) => setTags(v)}
                 />
-                <Button
-                    margin="normal"
-                    form className={classes.button}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <Autocomplete
+                    multiple
+                    className={classes.form}
+                    options={majorList}
+                    defaultValue={prefMajors}
+                    renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Preferred Majors"
+                    />
+                    )}
+                    onChange={(e,v) => setPrefMajors(v)}
+                />
+                <Autocomplete
+                    multiple
+                    className={classes.form}
+                    options={minorList}
+                    defaultValue={prefMinors}
+                    renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Preferred Minors"
+                    />
+                    )}
+                    onChange={(e,v) => setPrefMinors(v)}
+                />
+                <SubmitButton 
+                    specializations={specializations} 
+                    supporter_types={supporter_types}
+                    teams={teams} 
+                    employer={employer}
+                    title={title} 
+                    tags={tags} 
+                    prefMajors={prefMajors} 
+                    prefMinors={prefMinors}>
+                </SubmitButton>
             </form>
         </div>
         </Container>

@@ -20,15 +20,14 @@ const useStyles = makeStyles(theme => ({
       align: "center",
     },
     avatar: {
-        marginLeft: "42%",
-        marginRight: "50%",
         width: theme.spacing(25),
         height: theme.spacing(25)
     },
 }));
 
+
 function handleSubmit(){
-    //TODO
+    
 }
 
 function getLinkedIn(arr){
@@ -59,7 +58,17 @@ const ProfileInformation = (props) => {
                 Profile Information
             </Typography>
             <form className={classes.form}>
-                <Avatar className={classes.avatar} src={settings.picture}/>
+                <Grid container>
+                    <Grid item xs={3} sm={5}>
+
+                    </Grid>
+                    <Grid item xs={6} sm={2}>
+                        <Avatar className={classes.avatar} src={settings.picture}/>
+                    </Grid>
+                    <Grid item xs={3} lg={5}>
+                        
+                    </Grid>
+                </Grid>
                 <br/>
                 <Grid container>
                     <Grid item xs={3}>

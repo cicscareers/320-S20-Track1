@@ -64,8 +64,6 @@ const SupporterSettings = (props) => {
     const [error, setError]=React.useState(false)
     const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
 
-
-
     useEffect(() => {
 
       setLoaded(false);
@@ -75,11 +73,10 @@ const SupporterSettings = (props) => {
       .then(([res1, res2]) => { 
          return Promise.all([res1.json(), res2.json()]) 
       })
-      .then(([res1, res2]) => {
+      .then(([res1, res2, res3]) => {
         if(res1.statusCode >= 200 && res1.statusCode <400 && res2.specialization_types !== undefined){
           setSettings(res1.body);
           setAppointmentTypesList(res2.specialization_types);
-          console.log(res2)
           setLoaded(true);
         }else{
           throw new Error()
