@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Checkbox, TextField, FormControlLabel } from '@material-ui/core';
 import useStyles from "./BlockStyles.js"
 import BlockCard from '../BlockCards/BlockCards.js'
-import BigBlockList from '../Blocks.js'
 import AddIcon from '@material-ui/icons/Add';
 import convertTime from "../../../../FindSupporter/convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
@@ -22,16 +21,43 @@ const ResponsiveDrawer = (props) => {
   const [currentViewSelectedDate, handleCurrentViewDateChange] = React.useState(new Date());
   const [isRecurring, setIsRecurring]=React.useState(false);
   const [maxAppointents, setMaxAppointents]=React.useState(1);
-  const [numberOfWeeks, setNumberOfWeeks]=React.useState(1)
-  const [appointmentTypes, setAppointmentTypes]=React.useState([])
-  let BlockList = [];
+  const [numberOfWeeks, setNumberOfWeeks]=React.useState(1);
+  const [appointmentTypes, setAppointmentTypes]=React.useState([]);
+  const [blockListFromEndPoint, setBlockListFromEndPoint] = React.useState([]);
+  var BlockList = [];
+  const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/1/blocks";
 
+  //Calls the API to get the list of supporters
   useEffect(() => {
-    
-    }, [])
+    fetchSupporterList(get_blocks_url);
+  }, [])
 
-  
-  //Creates a new supporter card a supporter
+  // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
+  async function asyncFetch(get_blocks_url) {
+    let response = await fetch(get_blocks_url);
+    let json = await response.json();
+    return json;
+  }
+
+  function fetchSupporterList(url) {
+    setLoaded(false);
+    asyncFetch(url).then((json) => {
+      if(json.body !== undefined) {
+        setBlockListFromEndPoint(new Array(json.body));
+        BlockList = json.body;
+        setBlockListFromEndPoint(BlockList)
+        setLoaded(true);
+      } else {
+        throw new Error();
+        setLoaded(true);
+      }
+    })
+    .catch(error => {
+        setLoaded(true);
+        console.log("No Supporters Found")
+      });
+  }
+
   
   const getBlockCard = (blockObj, s) => {
     return <BlockCard {...blockObj}/>;
@@ -43,19 +69,21 @@ const ResponsiveDrawer = (props) => {
 
   function updateCurrentViewDateBlockList() {
     let currBlockList = [];
-    for(let i =0;i<BigBlockList.length;i++){
-      let currStartDate = new Date(BigBlockList[i].start_date);
+    for(let i =0;i<blockListFromEndPoint.length;i++){
+      let currStartDate = new Date(blockListFromEndPoint[i].start_date);
       let blockDate = new Date(currStartDate.getFullYear(), currStartDate.getMonth(), currStartDate.getDate());
       let currDateNoTime = new Date(currentViewSelectedDate.getFullYear(), currentViewSelectedDate.getMonth(), currentViewSelectedDate.getDate());
       if(currDateNoTime.getTime()===blockDate.getTime()) {
-        currBlockList.push(BigBlockList[i]);
+        currBlockList.push(blockListFromEndPoint[i]);
       }
     }
     return currBlockList;
   }
   
   function populateUniqueBlocks(currBlockList){
+    let specializationList = getAllSupporterSpecializationsToBlocks();
     for(let i =0;i<currBlockList.length;i++){
+      currBlockList[i].specializations = specializationList;
       if(currBlockList[i].recurring_id!==null){
         if(i !== currBlockList.length - 1){
           var j=i+1
@@ -66,6 +94,14 @@ const ResponsiveDrawer = (props) => {
       }
     }
     BlockList = currBlockList;
+  }
+
+  function getAllSupporterSpecializationsToBlocks() {
+    let specializationList = [];
+    for(let i = 0; i < props.settings.specialization_types.length; i++) {
+      specializationList.push(props.settings.specialization_types[i].specialization_type)
+    }
+    return specializationList
   }
 
   function nextDay(){
@@ -114,6 +150,9 @@ const ResponsiveDrawer = (props) => {
               variant="inline"
               value={currentViewSelectedDate}
               onChange={handleCurrentViewDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
             />
             </Grid>
             <Grid item>

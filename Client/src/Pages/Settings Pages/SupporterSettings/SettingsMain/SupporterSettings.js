@@ -156,7 +156,7 @@ const SupporterSettings = (props) => {
           </div>
         </Drawer>
         <main className={classes.content}>
-            {page==="Create Appointment Blocks" && (<Blocks/>)}
+            {page==="Create Appointment Blocks" && (<Blocks settings={settings}/>)}
             {page==="Profile Information" && (<Profile settings={settings}/>)}
             {page==="Supporter Information" && (<SupporterInfo settings={settings}/>)}
             {page==="Appointment Block Settings" && (<BlockSettings settings={settings}/>)}
