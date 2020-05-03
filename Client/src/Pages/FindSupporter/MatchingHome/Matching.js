@@ -165,9 +165,9 @@ const ResponsiveDrawer = (props) => {
           tagsList.push(newList[i].tags[j])
         }
       }
-      for(let j=0;j<newList[i].topics.length;j++){
-        if(!topicsList.includes(newList[i].topics[j])){
-          topicsList.push(newList[i].topics[j])
+      for(var j in newList[i].topics){
+        if(!topicsList.includes(j)){
+          topicsList.push(j)
         }
       }
     }
