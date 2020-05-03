@@ -24,7 +24,7 @@ const ResponsiveDrawer = (props) => {
   const [numberOfWeeks, setNumberOfWeeks]=React.useState(1);
   const [appointmentTypes, setAppointmentTypes]=React.useState([]);
   const [blockListFromEndPoint, setBlockListFromEndPoint] = React.useState([]);
-  var BlockList = [];
+  var blockList = [];
   const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/1/blocks";
 
   //Calls the API to get the list of supporters
@@ -43,9 +43,8 @@ const ResponsiveDrawer = (props) => {
     setLoaded(false);
     asyncFetch(url).then((json) => {
       if(json.body !== undefined) {
-        setBlockListFromEndPoint(new Array(json.body));
-        BlockList = json.body;
-        setBlockListFromEndPoint(BlockList)
+        setBlockListFromEndPoint(json.body);
+        blockList = json.body;
         setLoaded(true);
       } else {
         throw new Error();
@@ -93,7 +92,7 @@ const ResponsiveDrawer = (props) => {
         }
       }
     }
-    BlockList = currBlockList;
+    blockList = currBlockList;
   }
 
   function getAllSupporterSpecializationsToBlocks() {
