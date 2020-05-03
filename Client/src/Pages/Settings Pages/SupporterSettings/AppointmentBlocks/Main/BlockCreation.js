@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Checkbox, TextField, FormControlLabel } from '@material-ui/core';
+import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Checkbox, TextField, FormControlLabel, FormControl,
+Input, InputLabel, MenuItem, Select } from '@material-ui/core';
 import useStyles from "./BlockStyles.js"
 import BlockCard from '../BlockCards/BlockCards.js'
 import AddIcon from '@material-ui/icons/Add';
@@ -14,6 +15,7 @@ const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
   const classes = useStyles();
   const [open, setOpen]=React.useState(false);
+  const [error,setError]=React.useState(false);
   const [isLoaded, setLoaded] = React.useState(true);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const today = new Date();
@@ -56,7 +58,6 @@ const ResponsiveDrawer = (props) => {
         console.log("No Supporters Found")
       });
   }
-
   
   const getBlockCard = (blockObj, s) => {
     return <BlockCard {...blockObj}/>;
@@ -94,7 +95,7 @@ const ResponsiveDrawer = (props) => {
     }
     blockList = currBlockList;
   }
-
+  
   function getAllSupporterSpecializationsToBlocks() {
     let specializationList = [];
     for(let i = 0; i < props.settings.specialization_types.length; i++) {
@@ -120,7 +121,16 @@ const ResponsiveDrawer = (props) => {
 
   populateUniqueBlocks(updateCurrentViewDateBlockList());
 
-  if(!isLoaded){
+  if(error){
+    return (
+      <div align="center">
+        <br></br>
+        <Typography variant="h6">There was a connection error. We may be performing maintenance on the site.</Typography>
+      </div>
+    )
+  }
+
+  else if(!isLoaded){
     return (
       <div align="center">
         <br></br>

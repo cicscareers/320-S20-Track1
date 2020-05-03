@@ -18,9 +18,8 @@ const useStyles = makeStyles((theme) => ({
     spacer: {
       flexGrow: 1,
     },
-    calendarView: {
-    },
-    blockList: {
+    dateName:{
+      paddingTop: theme.spacing(.7)
     }
   }));
 
