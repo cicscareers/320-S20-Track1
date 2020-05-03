@@ -143,37 +143,31 @@ def update_student_profile(event, context):
 
     update_error_messages = []
 
+    link_list = event['links']
+
+    #Check if link_id exists
+    for link_id, link in link_list:
+        sql = 'SELECT * FROM link WHERE link_id = :link_id;'
+        sql_parameters = [{'name': 'link_id', 'value': {'longValue': entry}}]
+        response = query(sql, sql_parameters)
+        if(response['records'] ==[]):
+            raise LambdaException("404: link_id:" + str(entry) + " does not exist")
 
     #User links
-    if 'linkedin' in event:
-        linkedin_link = event['linkedin']
-        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :linkedin_link WHERE link.link_type = 'linkedin'"
-        linkedin_param = deepcopy(student_id_param)
-        linkedin_param.append({'name' : 'linkedin_link', 'value' : {'stringValue' : linkedin_link}})
-        try:
-            update_linkedin = query(sql, linkedin_param)
-        except Exception as e:
-            update_error_messages.append("Failed to update linkedin: " + str(e))
+    #Execute parameterized query to delete supporter's old links
+    sql = "DELETE FROM user_links WHERE use_id = :supporter_id;"
+    try:
+        query(sql, supporter_id_param)
+    except Exception as e:
+        raise LambdaException("500: Unable to delete links")
 
-    if 'github' in event:
-        github_link = event['github']
-        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :github_link WHERE link.link_type = 'github'"
-        github_param = deepcopy(student_id_param)
-        github_param.append({'name' : 'github_link', 'value' : {'stringValue' : github_link}})
-        try:
-            update_github = query(sql, github_param)
-        except Exception as e:
-            update_error_messages.append("Failed to update github: " + str(e))
-
-    if 'personal_site' in event:
-        personal_site_link = event['personal_site']
-        sql = "INSERT INTO user SET user_id = :student_id, link_id = link.link_id, link = :personal_site_link WHERE link.link_type = 'personal_site'"
-        personal_site_param = deepcopy(student_id_param)
-        personal_site_param.append({'name' : 'personal_site_link', 'value' : {'stringValue' : personal_site_link}})
-        try:
-            update_personal_site = query(sql, personal_site_param)
-        except Exception as e:
-            update_error_messages.append("Failed to update personal site: " + str(e))
+    #Execute parameterized queries for updating links
+    for link_id, link in link_list:
+        sql = 'INSERT INTO user_links(user_id, link_id, link) VALUES (:user_id, :link_id, :link);'
+        sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}, {'name': 'link_id', 'value': {'longValue': link_id}}, {'name': 'link', 'value': {'longValue': link}}]
+        major_response = query(sql, sql_parameters)
+        if(major_response["numberOfRecordsUpdated"] == 0):
+            raise LambdaException("409: User links not updated")
 
 
     #notification preferences table
