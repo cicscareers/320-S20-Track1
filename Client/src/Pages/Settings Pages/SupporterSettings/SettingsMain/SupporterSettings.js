@@ -80,7 +80,7 @@ const SupporterSettings = (props) => {
     function fetchSupporterList(url) {
       setLoaded(false);
       myFetch(url).then((json) => {
-        if(json.body !== undefined) {
+        if(json.statusCode >= 200 && json.statusCode <400) {
           setSettings(json.body);
           setLoaded(true);
         } else {
@@ -96,7 +96,7 @@ const SupporterSettings = (props) => {
     }
 
     function formatFetchURL(startDate, endDate) {
-      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/1";
+      return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + sessionStorage.getItem("id");
     }
 
     if(error){
@@ -105,7 +105,7 @@ const SupporterSettings = (props) => {
           <br/>
           <br/>
           <br/>
-          <Typography variant="h4">There was an error fetching supporters. The server may be down at the moment</Typography>
+          <Typography variant="h4">There was an error fetching your settings</Typography>
         </div>
       )
     }
