@@ -103,6 +103,8 @@ export default function SignIn() {
   const [password2, setPassword2] = useState("");
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
+  const [codeCorrect, setCodeCorrect] = useState(true);
+  const [emailCorrect, setEmailCorrect] = useState(true);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -116,6 +118,8 @@ export default function SignIn() {
 
 
    function  handleSubmitButton(event){
+     setCodeCorrect(true)
+     setEmailCorrect(true)
     Auth.forgotPasswordSubmit(email, code, password)
     .then(data => handleClickOpen())
     .catch(err => handleError(err));
@@ -124,8 +128,11 @@ export default function SignIn() {
 
   function handleError(error){
     console.log(error)
+    if (error.code == "CodeMismatchException"){
+        setCodeCorrect(false)
+    }
     if (error.code == "ExpiredCodeException"){
-        alert("This code has expired")
+      setEmailCorrect(false);
     }
     else{
       alert(error.message)
@@ -187,6 +194,13 @@ export default function SignIn() {
             id="code"
             onChange={e => setCode(e.target.value)}
           />
+          {!codeCorrect && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+              This code is invalid
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -198,6 +212,13 @@ export default function SignIn() {
             id="email"
             onChange={e => setEmail(e.target.value)}
           />
+          {!emailCorrect && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                This email is incorrect or the code has expired.
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -247,7 +268,7 @@ export default function SignIn() {
             Reset My Password
           </Button>
           <Grid container>
-          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+          <Dialog aria-labelledby="customized-dialog-title" open={open}>
             <DialogTitle id="customized-dialog-title">
               Password Changed
             </DialogTitle>
