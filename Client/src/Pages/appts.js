@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
       flexShrink: 0,
     },
-    zIndex: - 1,
   },
   dayselect: {
     marginLeft: "40%"
@@ -46,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
   },
   content: {
     flexGrow: 1,
@@ -226,6 +228,9 @@ const ResponsiveDrawer = (props) => {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <AppBar position="fixed" className={classes.appBar}>
+        <Menu />
+      </AppBar>
       <Drawer
         className={classes.drawer}
         variant="permanent"

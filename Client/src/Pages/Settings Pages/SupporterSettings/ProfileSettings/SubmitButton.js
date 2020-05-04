@@ -41,6 +41,7 @@ const ProfileInformation = (props) => {
           .then(response => {
             if (response.status >= 200 && response.status < 300) {
               console.log(response)
+              sessionStorage.setItem("image", picture);
               return response.json();
             } else {
               throw new Error("Server can't be reached!");

@@ -166,6 +166,7 @@ export default function MenuAppBar(props) {
     <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
  }
+ const SwitchUserHandle= event =>{
   if(event.currentTarget.id=='student'){
     cookies.set('role', "Student")
   }

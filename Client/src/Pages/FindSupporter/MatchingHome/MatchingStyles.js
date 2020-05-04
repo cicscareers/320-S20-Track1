@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
         flexShrink: 0,
       },
-      zIndex: -1,
     },
     dayselect: {
       marginLeft: "40%"
@@ -35,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
     },
     rating: {
      align: "center",
