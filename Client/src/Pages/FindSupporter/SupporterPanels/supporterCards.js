@@ -12,21 +12,23 @@ import cardStyles from './CardStyles'
 
 const SupporterCard = (props) => {
   //Initialize all the constants
-  const {name, rating, employer, title, location, topics, tags, imgsrc, timeBlocks, day, linkedin, supporter_id, score, filtered_tags} = props;
+  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, links, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
-  const studentID = cookies.get("id")
-  const IntID=parseInt(studentID)
+  const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
+  const [apptDuration, setApptDuration] = React.useState(0);
   const [time, setTime] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
+  const [medium, setMedium] = React.useState("")
   const has_tags=supporter_has_tags()
   const startTimes = [];
-  
+  console.log(links)
+  const linkedin = (links && links["LinkedIn"]!=="") ? links["LinkedIn"] : ""
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
     const tag_list=[]
@@ -47,6 +49,7 @@ const SupporterCard = (props) => {
   //Sets the appointment topic based on selected chip
   const chipFilter = (item) => { 
     setApptTopic(item);
+    setApptDuration(topics[item].duration)
   }
 
   //Sets appointment time based on selected chip
@@ -71,13 +74,24 @@ const SupporterCard = (props) => {
 
   //Checks that a time and topic was selected
   function validateForm() {
-    return apptTopic!="" && time!="";
+    return apptTopic!=="" && time!=="" && medium!=="";
   };
 
   //Converts a time string to minutes
   function convertToMin(t){
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
   }
+
+  function convertTopicsToArray(tops){
+    var arr = []
+    for(var i in tops){
+      arr.push(i)
+    }
+    console.log(arr)
+    return arr
+  }
+
+  const topics_array = convertTopicsToArray(topics)
 
   //Creates an appointment
   //Calls the API
@@ -101,15 +115,15 @@ const SupporterCard = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_id: IntID,
-          supporter_id: supporter_id,
-          time_of_appt: day+" "+timeToString(time)+":00",
-          duration: 30,
-          medium: "in-person",
-          location: location,
-          comment: supporterComment,
-          specialization: apptTopic,
-          selected_tags: filtered_tags
+            "student_id": studentID.toString(),
+            "supporter_id": supporter_id,
+            "time_of_appt": day+" "+timeToString(time)+":00",
+            "medium": medium,
+            "location": office,
+            "comment": comment,
+            "specialization": apptTopic,
+            "selected_tags": filtered_tags,
+            "override": false
         })
       }
     )
@@ -200,10 +214,10 @@ const SupporterCard = (props) => {
         <Grid container spacing={3}>
           <Grid item xs={4}>
               <Typography>{employer}, {title}</Typography>
-              <Typography>{location}</Typography>
+              <Typography>{office}</Typography>
               <br/>
               <Typography>Select Appointment Topic:</Typography>
-              {topics.map(topic => <Chip 
+              {topics_array.map(topic => <Chip 
                 clickable 
                 value={topic}
                 variant={(apptTopic === topic) ? 'default' : 'outlined'}
@@ -217,6 +231,16 @@ const SupporterCard = (props) => {
               <Typography>Select Appointment Time:</Typography>
               {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
               {startTimes.map(st => generateTimeChip(st))}
+              <Typography>Select Appointment Medium:</Typography>
+              {mediums.map(med => <Chip 
+                clickable 
+                value={med}
+                variant={(medium === med) ? 'default' : 'outlined'}
+                color="primary" 
+                label={med} 
+                className={classes.tagChip}
+                onClick={ () => setMedium(med) }
+              />)}
           </Grid>
           <Grid item xs={1} align="center">
           </Grid>
@@ -236,7 +260,7 @@ const SupporterCard = (props) => {
                   horizontal: 'right',
                 }}
                 badgeContent={
-                  <Button className={classes.badgeButton} href={linkedin}>
+                  <Button className={classes.badgeButton} href={"//"+linkedin}>
                     <img border={5}
                       src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
                       className={classes.badge}/>
@@ -272,13 +296,16 @@ const SupporterCard = (props) => {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Location: {location}
+            Location: {office}
           </Typography>
           <Typography gutterBottom>
             Time: {convertTime(time)} for 30 minutes on {day}
           </Typography>
           <Typography gutterBottom>
             Appointment Type: {apptTopic}
+          </Typography>
+          <Typography gutterBottom>
+            Appointment Medium: {medium}
           </Typography>
           <Typography gutterBottom>
             Additional Comments

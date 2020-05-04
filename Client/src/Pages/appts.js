@@ -287,7 +287,7 @@ const ResponsiveDrawer = (props) => {
                       supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                       student = {appointment.studentFN + " " + appointment.studentLN}
                       supporterProfilePic = {appointment.supporterPic}
-                      studentProfilePic = {""}
+                      studentProfilePic = {appointment.studentPic}
                       comments = {appointment.comment}
                       appt_id = {appointment.appointment_id}
                     />
@@ -314,7 +314,7 @@ const ResponsiveDrawer = (props) => {
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
-                    studentProfilePic = {""}
+                    studentProfilePic = {appointment.studentPic}
                     comments = {appointment.comment}
                     rating = {appointment.rating}
                     feedback = {appointment.feedback}
@@ -343,7 +343,7 @@ const ResponsiveDrawer = (props) => {
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
-                    studentProfilePic = {""}
+                    studentProfilePic = {appointment.studentPic}
                     comments = {appointment.comment}
                     rating = {appointment.rating}
                     feedback = {appointment.feedback}

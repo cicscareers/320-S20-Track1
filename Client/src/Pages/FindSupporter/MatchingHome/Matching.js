@@ -88,7 +88,7 @@ const ResponsiveDrawer = (props) => {
   
   //For hard filtering. Commented out code will hard filter the given fields
   var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
-  supporter.day.substring(8,10)===selectedDate.getDate().toString() && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
+  supporter.day.substring(8,10)===getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
   //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
@@ -162,9 +162,9 @@ const ResponsiveDrawer = (props) => {
           tagsList.push(newList[i].tags[j])
         }
       }
-      for(let j=0;j<newList[i].topics.length;j++){
-        if(!topicsList.includes(newList[i].topics[j])){
-          topicsList.push(newList[i].topics[j])
+      for(var j in newList[i].topics){
+        if(!topicsList.includes(j)){
+          topicsList.push(j)
         }
       }
     }
@@ -177,7 +177,6 @@ const ResponsiveDrawer = (props) => {
 
   //Inputs a supporter and returns their score 
   function score(supporter){
-    
     var supporterScore=0
     var count=stateTopics.length+stateTags.length+2
 

@@ -171,6 +171,18 @@ const SupporterCard = (props) => {
        startTimes.push(i);
     }
   }
+
+  function convertTopicsToArray(tops){
+    var arr = []
+    for(var i in tops){
+      arr.push(i)
+    }
+    console.log(arr)
+    return arr
+  }
+
+  const topics_array = convertTopicsToArray(topics)
+
   function mapScore(s){
     if(s>.75){
       return "Great Match"
@@ -216,7 +228,7 @@ const SupporterCard = (props) => {
                 <Typography>{office}</Typography>
                 <br/>
                 <Typography>Select Appointment Topic:</Typography>
-                {topics.map(topic => <Chip 
+                {topics_array.map(topic => <Chip 
                   clickable 
                   value={topic}
                   variant={(apptTopic === topic) ? 'default' : 'outlined'}

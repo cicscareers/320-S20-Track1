@@ -1,5 +1,6 @@
 import React from "react"
 import {makeStyles, Typography, Button, Avatar, Container, Box, TextField, Grid} from "@material-ui/core";
+import SubmitButton from './SubmitButton.js'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -20,24 +21,24 @@ const useStyles = makeStyles(theme => ({
       align: "center",
     },
     avatar: {
-        marginLeft: "42%",
-        marginRight: "50%",
         width: theme.spacing(25),
         height: theme.spacing(25)
     },
 }));
 
+
 function handleSubmit(){
-    //TODO
+    
 }
 
 function getLinkedIn(arr){
-    if(arr !== null) {
-        for(let i=0;i<arr.length;i++){
-            console.log(arr[i])
-            if(arr[i].link_type === "linkedin"){
-                return arr[i].link
-            }
+    if (!arr){
+        return ""
+    }
+    for(let i=0;i<arr.length;i++){
+        console.log(arr[i])
+        if(arr[i].link_type === "LinkedIn"){
+            return arr[i].link
         }
     }
     return ""
@@ -52,8 +53,9 @@ const ProfileInformation = (props) => {
     const [pronouns, setPronouns]=React.useState(settings.pronouns)
     const [phoneNumber, setPhoneNumber]=React.useState(settings.phone)
     const [email, setEmail]=React.useState(settings.email)
+    const [picture, setPicture]=React.useState(settings.picture)
     const [linkedIn, setLinkedIn]=React.useState(getLinkedIn(settings.link))
-    const [bio, setBio]=React.useState("")
+    const [bio, setBio]=React.useState(settings.bio)
     return (
         <Container component="main">
         <div className={classes.paper}>
@@ -61,7 +63,17 @@ const ProfileInformation = (props) => {
                 Profile Information
             </Typography>
             <form className={classes.form}>
-                <Avatar className={classes.avatar} src={settings.picture}/>
+                <Grid container>
+                    <Grid item xs={3} sm={5}>
+
+                    </Grid>
+                    <Grid item xs={6} sm={2}>
+                        <Avatar className={classes.avatar} src={picture}/>
+                    </Grid>
+                    <Grid item xs={3} lg={5}>
+                        
+                    </Grid>
+                </Grid>
                 <br/>
                 <Grid container>
                     <Grid item xs={3}>
@@ -69,7 +81,7 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
+                            disabled
                             label="First Name"
                             autoFocus
                             defaultValue={firstName}
@@ -94,7 +106,7 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
+                            disabled
                             label="Last Name"
                             autoFocus
                             defaultValue={lastName}
@@ -122,9 +134,9 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
                             label="Email Address"
                             autoFocus
+                            disabled
                             defaultValue={email}
                             form className={classes.form}
                             onChange={e => setEmail(e.target.value)}
@@ -158,6 +170,17 @@ const ProfileInformation = (props) => {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    required
+                    label="Profile Image Source"
+                    autoFocus
+                    defaultValue={picture}
+                    form className={classes.form}
+                    onChange={e => setPicture(e.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
                     label="Personal Biography"
                     autoFocus
                     multiline
@@ -166,15 +189,18 @@ const ProfileInformation = (props) => {
                     form className={classes.form}
                     onChange={e => setBio(e.target.value)}
                 />
-                <Button
-                    margin="normal"
-                    form className={classes.button}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <SubmitButton
+                    firstName={firstName}
+                    prefName={prefName}
+                    lastName={lastName}
+                    picture={picture}
+                    pronouns={pronouns}
+                    phoneNumber={phoneNumber}
+                    email={email}
+                    linkedIn={linkedIn}
+                    bio={bio}
+                />
+
             </form>
         </div>
         </Container>
