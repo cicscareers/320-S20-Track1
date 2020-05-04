@@ -14,6 +14,12 @@ import FieldDefaults from "../FieldDefaults/fieldDefaults.js";
 import AdminApproval from "../AdminApproval/adminApproval.js";
 import SupporterApproval from "../SupporterApproval/SupporterApproval";
 import FaqSettings from "../FAQ/faqPage.js";
+import ChangeColleges from "../Academics/EditColleges"
+import ChangeMajors from "../Academics/EditMajors"
+import ChangeMinors from "../Academics/EditMinors"
+import ChangeLinks from "../Edits/EditLinks"
+import ChangeMediums from "../Edits/EditMedium"
+
 
 const drawerWidth = "25%";
 
@@ -59,10 +65,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SupporterSettings = (props) => {
 
+
+const SupporterSettings = (props) => {
+  const btns ={one: "#d3d3d3", two: "#ffffff", three: "#ffffff", four: "#ffffff", five: "#ffffff",
+              six: "#ffffff", seven: "#d3d3d3", eight: "#ffffff", nine: "#ffffff", ten: "#ffffff",
+              elev: "#ffffff", twelve: "#ffffff", thirteen: "#ffffff"}
+    
     const classes = useStyles();
-    const [page, setPage]=React.useState("Field Defaults")
+    const [page, setPage]=React.useState("Supporter Approval")
+    const [buttons, setBtns] = React.useState(btns)
+
+    console.log(buttons.one)
+    function highLightButton(btn){
+      const cols ={one: "#ffffff", two: "#ffffff", three: "#ffffff", four: "#ffffff", five: "#ffffff",
+        six: "#ffffff", seven: "#ffffff", eight: "#ffffff", nine: "#ffffff", ten: "#ffffff",
+        elev: "#ffffff", twelve: "#ffffff", thirteen: "#ffffff"}
+      cols[btn] = "#d3d3d3"
+      setBtns(cols)
+      
+    }
+    
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -82,29 +105,71 @@ const SupporterSettings = (props) => {
           <br/>
           <br/>
             <List>
-              <ListItem button onClick={() => setPage("Field Defaults")} key={1}>
+              {/* <ListItem button style={{backgroundColor: buttons.one}} onClick={() => {
+                highLightButton("one")
+                setPage("Field Defaults")}} key={1}>
                 <ListItemText primary={"Field Defaults"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("View Blocked Accounts")} key={2}>
+              <ListItem button style={{backgroundColor: buttons.two}} onClick={() => {
+                highLightButton("two")
+                setPage("View Blocked Accounts")}} key={2}>
                 <ListItemText primary={"View Blocked Accounts"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Download Data")} key={3}>
+              <ListItem button style={{backgroundColor: buttons.three}} onClick={() => {
+                highLightButton("three")
+                setPage("Download Data")}} key={3}>
                 <ListItemText primary={"Download Data"} />
-              </ListItem>
-              <ListItem button onClick={() => setPage("Edit Tags")} key={4}>
-                <ListItemText primary={"Edit Tags"} />
-              </ListItem>
-              <ListItem button onClick={() => setPage("Edit Topics")} key={5}>
-                <ListItemText primary={"Edit Topics"} />
-              </ListItem>
-              <ListItem button onClick={() => setPage("Admin Approval")} key={6}>
+              </ListItem> */}
+              
+              <ListItem button style={{backgroundColor: buttons.six}} onClick={() => {
+                highLightButton("six")
+                setPage("Admin Approval")}} key={6}>
                 <ListItemText primary={"Admin Approval"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Supporter Approval")} key={7}>
+              <ListItem button style={{backgroundColor: buttons.seven}} onClick={() => {
+                highLightButton("seven")
+                setPage("Supporter Approval")}} key={7}>
                 <ListItemText primary={"Supporter Approval"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("FAQ Settings")} key={8}>
+              <ListItem button style={{backgroundColor: buttons.eight}} onClick={() => {
+                highLightButton("eight")
+                setPage("FAQ Settings")}} key={8}>
                 <ListItemText primary={"FAQ Settings"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.four}} onClick={() => {
+                highLightButton("four")
+                setPage("Edit Tags")}} key={4}>
+                <ListItemText primary={"Edit Tags"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.five}} onClick={() => {
+                highLightButton("five")
+                setPage("Edit Topics")}} key={5}>
+                <ListItemText primary={"Edit Topics"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.nine}} onClick={() => {
+                highLightButton("nine")
+                setPage("Edit Colleges")}} key={9}>
+                <ListItemText primary={"Edit Colleges"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.ten}} onClick={() => {
+                highLightButton("ten")
+                setPage("Edit Majors")}} key={10}>
+                <ListItemText primary={"Edit Majors"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.elev}} onClick={() => {
+                highLightButton("elev")
+                setPage("Edit Minors")}} key={11}>
+                <ListItemText primary={"Edit Minors"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.twelve}} onClick={() => {
+                highLightButton("twelve")
+                setPage("Edit Links")}} key={12}>
+                <ListItemText primary={"Edit Links"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.thirteen}} onClick={() => {
+                highLightButton("thirteen")
+                setPage("Edit Mediums")}} key={13}>
+                <ListItemText primary={"Edit Mediums"} />
               </ListItem>
             </List>
           </div>
@@ -115,10 +180,14 @@ const SupporterSettings = (props) => {
             {page==="Download Data" && (<DownloadData/>)}
             {page==="Edit Tags" && (<ChangeTags/>)}
             {page==="Edit Topics" && (<ChangeTopics/>)}
-            
             {page==="Admin Approval" && (<AdminApproval/>)}
             {page==="Supporter Approval" && (<SupporterApproval/>)}
             {page==="FAQ Settings" && (<FaqSettings/>)}
+            {page==="Edit Colleges" && (<ChangeColleges/>)}
+            {page==="Edit Majors" && (<ChangeMajors/>)}
+            {page==="Edit Minors" && (<ChangeMinors/>)}
+            {page==="Edit Links" && (<ChangeLinks/>)}
+            {page==="Edit Mediums" && (<ChangeMediums/>)}
         </main>
       </div>
       );

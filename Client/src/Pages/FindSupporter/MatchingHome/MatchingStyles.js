@@ -16,12 +16,10 @@ const useStyles = makeStyles((theme) => ({
         width: drawerWidth,
         flexShrink: 0,
       },
+      zIndex: -1,
     },
     dayselect: {
       marginLeft: "40%"
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
     },
     menuButton: {
       marginRight: theme.spacing(2),

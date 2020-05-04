@@ -2,12 +2,12 @@ import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
         DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Topics from "../../../FindSupporter/topics"
+import AdminSettings from '../SettingsMain/AdminSettings';
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
-    const [topics, setTopics] = useState([]);
+    const [selectedMajor, setSelectedMajor] = useState("");
+    const [addMajor, setAddMajor] = useState("");
+    const [majors, setMajors] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
@@ -18,7 +18,7 @@ export default function ChangeTags() {
 
     function handleDeleteConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors",
         {
           method: "DELETE",
           headers: {
@@ -26,7 +26,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type_id: selectedTopic.specialization_type_id
+              major_id: selectedMajor.major_id
           })
        
         }
@@ -57,9 +57,19 @@ export default function ChangeTags() {
       setAddOpen(false);
     }
 
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors")
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        setMajors(json.majors)
+        setLoaded(true)
+      })
+    }
+
     function handleAddConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors",
         {
           method: "POST",
           headers: {
@@ -67,7 +77,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type: addTopic
+              major: addMajor
           })
        
         }
@@ -84,33 +94,38 @@ export default function ChangeTags() {
         setLoaded(false)
         reloadInfo()
       })
+
       .catch(error => {
         console.log(error);
       });
+      
       setAddOpen(false)
+      
     }
 
     function handleAddOpen(){
       setAddOpen(true)
     }
 
-    function reloadInfo(){
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
-      .then(res => res.json())
-      .then(json => {
-        setTopics(json.specialization_types)
-        setLoaded(true)
-      })
-    }
-
     useEffect(() => {
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors")
       .then(res => res.json())
       .then(json => {
-        setTopics(json.specialization_types)
+        console.log(json)
+        setMajors(json.majors)
         setLoaded(true)
       })
     },[])
+
+    // useEffect(() => {
+    //   fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/tags')
+    //   .then(res => res.json())
+    //   .then(json => {
+    //     console.log(json)
+    //     setTags(json.tags)
+    //     setLoaded(true)
+    //   })
+    // },[])
 
     if(!isLoaded){
       return <Typography>Loading.....</Typography>
@@ -123,29 +138,29 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Majors
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {topics}
+                    options= {majors}
                     style={{width: 300}}
-                    getOptionLabel={option => option.specialization_type}
+                    getOptionLabel={option => option.major}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Majors"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedMajor(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Major
                     </Button>
                   </Grid>
                 </Grid>
@@ -155,14 +170,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Major to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddMajor(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Major
                   </Button>
                 </Grid>
                 </Grid>
@@ -176,14 +191,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Major
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Major?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedTopic.specialization_type}
+                            {selectedMajor.major}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -202,14 +217,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Major
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Major?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addMajor}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

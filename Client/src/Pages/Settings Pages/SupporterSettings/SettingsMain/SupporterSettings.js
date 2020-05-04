@@ -27,13 +27,12 @@ const useStyles = makeStyles((theme) => ({
       width: drawerWidth,
       flexShrink: 0,
     },
+    zIndex: -1,
   },
   dayselect: {
     marginLeft: "40%"
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
+
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
@@ -63,11 +62,12 @@ const SupporterSettings = (props) => {
     const [settings, setSettings]=React.useState([])
     const [error, setError]=React.useState(false)
     const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
+    const id = sessionStorage.getItem("id");
 
     useEffect(() => {
 
       setLoaded(false);
-      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/27"), 
+      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + id), 
       fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
 
       .then(([res1, res2]) => { 
@@ -88,8 +88,6 @@ const SupporterSettings = (props) => {
         console.log("Error Connectting to API")
       });
     }, [])
-
-  
 
     if(error){
       return (
@@ -116,9 +114,7 @@ const SupporterSettings = (props) => {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Menu/>
-        </AppBar>
+        
         <Drawer
           className={classes.drawer}
           variant="permanent"

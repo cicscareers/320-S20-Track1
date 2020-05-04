@@ -52,10 +52,7 @@ const ResponsiveDrawer = (props) => {
     setLoaded(false);
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
-      console.log(json.body)
-        //for(var i in json.body[0].topics){
-          //console.log(i)
-        //}
+        console.log(json.body)
         setSupporters(json.body);
         setLoaded(true);
       } else {
@@ -297,9 +294,7 @@ const ResponsiveDrawer = (props) => {
       <div className={classes.root}>
         {/*Handles the appbar sizing*/}
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Menu/>
-        </AppBar>
+        
         <Drawer
           className={classes.drawer}
           variant="permanent"

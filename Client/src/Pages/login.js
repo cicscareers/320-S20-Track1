@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl,FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
@@ -15,9 +15,9 @@ function Copyright() {
       {"Copyright © "}
       <Link
         color="inherit"
-        href="https://github.com/david-fisher/320-S20-Track1/"
+        href="https://www.cics.umass.edu/careers"
       >
-        CS 320 Track 1
+        CICS Careers
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -51,10 +51,36 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
+  const [validInfo,setValidInfo] = useState(true)
+  
 
   const handleChange = (event) => {
     setLoginType(event.target.value);
   };
+
+  function fetchPicture(){
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/" + sessionStorage.getItem("id").toString() + "/picture",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+        }
+      )
+      .then(response => {
+        return response.json()
+      })
+      .then(json => {
+        console.log(json.picture)
+        sessionStorage.setItem("image", json.picture);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}
+
 
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
@@ -75,9 +101,6 @@ export default function SignIn() {
           var json = JSON.parse(window.atob(base64Url));
           const cookies = new Cookies();
 
-          console.log(json)
-          console.log("$$$$$$$$");
-
           sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
           sessionStorage.setItem("email", json.email);
           sessionStorage.setItem("firstName", json.given_name);
@@ -85,11 +108,18 @@ export default function SignIn() {
           sessionStorage.setItem("role", "Student");
           sessionStorage.setItem("id", json.preferred_username);
           cookies.set("role", "Student", { path: "/" });
-
+          fetchPicture()
           window.location.reload();
         }
       }catch(error){
-        alert(error.message);
+        //alert(error.message);
+        if(error.code =="NotAuthorizedException"){
+          setValidInfo(false);
+          
+        }
+        else{
+          alert(error.message)
+        }
         console.log(error);
       }
     }
@@ -110,7 +140,6 @@ export default function SignIn() {
       // });
 
 
-
   //checks if they put in an email and password
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -119,7 +148,7 @@ export default function SignIn() {
   //So the user can press enter rather than click the button
   function handleKeyPress(event){
     if(event.key === 'Enter' && validateForm()){
-      //{handleSubmit}
+      return handleSubmit
     }
   }
 
@@ -127,9 +156,9 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <img  height="175" width="175" src ="cicscareers_logo_3.png"></img>
+        <br/>
+        
         <form className={classes.form}>
           <TextField
             variant="outlined"
@@ -171,6 +200,13 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+          {!validInfo && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Incorrect username or password.
+              </FormHelperText>
+            </FormControl>
+          )}
           <Grid container form className={classes.form}>
             <Grid item xs>
               <Link href="/forgot-password" variant="body2">
