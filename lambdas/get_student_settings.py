@@ -95,10 +95,9 @@ def get_student_settings_handler(event, context):
         error_messages.append(str(e) + " get_student_settings.py, line 81")
 
     colleges = []
-    if len(colleges) > 0:
-        colleges_data = colleges_data[0]
+    if len(colleges_data) > 0:
         for college in colleges_data:
-            colleges.append(college['stringValue'])
+            colleges.append(college[0]['stringValue'])
         response['college'] = colleges
     else:
         response['college'] = None
