@@ -114,13 +114,7 @@ const FaqCard = (props) => {
           });
         setDeleteDialog(false)
     }
-
-
-    
-
- 
-
-
+  
     return(
         <ExpansionPanel>
           <ExpansionPanelSummary
@@ -149,7 +143,7 @@ const FaqCard = (props) => {
                             Edit Question <EditIcon fontSize="small" style={{marginLeft: 7}}></EditIcon>
                         </Button>
                     </Grid>
-                    <Grid item lg = {6} style={{justifyContent: 'flex-start',  display: 'flex', padding: 30}}>
+                    <Grid item lg = {6} style={{justifyContent: 'center', marginTop: 20, display: 'flex'}}>
                         <Button variant='contained' color='primary' size='medium' onClick={handleDeleteOpen}>
                             Delete Question <DeleteIcon fontSize="small" style={{marginLeft: 7}}></DeleteIcon>
                         </Button>
@@ -157,9 +151,6 @@ const FaqCard = (props) => {
                     
                 </Grid>
             </Grid>
-            
-            
-            
           </ExpansionPanelDetails>
         <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Edit FAQ</DialogTitle>
@@ -202,9 +193,6 @@ const FaqCard = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-
-
       <Dialog
         open={deleteOpen}
         onClose={handleDeleteClose}
@@ -227,9 +215,6 @@ const FaqCard = (props) => {
             </Button>
         </DialogActions>
         </Dialog>
-
-
-        
         </ExpansionPanel>
     );
 

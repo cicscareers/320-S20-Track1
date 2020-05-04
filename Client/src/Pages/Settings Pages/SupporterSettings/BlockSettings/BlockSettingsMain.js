@@ -19,7 +19,7 @@ const BlockCard = (props) => {
     };
 
     return (
-        <div>
+        <div>  
             <Grid direction="column" container>
                 <Grid item xs={11}>
                     {settings.appointment_type_info.map(typeObj => getTypeCard(typeObj))}

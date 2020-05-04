@@ -116,13 +116,13 @@ export default function MenuAppBar(props) {
               .then(res => res.json())
               .then(json => {
                 sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
-                console.log(json.user_roles)
-                console.log("setting possible roles to: " + json.user_roles);
+                //console.log(json.user_roles)
+                //console.log("setting possible roles to: " + json.user_roles);
                 SetPossibleRoles(json.user_roles);
               })
               .catch(error => {
-                  console.log(error);
-                  console.log("No Supporters Found");
+                  //console.log(error);
+                  //console.log("No Supporters Found");
               });
       }, [])
    
