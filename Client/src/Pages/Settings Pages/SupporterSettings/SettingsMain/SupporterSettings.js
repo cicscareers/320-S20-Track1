@@ -64,8 +64,6 @@ const SupporterSettings = (props) => {
     const [error, setError]=React.useState(false)
     const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
     const id = sessionStorage.getItem("id");
-    console.log('@#$%^&*&^%$#')
-    console.log(id)
 
     useEffect(() => {
 
@@ -92,8 +90,6 @@ const SupporterSettings = (props) => {
         console.log("Error Connectting to API")
       });
     }, [])
-
-  
 
     if(error){
       return (
