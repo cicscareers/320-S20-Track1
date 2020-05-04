@@ -116,7 +116,7 @@ const AcademicInformation = (props) => {
       body: JSON.stringify({
         first_name: settings.firstName,
         bio: settings.bio,
-        college: college,
+        colleges: college,
         email: settings.email,
         gender: settings.gender,
         grad_student: settings.grad_student,
@@ -130,7 +130,7 @@ const AcademicInformation = (props) => {
         pronouns: settings.pronouns,
         resume: settings.resume,
         statusCode: settings.statusCode,
-        colleges: [],
+        
         links: []
       }),
       headers: {
