@@ -31,6 +31,7 @@ const ProfileInformation = (props) => {
                 "phone": phoneNumber,
                 "links": [["LinkedIn",linkedIn]],
                 "tags": [],
+                "specializations": [],
                 "notification_preferences": [],
                 "major_preferences": [],
                 "minor_preferences": [],
