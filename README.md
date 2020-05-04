@@ -80,10 +80,12 @@ Cloud Team: ***Five Guys(like the restaurant)***
 *Storing pictures and images*
 
 ##### Remark
-The [**Host**](https://console.aws.amazon.com/s3/buckets/t1-s3-us-east-1/?region=us-east-1) bucket hosts the website. Currently it's open to public to access the website. But since it's set up CloudFront, it could be restrict to only accessed via CloudFront to reach further security.
+The [**Host**](https://console.aws.amazon.com/s3/buckets/t1-s3-us-east-1/?region=us-east-1) bucket hosts the website. Currently it's open to public to access the website. But since the CloudFront is set up, it could be restrict to only accessed via CloudFront to reach further security.
 
 #### CloudFront
 [CloudFront Console](https://console.aws.amazon.com/cloudfront/home?region=us-east-1#distribution-settings:EGSMGROFKR7F8)
+
+##### Remark
 Setting up CloudFront is really easy and straightforward. Be careful ***DO NOT*** use the originally S3 Bucket URL in the default pull down list for `Origin Domain Name`. Please use the website endpoint URL in the "Static Website Hosting" section of the properties in S3 Bucket Console.
 
 #### Route 53
@@ -95,9 +97,9 @@ We do not use Route 53 to register the domain, so don't worry about it.
 * [DB Schema](https://dbdiagram.io/d/5e97803e39d18f5553fdab5a)
 
 #### Database Schema
-*Updated 5/1 4am*  
+*Updated 5/4 10am*  
 [Click here for Full Version](https://dbdiagram.io/d/5e97803e39d18f5553fdab5a)
-![dbdiagram.io](images/04-29_db_schema.png)
+![dbdiagram.io](images/05-04_db_schema.png)
 
 #### Changes
 ##### 4/29 6pm
