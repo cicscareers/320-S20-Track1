@@ -114,7 +114,6 @@ const FaqCard = (props) => {
           });
         setDeleteDialog(false)
     }
-  
     return(
         <ExpansionPanel>
           <ExpansionPanelSummary
@@ -137,8 +136,8 @@ const FaqCard = (props) => {
                     </Typography>
                 </Grid>
                 <Divider/>
-                <Grid item container lg={12} style={{marginTop: 50, display: 'flex'}}>
-                    <Grid item lg = {6} style={{justifyContent: 'flex-end',  display: 'flex', padding: 30}}>
+                <Grid item container lg={12} style={{justifyContent: 'center', marginTop: 50, display: 'flex'}}>
+                    <Grid item lg = {6} style={{justifyContent: 'center', marginTop: 20, display: 'flex'}}>
                         <Button variant='contained' color='primary' size='medium' onClick={handleEditOpen}>
                             Edit Question <EditIcon fontSize="small" style={{marginLeft: 7}}></EditIcon>
                         </Button>
