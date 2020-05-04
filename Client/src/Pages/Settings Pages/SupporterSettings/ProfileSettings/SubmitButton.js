@@ -48,7 +48,7 @@ const ProfileInformation = (props) => {
             }
           })
           .then(json => {
-            //window.location.reload()
+            window.location.reload()
           })
           .catch(error => {
             console.log(error);

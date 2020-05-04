@@ -15,8 +15,9 @@ const ProfileInformation = (props) => {
     const {specializations, supporter_types, office, teams, employer, title, tags, prefMajors, prefMinors, specializations_json} = props
 
     var arr=[]
+    console.log("aaaaaaa")
     for(let i=0;i<specializations.length;i++){
-      if(specializations_json[specializations[i]]!==undefined){
+      if(!specializations_json[specializations[i]]){
         var ar=[specializations[i], 30, 1]
         arr.push(ar)
       } else {
@@ -63,7 +64,7 @@ const ProfileInformation = (props) => {
             }
           })
           .then(json => {
-            //window.location.reload()
+            window.location.reload()
           })
           .catch(error => {
             console.log(error);
