@@ -181,7 +181,10 @@ export default function SignUp(props) {
       })
       .then(res => res.json())
       .then(json => {
+          alert('Please await Approval by Admin')
           console.log(json)
+          window.location.reload(false)
+          
       })
   }
 

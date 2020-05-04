@@ -66,6 +66,7 @@ const StudentSettings = (props) => {
   const [settings, setSettings] = React.useState([]);
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const [btns, setBtns] = React.useState({one: "#d3d3d3", two: "#ffffff", three:'#ffffff'})
 
   const cookies = new Cookies();
   const id = sessionStorage.getItem("id")
@@ -92,6 +93,12 @@ const StudentSettings = (props) => {
         setError(true);
         setLoaded(true);
       });
+  }
+
+  function handleHighlight(e){
+    const tmp = {one: "#ffffff", two: "#ffffff", three:'#ffffff'}
+    tmp[e] = "#d3d3d3"
+    setBtns(tmp)
   }
 
   async function myFetch(url) {
@@ -144,15 +151,24 @@ const StudentSettings = (props) => {
           <List>
             <ListItem
               button
-              onClick={() => setPage("Profile Information")}
+              style={{backgroundColor: btns.one}}
+              onClick={() => {
+                handleHighlight("one")
+                setPage("Profile Information")}}
               key={1}
             >
               <ListItemText primary={"Profile Information"} />
             </ListItem>
-            <ListItem button onClick={() => setPage("Academics")} key={2}>
+            <ListItem button style={{backgroundColor: btns.two}}
+              onClick={() => {
+                handleHighlight("two")
+                setPage("Academics")}} key={2}>
               <ListItemText primary={"Academics"} />
             </ListItem>
-            <ListItem button onClick={() => setPage("Request to be a Supporter")} key={2}>
+            <ListItem button style={{backgroundColor: btns.three}}
+              onClick={() => {
+                handleHighlight("three")
+                setPage("Request to be a Supporter")}} key={3}>
               <ListItemText primary={"Request to be a Supporter"} />
             </ListItem>
           </List>
