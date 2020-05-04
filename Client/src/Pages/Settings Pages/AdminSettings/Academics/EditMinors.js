@@ -5,9 +5,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
-    const [topics, setTopics] = useState([]);
+    const [selectedMinor, setSelectedMinor] = useState("");
+    const [addMinor, setAddMinor] = useState("");
+    const [minors, setMinors] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
@@ -18,7 +18,7 @@ export default function ChangeTags() {
 
     function handleDeleteConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors",
         {
           method: "DELETE",
           headers: {
@@ -26,7 +26,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type_id: selectedTopic.specialization_type_id
+              minor_id: selectedMinor.minor_id
           })
        
         }
@@ -59,7 +59,7 @@ export default function ChangeTags() {
 
     function handleAddConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors",
         {
           method: "POST",
           headers: {
@@ -67,7 +67,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type: addTopic
+              minor: addMinor
           })
        
         }
@@ -95,19 +95,20 @@ export default function ChangeTags() {
     }
 
     function reloadInfo(){
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors")
       .then(res => res.json())
       .then(json => {
-        setTopics(json.specialization_types)
+        console.log(json)
+        setMinors(json.majors)
         setLoaded(true)
       })
     }
 
     useEffect(() => {
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors")
       .then(res => res.json())
       .then(json => {
-        setTopics(json.specialization_types)
+        setMinors(json.minors)
         setLoaded(true)
       })
     },[])
@@ -123,29 +124,29 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Minors
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {topics}
+                    options= {minors}
                     style={{width: 300}}
-                    getOptionLabel={option => option.specialization_type}
+                    getOptionLabel={option => option.minor}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Minors"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedMinor(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Minor
                     </Button>
                   </Grid>
                 </Grid>
@@ -155,14 +156,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Minor to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddMinor(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Minor
                   </Button>
                 </Grid>
                 </Grid>
@@ -176,14 +177,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Minor
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Minor?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedTopic.specialization_type}
+                            {selectedMinor.minor}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -202,14 +203,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Minor
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Minor?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addMinor}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
