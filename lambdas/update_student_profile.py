@@ -1,9 +1,5 @@
-import boto3
-import json
-
-from copy import deepcopy
-from package import db_config
 from package.query_db import query
+from package.dictionary_to_list import dictionary_to_list
 from package.lambda_exception import LambdaException
 
 #Authors: Victoria Caruso and Hadley Pope
@@ -16,7 +12,7 @@ def update_student_profile(event, context):
     student_id_param = {'name' : 'student_id', 'value' : {'longValue' : student_id}}
 
     #Check if supporter exists
-    sql = 'SELECT * FROM srudents WHERE student_id = :student_id;'
+    sql = 'SELECT * FROM students WHERE student_id = :student_id;'
     supporter_id_param = {'name': 'student_id', 'value': {'longValue': student_id}}
     response = query(sql, [supporter_id_param])
     if(response['records'] == []):
@@ -61,7 +57,7 @@ def update_student_profile(event, context):
         college_list = event['colleges']
         
         #Check if college_id exists
-        for entry in major_list:
+        for entry in college_list:
             sql = 'SELECT college_id FROM college WHERE college = :college;'
             sql_parameters = [{'name': 'college', 'value': {'stringValue': entry}}]
             response = query(sql, sql_parameters)
@@ -98,7 +94,7 @@ def update_student_profile(event, context):
             sql_parameters = [{'name': 'major', 'value': {'stringValue': entry}}]
             response = query(sql, sql_parameters)
             if(response['records'] ==[]):
-                raise LambdaException("404: major_id:" + str(entry) + " does not exist")
+                raise LambdaException("404: major_id: " + str(entry) + " does not exist")
             else:
                 major_id_list.append(response['records'][0][0]['longValue'])
 
