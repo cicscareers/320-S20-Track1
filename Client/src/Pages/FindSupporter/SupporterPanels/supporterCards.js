@@ -106,17 +106,6 @@ const SupporterCard = (props) => {
       supporterComment=`${supporterComment + has_tags[i]}\\n`
     }
     supporterComment=supporterComment+comment
-
-        console.log("**************")
-
-        console.log(studentID)
-        console.log(supporter_id)
-        console.log(day+" "+timeToString(time)+":00")
-        console.log(medium)
-        console.log(office)
-        console.log(supporterComment)
-        console.log(apptTopic)
-        console.log(filtered_tags)
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
@@ -141,18 +130,6 @@ const SupporterCard = (props) => {
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
         console.log(response)
-        console.log("**************")
-
-        console.log(studentID)
-        console.log(supporter_id)
-        console.log(day+" "+timeToString(time)+":00")
-        console.log(medium)
-        console.log(office)
-        console.log(supporterComment)
-        console.log(apptTopic)
-        console.log(filtered_tags)
-                
-        console.log("**************")
         return response.json();
       } else {
         throw new Error("Server can't be reached!");
