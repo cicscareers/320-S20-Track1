@@ -88,8 +88,6 @@ function extractSupporterTypes(settings){
         arr.push("Alumni")
     if(settings.faculty)
         arr.push("Faculty")
-    if(settings.grad_student)
-        arr.push("Graduate Student")
     if(settings.other)
         arr.push("Other")
     return arr
