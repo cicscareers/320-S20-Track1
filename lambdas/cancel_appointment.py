@@ -1,22 +1,19 @@
 import json
 from package.query_db import query
 from package.dictionary_to_list import dictionary_to_list
+from package.lambda_exception import LambdaException
 
 def cancel_appointment(event, context):
-    appointment_id_to_delete = event['appointment_id']
+    appointment_id_to_delete = int(event['appointment_id'])
     cancel_reason = event['cancel_reason']
 
     appointment_id_dic = {}
     cancel_reason_dic = {}
     if appointment_id_to_delete == None:
-        return{
-            "statusCode": 404 
-        }
+       raise LambdaException("400: appointment_id was not given")
     
     if cancel_reason == None:
-        return{
-            "statusCode": 404 
-        }
+        raise LambdaException("400: cancel_reason was not given")
 
     appointment_id_dic['appointment_id'] = appointment_id_to_delete
     cancel_reason_dic['cancel_reason'] = cancel_reason
@@ -26,9 +23,7 @@ def cancel_appointment(event, context):
     sql_parameters = dictionary_to_list(appointment_id_dic)
     response = query(sql_select, sql_parameters)
     if response['records'] == []:
-        return{
-            'statusCode': 404
-        }
+        raise LambdaException("404: This appointment does not exist")
 
 
     sql_update = """ UPDATE scheduled_appointments SET cancelled = True, cancel_reason = :cancel_reason WHERE appointment_id = :appointment_id"""
