@@ -99,6 +99,7 @@ export default function MenuAppBar(props) {
   const token = sessionStorage.getItem("token");
   const name = sessionStorage.getItem("firstName");
   const id = sessionStorage.getItem("id");
+  const image = sessionStorage.getItem("image")
 
   //Sets the styling
   const classes = useStyles();
@@ -111,21 +112,21 @@ export default function MenuAppBar(props) {
   const open = Boolean(anchorEl);
   const [openModal, setOpen] = React.useState(false);
 
+  
   useEffect(() => {
     fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
-              .then(res => res.json())
-              .then(json => {
-                sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
-                //console.log(json.user_roles)
-                //console.log("setting possible roles to: " + json.user_roles);
-                SetPossibleRoles(json.user_roles);
-              })
-              .catch(error => {
-                  //console.log(error);
-                  //console.log("No Supporters Found");
-              });
+        .then(res => res.json())
+        .then(json => {
+          sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+          //console.log(json.user_roles)
+          //console.log("setting possible roles to: " + json.user_roles);
+          SetPossibleRoles(json.user_roles);
+        })
+        .catch(error => {
+            //console.log(error);
+            //console.log("No Supporters Found");
+        });
       }, [])
-   
     
   const handleModalOpen = () => {
     setOpen(true);
@@ -149,6 +150,7 @@ export default function MenuAppBar(props) {
     sessionStorage.removeItem("firstName");
     sessionStorage.removeItem("lastName");
     sessionStorage.removeItem("role");
+    sessionStorage.removeItem("image");
     cookies.remove("role");
     sessionStorage.removeItem("token");
     window.location.reload();
@@ -159,21 +161,11 @@ export default function MenuAppBar(props) {
      return(<div style={{width:'40%',float:'right'}}><Button variant="text" href="/match" className={classes.button}>Create Appointment</Button>
      <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
      <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
-
    }
-  
     return(<div style={{width:'300px',float:'right'}}>>
     <Button variant="text" href="/appointments" className={classes.button}>My Appointments</Button>
     <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button></div>);
-    
-  
-
  }
-//  alert(PossibleRoles);
-//   const RoleNameStudent=PossibleRoles[0].charAt(0).toUpperCase() + PossibleRoles[0].slice(1);
-//   const RoleNameSupporter=PossibleRoles[1].charAt(0).toUpperCase() + PossibleRoles[1].slice(1);
-//   const RoleNameAdmin=PossibleRoles[2].charAt(0).toUpperCase() + PossibleRoles[2].slice(1);
- const SwitchUserHandle= event =>{
   if(event.currentTarget.id=='student'){
     cookies.set('role', "Student")
   }
@@ -184,12 +176,9 @@ export default function MenuAppBar(props) {
     window.location.reload('/');
   }
  window.location.reload('/appointments');
-  
  }
  function renderRolesInModal(){
   let RenderRoles=[];
-
-  
   if(PossibleRoles.length==1){
     RenderRoles=(<h2>Sorry, You just have 1 role.</h2>);
   }
@@ -205,9 +194,7 @@ export default function MenuAppBar(props) {
     
       
       RenderRoles.push((<Button key={i} className={classes.button}
-      id={PossibleRoles[i]}
-      
-       
+        id={PossibleRoles[i]}
         color="primary"
         onClick={SwitchUserHandle}
         style={{marginLeft:'10px',marginRight:'10px'}}
@@ -235,7 +222,7 @@ return RenderRoles;
           <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 
-              src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
+              src={image}
               className={classes.large}>
             </Avatar>
           </Button>
@@ -289,27 +276,6 @@ return RenderRoles;
       </Typography>
       </Link>
   </MenuItem>)}
-  {/* <Dialog onClose={handleModalClose} aria-labelledby="customized-dialog-title" open={openModal}>
-  </Dialog> */}
-   {/* <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={openModal}
-        onClose={handleModalClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={openModal}>
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">Which role do you want to choose?</h2>
-      <p id="transition-modal-description" style={{textAlign:'center'}}>{renderRolesInModal()}</p>
-          </div>
-        </Fade>
-      </Modal> */}
        <Dialog
         open={openModal}
         TransitionComponent={Transition}
@@ -318,7 +284,7 @@ return RenderRoles;
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Which role do you want to choose?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Choose role"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
            Given below are the list of the roles that you have been registered as. Select the role you want to switch to.

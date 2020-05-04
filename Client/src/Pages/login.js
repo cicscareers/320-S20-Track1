@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl,FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
@@ -52,10 +52,35 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
   const [validInfo,setValidInfo] = useState(true)
+  
 
   const handleChange = (event) => {
     setLoginType(event.target.value);
   };
+
+  function fetchPicture(){
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/" + sessionStorage.getItem("id").toString() + "/picture",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+        }
+      )
+      .then(response => {
+        return response.json()
+      })
+      .then(json => {
+        console.log(json.picture)
+        sessionStorage.setItem("image", json.picture);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}
+
 
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
@@ -76,9 +101,6 @@ export default function SignIn() {
           var json = JSON.parse(window.atob(base64Url));
           const cookies = new Cookies();
 
-          console.log(json)
-          console.log("$$$$$$$$");
-
           sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
           sessionStorage.setItem("email", json.email);
           sessionStorage.setItem("firstName", json.given_name);
@@ -86,13 +108,15 @@ export default function SignIn() {
           sessionStorage.setItem("role", "Student");
           sessionStorage.setItem("id", json.preferred_username);
           cookies.set("role", "Student", { path: "/" });
-
+          fetchPicture()
           window.location.reload();
         }
       }catch(error){
         //alert(error.message);
         if(error.code =="NotAuthorizedException"){
-        setValidInfo(false);}
+          setValidInfo(false);
+          
+        }
         else{
           alert(error.message)
         }
@@ -114,7 +138,6 @@ export default function SignIn() {
       //   alert("Invalid credentials");
       //   console.log(error);
       // });
-
 
 
   //checks if they put in an email and password
