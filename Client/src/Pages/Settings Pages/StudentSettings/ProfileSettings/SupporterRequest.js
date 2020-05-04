@@ -350,7 +350,7 @@ export default function SignUp(props) {
             onClick={handleSubmitButton}
             
           >
-            Create Account
+            Request Account
           </Button>
 
           
