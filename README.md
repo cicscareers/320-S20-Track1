@@ -149,6 +149,9 @@ Currently the scripts for email notifictions for appointments including sending 
 
 #### Web Application Firewall
 We can deploy ACL(Access Control List) to filter any part of the web request, such as IP addresses, HTTP headers, HTTP body, or URI strings. This allows us to block common attack patterns, such as SQL injection or cross-site scripting.  
-
+  
 We didn’t deploy it because it’s not part of the non-functional requirements and it makes
 extra cost.
+
+#### CloudWatch
+No alarms are currently set to monitor the cost of the AWS services used because this was not a main priority and there wasn't firm grasp on the baseline usage. All the Lambdas and its logs are in us-east-2 (Ohio) and  currently all billing alarms are displayed on us-east-1 (Virginia), but I don't believe this should be a problem because CloudWatch has cross-region functionalities.
