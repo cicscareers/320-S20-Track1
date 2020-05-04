@@ -60,10 +60,10 @@ const CreateAppointmentModal = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_email: studentEmail,
-          supporter_email: supporterEmail,
+          student_email: supporterEmail,
+          supporter_email: studentEmail,
           selected_tags: [],
-          specialization: "Mock Interview",
+          specialization: "Interviewing",
           time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
           duration: 30,
           medium: "in-person",
