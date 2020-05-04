@@ -114,13 +114,6 @@ const FaqCard = (props) => {
           });
         setDeleteDialog(false)
     }
-
-
-    
-
- 
-
-
     return(
         <ExpansionPanel>
           <ExpansionPanelSummary
@@ -157,9 +150,6 @@ const FaqCard = (props) => {
                     
                 </Grid>
             </Grid>
-            
-            
-            
           </ExpansionPanelDetails>
         <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Edit FAQ</DialogTitle>
@@ -202,9 +192,6 @@ const FaqCard = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
-
-
       <Dialog
         open={deleteOpen}
         onClose={handleDeleteClose}
@@ -227,9 +214,6 @@ const FaqCard = (props) => {
             </Button>
         </DialogActions>
         </Dialog>
-
-
-        
         </ExpansionPanel>
     );
 

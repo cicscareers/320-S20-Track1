@@ -1,53 +1,66 @@
-import React, { Component } from "react";
-// import { Grid, AppBar, Toolbar, Typography } from "@material-ui/core";
-import Faqs from "../components/Faqs";
-import Header from "../Navigation/appbar.js";
+import React, { useEffect, useState } from "react";
+import {
+  Typography,
+  CircularProgress,
+  Grid,
+  TextField,
+} from "@material-ui/core";
+import FaqCard from "../components/faqCard";
 
-class App extends Component {
-  state = {
-    faqs: [
-      {
-        id: 1,
-        question: "Where do I find my profile?",
-        answer: "Click profile",
-      },
-      {
-        id: 2,
-        question: "Where do I find my appointments?",
-        answer: "Click my appointments",
-      },
-      {
-        id: 3,
-        question: "How do I logout?",
-        answer: "Click logout",
-      },
-      {
-        id: 4,
-        question: "How do I login?",
-        answer: "Click login",
-      },
-      {
-        id: 5,
-        question: "What is my birthday?",
-        answer: "Check your profile",
-      },
-      {
-        id: 6,
-        question: "What is the square root of 169",
-        answer: "13",
-      },
-    ],
-  };
+const FaqSettings = () => {
+  const [isLoaded, setLoaded] = useState(false);
+  const [faqList, setFaqList] = useState([]);
+  const [search, setSearch] = useState("");
 
-  render() {
+  useEffect(() => {
+    fetch(
+      "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/faq"
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        setFaqList(json.faqs);
+        setLoaded(true);
+      });
+  });
+
+  if (!isLoaded) {
     return (
-      <div className="App">
-        <div className="container">
-          <Faqs faqs={this.state.faqs} />
-        </div>
+      <div align="center">
+        <br></br>
+        <Typography variant="h4">Loading...</Typography>
+        <br></br>
+        <CircularProgress />
       </div>
     );
+  } else {
+    return (
+      <main>
+        <Grid container>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Search for FAQ"
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+            />
+          </Grid>
+        </Grid>
+        {faqList
+          .filter((faq) => {
+            let searchable = faq.question.toLowerCase();
+            return searchable.indexOf(search) !== -1;
+          })
+          .map((faq) => [
+            <FaqCard
+              question={faq.question}
+              answer={faq.answer}
+              id={faq.faq_id}
+            />,
+          ])}
+      </main>
+    );
   }
-}
+};
 
-export default App;
+export default FaqSettings;

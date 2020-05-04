@@ -5,20 +5,38 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
-    const [topics, setTopics] = useState([]);
+    const [selectedCollege, setSelectedCollege] = useState("");
+    const [addCollege, setAddCollege] = useState("");
+    const [colleges, setColleges] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
+
+    useEffect(() => {
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges")
+      .then(res => res.json())
+      .then(json => {
+        setColleges(json.colleges)
+        setLoaded(true)
+      })
+    },[])
 
     function handleDeleteClose(){
       setDeleteOpen(false);
     }
 
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges")
+      .then(res => res.json())
+      .then(json => {
+        setColleges(json.colleges)
+        setLoaded(true)
+      })
+    }
+
     function handleDeleteConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        " https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges",
         {
           method: "DELETE",
           headers: {
@@ -26,7 +44,8 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type_id: selectedTopic.specialization_type_id
+              college_id: selectedCollege.college_id,
+              college: selectedCollege.college
           })
        
         }
@@ -59,7 +78,7 @@ export default function ChangeTags() {
 
     function handleAddConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/colleges",
         {
           method: "POST",
           headers: {
@@ -67,7 +86,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type: addTopic
+              college: addCollege
           })
        
         }
@@ -94,23 +113,7 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    function reloadInfo(){
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
-      .then(res => res.json())
-      .then(json => {
-        setTopics(json.specialization_types)
-        setLoaded(true)
-      })
-    }
-
-    useEffect(() => {
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
-      .then(res => res.json())
-      .then(json => {
-        setTopics(json.specialization_types)
-        setLoaded(true)
-      })
-    },[])
+   
 
     if(!isLoaded){
       return <Typography>Loading.....</Typography>
@@ -123,29 +126,29 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Colleges
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {topics}
+                    options= {colleges}
                     style={{width: 300}}
-                    getOptionLabel={option => option.specialization_type}
+                    getOptionLabel={(option)=> option.college}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Colleges"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedCollege(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete College
                     </Button>
                   </Grid>
                 </Grid>
@@ -155,14 +158,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="College to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddCollege(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add College
                   </Button>
                 </Grid>
                 </Grid>
@@ -176,14 +179,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete College
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this College?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedTopic.specialization_type}
+                            {selectedCollege.college}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -202,14 +205,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add College
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this College?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addCollege}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

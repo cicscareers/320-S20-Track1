@@ -148,8 +148,8 @@ const ApprovalCard = (props) => {
                   <Typography>Team: {props.team}</Typography>
                   
               </Grid>
-              <Grid item lg={12} align="center" style={{display: 'flex'}}>
-                <Grid lg={6} align='center'>
+              <Grid item container lg={12}  style={{display: 'flex'}}>
+                <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 30}}>
                     <Button
                         margin="normal"
                         variant="contained"
@@ -160,7 +160,7 @@ const ApprovalCard = (props) => {
                         Approve
                     </Button>
                 </Grid>
-                <Grid lg={6} align='center'>
+                <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 30}}>
                     <Button
                         margin="normal"
                         variant="contained"

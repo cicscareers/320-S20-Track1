@@ -1,13 +1,15 @@
 import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
-        DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
+        DialogContent, DialogContentText, DialogActions, Input} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
+import { InputLabel } from '@material-ui/core';
+
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
-    const [topics, setTopics] = useState([]);
+    const [selectedMedium, setSelectedMedium] = useState("");
+    const [addMedium, setAddMedium] = useState("");
+    const [mediums, setMediums] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
@@ -16,9 +18,18 @@ export default function ChangeTags() {
       setDeleteOpen(false);
     }
 
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums")
+      .then(res => res.json())
+      .then(json => {
+        setMediums(json.mediums)
+        setLoaded(true)
+      })
+    }
+
     function handleDeleteConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums",
         {
           method: "DELETE",
           headers: {
@@ -26,7 +37,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type_id: selectedTopic.specialization_type_id
+              medium_id: selectedMedium.medium_id
           })
        
         }
@@ -59,7 +70,7 @@ export default function ChangeTags() {
 
     function handleAddConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums",
         {
           method: "POST",
           headers: {
@@ -67,7 +78,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type: addTopic
+              medium: addMedium
           })
        
         }
@@ -94,20 +105,11 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    function reloadInfo(){
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
-      .then(res => res.json())
-      .then(json => {
-        setTopics(json.specialization_types)
-        setLoaded(true)
-      })
-    }
-
     useEffect(() => {
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums")
       .then(res => res.json())
       .then(json => {
-        setTopics(json.specialization_types)
+        setMediums(json.mediums)
         setLoaded(true)
       })
     },[])
@@ -123,29 +125,29 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Mediums
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {topics}
+                    options= {mediums}
                     style={{width: 300}}
-                    getOptionLabel={option => option.specialization_type}
+                    getOptionLabel= {option => option.medium}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Mediums"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedMedium(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Medium
                     </Button>
                   </Grid>
                 </Grid>
@@ -155,14 +157,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Medium to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddMedium(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Medium
                   </Button>
                 </Grid>
                 </Grid>
@@ -176,14 +178,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Medium
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Medium?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedTopic.specialization_type}
+                            {selectedMedium.medium}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -202,14 +204,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Medium
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Medium?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addMedium}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

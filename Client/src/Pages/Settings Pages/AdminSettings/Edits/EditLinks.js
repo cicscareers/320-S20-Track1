@@ -5,9 +5,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Topics from "../../../FindSupporter/topics"
 
 export default function ChangeTags() {
-    const [selectedTopic, setSelectedTopic] = useState("");
-    const [addTopic, setAddTopic] = useState("");
-    const [topics, setTopics] = useState([]);
+    const [selectedLink, setSelectedLink] = useState("");
+    const [addLink, setAddLink] = useState("");
+    const [links, setLinks] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
@@ -16,9 +16,18 @@ export default function ChangeTags() {
       setDeleteOpen(false);
     }
 
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/links")
+      .then(res => res.json())
+      .then(json => {
+        setLinks(json.links)
+        setLoaded(true)
+      })
+    }
+
     function handleDeleteConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/links",
         {
           method: "DELETE",
           headers: {
@@ -26,7 +35,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type_id: selectedTopic.specialization_type_id
+              link_id: selectedLink.link_id
           })
        
         }
@@ -59,7 +68,7 @@ export default function ChangeTags() {
 
     function handleAddConfirm(){
       fetch(
-        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types",
+        "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/links",
         {
           method: "POST",
           headers: {
@@ -67,7 +76,7 @@ export default function ChangeTags() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              specialization_type: addTopic
+              link_type: addLink
           })
        
         }
@@ -94,20 +103,11 @@ export default function ChangeTags() {
       setAddOpen(true)
     }
 
-    function reloadInfo(){
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
-      .then(res => res.json())
-      .then(json => {
-        setTopics(json.specialization_types)
-        setLoaded(true)
-      })
-    }
-
     useEffect(() => {
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/links")
       .then(res => res.json())
       .then(json => {
-        setTopics(json.specialization_types)
+        setLinks(json.links)
         setLoaded(true)
       })
     },[])
@@ -123,29 +123,29 @@ export default function ChangeTags() {
               <Grid container style={{display: 'flex'}} lg={12} spacing={1}>
                 <Grid item lg={12} style={{display: 'flex', paddingTop: 20}} justify='center'>
                       <Typography style={{fontSize: 20}}>
-                      Supporter Topics
+                      Links
                     </Typography>
                 </Grid>
                 <Grid container item lg={12} justify='center' style={{display: 'flex', padding: 10, marginTop: 20}}>
                   <Grid item lg={6} justify='flex-end' style={{display: 'flex', padding: 10}}>
                   <Autocomplete
                     id="supporter-topics"
-                    options= {topics}
+                    options= {links}
                     style={{width: 300}}
-                    getOptionLabel={option => option.specialization_type}
+                    getOptionLabel={option => option.link_type}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         variant="outlined"
-                        label="Topics"
+                        label="Links"
                       />
                     )}
-                    onChange={(e,T) => setSelectedTopic(T)}
+                    onChange={(e,T) => setSelectedLink(T)}
                   />
                   </Grid>
                   <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                     <Button variant='contained' color='primary' size='large' onClick={handleDeleteOpen}>
-                      Delete Topic
+                      Delete Link
                     </Button>
                   </Grid>
                 </Grid>
@@ -155,14 +155,14 @@ export default function ChangeTags() {
                       variant="outlined"
                       id="add-topic"
                       style={{width: 300}}
-                      label="Topic to add:"
+                      label="Link to add:"
                       name="add-topic"
-                      onChange={e => setAddTopic(e.target.value)}
+                      onChange={e => setAddLink(e.target.value)}
                     />
                   </Grid>
                 <Grid item lg={6} justify='flex-start' style={{display: 'flex', padding: 10}}>
                   <Button variant='contained' color='primary' size='large' onClick={handleAddOpen}>
-                    Add Topic
+                    Add Link
                   </Button>
                 </Grid>
                 </Grid>
@@ -176,14 +176,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Delete Topic
+                        Delete Link
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to Delete this Topic?
+                            Are you sure you want to Delete this Link?
                         </DialogContentText>
                         <DialogContentText>
-                            {selectedTopic.specialization_type}
+                            {selectedLink.link_type}
                         </DialogContentText>
                         
                     </DialogContent>
@@ -202,14 +202,14 @@ export default function ChangeTags() {
                     aria-labelledby="draggable-dialog-title"
                     >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Add Topic
+                        Add Link
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to add this Topic?
+                            Are you sure you want to add this Link?
                         </DialogContentText>
                         <DialogContentText>
-                          {addTopic}
+                          {addLink}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
