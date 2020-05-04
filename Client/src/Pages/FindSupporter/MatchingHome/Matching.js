@@ -67,7 +67,6 @@ const ResponsiveDrawer = (props) => {
   }
 
   function formatFetchURL(startDate, endDate) {
-    console.log(formatDateForFetch(startDate))
     return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + formatDateForFetch(startDate) + "%2000%3A00%3A00&end_date=" + formatDateForFetch(endDate) + "%2000%3A00%3A00";
   }
 
@@ -88,20 +87,6 @@ const ResponsiveDrawer = (props) => {
 
   
   //For hard filtering. Commented out code will hard filter the given fields
-  console.log("supporter list")
-  console.log(supporters)
-  console.log("supporter 0 day")
-  if(supporters[0]){
-    console.log("***************")
-    console.log(supporters[0].day)
-    console.log(supporters[0].day.substring(0,4))
-    console.log(selectedDate.getFullYear().toString())
-    console.log(supporters[0].day.substring(5,7))
-    console.log(selectedDate.getDate().toString())
-    console.log(supporters[0].day.substring(8,10))
-    console.log(getTheMonth(selectedDate.getMonth()+1))
-    console.log("***************")
-  }
   var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
   supporter.day.substring(8,10)===getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
@@ -192,7 +177,6 @@ const ResponsiveDrawer = (props) => {
 
   //Inputs a supporter and returns their score 
   function score(supporter){
-    
     var supporterScore=0
     var count=stateTopics.length+stateTags.length+2
 
@@ -262,10 +246,6 @@ const ResponsiveDrawer = (props) => {
   ////////////////////////////////////////////////
 
   //Display a loading screen if the API is still being called
-
-  console.log("new list:")
-  console.log(newList)
-
   if(error){
     return (
       <div align="center">
