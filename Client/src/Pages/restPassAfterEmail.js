@@ -15,7 +15,13 @@ import Container from "@material-ui/core/Container";
 import { createMuiTheme } from "@material-ui/core/styles";
 import purple from "@material-ui/core/colors/purple";
 import red from "@material-ui/core/colors/red";
-import {FormHelperText, FormControl} from "@material-ui/core";
+import {FormHelperText, FormControl, Dialog, withStyles} from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import {Auth, Amplify} from 'aws-amplify';
 
 function Copyright() {
   return (
@@ -53,21 +59,119 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
+
 export default function SignIn() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [codeCorrect, setCodeCorrect] = useState(true);
+  const [emailCorrect, setEmailCorrect] = useState(true);
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
-  function handleSubmit(event) {
-    alert("password changed");
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  };
+
+
+   function  handleSubmitButton(event){
+     setCodeCorrect(true)
+     setEmailCorrect(true)
+    Auth.forgotPasswordSubmit(email, code, password)
+    .then(data => handleClickOpen())
+    .catch(err => handleError(err));
+
   }
+
+  function handleError(error){
+    console.log(error)
+    if (error.code == "CodeMismatchException"){
+        setCodeCorrect(false)
+        return
+    }
+    if (error.code == "ExpiredCodeException"){
+      setEmailCorrect(false);
+      return
+    }
+    else{
+      alert(error.message)
+    }
+  }
+
 
   function validateForm() {
-    return password===password2 && password.length > 0 && password2.length > 0;
+    return password===password2 && password.length > 0 && password2.length > 0 && code.length > 0 & email.length > 0 && validEmail(email);
   }
 
+  function hasLowerCase(str) {
+      return str.toUpperCase() !== str;
+  }
+  function hasUpperCase(str) {
+    return str.toLowerCase() !== str
+  }
+
+  function containsSpecial(str){
+   return /[\s~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?()\._]/g.test(str);
+  }
+
+    function validatePass(pass){
+      return pass.length>=8 && hasUpperCase(pass) && hasLowerCase(pass) && containsSpecial(pass);
+    }
   function samePass(pass, pass2){
     return password===password2;
+  }
+
+  function validEmail(address) {
+    return !! address.match(/.+@.+/);
+  }
+
+  function handleKeyPress(event){
+    if(event.key === 'Enter'){
+    handleSubmitButton()
+    }
   }
 
   return (
@@ -86,6 +190,42 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
+            name="verification code"
+            label="Enter verification code"
+            type="code"
+            id="code"
+            onChange={e => setCode(e.target.value)}
+          />
+          {!codeCorrect && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+              This code is invalid
+              </FormHelperText>
+            </FormControl>
+          )}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="Email address"
+            label="Email address"
+            type="email"
+            id="email"
+            onChange={e => setEmail(e.target.value)}
+          />
+          {!emailCorrect && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                This email is incorrect or the code has expired.
+              </FormHelperText>
+            </FormControl>
+          )}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
             name="new password"
             label="New Password"
             type="password"
@@ -93,6 +233,13 @@ export default function SignIn() {
             autoComplete="current-password"
             onChange={e => setPassword(e.target.value)}
           />
+          {!validatePass(password) && password.length > 0 && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+              Your password should be at least 8 characters long and should include a lowercase, uppercase, and special character.
+              </FormHelperText>
+            </FormControl>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -117,12 +264,27 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={handleSubmitButton}
             disabled={!validateForm()}
           >
             Reset My Password
           </Button>
           <Grid container>
+          <Dialog aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title">
+              Password Changed
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+              Your password has been successfully changed.
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus href="/login" color="primary">
+                Back to Sign in
+              </Button>
+            </DialogActions>
+          </Dialog>
             <Grid item>
               <Link href="/login" variant="body2">
                 {"Back to sign in"}

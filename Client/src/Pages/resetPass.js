@@ -21,7 +21,7 @@ import {FormHelperText, FormControl} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-
+import {Auth} from 'aws-amplify';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -109,19 +109,29 @@ export default function ResetPass() {
   };
   const classes = useStyles();
    function handleSubmitButton(event){
-    handleSubmit(event)
-    handleClickOpen()
+
+    return handleSubmit
   }
+
   function handleKeyPress(event){
-    if(event.key === 'Enter'){
-      handleSubmit(event)
+    if(event.key == 'Enter'){
+      return handleSubmit
     }
   }
-  function handleSubmit(event) {
+  const handleSubmit = async event =>{
+    event.preventDefault()
+    try {
+      console.log("Email Sent to ", email)
+      await Auth.forgotPassword(email)
+      handleClickOpen()
+    }catch(error){
+      console.log(error)
+      alert(error.message)
+    }
   }
 
   function validateForm() {
-   email.length > 0 && validEmail(email);
+   return email.length > 0 && validEmail(email);
   }
 
   function validEmail(address) {
@@ -164,25 +174,23 @@ export default function ResetPass() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmitButton}
+            disabled={!validateForm()}
+            onClick={handleSubmitButton()}
           >
             Request Password Reset
           </Button>
-          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          <Dialog aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" >
               Password Reset Requested
             </DialogTitle>
             <DialogContent dividers>
               <Typography gutterBottom>
-              Your request for a password reset has been submitted.
-              </Typography>
-              <Typography gutterBottom>
-              An link will be sent to {email} to reset your password
+              A code will be sent to {email} to reset your password
               </Typography>
             </DialogContent>
             <DialogActions>
-              <Button autoFocus href="/login" color="primary">
-                Back to sign in
+              <Button autoFocus href="/forgot-password2" color="primary">
+                Ok
               </Button>
             </DialogActions>
           </Dialog>
@@ -201,4 +209,3 @@ export default function ResetPass() {
     </Container>
   );
 }
-

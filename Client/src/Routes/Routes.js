@@ -28,42 +28,24 @@ var role = cookies.get("role");
 
 export default function Routes() {
   return (
-    <Switch>
-      {role === "Student" && <Redirect exact from="/" to="/match" />}
-      {role !== "Student" && <Redirect exact from="/" to="/appointments" />}
-      <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
-      <AuthenticatedRoute path="/feedback" exact component={Feedback} />
-      <AdminRoute path="/admin-settings" exact component={AdminSettings} />
-      <SupporterRoute
-        Route
-        path="/supporter-settings"
-        exact
-        component={SupporterSettings}
-      />
-      <Route path="/create-block" exact component={SupporterBlocks} />
-      <UnauthenticatedRoute path="/login" exact component={Login} />
-      <StudentRoute path="/match" exact component={Matching} />
-      <Route path="/TOS" exact component={tos} />
-      <AuthenticatedRoute path="/appointments" exact component={appts} />
-      <AuthenticatedRoute path="/account" exact component={StudentSettings} />
-      <UnauthenticatedRoute
-        path="/signup-supporter"
-        exact
-        component={SignUpSupporter}
-      />
-      <UnauthenticatedRoute path="/signup" exact component={SignUp} />
-      <UnauthenticatedRoute
-        path="/forgot-password"
-        exact
-        component={ForgotPassword}
-      />
-      <UnauthenticatedRoute
-        path="/forgot-password2"
-        exact
-        component={resetPassAfterEmail}
-      />
-      <Route path="/index.html" to="/" />
-      <Route component={NotFound} />
-    </Switch>
+        <Switch>
+          {role==="Student" && <Redirect exact from="/" to="/match" />}
+          {role!=="Student" && <Redirect exact from="/" to="/appointments" />}
+          <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
+          <AuthenticatedRoute path="/feedback" exact component={Feedback} />
+          <AdminRoute path="/admin-settings" exact component={AdminSettings} />
+          <AuthenticatedRoute path="/account" exact component={StudentSettings} />
+          <SupporterRoute Route path="/supporter-settings" exact component={SupporterSettings} />
+          <Route path="/create-block" exact component={SupporterBlocks} />
+          <UnauthenticatedRoute path="/login" exact component={Login} />
+          <StudentRoute path="/match" exact component={Matching} />
+          <Route path="/TOS" exact component={tos} />
+          <AuthenticatedRoute path="/appointments" exact component={appts} />} />
+          <UnauthenticatedRoute path="/signup" exact component={SignUp} />
+          <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
+          <UnauthenticatedRoute path="/forgot-password2" exact component={resetPassAfterEmail} />
+          <Route path="/index.html" to="/" />
+          <Route component={NotFound} />
+        </Switch>
   );
 }

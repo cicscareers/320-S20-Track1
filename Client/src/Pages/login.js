@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl } from "@material-ui/core";
+import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl,FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
@@ -46,11 +46,12 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   //sets styling
   const classes = useStyles();
-  
+
   //Email and password from the textbox
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
+  const [validInfo,setValidInfo] = useState(true)
 
   const handleChange = (event) => {
     setLoginType(event.target.value);
@@ -59,7 +60,7 @@ export default function SignIn() {
   //sets up the encryption library
   var bcrypt = require('bcryptjs');
   var salt = bcrypt.genSaltSync(10);
-  
+
   //Gets run when submit is pressed and handles authentication.
   const handleSubmit = async event =>{
     event.preventDefault();
@@ -89,7 +90,12 @@ export default function SignIn() {
           window.location.reload();
         }
       }catch(error){
-        //alert("Invalid credentials");
+        //alert(error.message);
+        if(error.code =="NotAuthorizedException"){
+        setValidInfo(false);}
+        else{
+          alert(error.message)
+        }
         console.log(error);
       }
     }
@@ -119,7 +125,7 @@ export default function SignIn() {
   //So the user can press enter rather than click the button
   function handleKeyPress(event){
     if(event.key === 'Enter' && validateForm()){
-      handleSubmit(event)
+      return handleSubmit
     }
   }
 
@@ -171,6 +177,13 @@ export default function SignIn() {
           >
             Sign In
           </Button>
+          {!validInfo && (
+            <FormControl className={classes.error} error>
+              <FormHelperText>
+                Incorrect username or password.
+              </FormHelperText>
+            </FormControl>
+          )}
           <Grid container form className={classes.form}>
             <Grid item xs>
               <Link href="/forgot-password" variant="body2">
