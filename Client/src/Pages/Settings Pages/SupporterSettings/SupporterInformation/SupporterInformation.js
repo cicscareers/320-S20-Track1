@@ -28,7 +28,34 @@ function handleSubmit(){
     //TODO
 }
 
+function extractSpecializationTypesArray(spec){
+    var arr=[]
+    if(!spec){
+        return arr
+    }
+    for(let i=0;i<spec.length;i++){
+        var ar=[]
+        ar.push(spec[i]["specialization_type"])
+        ar.push(spec[i]["duration"])
+        ar.push(spec[i]["max_students"])
+        arr.push(ar)
+    }
+    //console.log(arr)
+    return arr
+}
+
 function extractSpecializationTypes(spec){
+    var arr=[]
+    if(!spec){
+        return arr
+    }
+    for(let i=0;i<spec.length;i++){
+        arr.push(spec[i]["specialization_type"])
+    }
+    return arr
+}
+
+function extractSpecializationNames(spec){
     var arr=[]
     if(!spec){
         return arr
@@ -72,12 +99,11 @@ const ProfileInformation = (props) => {
     const classes=useStyles();
     const {settings} = props
     const [error, setError] = React.useState(false)
-    const spec_types = extractSpecializationTypes(settings.specialization_types ? settings.specialization_types : [] )
+    const spec_types = extractSpecializationTypesArray(settings.appointment_type_info ? settings.appointment_type_info : [] )
     const supporter_types=extractSupporterTypes(settings)
     const [supporterTypes, setSupporterTypes]=React.useState(supporter_types);
     const [teams, setTeams]=React.useState(settings.team_name);
     const [office, setOffice]=React.useState(settings.office);
-    const [specializations, setSpecializations]=React.useState(spec_types);
     const [employer, setEmployer]=React.useState(settings.employer);
     const [title, setTitle]=React.useState(settings.title);
     const [tags, setTags]=React.useState(settings.tags ? settings.tags : [])
@@ -88,6 +114,14 @@ const ProfileInformation = (props) => {
     const [prefMajors, setPrefMajors]=React.useState(extractMajors(settings.major_preferences))
     const [minorList, setMinorList] = React.useState([])
     const [prefMinors, setPrefMinors]=React.useState(extractMinors(settings.minor_preferences))
+    const types_list = extractSpecializationNames(settings.appointment_type_info ? settings.appointment_type_info : [] )
+    const [specializations, setSpecializations]=React.useState(types_list);
+
+
+    //console.log(settings.specialization_types)
+    console.log(settings.appointment_type_info)
+
+    console.log(specializations)
 
     function extractMajors(m){
         if(m === undefined){
@@ -109,6 +143,17 @@ const ProfileInformation = (props) => {
           arr.push(m[i].minor)
         }
         return arr
+    }
+
+    function changeSpecs(v){
+        for(let i=0;i<v.length;i++){
+            if(!settings.appointment_type_info[v[i]]){
+                settings.appointment_type_info[v[i]]=[v[i],30,1]
+            }
+        }
+        console.log(specializations)
+        setSpecializations(v)
+
     }
 
     useEffect(() => {
@@ -243,7 +288,7 @@ const ProfileInformation = (props) => {
                     multiple
                     className={classes.form}
                     options={typesList}
-                    defaultValue={specializations}
+                    defaultValue={types_list}
                     renderInput={(params) => (
                     <TextField
                         {...params}
@@ -304,6 +349,7 @@ const ProfileInformation = (props) => {
                     title={title} 
                     tags={tags} 
                     office={office}
+                    specializations_json={settings.appointment_type_info}
                     prefMajors={prefMajors} 
                     prefMinors={prefMinors}>
                 </SubmitButton>

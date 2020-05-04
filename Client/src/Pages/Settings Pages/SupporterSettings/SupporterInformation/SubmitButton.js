@@ -12,7 +12,23 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const {specializations, supporter_types, office, teams, employer, title, tags, prefMajors, prefMinors} = props
+    const {specializations, supporter_types, office, teams, employer, title, tags, prefMajors, prefMinors, specializations_json} = props
+
+    var arr=[]
+    for(let i=0;i<specializations.length;i++){
+      if(specializations_json[specializations[i]]!==undefined){
+        var ar=[specializations[i], 30, 1]
+        arr.push(ar)
+      } else {
+        var dur=specializations_json[i].duration
+        var max=specializations_json[i].max_students
+        var ar = [specializations[i], dur, max]
+        arr.push(ar)
+      }
+    }
+    console.log("**************")
+    console.log(arr)
+    console.log("**************")
 
     function handleSubmit(){
         fetch(
@@ -33,7 +49,8 @@ const ProfileInformation = (props) => {
                 "tags": tags,
                 "major_preferences": prefMajors,
                 "minor_preferences": prefMinors,
-                "supporter_types": []
+                "supporter_types": [],
+                "specializations" : arr
               })
             }
           )

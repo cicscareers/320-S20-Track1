@@ -16,7 +16,7 @@ const ProfileInformation = (props) => {
     console.log(linkedIn)
     function handleSubmit(){
         fetch(
-            "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/27",
+            "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/" + sessionStorage.getItem("id"),
             {
               method: "PATCH",
               headers: {
