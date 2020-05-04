@@ -133,11 +133,9 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <img  height="150" width="150" src ="cicscareers_logo_3.png"></img>
+        <img  height="175" width="175" src ="cicscareers_logo_3.png"></img>
         <br/>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        
         <form className={classes.form}>
           <TextField
             variant="outlined"
