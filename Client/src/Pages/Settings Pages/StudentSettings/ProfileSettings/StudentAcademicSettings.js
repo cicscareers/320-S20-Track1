@@ -69,7 +69,9 @@ function extractMajors(maj) {
 }
 const AcademicInformation = (props) => {
   const classes = useStyles();
+  
   const { settings } = props;
+  console.log(settings.college)
   const [college, setColleges] = useState([]);
   const [majors, setMajors] = useState([]);
   const [minors, setMinors] = useState([]);
@@ -80,9 +82,9 @@ const AcademicInformation = (props) => {
   const [minorsList, setMinorsList] = React.useState([]);
   const [loaded, setLoaded] = useState(false);
   const cookies = new Cookies();
-  const id = 2; //cookies.get("id");
+  const id = sessionStorage.getItem("id")
   const url =
-    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
+  "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
   const gradYearList = [
     "2020",
@@ -104,37 +106,42 @@ const AcademicInformation = (props) => {
   const minorsURL =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors";
   const patchURL =
-    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
-    id;
+  "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
+  id;
   function handleSubmit() {
-    fetch(patchURL, {
+    console.log(college)
+    
+    fetch(url, {
       method: "PATCH",
       body: JSON.stringify({
-        //student_id: id,
-        first_name: "hi there",
-        //bio: bio,
-        //college: [],
-        //email: email,
-        //gender: settings.gender,
-        // grad_student: settings.grad_student,
-        //grad_year: grad_year.toString(),
-        //last_name: lastName,
-        //majors: [],
-        //minors: [],
-        //grad_student: "true",
-        //phone: phoneNumber,
-        //picture: picture,
-        //preferred_name: prefName,
-        //pronouns: pronouns,
-        // resume: settings.resume,
-        //statusCode: settings.statusCode,
+        first_name: settings.firstName,
+        bio: settings.bio,
+        college: college,
+        email: settings.email,
+        gender: settings.gender,
+        grad_student: settings.grad_student,
+        grad_year: grad_year,
+        last_name: settings.lastName,
+        majors: majors,
+        minors: minors,
+        phone: settings.phoneNumber,
+        picture: settings.picture,
+        preferred_name: settings.prefName,
+        pronouns: settings.pronouns,
+        resume: settings.resume,
+        statusCode: settings.statusCode,
+        colleges: [],
+        links: []
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => {
+        console.log(json)
+        //window.location.reload(false)
+      });
   }
   useEffect(() => {
     setLoaded(false);

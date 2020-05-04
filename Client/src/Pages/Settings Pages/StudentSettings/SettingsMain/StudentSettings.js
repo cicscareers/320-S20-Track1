@@ -67,10 +67,10 @@ const StudentSettings = (props) => {
   const [error, setError] = React.useState(false);
 
   const cookies = new Cookies();
-  const id = cookies.get("id");
+  const id = sessionStorage.getItem("id")
+  console.log(id)
   const url =
-    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
-    id;
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/"+id;
 
   useEffect(() => {
     fetchStudentSettings(url);

@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const ProfileInformation = (props) => {
   const classes = useStyles();
   const { settings } = props;
+  console.log(settings.college)
   const [firstName, setFirstName] = React.useState(settings.first_name);
   const [prefName, setPrefName] = React.useState(settings.preferred_name);
   const [lastName, setLastName] = React.useState(settings.last_name);
@@ -52,8 +53,7 @@ const ProfileInformation = (props) => {
   const [picture, setPicture] = React.useState(settings.picture);
   const [grad_year, setGradYear] = React.useState(settings.grad_year);
 
-  const cookies = new Cookies();
-  const id = cookies.get("id");
+  const id = sessionStorage.getItem("id")
   const url =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
@@ -79,6 +79,26 @@ const ProfileInformation = (props) => {
       ];
     }
     console.log(formatted_majors);
+    console.log(settings.grad_year)
+    console.log({
+      first_name: firstName,
+      bio: bio,
+      colleges: formatted_colleges,
+      email: email,
+      gender: settings.gender,
+      grad_student: settings.grad_student,
+      grad_year: settings.grad_year,
+      last_name: lastName,
+      majors: [],
+      minors: [],
+      phone: phoneNumber,
+      picture: picture,
+      preferred_name: prefName,
+      pronouns: pronouns,
+      resume: settings.resume,
+      statusCode: settings.statusCode,
+      links: []
+    })
     // console.log(formatted_minors);
     // console.log(formatted_colleges);
     fetch(url, {
@@ -92,21 +112,26 @@ const ProfileInformation = (props) => {
         grad_student: settings.grad_student,
         grad_year: settings.grad_year,
         last_name: lastName,
-        // majors: formatted_majors,
-        // minors: formatted_minors,
+        majors: [],
+        minors: [],
         phone: phoneNumber,
         picture: picture,
         preferred_name: prefName,
         pronouns: pronouns,
         resume: settings.resume,
         statusCode: settings.statusCode,
+        colleges: [],
+        links: []
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => {
+        console.log(json)
+        window.location.reload(false)
+      });
   }
 
   return (
@@ -131,6 +156,7 @@ const ProfileInformation = (props) => {
                 fullWidth
                 label="First Name"
                 required
+                disabled
                 multiline
                 defaultValue={firstName}
                 form
@@ -143,6 +169,7 @@ const ProfileInformation = (props) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
+                
                 label="Preferred Name"
                 multiline
                 defaultValue={prefName}
@@ -159,6 +186,7 @@ const ProfileInformation = (props) => {
                 required
                 label="Last Name"
                 multiline
+                disabled
                 defaultValue={lastName}
                 form
                 className={classes.form}
@@ -189,6 +217,7 @@ const ProfileInformation = (props) => {
                 required
                 label="Email Address"
                 multiline
+                disabled
                 defaultValue={email}
                 form
                 className={classes.form}
