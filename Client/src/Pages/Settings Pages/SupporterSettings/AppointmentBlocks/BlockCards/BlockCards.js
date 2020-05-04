@@ -7,7 +7,6 @@ import deleteAppointmentBlock from './deleteAppointmentBlock';
 const BlockCard = (props) => {
   //Initialize all the constants
   const {appointment_block_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
-  console.log(props);
 
   const days_of_week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
   var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
