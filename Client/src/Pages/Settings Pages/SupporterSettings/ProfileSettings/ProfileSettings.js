@@ -32,10 +32,12 @@ function handleSubmit(){
 }
 
 function getLinkedIn(arr){
-    for(let i=0;i<arr.length;i++){
-        console.log(arr[i])
-        if(arr[i].link_type === "linkedin"){
-            return arr[i].link
+    if(arr !== null) {
+        for(let i=0;i<arr.length;i++){
+            console.log(arr[i])
+            if(arr[i].link_type === "linkedin"){
+                return arr[i].link
+            }
         }
     }
     return ""

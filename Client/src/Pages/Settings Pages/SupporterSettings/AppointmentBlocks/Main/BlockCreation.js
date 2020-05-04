@@ -9,6 +9,7 @@ import { DatePicker} from "@material-ui/pickers";
 import {Autocomplete} from '@material-ui/lab';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import createAppointmentBlock from './CreateAppointmentBlock';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -26,7 +27,8 @@ const ResponsiveDrawer = (props) => {
   const [appointmentTypes, setAppointmentTypes]=React.useState([]);
   const [blockListFromEndPoint, setBlockListFromEndPoint] = React.useState([]);
   var blockList = [];
-  const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/1/blocks";
+  const id = sessionStorage.getItem("id");
+  const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/"+id+"/blocks";
 
   //Calls the API to get the list of supporters
   useEffect(() => {
@@ -41,12 +43,10 @@ const ResponsiveDrawer = (props) => {
   }
 
   function populateTypeArray(json){
-    console.log(json)
     var arr = []
     for(let i=0;i<json.length;i++){
       arr.push(json[i].specialization_type)
     }
-    console.log(arr)
     return arr
   }
 
@@ -277,7 +277,20 @@ const ResponsiveDrawer = (props) => {
                 </FormControl>)}
             </DialogContent>
               <DialogActions>
-                  <Button autoFocus color="primary" variant="contained">
+                  <Button
+                    autoFocus
+                    color="primary"
+                    variant="contained"
+                    onClick={()=>
+                      createAppointmentBlock(
+                        id, 
+                        createBlockSelectedDate, 
+                        sliderTime[0], 
+                        sliderTime[1], 
+                        numberOfWeeks, 
+                        maxAppointents, 
+                        isRecurring
+                      )}>
                     Create block
                   </Button>
               </DialogActions>
