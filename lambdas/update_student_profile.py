@@ -159,6 +159,11 @@ def update_student_profile(event, context):
         last_name = event['last_name']
         user_settings['last_name'] = last_name
         updated_user_vals.append("last_name = :last_name")
+        
+    if event['email'] != "":
+        email = event['email']
+        user_settings['email'] = email
+        updated_user_vals.append("email = :email")
 
     if event['preferred_name'] != "":
         preferred_name = event['preferred_name']
@@ -190,7 +195,7 @@ def update_student_profile(event, context):
         user_settings['phone'] = phone
         updated_user_vals.append("phone = :phone")
 
-    user_settings_sql = "UPDATE users SET " + ", ".join(updated_user_vals) + " WHERE id = :supporter_id;"
+    user_settings_sql = "UPDATE users SET " + ", ".join(updated_user_vals) + " WHERE id = :student_id;"
     user_settings_params = dictionary_to_list(user_settings) 
     user_settings_params.append(supporter_id_param)
 
