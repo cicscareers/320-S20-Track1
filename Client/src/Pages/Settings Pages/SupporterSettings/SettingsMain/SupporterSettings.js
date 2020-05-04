@@ -63,13 +63,14 @@ const SupporterSettings = (props) => {
     const [settings, setSettings]=React.useState([])
     const [error, setError]=React.useState(false)
     const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
-
-
+    const id = sessionStorage.getItem("id");
+    console.log('@#$%^&*&^%$#')
+    console.log(id)
 
     useEffect(() => {
 
       setLoaded(false);
-      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/1"), 
+      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + id), 
       fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
 
       .then(([res1, res2]) => { 

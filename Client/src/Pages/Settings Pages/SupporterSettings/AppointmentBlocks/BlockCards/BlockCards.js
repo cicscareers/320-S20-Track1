@@ -1,11 +1,13 @@
 import React from 'react';
 import { Typography, Button, Card, CardActions, CardContent, Grid} from '@material-ui/core';
-import classes from './CardStyles'
-import convertTime from '../../../../FindSupporter/convertTime'
+import classes from './CardStyles';
+import convertTime from '../../../../FindSupporter/convertTime';
+import deleteAppointmentBlock from './deleteAppointmentBlock';
 
 const BlockCard = (props) => {
   //Initialize all the constants
-  const {appointment_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
+  const {appointment_block_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
+  console.log(props);
 
   const days_of_week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
   var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -14,6 +16,7 @@ const BlockCard = (props) => {
   const week_day= date_strings[0]
   const month_name = date_strings[1]
   const day = date_strings[2]
+  const id = sessionStorage.getItem("id");
 
   function  init_datetimes(){
     Block_Date.setYear(parseInt(start_date.substring(0,4)))
@@ -73,7 +76,7 @@ const BlockCard = (props) => {
             </Typography>
         </CardContent>
         <CardActions>
-            <Button size="small">Delete Block</Button>
+            <Button size="small" onClick={() => deleteAppointmentBlock(id, appointment_block_id, recurring_id)}>Delete Block</Button>
         </CardActions>
         </Card>
         <br/>
