@@ -35,7 +35,8 @@ const CreateAppointmentModal = (props) => {
   const [medium, setMedium] = useState("In person");
   const [location, setLocation] = useState("");
   const [comment, setComment] = useState("");
-  const [supporterEmail, setSupporterEmail] = useState("");
+  console.log(sessionStorage.getItem("email"))
+  const [supporterEmail, setSupporterEmail] = useState(sessionStorage.getItem("email"));
   const [studentEmail, setStudentEmail] = useState("");
   const [appointmentType, setappointmentType] = useState("");
   const [disableButton, setDisableButton] = useState(false);
@@ -60,13 +61,13 @@ const CreateAppointmentModal = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_email: supporterEmail,
-          supporter_email: studentEmail,
+          student_email: studentEmail,
+          supporter_email: supporterEmail,
           selected_tags: [],
           specialization: "Interviewing",
           time_of_appt: year+"-"+month+"-"+day+" "+time+":00",
           duration: 30,
-          medium: "in-person",
+          medium: "pigeon",
           location: location,
           comment: "",
           override: "true"
@@ -87,6 +88,13 @@ const CreateAppointmentModal = (props) => {
       console.log(error);
     });
 
+  }
+
+  function setSupporterEmailForBothRoles(email, isAdmin) {
+    if(isAdmin) {
+      console.log('$$$$$$$$$$$$$$$$$$$$')
+      setSupporterEmail(email);
+    }
   }
 
   function getTheMonth(month){
@@ -162,7 +170,7 @@ const CreateAppointmentModal = (props) => {
               className={classes.inputs}
               align="center"
               placeholder="Supporter Email"
-              onChange={e => setSupporterEmail(e.target.value)}
+              onChange={e => setSupporterEmailForBothRoles(e.target.value, role==="admin")}
               fullWidth
             >
             </TextField>}
