@@ -34,6 +34,7 @@ const ResponsiveDrawer = (props) => {
   const topicsList=[]
   const tagsList=[]
 
+
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
   //Calls the API to get the list of supporters
@@ -54,6 +55,9 @@ const ResponsiveDrawer = (props) => {
       if(json.body !== undefined) {
         console.log(json.body)
         setSupporters(json.body);
+        getTagsAndTopics()
+        console.log(topicsList)
+        setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
         throw new Error();
@@ -156,6 +160,9 @@ const ResponsiveDrawer = (props) => {
 
   //Generates the list of topics and tags to be used by the autocomplete filters
   function getTagsAndTopics(){
+    if(!newList){
+      return 
+    }
     for(let i=0;i<newList.length;i++){
       for(let j=0;j<newList[i].tags.length;j++){
         if(!tagsList.includes(newList[i].tags[j])){
@@ -169,6 +176,8 @@ const ResponsiveDrawer = (props) => {
       }
     }
   }
+  console.log("topics list")
+  console.log(topicsList)
   getTagsAndTopics()
   
   ///////////////////////////
@@ -189,7 +198,7 @@ const ResponsiveDrawer = (props) => {
       }
     }
     for(let i=0;i<stateTopics.length;i++){
-      if(supporter.topics.includes(stateTopics[i])){
+      if(supporter.topics[stateTopics[i]]){
         supporterScore++
       }
     }
