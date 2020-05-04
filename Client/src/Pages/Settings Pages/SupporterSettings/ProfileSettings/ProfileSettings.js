@@ -53,6 +53,7 @@ const ProfileInformation = (props) => {
     const [pronouns, setPronouns]=React.useState(settings.pronouns)
     const [phoneNumber, setPhoneNumber]=React.useState(settings.phone)
     const [email, setEmail]=React.useState(settings.email)
+    const [picture, setPicture]=React.useState(settings.picture)
     const [linkedIn, setLinkedIn]=React.useState(getLinkedIn(settings.link))
     const [bio, setBio]=React.useState(settings.bio)
     return (
@@ -67,7 +68,7 @@ const ProfileInformation = (props) => {
 
                     </Grid>
                     <Grid item xs={6} sm={2}>
-                        <Avatar className={classes.avatar} src={settings.picture}/>
+                        <Avatar className={classes.avatar} src={picture}/>
                     </Grid>
                     <Grid item xs={3} lg={5}>
                         
@@ -169,6 +170,17 @@ const ProfileInformation = (props) => {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    required
+                    label="Profile Image Source"
+                    autoFocus
+                    defaultValue={picture}
+                    form className={classes.form}
+                    onChange={e => setPicture(e.target.value)}
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
                     label="Personal Biography"
                     autoFocus
                     multiline
@@ -181,6 +193,7 @@ const ProfileInformation = (props) => {
                     firstName={firstName}
                     prefName={prefName}
                     lastName={lastName}
+                    picture={picture}
                     pronouns={pronouns}
                     phoneNumber={phoneNumber}
                     email={email}

@@ -15,8 +15,7 @@ const SupporterCard = (props) => {
   const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, links, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
-  const studentID = cookies.get("id")
-  const IntID=parseInt(studentID)
+  const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
   const [apptDuration, setApptDuration] = React.useState(0);
@@ -107,6 +106,17 @@ const SupporterCard = (props) => {
       supporterComment=`${supporterComment + has_tags[i]}\\n`
     }
     supporterComment=supporterComment+comment
+
+        console.log("**************")
+
+        console.log(studentID)
+        console.log(supporter_id)
+        console.log(day+" "+timeToString(time)+":00")
+        console.log(medium)
+        console.log(office)
+        console.log(supporterComment)
+        console.log(apptTopic)
+        console.log(filtered_tags)
     fetch(
       "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/students",
       {
@@ -116,20 +126,33 @@ const SupporterCard = (props) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          student_id: IntID,
-          supporter_id: supporter_id,
-          time_of_appt: day+" "+timeToString(time)+":00",
-          medium: medium,
-          location: office,
-          comment: supporterComment,
-          specialization: apptTopic,
-          selected_tags: filtered_tags
+            "student_id": studentID.toString(),
+            "supporter_id": supporter_id,
+            "time_of_appt": day+" "+timeToString(time)+":00",
+            "medium": medium,
+            "location": office,
+            "comment": comment,
+            "specialization": apptTopic,
+            "selected_tags": filtered_tags,
+            "override": false
         })
       }
     )
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
         console.log(response)
+        console.log("**************")
+
+        console.log(studentID)
+        console.log(supporter_id)
+        console.log(day+" "+timeToString(time)+":00")
+        console.log(medium)
+        console.log(office)
+        console.log(supporterComment)
+        console.log(apptTopic)
+        console.log(filtered_tags)
+                
+        console.log("**************")
         return response.json();
       } else {
         throw new Error("Server can't be reached!");

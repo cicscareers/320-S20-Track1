@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const {firstName,prefName,lastName,pronouns,phoneNumber,email,linkedIn,bio} = props
+    const {firstName,prefName,lastName,picture,pronouns,phoneNumber,email,linkedIn,bio} = props
     console.log(linkedIn)
     function handleSubmit(){
         fetch(
@@ -26,11 +26,12 @@ const ProfileInformation = (props) => {
               body: JSON.stringify({
                 "preferred_name": prefName,
                 "bio": bio,
+                "picture" : picture,
                 "pronouns": pronouns,
                 "phone": phoneNumber,
                 "links": [["LinkedIn",linkedIn]],
-                "notification_preferences": [],
                 "tags": [],
+                "notification_preferences": [],
                 "major_preferences": [],
                 "minor_preferences": [],
                 "supporter_types": []
@@ -46,7 +47,7 @@ const ProfileInformation = (props) => {
             }
           })
           .then(json => {
-            window.location.reload()
+            //window.location.reload()
           })
           .catch(error => {
             console.log(error);

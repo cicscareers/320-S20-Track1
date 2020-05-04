@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 const ProfileInformation = (props) => {
     const classes=useStyles();
     const {specializations, supporter_types, office, teams, employer, title, tags, prefMajors, prefMinors} = props
-    console.log(prefMinors)
+
     function handleSubmit(){
         fetch(
             "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/27",
@@ -46,7 +46,7 @@ const ProfileInformation = (props) => {
             }
           })
           .then(json => {
-            window.location.reload()
+            //window.location.reload()
           })
           .catch(error => {
             console.log(error);
