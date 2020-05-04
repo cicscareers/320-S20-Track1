@@ -8,6 +8,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { Auth, Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
+import OpenSansLight from './OpenSans-Light.ttf';
 
 const cookies = new Cookies();
 const role = cookies.get('role')
@@ -21,19 +22,8 @@ console.log(primary_color)
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: [
-      'Open Sans Light',
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
+    fontFamily:{OpenSansLight},
+    fontStyle: 'light',
     button: {
       textTransform: 'none'
     }
