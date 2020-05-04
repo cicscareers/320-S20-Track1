@@ -14,6 +14,7 @@ import Menu from "../../../../Navigation/appbar.js";
 import Cookies from "universal-cookie";
 import StudentProfileSettings from "../ProfileSettings/StudentProfileSettings";
 import StudentAcademicSettings from "../ProfileSettings/StudentAcademicSettings";
+import SupporterApplication from '../ProfileSettings/SupporterRequest'
 
 const drawerWidth = "25%";
 
@@ -151,6 +152,9 @@ const StudentSettings = (props) => {
             <ListItem button onClick={() => setPage("Academics")} key={2}>
               <ListItemText primary={"Academics"} />
             </ListItem>
+            <ListItem button onClick={() => setPage("Request to be a Supporter")} key={2}>
+              <ListItemText primary={"Request to be a Supporter"} />
+            </ListItem>
           </List>
         </div>
       </Drawer>
@@ -160,6 +164,9 @@ const StudentSettings = (props) => {
         )}
         {page === "Academics" && (
           <StudentAcademicSettings settings={settings} />
+        )}
+        {page === 'Request to be a Supporter' && (
+          <SupporterApplication settings={settings} />
         )}
       </main>
     </div>
