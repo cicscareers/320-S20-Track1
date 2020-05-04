@@ -105,7 +105,6 @@ const ResponsiveDrawer = (props) => {
       var filteredAppointmentList = [];
     }
     else{
-      
       var filteredAppointmentList = (appointments.filter(
       appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
     }
@@ -133,7 +132,6 @@ const ResponsiveDrawer = (props) => {
 
   function getTheMonth(month){
     if (parseInt(month)>10){
-      console.log(month.toString())
       return month.toString();
     }
     else{
@@ -175,7 +173,6 @@ const ResponsiveDrawer = (props) => {
       
         .then(res => res.json())
         .then(json => {
-          console.log(role)
           setLoaded(true);
           setAppointments(json.body);
         })
@@ -192,13 +189,11 @@ const ResponsiveDrawer = (props) => {
           return res.json();
         })
         .then(json => {
-          console.log(json.body)
           setLoaded(true);
           setAppointments(json.body);
           
         })
         .catch(err => {
-          console.log('WTFFF')
           setAppointments([]);
           setLoaded(true);
         })
