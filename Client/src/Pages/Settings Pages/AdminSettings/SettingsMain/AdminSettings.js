@@ -120,16 +120,7 @@ const SupporterSettings = (props) => {
                 setPage("Download Data")}} key={3}>
                 <ListItemText primary={"Download Data"} />
               </ListItem> */}
-              <ListItem button style={{backgroundColor: buttons.four}} onClick={() => {
-                highLightButton("four")
-                setPage("Edit Tags")}} key={4}>
-                <ListItemText primary={"Edit Tags"} />
-              </ListItem>
-              <ListItem button style={{backgroundColor: buttons.five}} onClick={() => {
-                highLightButton("five")
-                setPage("Edit Topics")}} key={5}>
-                <ListItemText primary={"Edit Topics"} />
-              </ListItem>
+              
               <ListItem button style={{backgroundColor: buttons.six}} onClick={() => {
                 highLightButton("six")
                 setPage("Admin Approval")}} key={6}>
@@ -144,6 +135,16 @@ const SupporterSettings = (props) => {
                 highLightButton("eight")
                 setPage("FAQ Settings")}} key={8}>
                 <ListItemText primary={"FAQ Settings"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.four}} onClick={() => {
+                highLightButton("four")
+                setPage("Edit Tags")}} key={4}>
+                <ListItemText primary={"Edit Tags"} />
+              </ListItem>
+              <ListItem button style={{backgroundColor: buttons.five}} onClick={() => {
+                highLightButton("five")
+                setPage("Edit Topics")}} key={5}>
+                <ListItemText primary={"Edit Topics"} />
               </ListItem>
               <ListItem button style={{backgroundColor: buttons.nine}} onClick={() => {
                 highLightButton("nine")

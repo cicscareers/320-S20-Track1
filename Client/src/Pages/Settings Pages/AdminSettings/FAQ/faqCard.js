@@ -143,13 +143,13 @@ const FaqCard = (props) => {
                     </Typography>
                 </Grid>
                 <Divider/>
-                <Grid item container lg={12} style={{justifyContent: 'center', marginTop: 50, display: 'flex'}}>
-                    <Grid item lg = {6} style={{justifyContent: 'center', marginTop: 20, display: 'flex'}}>
+                <Grid item container lg={12} style={{marginTop: 50, display: 'flex'}}>
+                    <Grid item lg = {6} style={{justifyContent: 'flex-end',  display: 'flex', padding: 30}}>
                         <Button variant='contained' color='primary' size='medium' onClick={handleEditOpen}>
                             Edit Question <EditIcon fontSize="small" style={{marginLeft: 7}}></EditIcon>
                         </Button>
                     </Grid>
-                    <Grid item lg = {6} style={{justifyContent: 'center', marginTop: 20, display: 'flex'}}>
+                    <Grid item lg = {6} style={{justifyContent: 'flex-start',  display: 'flex', padding: 30}}>
                         <Button variant='contained' color='primary' size='medium' onClick={handleDeleteOpen}>
                             Delete Question <DeleteIcon fontSize="small" style={{marginLeft: 7}}></DeleteIcon>
                         </Button>
