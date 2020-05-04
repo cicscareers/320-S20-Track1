@@ -64,6 +64,7 @@ const SupporterSettings = (props) => {
     const [error, setError]=React.useState(false)
     const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
     const id = sessionStorage.getItem("id");
+    const [btns, setBtns] = React.useState({one: "#d3d3d3", two: "#ffffff", three:'#ffffff', four: '#ffffff'})
 
     useEffect(() => {
 
@@ -89,6 +90,12 @@ const SupporterSettings = (props) => {
         console.log("Error Connectting to API")
       });
     }, [])
+
+    function handleHighlight(e){
+      const tmp = {one: "#ffffff", two: "#ffffff", three:'#ffffff', four: '#ffffff'}
+      tmp[e] = '#d3d3d3'
+      setBtns(tmp)
+    }
 
     if(error){
       return (
@@ -131,16 +138,28 @@ const SupporterSettings = (props) => {
           <br/>
           <br/>
             <List>
-              <ListItem button onClick={() => setPage("Profile Information")} key={1}>
+              <ListItem button style={{backgroundColor: btns.one}}
+              onClick={() => {
+                handleHighlight("one")
+                setPage("Profile Information")}} key={1}>
                 <ListItemText primary={"Profile Information"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Supporter Information")} key={2}>
+              <ListItem button style={{backgroundColor: btns.two}}
+              onClick={() => {
+                handleHighlight("two")
+                setPage("Supporter Information")}} key={2}>
                 <ListItemText primary={"Supporter Information"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Appointment Block Settings")} key={4}>
+              <ListItem button style={{backgroundColor: btns.three}}
+              onClick={() => {
+                handleHighlight("three")
+                setPage("Appointment Blocks Settings")}} key={3}>
                 <ListItemText primary={"Appointment Blocks Settings"} />
               </ListItem>
-              <ListItem button onClick={() => setPage("Create Appointment Blocks")} key={4}>
+              <ListItem button style={{backgroundColor: btns.four}}
+              onClick={() => {
+                handleHighlight("four")
+                setPage("Create Appointment Blocks")}} key={4}>
                 <ListItemText primary={"Create Appointment Blocks"} />
               </ListItem>
             </List>

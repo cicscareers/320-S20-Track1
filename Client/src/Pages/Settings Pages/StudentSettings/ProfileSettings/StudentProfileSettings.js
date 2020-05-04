@@ -130,6 +130,7 @@ const ProfileInformation = (props) => {
       .then((response) => response.json())
       .then((json) => {
         console.log(json)
+        sessionStorage.setItem("image", picture)
         window.location.reload(false)
       });
   }
@@ -248,7 +249,20 @@ const ProfileInformation = (props) => {
             form
             className={classes.form}
             onChange={(e) => setLinkedIn(e.target.value)}
+
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            required
+            label="Profile Image Source"
+            autoFocus
+            defaultValue={picture}
+            form className={classes.form}
+            onChange={e => setPicture(e.target.value)}
+          />
+
           <TextField
             variant="outlined"
             margin="normal"
