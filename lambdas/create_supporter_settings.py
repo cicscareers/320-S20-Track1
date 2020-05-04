@@ -82,9 +82,7 @@ def create_supporter_settings(event, context):
             'statusCode': 409 #conflict
         }
 
-    temp_dict = {}
-    temp_dict['supporter_id'] = supporter_id
-
+    #Insert into supporter specializations
     sql = 'INSERT INTO supporter_specializations VALUES (:supporter_id, null, null, null)'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     response = query(sql, sql_parameters)
@@ -94,7 +92,7 @@ def create_supporter_settings(event, context):
             'statusCode': 409 #conflict
         }
     
-    # #Insert major preferences
+    #Insert major preferences
     sql = 'INSERT INTO supporter_major_preferences VALUES (:supporter_id, null)'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}] #, {'name': 'major_id', 'value': {'longValue': maj['major_id']}}]
     response = query(sql, sql_parameters)
@@ -104,6 +102,7 @@ def create_supporter_settings(event, context):
             'statusCode': 409 #conflict
         }
 
+    #Insert into minor preferences
     sql = 'INSERT INTO supporter_minor_preferences VALUES (:supporter_id, null)'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}] #, {'name': 'minor_id', 'value': {'longValue': minor['minor_id']}}]
     response = query(sql, sql_parameters)
