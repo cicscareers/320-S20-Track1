@@ -53,6 +53,7 @@ const ResponsiveDrawer = (props) => {
     setLoaded(false);
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
+        console.log("matching json body")
         console.log(json.body)
         setSupporters(json.body);
         getTagsAndTopics()

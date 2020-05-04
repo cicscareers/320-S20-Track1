@@ -78,6 +78,9 @@ const SupporterCard = (props) => {
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
+
+  console.log("topic durs")
+  console.log(topics[apptTopic])
   //console.log(name + " " + score)
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -293,7 +296,7 @@ const SupporterCard = (props) => {
                 Location: {office}
               </Typography>
               <Typography gutterBottom>
-                Time: {convertTime(time)} for 30 minutes on {day}
+                Time: {convertTime(time)} for {topics[apptTopic].duration} minutes on {day}
               </Typography>
               <Typography gutterBottom>
                 Appointment Type: {apptTopic}

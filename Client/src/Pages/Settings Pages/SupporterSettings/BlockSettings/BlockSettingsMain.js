@@ -14,7 +14,7 @@ const BlockCard = (props) => {
     const {settings} = props
     const classes=useStyles()
 
-    const getTypeCard = (typeObj, settings) => {
+    const getTypeCard = (typeObj) => {
         return <BlockSettings {...typeObj} settings={settings}/>;
     };
 
@@ -27,13 +27,6 @@ const BlockCard = (props) => {
             <Grid direction="column" container>
                 <Grid item xs={12}>
                     {settings.appointment_type_info.map(typeObj => getTypeCard(typeObj))}
-                </Grid>
-                <Grid item xs={1}>
-                <Button variant="contained" color="primary" className={classes.fab}>
-                    <Typography variant="h6">
-                        Save Settings
-                    </Typography>
-                </Button>
                 </Grid>
             </Grid>
         </div>
