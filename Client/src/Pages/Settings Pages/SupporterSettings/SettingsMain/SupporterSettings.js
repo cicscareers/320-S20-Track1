@@ -67,7 +67,7 @@ const SupporterSettings = (props) => {
     useEffect(() => {
 
       setLoaded(false);
-      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/1"), 
+      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/27"), 
       fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
 
       .then(([res1, res2]) => { 

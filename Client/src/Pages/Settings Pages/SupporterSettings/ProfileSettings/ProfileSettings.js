@@ -1,5 +1,6 @@
 import React from "react"
 import {makeStyles, Typography, Button, Avatar, Container, Box, TextField, Grid} from "@material-ui/core";
+import SubmitButton from './SubmitButton.js'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -31,9 +32,12 @@ function handleSubmit(){
 }
 
 function getLinkedIn(arr){
+    if (!arr){
+        return ""
+    }
     for(let i=0;i<arr.length;i++){
         console.log(arr[i])
-        if(arr[i].link_type === "linkedin"){
+        if(arr[i].link_type === "LinkedIn"){
             return arr[i].link
         }
     }
@@ -50,7 +54,7 @@ const ProfileInformation = (props) => {
     const [phoneNumber, setPhoneNumber]=React.useState(settings.phone)
     const [email, setEmail]=React.useState(settings.email)
     const [linkedIn, setLinkedIn]=React.useState(getLinkedIn(settings.link))
-    const [bio, setBio]=React.useState("")
+    const [bio, setBio]=React.useState(settings.bio)
     return (
         <Container component="main">
         <div className={classes.paper}>
@@ -76,7 +80,7 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
+                            disabled
                             label="First Name"
                             autoFocus
                             defaultValue={firstName}
@@ -101,7 +105,7 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
+                            disabled
                             label="Last Name"
                             autoFocus
                             defaultValue={lastName}
@@ -129,9 +133,9 @@ const ProfileInformation = (props) => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            required
                             label="Email Address"
                             autoFocus
+                            disabled
                             defaultValue={email}
                             form className={classes.form}
                             onChange={e => setEmail(e.target.value)}
@@ -173,15 +177,17 @@ const ProfileInformation = (props) => {
                     form className={classes.form}
                     onChange={e => setBio(e.target.value)}
                 />
-                <Button
-                    margin="normal"
-                    form className={classes.button}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                <SubmitButton
+                    firstName={firstName}
+                    prefName={prefName}
+                    lastName={lastName}
+                    pronouns={pronouns}
+                    phoneNumber={phoneNumber}
+                    email={email}
+                    linkedIn={linkedIn}
+                    bio={bio}
+                />
+
             </form>
         </div>
         </Container>

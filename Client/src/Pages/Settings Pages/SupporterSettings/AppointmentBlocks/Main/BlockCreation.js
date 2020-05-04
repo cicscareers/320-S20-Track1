@@ -26,7 +26,7 @@ const ResponsiveDrawer = (props) => {
   const [appointmentTypes, setAppointmentTypes]=React.useState([]);
   const [blockListFromEndPoint, setBlockListFromEndPoint] = React.useState([]);
   var blockList = [];
-  const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/1/blocks";
+  const get_blocks_url = "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/27/blocks";
 
   //Calls the API to get the list of supporters
   useEffect(() => {

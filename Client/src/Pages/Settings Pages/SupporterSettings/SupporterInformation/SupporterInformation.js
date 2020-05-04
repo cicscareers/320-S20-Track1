@@ -87,7 +87,7 @@ const ProfileInformation = (props) => {
     const [majorList, setMajorList] = React.useState([])
     const [prefMajors, setPrefMajors]=React.useState(extractMajors(settings.major_preferences))
     const [minorList, setMinorList] = React.useState([])
-    const [prefMinors, setPrefMinors]=React.useState([])
+    const [prefMinors, setPrefMinors]=React.useState(extractMinors(settings.minor_preferences))
 
     function extractMajors(m){
         if(m === undefined){
@@ -303,6 +303,7 @@ const ProfileInformation = (props) => {
                     employer={employer}
                     title={title} 
                     tags={tags} 
+                    office={office}
                     prefMajors={prefMajors} 
                     prefMinors={prefMinors}>
                 </SubmitButton>

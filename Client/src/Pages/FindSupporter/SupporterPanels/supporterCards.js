@@ -12,7 +12,7 @@ import cardStyles from './CardStyles'
 
 const SupporterCard = (props) => {
   //Initialize all the constants
-  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, linkedin, supporter_id, score, filtered_tags} = props;
+  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, links, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
   const studentID = cookies.get("id")
@@ -28,7 +28,8 @@ const SupporterCard = (props) => {
   const [medium, setMedium] = React.useState("")
   const has_tags=supporter_has_tags()
   const startTimes = [];
-  
+  console.log(links)
+  const linkedin = (links && links["LinkedIn"]!=="") ? links["LinkedIn"] : ""
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
     const tag_list=[]
