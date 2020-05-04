@@ -272,7 +272,7 @@ const ResponsiveDrawer = (props) => {
         </DialogContent>
       </Dialog>
         {filteredAppointmentList.length>0 && <Typography align="center" variant="h4">Upcoming Appointments</Typography>}
-        {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">We couldnt find an appointment with those attributes. Please try widening your search.</Typography>}
+        {filteredAppointmentList.length===0 && <Typography align="center" variant="h4">No Scheduled Appointments</Typography>}
         <br/>
         <br/>
         

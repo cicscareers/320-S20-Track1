@@ -1,6 +1,6 @@
-function deleteAppointmentBlock(id, appointment_block_id, recurring_id) {
+function deleteAppointmentBlock(id, appointment_block_id, recurring_id, delete_recurring) {
 
-	let formatted_delete_recurring = "true"
+	let formatted_delete_recurring = delete_recurring.toString();
 	let formatted_recurring_id = recurring_id;
 	if(formatted_recurring_id === null) {
 		formatted_recurring_id = "NULL";
