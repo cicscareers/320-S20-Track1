@@ -281,8 +281,7 @@ const ResponsiveDrawer = (props) => {
                     autoFocus
                     color="primary"
                     variant="contained"
-                    onClick={()=>
-                      createAppointmentBlock(
+                    onClick={()=>createAppointmentBlock(
                         id, 
                         createBlockSelectedDate, 
                         sliderTime[0], 
