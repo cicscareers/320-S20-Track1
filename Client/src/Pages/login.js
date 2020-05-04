@@ -15,9 +15,9 @@ function Copyright() {
       {"Copyright © "}
       <Link
         color="inherit"
-        href="https://github.com/david-fisher/320-S20-Track1/"
+        href="https://www.cics.umass.edu/careers"
       >
-        CS 320 Track 1
+        CICS Careers
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -133,6 +133,8 @@ export default function SignIn() {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
+        <img  height="150" width="150" src ="cicscareers_logo_3.png"></img>
+        <br/>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
