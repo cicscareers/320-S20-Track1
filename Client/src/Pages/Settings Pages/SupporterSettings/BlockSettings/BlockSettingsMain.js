@@ -18,10 +18,14 @@ const BlockCard = (props) => {
         return <BlockSettings {...typeObj} settings={settings}/>;
     };
 
+    console.log("hello from block settings")
+    console.log(settings)
+    console.log("***********************")
+
     return (
         <div>  
             <Grid direction="column" container>
-                <Grid item xs={11}>
+                <Grid item xs={12}>
                     {settings.appointment_type_info.map(typeObj => getTypeCard(typeObj))}
                 </Grid>
                 <Grid item xs={1}>

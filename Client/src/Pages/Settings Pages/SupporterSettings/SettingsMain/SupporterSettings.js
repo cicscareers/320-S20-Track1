@@ -153,7 +153,7 @@ const SupporterSettings = (props) => {
               <ListItem button style={{backgroundColor: btns.three}}
               onClick={() => {
                 handleHighlight("three")
-                setPage("Appointment Blocks Settings")}} key={3}>
+                setPage("Appointment Settings")}} key={3}>
                 <ListItemText primary={"Appointment Blocks Settings"} />
               </ListItem>
               <ListItem button style={{backgroundColor: btns.four}}
@@ -169,7 +169,7 @@ const SupporterSettings = (props) => {
             {page==="Create Appointment Blocks" && (<Blocks typesList = {appointmentTypesList} settings={settings}/>)}
             {page==="Profile Information" && (<Profile settings={settings}/>)}
             {page==="Supporter Information" && (<SupporterInfo settings={settings}/>)}
-            {page==="Appointment Block Settings" && (<BlockSettings settings={settings}/>)}
+            {page==="Appointment Settings" && (<BlockSettings settings={settings}/>)}
         </main>
       </div>
       );
