@@ -2,6 +2,7 @@ import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
         DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import AdminSettings from '../SettingsMain/AdminSettings';
 
 export default function ChangeTags() {
     const [selectedMajor, setSelectedMajor] = useState("");
@@ -39,8 +40,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -54,6 +55,16 @@ export default function ChangeTags() {
 
     function handleAddClose(){
       setAddOpen(false);
+    }
+
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/majors")
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        setMajors(json.majors)
+        setLoaded(true)
+      })
     }
 
     function handleAddConfirm(){
@@ -80,13 +91,16 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
+
       .catch(error => {
         console.log(error);
       });
+      
       setAddOpen(false)
+      
     }
 
     function handleAddOpen(){

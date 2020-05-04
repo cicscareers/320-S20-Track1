@@ -18,6 +18,15 @@ export default function ChangeTags() {
       setDeleteOpen(false);
     }
 
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums")
+      .then(res => res.json())
+      .then(json => {
+        setMediums(json.mediums)
+        setLoaded(true)
+      })
+    }
+
     function handleDeleteConfirm(){
       fetch(
         "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/mediums",
@@ -42,8 +51,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -83,8 +92,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);

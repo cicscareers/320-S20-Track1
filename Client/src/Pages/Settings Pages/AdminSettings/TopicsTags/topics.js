@@ -40,8 +40,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -81,8 +81,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -92,6 +92,15 @@ export default function ChangeTags() {
 
     function handleAddOpen(){
       setAddOpen(true)
+    }
+
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/specialization-types")
+      .then(res => res.json())
+      .then(json => {
+        setTopics(json.specialization_types)
+        setLoaded(true)
+      })
     }
 
     useEffect(() => {

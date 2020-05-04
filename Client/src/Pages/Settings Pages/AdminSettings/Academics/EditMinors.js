@@ -40,8 +40,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -81,8 +81,8 @@ export default function ChangeTags() {
         }
       })
       .then(json => {
-        //setOpen(false);
-        //setOpenCreated(true);
+        setLoaded(false)
+        reloadInfo()
       })
       .catch(error => {
         console.log(error);
@@ -92,6 +92,16 @@ export default function ChangeTags() {
 
     function handleAddOpen(){
       setAddOpen(true)
+    }
+
+    function reloadInfo(){
+      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/table/minors")
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        setMinors(json.majors)
+        setLoaded(true)
+      })
     }
 
     useEffect(() => {
