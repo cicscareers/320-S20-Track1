@@ -105,7 +105,7 @@ const ResponsiveDrawer = (props) => {
       var filteredAppointmentList = [];
     }
     else{
-      console.log(appointments);
+      
       var filteredAppointmentList = (appointments.filter(
       appt => String((appt.supporterFN + " " + appt.supporterLN).toLowerCase()).includes(search.toLowerCase())))
     }
