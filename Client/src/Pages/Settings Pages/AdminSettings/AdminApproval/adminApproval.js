@@ -16,7 +16,7 @@ const AdminApproval = () => {
     const [reload, setReload] = useState(false);
 
     useEffect(() => {
-        fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/?is_student=true&?is_supporter=true')
+        fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/')
         .then(res => res.json())
         .then(json => {
             console.log(json.users)
@@ -56,14 +56,14 @@ const AdminApproval = () => {
             }
           })
           .then(json => {
-            //setOpen(false);
+            window.location.reload(false)
             //setOpenCreated(true);
           })
           .catch(error => {
             console.log(error);
           });
         
-        window.location.reload(false)
+        
         setDialog(false)
     }
 

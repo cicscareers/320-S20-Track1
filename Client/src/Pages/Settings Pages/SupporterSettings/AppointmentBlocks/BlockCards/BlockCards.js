@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography, Button, Card, CardActions, CardContent, Grid} from '@material-ui/core';
+import React, {useState} from 'react';
+import { Typography, Button, Card, CardActions, CardContent, Grid, Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import classes from './CardStyles';
 import convertTime from '../../../../FindSupporter/convertTime';
 import deleteAppointmentBlock from './deleteAppointmentBlock';
@@ -16,6 +16,7 @@ const BlockCard = (props) => {
   const month_name = date_strings[1]
   const day = date_strings[2]
   const id = sessionStorage.getItem("id");
+  const [openRecurringDeleteDialog, setOpenRecurringDeleteDialog] = useState(false);
 
   function  init_datetimes(){
     Block_Date.setYear(parseInt(start_date.substring(0,4)))
@@ -49,6 +50,14 @@ const BlockCard = (props) => {
     return convertTime(minutes)
   }
 
+  function deleteAppointmentOrSurfaceDialog(id, appointment_block_id, recurring_id) {
+    if(recurring_id !== null) {
+      setOpenRecurringDeleteDialog(true);
+    } else {
+      deleteAppointmentBlock(id, appointment_block_id, recurring_id, false);
+    }
+  }
+
   return (
     <div>
         <Card className={classes.root}>
@@ -74,9 +83,52 @@ const BlockCard = (props) => {
                 <b>Specializations: </b>{specializationArrayToString(specializations)}
             </Typography>
         </CardContent>
-        <CardActions>
-            <Button size="small" onClick={() => deleteAppointmentBlock(id, appointment_block_id, recurring_id)}>Delete Block</Button>
+        <Grid container>
+        <Grid item xs={5}/>
+        <Grid item xs={2}>
+        <CardActions alignSelf="right">
+            <Button size="small"
+              color="primary" 
+              variant="contained"
+              onClick={() => deleteAppointmentOrSurfaceDialog(id, appointment_block_id, recurring_id)}
+            >
+              Delete Block
+            </Button>
         </CardActions>
+        </Grid>
+        <Grid item xs={5}/>
+        </Grid>
+        <Dialog onClose={()=>setOpenRecurringDeleteDialog(false)} aria-labelledby="customized-dialog-title" open={openRecurringDeleteDialog}>
+            <DialogTitle id="customized-dialog-title" align="center" onClose={() => ()=>setOpenRecurringDeleteDialog(false)}>
+                Delete Recurring Block
+            </DialogTitle>
+            <DialogContent dividers>
+              <DialogActions>
+                <Grid container>
+                <Grid item xs={6}>
+                  <Button 
+                    size="small" 
+                    color="primary" 
+                    variant="contained" 
+                    onClick={() => deleteAppointmentBlock(id, appointment_block_id, recurring_id, false)}
+                  >
+                    This Block
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button 
+                    size="small" 
+                    color="primary"
+                    variant="contained" 
+                    onClick={() => deleteAppointmentBlock(id, appointment_block_id, recurring_id, true)}
+                  >
+                    All Blocks
+                  </Button>
+                </Grid>
+                </Grid>
+              </DialogActions>
+            </DialogContent>
+        </Dialog>
         </Card>
         <br/>
     </div>

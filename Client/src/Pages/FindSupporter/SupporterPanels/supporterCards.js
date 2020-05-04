@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Chip, Button, Grid, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Badge, Typography  } from '@material-ui/core';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -25,9 +25,17 @@ const SupporterCard = (props) => {
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [medium, setMedium] = React.useState("")
+  const [dur,setDur]=React.useState(topics[apptTopic]!==undefined ? topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
-  console.log(links)
+  console.log("********topics list***********")
+  console.log(topics)
+  console.log("********selected topic***********")
+  console.log(apptTopic)
+  console.log("********duration***********")
+  console.log(dur)
+  console.log("********duration***********")
+  console.log("")
   const linkedin = (links && links["LinkedIn"]!=="") ? links["LinkedIn"] : ""
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
@@ -90,6 +98,10 @@ const SupporterCard = (props) => {
     console.log(arr)
     return arr
   }
+
+  useEffect(() => {
+    setDur(topics[apptTopic]!== undefined ? topics[apptTopic].duration : 0)
+  });
 
   const topics_array = convertTopicsToArray(topics)
 
@@ -299,7 +311,7 @@ const SupporterCard = (props) => {
             Location: {office}
           </Typography>
           <Typography gutterBottom>
-            Time: {convertTime(time)} for 30 minutes on {day}
+            Time: {convertTime(time)} for {dur} minutes on {day}
           </Typography>
           <Typography gutterBottom>
             Appointment Type: {apptTopic}

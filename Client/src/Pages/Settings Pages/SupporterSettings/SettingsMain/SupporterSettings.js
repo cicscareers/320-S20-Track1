@@ -154,7 +154,7 @@ const SupporterSettings = (props) => {
               onClick={() => {
                 handleHighlight("three")
                 setPage("Appointment Settings")}} key={3}>
-                <ListItemText primary={"Appointment Blocks Settings"} />
+                <ListItemText primary={"Appointment Settings"} />
               </ListItem>
               <ListItem button style={{backgroundColor: btns.four}}
               onClick={() => {
