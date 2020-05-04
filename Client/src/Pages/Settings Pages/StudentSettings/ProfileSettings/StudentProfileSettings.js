@@ -30,29 +30,27 @@ const useStyles = makeStyles((theme) => ({
     align: "center",
   },
   avatar: {
-    marginLeft: "42%",
+    marginLeft: "38%",
     marginRight: "50%",
     width: theme.spacing(25),
     height: theme.spacing(25),
+    backgroundColor: "primary",
   },
 }));
 
-function handleSubmit() {
-  //TODO
-}
-
 const ProfileInformation = (props) => {
   const classes = useStyles();
-  const [firstName, setFirstName] = React.useState("");
-  const [prefName, setPrefName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [pronouns, setPronouns] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [linkedIn, setLinkedIn] = React.useState("");
-  const [bio, setBio] = React.useState("");
-  const [picture, setPicture] = React.useState("");
-  const [loaded, setLoaded] = React.useState(false);
+  const { settings } = props;
+  const [firstName, setFirstName] = React.useState(settings.first_name);
+  const [prefName, setPrefName] = React.useState(settings.preferred_name);
+  const [lastName, setLastName] = React.useState(settings.last_name);
+  const [pronouns, setPronouns] = React.useState(settings.pronouns);
+  const [phoneNumber, setPhoneNumber] = React.useState(settings.phone);
+  const [email, setEmail] = React.useState(settings.email);
+  const [linkedIn, setLinkedIn] = React.useState(settings.link);
+  const [bio, setBio] = React.useState(settings.bio);
+  const [picture, setPicture] = React.useState(settings.picture);
+  const [grad_year, setGradYear] = React.useState(settings.grad_year);
 
   const cookies = new Cookies();
   const id = cookies.get("id");
@@ -60,33 +58,57 @@ const ProfileInformation = (props) => {
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
 
-  useEffect(() => {
-    fetch(url, { method: "GET" })
-      .then((res) => res.json())
-      .then((json) => {
-        setFirstName(json.first_name);
-        setPrefName(json.preferred_name);
-        setLastName(json.last_name);
-        setPronouns(json.pronouns);
-        setPhoneNumber(json.phone);
-        setEmail(json.email);
-        setBio(json.bio);
-        setLinkedIn(json.link);
-        setPicture(json.picture);
-        setLoaded(true);
-      });
-  }, []);
+  function handleSubmit() {
+    let formatted_majors = settings.major;
+    let formatted_minors = settings.minor;
+    let formatted_colleges = settings.college;
+    console.log(settings.major);
 
-  if (!loaded) {
-    return (
-      <div align="center">
-        <br></br>
-        <Typography variant="h4">Loading...</Typography>
-        <br></br>
-        <CircularProgress />
-      </div>
-    );
+    if (settings.major === null) {
+      formatted_majors = [];
+    }
+    if (settings.minor === null) {
+      formatted_minors = ["Greek"];
+    }
+    if (settings.college === null) {
+      formatted_colleges = [
+        {
+          college_id: 9,
+          college: "College of Information and Computer Sciences",
+        },
+      ];
+    }
+    console.log(formatted_majors);
+    // console.log(formatted_minors);
+    // console.log(formatted_colleges);
+    fetch(url, {
+      method: "PATCH",
+      body: JSON.stringify({
+        first_name: firstName,
+        bio: bio,
+        colleges: formatted_colleges,
+        email: email,
+        gender: settings.gender,
+        grad_student: settings.grad_student,
+        grad_year: settings.grad_year,
+        last_name: lastName,
+        // majors: formatted_majors,
+        // minors: formatted_minors,
+        phone: phoneNumber,
+        picture: picture,
+        preferred_name: prefName,
+        pronouns: pronouns,
+        resume: settings.resume,
+        statusCode: settings.statusCode,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
   }
+
   return (
     <Container component="main">
       <div className={classes.paper}>
@@ -94,7 +116,12 @@ const ProfileInformation = (props) => {
           Profile Information
         </Typography>
         <form className={classes.form}>
-          <Avatar className={classes.avatar} src={picture} />
+          <Avatar
+            // alt={firstName}
+            color="primary"
+            className={classes.avatar}
+            src={picture}
+          />
           <br />
           <Grid container>
             <Grid item xs={3}>
@@ -103,7 +130,6 @@ const ProfileInformation = (props) => {
                 margin="normal"
                 fullWidth
                 label="First Name"
-                autoFocus
                 required
                 multiline
                 defaultValue={firstName}
@@ -118,7 +144,6 @@ const ProfileInformation = (props) => {
                 margin="normal"
                 fullWidth
                 label="Preferred Name"
-                autoFocus
                 multiline
                 defaultValue={prefName}
                 form
@@ -133,7 +158,6 @@ const ProfileInformation = (props) => {
                 fullWidth
                 required
                 label="Last Name"
-                autoFocus
                 multiline
                 defaultValue={lastName}
                 form
@@ -147,7 +171,6 @@ const ProfileInformation = (props) => {
                 margin="normal"
                 fullWidth
                 label="Pronouns"
-                autoFocus
                 multiline
                 defaultValue={pronouns}
                 form
@@ -165,7 +188,6 @@ const ProfileInformation = (props) => {
                 fullWidth
                 required
                 label="Email Address"
-                autoFocus
                 multiline
                 defaultValue={email}
                 form
@@ -179,7 +201,6 @@ const ProfileInformation = (props) => {
                 margin="normal"
                 fullWidth
                 label="Phone Number"
-                autoFocus
                 multiline
                 defaultValue={phoneNumber}
                 form
@@ -193,7 +214,6 @@ const ProfileInformation = (props) => {
             margin="normal"
             fullWidth
             label="LinkedIn"
-            autoFocus
             multiline
             defaultValue={linkedIn}
             form
@@ -205,7 +225,6 @@ const ProfileInformation = (props) => {
             margin="normal"
             fullWidth
             label="Personal Biography"
-            autoFocus
             multiline
             rows={4}
             defaultValue={bio}

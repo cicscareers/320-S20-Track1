@@ -3,10 +3,17 @@ import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, ListItem, ListItemText, List } from "@material-ui/core";
+import {
+  makeStyles,
+  ListItem,
+  ListItemText,
+  List,
+  CircularProgress,
+} from "@material-ui/core";
 import Menu from "../../../../Navigation/appbar.js";
 import Cookies from "universal-cookie";
 import StudentProfileSettings from "../ProfileSettings/StudentProfileSettings";
+import StudentAcademicSettings from "../ProfileSettings/StudentAcademicSettings";
 
 const drawerWidth = "25%";
 
@@ -52,9 +59,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SupporterSettings = (props) => {
+const StudentSettings = (props) => {
   const classes = useStyles();
   const [page, setPage] = React.useState("Profile Information");
+  const [settings, setSettings] = React.useState([]);
+  const [loaded, setLoaded] = React.useState(false);
+  const [error, setError] = React.useState(false);
+
+  const cookies = new Cookies();
+  const id = cookies.get("id");
+  const url =
+    "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
+    id;
+
+  useEffect(() => {
+    fetchStudentSettings(url);
+  }, []);
+
+  function fetchStudentSettings(url) {
+    myFetch(url)
+      .then((json) => {
+        console.log(json);
+        if (json !== undefined) {
+          setSettings(json);
+          setLoaded(true);
+        } else {
+          throw new Error();
+        }
+      })
+      .catch((error) => {
+        setError(true);
+        setLoaded(true);
+      });
+  }
+
+  async function myFetch(url) {
+    let response = await fetch(url);
+    let json = await response.json();
+    return json;
+  }
+
+  if (error) {
+    return (
+      <div align="center">
+        <br />
+        <br />
+        <br />
+        <Typography variant="h4">
+          There was an error fetching your settings. The server may be down at
+          the moment
+        </Typography>
+      </div>
+    );
+  } else if (!loaded) {
+    return (
+      <div align="center">
+        <br></br>
+        <Typography variant="h4">Loading...</Typography>
+        <br></br>
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -82,14 +148,22 @@ const SupporterSettings = (props) => {
             >
               <ListItemText primary={"Profile Information"} />
             </ListItem>
+            <ListItem button onClick={() => setPage("Academics")} key={2}>
+              <ListItemText primary={"Academics"} />
+            </ListItem>
           </List>
         </div>
       </Drawer>
       <main className={classes.content}>
-        {page === "Profile Information" && <StudentProfileSettings />}
+        {page === "Profile Information" && (
+          <StudentProfileSettings settings={settings} />
+        )}
+        {page === "Academics" && (
+          <StudentAcademicSettings settings={settings} />
+        )}
       </main>
     </div>
   );
 };
 
-export default SupporterSettings;
+export default StudentSettings;
