@@ -99,6 +99,7 @@ export default function MenuAppBar(props) {
   const token = sessionStorage.getItem("token");
   const name = sessionStorage.getItem("firstName");
   const id = sessionStorage.getItem("id");
+  const image = sessionStorage.getItem("image")
 
   //Sets the styling
   const classes = useStyles();
@@ -111,20 +112,38 @@ export default function MenuAppBar(props) {
   const open = Boolean(anchorEl);
   const [openModal, setOpen] = React.useState(false);
 
+  
   useEffect(() => {
     fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')
-              .then(res => res.json())
-              .then(json => {
-                sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
-                //console.log(json.user_roles)
-                //console.log("setting possible roles to: " + json.user_roles);
-                SetPossibleRoles(json.user_roles);
-              })
-              .catch(error => {
-                  //console.log(error);
-                  //console.log("No Supporters Found");
-              });
+        .then(res => res.json())
+        .then(json => {
+          sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+          //console.log(json.user_roles)
+          //console.log("setting possible roles to: " + json.user_roles);
+          SetPossibleRoles(json.user_roles);
+        })
+        .catch(error => {
+            //console.log(error);
+            //console.log("No Supporters Found");
+        });
       }, [])
+  /*useEffect(() => {
+      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/" + sessionStorage.getItem("id").toString() + "/picture"), 
+      fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + id + '/role')])
+
+      .then(([res1, res2]) => { 
+          return Promise.all([res1.json(), res2.json()]) 
+      })
+      .then(([res1, res2]) => {
+        console.log(res2)
+        sessionStorage.setItem('possibleRoles', ['student','supporter', 'admin']);
+        SetPossibleRoles(res2.user_roles);
+        setImage(res1.picture)
+      }).catch(error => {
+        //console.log(error);
+        //console.log("No Supporters Found");
+    });
+  }, [])*/
    
     
   const handleModalOpen = () => {
@@ -149,6 +168,7 @@ export default function MenuAppBar(props) {
     sessionStorage.removeItem("firstName");
     sessionStorage.removeItem("lastName");
     sessionStorage.removeItem("role");
+    sessionStorage.removeItem("image");
     cookies.remove("role");
     sessionStorage.removeItem("token");
     window.location.reload();
@@ -235,7 +255,7 @@ return RenderRoles;
           <Button variant="text" href="/FAQ" className={classes.button}>FAQ</Button>
           <Button className={classes.pictureButton} onClick={handleMenu}>
             <Avatar alt={name} 
-              src="https://www.cics.umass.edu/sites/default/files/styles/people_individual/public/headshots/img_4695_copy.jpg?itok=jwwJF0KP"
+              src={image}
               className={classes.large}>
             </Avatar>
           </Button>

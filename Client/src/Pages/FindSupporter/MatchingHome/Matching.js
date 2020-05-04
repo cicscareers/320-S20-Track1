@@ -275,9 +275,7 @@ const ResponsiveDrawer = (props) => {
       <div className={classes.root}>
         {/*Handles the appbar sizing*/}
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Menu/>
-        </AppBar>
+        
         <Drawer
           className={classes.drawer}
           variant="permanent"
