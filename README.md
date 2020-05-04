@@ -142,3 +142,6 @@ The Back-end teams and Front-end teams are granted with all permission to set up
 
 #### Overview
 Amazon Cognito is a service that lets you add sign in, sign up and other permission restrictions to a website or mobile app. it was integrated with the website easily and handled complicated steps in the sign-in and sign-up process such as email verification and user authentication. Cognito is easily scalable to more than millions of user and its free tier handles 50,000 monthly active users, which should be enough for ReachOut, but if this number isn't enough, the cost for each monthly active user after 50,000 is only $0.00550.
+
+#### Backlog: AWS SES
+Currently the scripts for email notifictions for appointments including sending .ics files with calendar invites are using a standard SMTP python library. This method of sending emails is insecure and it would the preferable to use the more secure AWS SES to send email invites. In order to set this up, the SES environment must be moved to a production environment from its current sandbox environment. The sandbox environment only allows emails to me sent from and to SES verified emails. Use [this tutorial](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html) to migrate out of the SES sandbox and into the production environment.
