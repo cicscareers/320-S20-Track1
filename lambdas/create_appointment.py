@@ -9,9 +9,10 @@ import datetime
 from package.email_ics import send_cal_email
 
 # function puts the appointment details in the database
-# Inputs: supporter_id, time_of_appt, medium, selected_tags, location, 
-#         specialization, comment (optional), override (boolean)
-#         supporter_email(optional), student_email (optional)
+# Inputs: time_of_appt, medium, selected_tags, location, 
+#         specialization, override (boolean), comment (optional)
+#         ONE OF: supporter_id, supporter_email, 
+#         ONE OF: student_id, student_email
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
