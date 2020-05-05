@@ -16,7 +16,7 @@ def handler(event, context):
 
     for abp_id, p_text in about_page:
         curr_about_page = response["about_page"]
-        next_p_text = {'about_page_id' : abp_id['longvalue'], 'page_text' : p_text['stringValue']}
+        next_p_text = {'about_page_id' : abp_id['longValue'], 'page_text' : p_text['stringValue']}
         curr_about_page.append(next_p_text)
         response['about_page'] = curr_about_page
 

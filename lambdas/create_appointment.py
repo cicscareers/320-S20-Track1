@@ -7,16 +7,17 @@ from package.lambda_exception import LambdaException
 import time
 import datetime
 from package.email_ics import send_cal_email
+from boto3 import client as boto3_client
 
 # function puts the appointment details in the database
-# Inputs: time_of_appt, medium, selected_tags, location, 
-#         specialization, override (boolean), comment (optional)
-#         ONE OF: supporter_id, supporter_email, 
-#         ONE OF: student_id, student_email
+# Inputs: supporter_id, time_of_appt, medium, selected_tags, location, 
+#         specialization, comment (optional), override (boolean)
+#         supporter_email(optional), student_email (optional)
 # Output: 201 Created
 def lambda_handler(event, context):
     # take in lambda input
     time_of_appt = event['time_of_appt']
+    duration = event['duration']
     tags = event['selected_tags']
     selected_tags_str = tags
     medium_string = event['medium']
@@ -34,8 +35,12 @@ def lambda_handler(event, context):
         override = False
     
     if override and event['student_id'] == "":
+        if event["duration"] == "":
+            raise LambdaException("400: Must provide appt duration if overriding create appointment")
+        duration = int(event['duration'])
+        
         # look up by email
-        if 'student_email' not in event:
+        if event['student_email'] == "":
             raise LambdaException("404: Must provide student_id or email.")
         # get student_email
         student_email = event['student_email']
@@ -92,7 +97,7 @@ def lambda_handler(event, context):
 
     if override and event['supporter_id'] == "":
         #look up by email
-        if 'supporter_email' not in event:
+        if event['supporter_email'] == "":
             raise LambdaException("404: Must provide supporter_id or email.")
         # get supporter_email
         supporter_email = event['supporter_email']
@@ -252,9 +257,8 @@ def lambda_handler(event, context):
         raise LambdaException("404: Invalid specialization.")
     else:
         specialization = specialization_query['records'][0][0]['longValue']
-
-    if not override:
-        # Check if provided time is already booked for supporter
+        
+    if duration == "":
         # get duration of appointment
         sql = "SELECT duration FROM supporter_specializations WHERE supporter_id=:supporter_id AND specialization_type_id=:specialization;"
         sql_parameters = [
@@ -272,6 +276,9 @@ def lambda_handler(event, context):
             raise LambdaException("404: Specialization type has no specified appointment duration.")
         else:
             duration = duration_query['records'][0][0]['longValue']
+
+    if not override:
+        # Check if provided time is already booked for supporter
         
         # get end time by advancing start time by 'duration'
         appt_start_time = datetime.datetime.strptime(time_of_appt, '%Y-%m-%d %H:%M:%S') #convert start time to datetime
@@ -377,6 +384,23 @@ def lambda_handler(event, context):
         response = query(sql, query_parameters)
     except Exception as e:
         raise LambdaException("404: Update to specializations_for_appointment failed: " + str(e))
+        
+    # send confirmation email
+    lambda_client = boto3_client('lambda')
+    email_event = {
+      "supporter_id": supporter_id,
+      "student_id": student_id,
+      "time_of_appt": time_of_appt,
+      "duration": duration,
+      "location": location,
+      "appointment_type": spec_type
+    }
+    try:
+        response = lambda_client.invoke(FunctionName="appointment_email",
+                                           InvocationType='Event',
+                                           Payload=json.dumps(email_event))
+    except Exception as e:
+        raise LambdaException("404: Unable to send confirmation email")
     
     # if no error, return 201 Created
     return {

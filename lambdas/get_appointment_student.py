@@ -31,6 +31,7 @@ def get_appointment_students(event, context):
             AND SA.appointment_id = SF.appointment_id \
             AND SF.specialization_type_id = ST.specialization_type_id \
             AND ST.specialization_type_id = SS.specialization_type_id \
+            AND SS.supporter_id = SR.supporter_id\
             AND S.student_id=:given_id;' 
             
     sql_parameters = [{'name':'given_id', 'value' : {'longValue': given_id}}]
@@ -79,5 +80,4 @@ def get_appointment_students(event, context):
             'body': student_appointments,
             'statusCode': 200
         }
-    
     

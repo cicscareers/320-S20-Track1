@@ -13,7 +13,7 @@ def create_supporter(event, context):
     # print('OOF')
 
     # Users table input
-    new_id=event['id']
+    new_id=int(event['id'])
     # first_name = event['first_name']
     # last_name = event['last_name']
     # email = event['email']
@@ -25,11 +25,7 @@ def create_supporter(event, context):
 
     # optional
     # if no input for team place empty
-    if 'team' not in event:
-        team = 'team'
-
-    else:
-        team = event['team']
+    team = event['team']
 
     # Supporters_type table input
     typ = event['supporter_types']
@@ -95,7 +91,7 @@ def create_supporter(event, context):
     #     }
 
     # inserts user into supporters table with same user_id
-    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name,is_pending, office) \
+    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name, is_pending, office) \
             VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, true,'office')"""
 
     sql_parameters = [
@@ -139,6 +135,6 @@ def create_supporter(event, context):
 
     # finish
     return {
-        'body': json.dumps("Supporter has been created. YAY!!!"),
+        'body': "Supporter has been created",
         'statusCode': 201
     }
