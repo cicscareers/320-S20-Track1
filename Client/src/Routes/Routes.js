@@ -1,8 +1,8 @@
 import React from "react";
-import Login from "../Pages/login.js";
-import ForgotPassword from "../Pages/resetPass.js";
-import SignUp from "../Pages/signup.js";
-import SignUpSupporter from "../Pages/signUpSupporter.js";
+import Login from "../Pages/Authentication/login.js";
+import ForgotPassword from "../Pages/Authentication/resetPass.js";
+import SignUp from "../Pages/Authentication/signup.js";
+import SignUpSupporter from "../Pages/Authentication/signUpSupporter.js";
 import tos from "../Pages/TOS.js";
 import appts from "../Pages/appts.js";
 import NotFound from "../Pages/NotFound.js";
@@ -17,10 +17,7 @@ import AdminRoute from "./AdminRoute";
 import Cookies from "universal-cookie";
 import SupporterRoute from "./SupporterRoute";
 import StudentRoute from "./StudentRoute.js";
-import Feedback from "../Pages/feedback";
-import SupporterBlocks from "../Pages/Settings Pages/SupporterSettings/AppointmentBlocks/Main/BlockCreation.js";
-//import Home from "../Pages/home.js";
-import resetPassAfterEmail from "../Pages/restPassAfterEmail";
+import resetPassAfterEmail from "../Pages/Authentication/restPassAfterEmail";
 import FAQ from "../Pages/faq";
 
 const cookies = new Cookies();
@@ -32,7 +29,6 @@ export default function Routes() {
           {role==="Student" && <Redirect exact from="/" to="/match" />}
           {role!=="Student" && <Redirect exact from="/" to="/appointments" />}
           <AuthenticatedRoute path="/FAQ" exact component={FAQ} />
-          <AuthenticatedRoute path="/feedback" exact component={Feedback} />
           <AdminRoute path="/admin-settings" exact component={AdminSettings} />
           <StudentRoute path="/account" exact component={StudentSettings} />
           <SupporterRoute Route path="/supporter-settings" exact component={SupporterSettings} />
@@ -40,6 +36,7 @@ export default function Routes() {
           <StudentRoute path="/match" exact component={Matching} />
           <Route path="/TOS" exact component={tos} />
           <AuthenticatedRoute path="/appointments" exact component={appts} />} />
+          <UnauthenticatedRoute path="/signup-supporter" exact component={SignUpSupporter} />
           <UnauthenticatedRoute path="/signup" exact component={SignUp} />
           <UnauthenticatedRoute path="/forgot-password" exact component={ForgotPassword} />
           <UnauthenticatedRoute path="/forgot-password2" exact component={resetPassAfterEmail} />

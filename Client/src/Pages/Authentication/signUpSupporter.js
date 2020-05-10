@@ -1,26 +1,12 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import {FormHelperText, FormControl} from "@material-ui/core";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import users from "../Data/users.json"
-import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
+import {Container, makeStyles, Typography, Box, Grid, Link, FormHelperText, FormControl, TextField, CssBaseline, Button, withStyles, Dialog, IconButton} from "@material-ui/core";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Autocomplete} from '@material-ui/lab';
 import { Auth } from "aws-amplify";
-import { Redirect } from 'react-router-dom';
-import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+
 
 
 function Copyright() {
@@ -31,7 +17,7 @@ function Copyright() {
         color="inherit"
         href="https://github.com/david-fisher/320-S20-Track1/"
       >
-        CS 320 Track 1
+        CICS Careers
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -132,10 +118,7 @@ export default function SignUp() {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   window.location.reload();
-  // };
+
 
   function validateForm() {
     return password===password2 && email.length > 0
@@ -146,7 +129,7 @@ export default function SignUp() {
     && validatePass(password);
   }
 
-  function samePass(pass, pass2){
+  function samePass(){
     return password===password2;
   }
 
@@ -159,99 +142,37 @@ export default function SignUp() {
   }
 
   const handleSubmit = async event => {
-    var error = false;
-    if(password !== password2){
-      alert("Passwords must match!");
-      error=true;
-    }
-    for (var i = 0; i < users.length; i++){
-      if (users[i].email === email){
-        alert("User already exists!");
-        error=true;
-        break;
+    var username = email;
+    event.preventDefault();
+      try{
+        const signUpResponse = await Auth.signUp({
+          username,
+          password,
+          attributes:{
+            email: email,
+            given_name: fname,
+            family_name: lname,
+            profile: "Supporter",
+            locale: "supporterType",
+            zoneinfo: employer,
+            nickname: title,
+            address: "team",
+            preferred_username: "default",
+
+          },
+        })
+
+        setOpen(true)
+        console.log('Redirect$$$$$$$$')
+        handleClickOpen()
+        //setRedirect(true);
+
+      }catch(error){
+        console.log("AHHHHHHHHHHWOIPOQIWPU0930838-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        console.log(error)
+        alert(error.message)
       }
     }
-
-    var username = email;
-    // var attributeList = []
-    // var emailData = {
-    //   Name : 'email',
-    //   Value : email
-    // };
-    // var role = {
-    //     Name : 'custom:role',
-    //     Value : 'Supporter'
-    // };
-    // var first_name = {
-    //     Name : 'custom:first_name',
-    //     Value : fname
-    // };
-    // var last_name = {
-    //     Name : 'custom:last_name',
-    //     Value : lname
-    // };
-    //
-    // var supporter_type ={
-    //   Name: 'custom:supporter_type',
-    //   Value: supporterType
-    // }
-    //
-    // var employerData = {
-    //   Name: 'employer',
-    //   Value: employer
-    //}
-
-    // var titleData = {
-    //   Name: 'title',
-    //   Value: title
-    // }
-    //
-    // var teamData ={
-    //   Name: 'team',
-    //   Value: team
-    // }
-
-
-    // attributeList.push(new CognitoUserAttribute(emailData));
-    // attributeList.push(new CognitoUserAttribute(role));
-    // attributeList.push(new CognitoUserAttribute(first_name));
-    // attributeList.push(new CognitoUserAttribute(last_name));
-    // attributeList.push(new CognitoUserAttribute(supporter_type));
-    // attributeList.push(new CognitoUserAttribute(employerData));
-    // attributeList.push(new CognitoUserAttribute(titleData));
-    // attributeList.push(new CognitoUserAttribute(teamData));
-        event.preventDefault();
-
-
-          try{
-            const signUpResponse = await Auth.signUp({
-              username,
-              password,
-              attributes:{
-                email: email,
-                given_name: fname,
-                family_name: lname,
-                profile: "Supporter",
-                locale: "supporterType",
-                zoneinfo: employer,
-                nickname: title,
-                address: "team",
-                preferred_username: "default",
-
-              },
-            })
-
-            setOpen(true)
-            console.log('Redirect$$$$$$$$')
-            handleClickOpen()
-            //setRedirect(true);
-
-          }catch(error){
-            console.log("AHHHHHHHHHHWOIPOQIWPU0930838-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            console.log(error)
-            alert(error.message)
-          }
-        }
 
 
 

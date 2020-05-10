@@ -1,27 +1,10 @@
 import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { createMuiTheme } from "@material-ui/core/styles";
-import purple from "@material-ui/core/colors/purple";
-import red from "@material-ui/core/colors/red";
-import {FormHelperText, FormControl, Dialog, withStyles} from "@material-ui/core";
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, FormHelperText, FormControl, Dialog, withStyles, IconButton} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import {Auth, Amplify} from 'aws-amplify';
+import {Auth} from 'aws-amplify';
 
 function Copyright() {
   return (
@@ -31,7 +14,7 @@ function Copyright() {
         color="inherit"
         href="https://github.com/david-fisher/320-S20-Track1/"
       >
-        King Codras
+        CICS Careers
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -71,6 +54,7 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
+
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -111,15 +95,10 @@ export default function SignIn() {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
-    setOpen(false);
-    window.location.reload();
-  };
 
-
-   function  handleSubmitButton(event){
-     setCodeCorrect(true)
-     setEmailCorrect(true)
+  function  handleSubmitButton(event){
+    setCodeCorrect(true)
+    setEmailCorrect(true)
     Auth.forgotPasswordSubmit(email, code, password)
     .then(data => handleClickOpen())
     .catch(err => handleError(err));
@@ -141,7 +120,6 @@ export default function SignIn() {
     }
   }
 
-
   function validateForm() {
     return password===password2 && password.length > 0 && password2.length > 0 && code.length > 0 & email.length > 0 && validEmail(email);
   }
@@ -160,7 +138,7 @@ export default function SignIn() {
     function validatePass(pass){
       return pass.length>=8 && hasUpperCase(pass) && hasLowerCase(pass) && containsSpecial(pass);
     }
-  function samePass(pass, pass2){
+  function samePass(){
     return password===password2;
   }
 
@@ -168,19 +146,10 @@ export default function SignIn() {
     return !! address.match(/.+@.+/);
   }
 
-  function handleKeyPress(event){
-    if(event.key === 'Enter'){
-    handleSubmitButton()
-    }
-  }
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
           Reset Password
         </Typography>

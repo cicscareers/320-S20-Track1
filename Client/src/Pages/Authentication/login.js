@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Button, MenuItem, TextField, Link, Grid, Box, Typography, Container, FormControl,FormHelperText } from "@material-ui/core";
+import React, { useState} from "react";
+import { Button, TextField, Link, Grid, Box, Typography, Container, FormControl,FormHelperText } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Select from '@material-ui/core/Select';
 import { Auth } from "aws-amplify";
 import Cookies from "universal-cookie";
-
-
-
 
 //Function that shows the copyright (will get updated to the appropiate one later)
 function Copyright() {
@@ -52,11 +48,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
   const [validInfo,setValidInfo] = useState(true)
-  
-
-  const handleChange = (event) => {
-    setLoginType(event.target.value);
-  };
 
   function fetchPicture(){
     fetch(
@@ -79,66 +70,42 @@ export default function SignIn() {
       .catch(error => {
         console.log(error);
       });
-}
+  }
 
-
-  //sets up the encryption library
-  var bcrypt = require('bcryptjs');
-  var salt = bcrypt.genSaltSync(10);
 
   //Gets run when submit is pressed and handles authentication.
   const handleSubmit = async event =>{
     event.preventDefault();
     var username = email;
-      try{
-        const user = await Auth.signIn(email, password);
-        console.log(user);
-        if (user.signInUserSession.accessToken !== undefined) {
-          console.log("hooray! we have json!");
+    try{
+      const user = await Auth.signIn(email, password);
+      console.log(user);
+      if (user.signInUserSession.accessToken !== undefined) {
 
-          var authToken = user.signInUserSession.idToken.jwtToken;
-          var base64Url = authToken.split('.')[1];
-          var json = JSON.parse(window.atob(base64Url));
-          const cookies = new Cookies();
-
-          sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
-          sessionStorage.setItem("email", json.email);
-          sessionStorage.setItem("firstName", json.given_name);
-          sessionStorage.setItem("lastName", json.family_name);
-          sessionStorage.setItem("role", "Student");
-          sessionStorage.setItem("id", json.preferred_username);
-          cookies.set("role", "Student", { path: "/" });
-          fetchPicture()
-          window.location.reload();
-        }
-      }catch(error){
-        //alert(error.message);
-        if(error.code =="NotAuthorizedException"){
-          setValidInfo(false);
-          
-        }
-        else{
-          alert(error.message)
-        }
-        console.log(error);
+        var authToken = user.signInUserSession.idToken.jwtToken;
+        var base64Url = authToken.split('.')[1];
+        var json = JSON.parse(window.atob(base64Url));
+        const cookies = new Cookies();
+        sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
+        sessionStorage.setItem("email", json.email);
+        sessionStorage.setItem("firstName", json.given_name);
+        sessionStorage.setItem("lastName", json.family_name);
+        sessionStorage.setItem("role", "Student");
+        sessionStorage.setItem("id", json.preferred_username);
+        cookies.set("role", "Student", { path: "/" });
+        fetchPicture()
+        window.location.reload();
       }
+    }catch(error){
+      if(error.code =="NotAuthorizedException"){
+        setValidInfo(false);   
+      }
+      else{
+        alert(error.message)
+      }
+      console.log(error);
     }
-
-      // .then(response => {
-      //   console.log(response);
-      //   return response.json();
-      // })
-      // .then(json => {
-      //   console.log(json);
-      // else {
-      //       throw new Error();
-      //     }
-      // })
-      // .catch(error => {
-      //   alert("Invalid credentials");
-      //   console.log(error);
-      // });
-
+  }
 
   //checks if they put in an email and password
   function validateForm() {
@@ -158,7 +125,6 @@ export default function SignIn() {
       <div className={classes.paper}>
         <img  height="175" width="175" src ="cicscareers_logo_3.png"></img>
         <br/>
-        
         <form className={classes.form}>
           <TextField
             variant="outlined"
@@ -187,8 +153,6 @@ export default function SignIn() {
             onChange={e => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-
-
           <Button
             margin="normal"
             fullWidth

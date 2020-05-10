@@ -29,9 +29,4 @@ FaqItem.propTypes = {
   faq: PropTypes.object.isRequired,
 };
 
-//Example for a constant
-// const itemStyle = {
-//   backgroundColor: "#f4f4f4"
-// };
-
 export default FaqItem;

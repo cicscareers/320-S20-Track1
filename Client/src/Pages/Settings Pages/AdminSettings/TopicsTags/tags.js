@@ -2,7 +2,6 @@ import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
         DialogContent, DialogContentText, DialogActions} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Tags from "../../../FindSupporter/tags.js"
 
 export default function ChangeTags() {
     const [selectedTag, setSelectedTag] = useState("");

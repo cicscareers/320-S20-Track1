@@ -1,2 +1,0 @@
-export default ["React","ML","iOS","C++","html","css","x86 assembly","AWS","microsoft","algorithms","Apple","Mac","Newton","Lisa","iMac","Swift",
-"Amazon","Money","Stacks","Divorce","Microsoft","Algorithms","Money","250","combinatorics","industry","networking","Networking","career development"]

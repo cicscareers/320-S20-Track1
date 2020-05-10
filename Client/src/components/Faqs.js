@@ -40,15 +40,6 @@ class Faqs extends Component {
         })}
       </div>
     );
-
-    // return this.props.faqs.map((faq) => (
-    //   <FaqItem
-    //     key={faq.id}
-    //     faq={faq}
-    //     question={faq.question}
-    //     answer={faq.answer}
-    //   />
-    // ));
   }
 }
 

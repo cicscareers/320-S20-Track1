@@ -2,9 +2,6 @@ import React, { useState, useEffect} from "react";
 import {Button, Typography, TextField, Grid, Card, Dialog, DialogTitle,
         DialogContent, DialogContentText, DialogActions, Input} from "@material-ui/core";
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Topics from "../../../FindSupporter/topics"
-import { InputLabel } from '@material-ui/core';
-
 
 export default function ChangeTags() {
     const [selectedMedium, setSelectedMedium] = useState("");
