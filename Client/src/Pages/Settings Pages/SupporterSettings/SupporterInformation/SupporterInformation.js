@@ -24,10 +24,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function handleSubmit(){
-    //TODO
-}
-
 function extractSpecializationTypesArray(spec){
     var arr=[]
     if(!spec){

@@ -11,7 +11,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 const FaqSettings = () => {
 
-    const [unapproved, setUnapproved] = useState([])
     const [isLoaded, setLoaded] = useState(false)
     const [addOpen, setAddDialog] = useState(false);
     const [faqList, setFaqList] = useState([]);

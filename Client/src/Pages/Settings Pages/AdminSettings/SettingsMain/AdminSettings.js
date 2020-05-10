@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles, ListItem, ListItemText, List} from '@material-ui/core';
 import Menu from "../../../../Navigation/appbar.js";
-import Cookies from "universal-cookie";
 import ChangeTopics from "../TopicsTags/topics.js";
 import ChangeTags from "../TopicsTags/tags.js";
 import ViewBlocked from "../BlockUnblock/blockUnblock.js";

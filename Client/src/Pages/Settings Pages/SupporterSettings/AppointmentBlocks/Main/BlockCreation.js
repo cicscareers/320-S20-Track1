@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Checkbox, TextField, FormControlLabel, FormControl,
+import {Typography, CircularProgress, Grid, Slider, Fab, Dialog, DialogActions, DialogContent, DialogTitle, Button, Checkbox, TextField, FormControlLabel, FormControl,
 Input, InputLabel, MenuItem, Select } from '@material-ui/core';
 import useStyles from "./BlockStyles.js"
 import BlockCard from '../BlockCards/BlockCards.js'
@@ -15,10 +15,8 @@ const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
   const classes = useStyles();
   const [open, setOpen]=React.useState(false);
-  const [error,setError]=React.useState(false);
   const [isLoaded, setLoaded] = React.useState(true);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
-  const today = new Date();
   const [createBlockSelectedDate, handleCreateBlockDateChange] = React.useState(new Date());
   const [currentViewSelectedDate, handleCurrentViewDateChange] = React.useState(new Date());
   const [isRecurring, setIsRecurring]=React.useState(false);
@@ -132,16 +130,7 @@ const ResponsiveDrawer = (props) => {
 
   populateUniqueBlocks(updateCurrentViewDateBlockList());
 
-  if(error){
-    return (
-      <div align="center">
-        <br></br>
-        <Typography variant="h6">There was a connection error. We may be performing maintenance on the site.</Typography>
-      </div>
-    )
-  }
-
-  else if(!isLoaded){
+  if(!isLoaded){
     return (
       <div align="center">
         <br></br>

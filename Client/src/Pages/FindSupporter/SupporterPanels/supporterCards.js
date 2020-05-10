@@ -18,7 +18,6 @@ const SupporterCard = (props) => {
   const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [apptDuration, setApptDuration] = React.useState(0);
   const [time, setTime] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -28,14 +27,7 @@ const SupporterCard = (props) => {
   const [dur,setDur]=React.useState(topics[apptTopic]!==undefined ? topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
-  console.log("********topics list***********")
-  console.log(topics)
-  console.log("********selected topic***********")
-  console.log(apptTopic)
-  console.log("********duration***********")
-  console.log(dur)
-  console.log("********duration***********")
-  console.log("")
+
   const linkedin = (links && links["LinkedIn"]!=="") ? links["LinkedIn"] : ""
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
@@ -57,7 +49,6 @@ const SupporterCard = (props) => {
   //Sets the appointment topic based on selected chip
   const chipFilter = (item) => { 
     setApptTopic(item);
-    setApptDuration(topics[item].duration)
   }
 
   //Sets appointment time based on selected chip
