@@ -38,6 +38,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getLinkedIn(arr){
+  if (!arr){
+      return ""
+  }
+  for(let i=0;i<arr.length;i++){
+      console.log(arr[i])
+      if(arr[i].link_type === "LinkedIn"){
+          return arr[i].link
+      }
+  }
+  return ""
+}
+
 const ProfileInformation = (props) => {
   const classes = useStyles();
   const { settings } = props;
@@ -48,7 +61,7 @@ const ProfileInformation = (props) => {
   const [pronouns, setPronouns] = React.useState(settings.pronouns);
   const [phoneNumber, setPhoneNumber] = React.useState(settings.phone);
   const [email, setEmail] = React.useState(settings.email);
-  const [linkedIn, setLinkedIn] = React.useState(settings.link);
+  const [linkedIn, setLinkedIn] = React.useState(getLinkedIn(settings.link));
   const [bio, setBio] = React.useState(settings.bio);
   const [picture, setPicture] = React.useState(settings.picture);
   const [grad_year, setGradYear] = React.useState(settings.grad_year);
@@ -97,7 +110,7 @@ const ProfileInformation = (props) => {
       pronouns: pronouns,
       resume: settings.resume,
       statusCode: settings.statusCode,
-      links: []
+      "links": [["LinkedIn",linkedIn]]
     })
     // console.log(formatted_minors);
     // console.log(formatted_colleges);
