@@ -115,7 +115,7 @@ const BlockCard = (props) => {
     setMax(e.target.value)
     for(let i=0;i<json_to_array.length;i++){
       if(json_to_array[i][0]===specialization_type){
-        json_to_array[i][2]=e.target.value
+        json_to_array[i][2]=parseInt(e.target.value)
       }
     }
     console.log(json_to_array)
