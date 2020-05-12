@@ -209,7 +209,7 @@ const ResponsiveDrawer = (props) => {
       count+=(rating-(5-supporter.rating))
     }
 
-    return (supporterScore/count)
+    return (supporterScore/count)+0.001*supporter.rating
   }
 
   //Maps every supporter / score pair to the score dictionary
