@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   makeStyles,
   Typography,
@@ -7,9 +7,7 @@ import {
   Container,
   TextField,
   Grid,
-  CircularProgress,
 } from "@material-ui/core";
-import Cookies from "universal-cookie";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -54,7 +52,6 @@ function getLinkedIn(arr){
 const ProfileInformation = (props) => {
   const classes = useStyles();
   const { settings } = props;
-  console.log(settings.college)
   const [firstName, setFirstName] = React.useState(settings.first_name);
   const [prefName, setPrefName] = React.useState(settings.preferred_name);
   const [lastName, setLastName] = React.useState(settings.last_name);
@@ -64,7 +61,6 @@ const ProfileInformation = (props) => {
   const [linkedIn, setLinkedIn] = React.useState(getLinkedIn(settings.link));
   const [bio, setBio] = React.useState(settings.bio);
   const [picture, setPicture] = React.useState(settings.picture);
-  const [grad_year, setGradYear] = React.useState(settings.grad_year);
 
   const id = sessionStorage.getItem("id")
   const url =
@@ -75,7 +71,6 @@ const ProfileInformation = (props) => {
     let formatted_majors = settings.major;
     let formatted_minors = settings.minor;
     let formatted_colleges = settings.college;
-    console.log(settings.major);
 
     if (settings.major === null) {
       formatted_majors = [];
@@ -91,29 +86,7 @@ const ProfileInformation = (props) => {
         },
       ];
     }
-    console.log(formatted_majors);
-    console.log(settings.grad_year)
-    console.log({
-      first_name: firstName,
-      bio: bio,
-      colleges: formatted_colleges,
-      email: email,
-      gender: settings.gender,
-      grad_student: settings.grad_student,
-      grad_year: settings.grad_year,
-      last_name: lastName,
-      majors: [],
-      minors: [],
-      phone: phoneNumber,
-      picture: picture,
-      preferred_name: prefName,
-      pronouns: pronouns,
-      resume: settings.resume,
-      statusCode: settings.statusCode,
-      "links": [["LinkedIn",linkedIn]]
-    })
-    // console.log(formatted_minors);
-    // console.log(formatted_colleges);
+
     fetch(url, {
       method: "PATCH",
       body: JSON.stringify({

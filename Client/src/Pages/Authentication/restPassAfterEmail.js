@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, FormHelperText, FormControl, Dialog, withStyles, IconButton} from "@material-ui/core";
+import { makeStyles, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, FormHelperText, FormControl, Dialog, withStyles, IconButton} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -107,11 +107,11 @@ export default function SignIn() {
 
   function handleError(error){
     console.log(error)
-    if (error.code == "CodeMismatchException"){
+    if (error.code === "CodeMismatchException"){
         setCodeCorrect(false)
         return
     }
-    if (error.code == "ExpiredCodeException"){
+    if (error.code === "ExpiredCodeException"){
       setEmailCorrect(false);
       return
     }

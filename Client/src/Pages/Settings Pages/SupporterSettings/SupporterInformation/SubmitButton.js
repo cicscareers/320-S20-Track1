@@ -1,5 +1,5 @@
-import React , {useEffect} from "react"
-import {makeStyles, Typography, Button, Container, CircularProgress, TextField, Grid} from "@material-ui/core";
+import React from "react"
+import {makeStyles, Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -12,24 +12,21 @@ const useStyles = makeStyles(theme => ({
 
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const {specializations, supporter_types, office, teams, employer, title, tags, prefMajors, prefMinors, specializations_json} = props
+    const {specializations, office, teams, employer, title, tags, prefMajors, prefMinors, specializations_json} = props
 
     var arr=[]
-    console.log("aaaaaaa")
+    var ar=[]
     for(let i=0;i<specializations.length;i++){
       if(!specializations_json[specializations[i]]){
-        var ar=[specializations[i], 30, 1]
+        ar=[specializations[i], 30, 1]
         arr.push(ar)
       } else {
         var dur=specializations_json[i].duration
         var max=specializations_json[i].max_students
-        var ar = [specializations[i], dur, max]
+        ar = [specializations[i], dur, max]
         arr.push(ar)
       }
     }
-    console.log("**************")
-    console.log(arr)
-    console.log("**************")
 
     function handleSubmit(){
         fetch(
@@ -70,9 +67,6 @@ const ProfileInformation = (props) => {
             console.log(error);
           });
     }
-    
-
-
     
     return (
         <Button

@@ -66,6 +66,7 @@ export default function SignIn() {
       .then(json => {
         console.log(json.picture)
         sessionStorage.setItem("image", json.picture);
+        window.location.reload();
       })
       .catch(error => {
         console.log(error);
@@ -94,7 +95,6 @@ export default function SignIn() {
         sessionStorage.setItem("id", json.preferred_username);
         cookies.set("role", "Student", { path: "/" });
         fetchPicture()
-        window.location.reload();
       }
     }catch(error){
       if(error.code =="NotAuthorizedException"){

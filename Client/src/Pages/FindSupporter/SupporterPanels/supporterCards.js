@@ -18,7 +18,6 @@ const SupporterCard = (props) => {
   const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [apptDuration, setApptDuration] = React.useState(0);
   const [time, setTime] = React.useState("");
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -28,14 +27,7 @@ const SupporterCard = (props) => {
   const [dur,setDur]=React.useState(topics[apptTopic]!==undefined ? topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
-  console.log("********topics list***********")
-  console.log(topics)
-  console.log("********selected topic***********")
-  console.log(apptTopic)
-  console.log("********duration***********")
-  console.log(dur)
-  console.log("********duration***********")
-  console.log("")
+
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
     const tag_list=[]
@@ -48,6 +40,13 @@ const SupporterCard = (props) => {
     return tag_list
   }
 
+  function getIndex(i){
+    if(has_tags.length <=3 && has_tags.length>0){
+      return i-has_tags.length
+    }
+    return i
+  }
+
   //Handles the expansion panel being expanded to get rid of top 3 tags when expanded
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -56,7 +55,6 @@ const SupporterCard = (props) => {
   //Sets the appointment topic based on selected chip
   const chipFilter = (item) => { 
     setApptTopic(item);
-    setApptDuration(topics[item].duration)
   }
 
   //Sets appointment time based on selected chip
@@ -190,6 +188,21 @@ const SupporterCard = (props) => {
     }
   }
 
+  function getTopThreeTagsNotFiltered(){
+    var i=0, j=0
+    var arr=[]
+    while (i<3 && i<tags.length){
+      if(!has_tags.includes(tags[j])){
+        arr.push(tags[j])
+        i++
+      }
+      j++
+    }
+    return arr
+  }
+
+ const topThreeTags=getTopThreeTagsNotFiltered()
+
   return (
     <ExpansionPanel className={classes.supporterCard} expanded={expanded === name} onChange={handleExpand(name)}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
@@ -206,11 +219,11 @@ const SupporterCard = (props) => {
           </Grid>
           <Grid item xs={5}>
             {!expanded && has_tags[0] && <Chip label={has_tags[0]} size="small" className={classes.filtered_tag} /> || 
-              !expanded && tags[0] && <Chip label={tags[0]} size="small" className={classes.tagChip} />}
+              !expanded && topThreeTags[getIndex(0)] && <Chip label={topThreeTags[getIndex(0)]} size="small" className={classes.tagChip} />}
             {!expanded && has_tags[1] && <Chip label={has_tags[1]} size="small" className={classes.filtered_tag} /> || 
-              !expanded && tags[1] && <Chip label={tags[1]} size="small" className={classes.tagChip} />}
+              !expanded && topThreeTags[getIndex(1)] && <Chip label={topThreeTags[getIndex(1)]} size="small" className={classes.tagChip} />}
             {!expanded && has_tags[2] && <Chip label={has_tags[2]} size="small" className={classes.filtered_tag} /> || 
-              !expanded && tags[2] && <Chip label={tags[2]} size="small" className={classes.tagChip} />}
+              !expanded && topThreeTags[getIndex(2)] && <Chip label={topThreeTags[getIndex(2)]} size="small" className={classes.tagChip} />}
           </Grid>
           <Grid item xs={3}>
             <Rating className={classes.rating} name="Supporter Rating" precision={0.5} value={rating} readOnly />

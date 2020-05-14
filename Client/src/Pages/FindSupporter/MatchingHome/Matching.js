@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid, Icon} from '@material-ui/core';
+import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import Menu from "../../../Navigation/appbar.js";
 import SupporterCard from "../SupporterPanels/supporterCards.js"
@@ -18,7 +18,6 @@ const ResponsiveDrawer = (props) => {
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
-  const [error, setError] = React.useState(false);
   const classes = useStyles();
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
@@ -53,16 +52,13 @@ const ResponsiveDrawer = (props) => {
     setLoaded(false);
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
-        console.log("matching json body")
-        console.log(json.body)
         setSupporters(json.body);
         getTagsAndTopics()
-        console.log(topicsList)
-        setStateTopics(topicsList ? topicsList : [])
+        //setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
-        throw new Error();
         setLoaded(true);
+        throw new Error();
       }
     })
     .catch(error => {
@@ -177,8 +173,7 @@ const ResponsiveDrawer = (props) => {
       }
     }
   }
-  console.log("topics list")
-  console.log(topicsList)
+
   getTagsAndTopics()
   
   ///////////////////////////
@@ -188,7 +183,7 @@ const ResponsiveDrawer = (props) => {
   //Inputs a supporter and returns their score 
   function score(supporter){
     var supporterScore=0
-    var count=stateTopics.length+stateTags.length+2
+    var count=stateTopics.length+stateTags.length+3
 
     if(supporter.name.toLowerCase().includes(name.toLowerCase())){
       supporterScore++
@@ -209,12 +204,13 @@ const ResponsiveDrawer = (props) => {
 
     if(rating<=supporter.rating){
       supporterScore++
-      count++
-    }else{
-      count+=(rating-(5-supporter.rating))
     }
 
-    return (supporterScore/count)
+    console.log("name " + supporter.name)
+    console.log("supporter score " + supporterScore)
+    console.log("count " + count)
+    console.log("state tags and topics " + stateTopics)
+    return (supporterScore/count)+0.0001*supporter.rating
   }
 
   //Maps every supporter / score pair to the score dictionary
@@ -256,18 +252,8 @@ const ResponsiveDrawer = (props) => {
   ////////////////////////////////////////////////
 
   //Display a loading screen if the API is still being called
-  if(error){
-    return (
-      <div align="center">
-        <br/>
-        <br/>
-        <br/>
-        <Typography variant="h4">There was an error fetching supporters. The server may be down at the moment</Typography>
-      </div>
-    )
-  }
 
-  else if(!isLoaded){
+  if(!isLoaded){
     return (
       <div align="center">
         <br></br>

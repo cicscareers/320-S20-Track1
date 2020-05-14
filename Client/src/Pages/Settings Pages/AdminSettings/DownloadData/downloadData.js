@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import {Button, Typography, TextField, Grid} from "@material-ui/core";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React from "react";
+import {Button} from "@material-ui/core";
 
 export default function DownloadData() {
 	return(

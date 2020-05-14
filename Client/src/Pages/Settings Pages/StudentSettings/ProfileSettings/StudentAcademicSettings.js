@@ -1,14 +1,4 @@
-import {
-  makeStyles,
-  Typography,
-  Button,
-  Container,
-  TextField,
-  Grid,
-  CircularProgress,
-  FormControlLabel,
-  Checkbox,
-} from "@material-ui/core";
+import {makeStyles,Typography,Button, Container,TextField,CircularProgress, FormControlLabel,Checkbox} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React, { useState, useEffect } from "react";
 import Cookies from "universal-cookie";
@@ -71,7 +61,6 @@ const AcademicInformation = (props) => {
   const classes = useStyles();
   
   const { settings } = props;
-  console.log(settings.college)
   const [college, setColleges] = useState([]);
   const [majors, setMajors] = useState([]);
   const [minors, setMinors] = useState([]);
@@ -109,7 +98,6 @@ const AcademicInformation = (props) => {
   "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
   id;
   function handleSubmit() {
-    console.log(college)
     
     fetch(url, {
       method: "PATCH",
@@ -160,9 +148,7 @@ const AcademicInformation = (props) => {
         ]);
       })
       .then(([res1, res2, res3, res4]) => {
-        //console.log(extractColleges(res2));
         setCollegesList(extractColleges(res2));
-        //console.log(extractMajors(res3));
         setMajorsList(extractMajors(res3));
         setMinorsList(extractMinors(res4));
         setColleges(res1.college ? res1.college : []);
@@ -174,17 +160,11 @@ const AcademicInformation = (props) => {
       })
       .catch((error) => {
         console.log(error);
-        //setError(true);
         setLoaded(true);
         console.log("Error Connecting to API");
       });
   }, []);
-  //console.log(minors);
-  //console.log(majors);
-  //console.log(college);
-  //console.log(grad_year);
-  //console.log(Array.isArray(majors));
-  //console.log(grad_student);
+
   if (!loaded) {
     return (
       <div align="center">

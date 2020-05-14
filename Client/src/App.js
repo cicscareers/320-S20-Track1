@@ -6,7 +6,6 @@ export default function App() {
 
   const token = sessionStorage.getItem("token");
   const [auth, setAuth] = React.useState(token !== null);
-  const [userRoles, setUserRoles] = React.useState();
 
   return (
   <div>
