@@ -54,7 +54,7 @@ const ResponsiveDrawer = (props) => {
       if(json.body !== undefined) {
         setSupporters(json.body);
         getTagsAndTopics()
-        setStateTopics(topicsList ? topicsList : [])
+        //setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
         setLoaded(true);
@@ -183,7 +183,7 @@ const ResponsiveDrawer = (props) => {
   //Inputs a supporter and returns their score 
   function score(supporter){
     var supporterScore=0
-    var count=stateTopics.length+stateTags.length+2
+    var count=stateTopics.length+stateTags.length+3
 
     if(supporter.name.toLowerCase().includes(name.toLowerCase())){
       supporterScore++
@@ -204,12 +204,13 @@ const ResponsiveDrawer = (props) => {
 
     if(rating<=supporter.rating){
       supporterScore++
-      count++
-    }else{
-      count+=(rating-(5-supporter.rating))
     }
 
-    return (supporterScore/count)+0.001*supporter.rating
+    console.log("name " + supporter.name)
+    console.log("supporter score " + supporterScore)
+    console.log("count " + count)
+    console.log("state tags and topics " + stateTopics)
+    return (supporterScore/count)+0.0001*supporter.rating
   }
 
   //Maps every supporter / score pair to the score dictionary
