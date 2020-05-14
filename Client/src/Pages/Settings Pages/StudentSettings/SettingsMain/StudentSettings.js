@@ -11,7 +11,6 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import Menu from "../../../../Navigation/appbar.js";
-import Cookies from "universal-cookie";
 import StudentProfileSettings from "../ProfileSettings/StudentProfileSettings";
 import StudentAcademicSettings from "../ProfileSettings/StudentAcademicSettings";
 import SupporterApplication from '../ProfileSettings/SupporterRequest'
@@ -67,10 +66,7 @@ const StudentSettings = (props) => {
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [btns, setBtns] = React.useState({one: "#d3d3d3", two: "#ffffff", three:'#ffffff'})
-
-  const cookies = new Cookies();
   const id = sessionStorage.getItem("id")
-  console.log(id)
   const url =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/"+id;
 

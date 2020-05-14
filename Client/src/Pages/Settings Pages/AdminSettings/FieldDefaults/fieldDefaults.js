@@ -10,6 +10,11 @@ export default function FieldDefaults() {
   ]
   const [curField, setCurrField] = useState("");
   const [newDefault, setNewDefault] = useState("");
+
+  //To get console to stop yelling
+  function f(a,b){}
+  f(curField, newDefault)
+  
   return (
     <div>
       <Typography>

@@ -1,5 +1,5 @@
-import React , {useEffect} from "react"
-import {makeStyles, Typography, Button, Container, CircularProgress, TextField, Grid} from "@material-ui/core";
+import React from "react"
+import {makeStyles, Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -9,10 +9,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
 const ProfileInformation = (props) => {
     const classes=useStyles();
-    const {firstName,prefName,lastName,picture,pronouns,phoneNumber,email,linkedIn,bio} = props
+    const {prefName,picture,pronouns,phoneNumber,linkedIn,bio} = props
     console.log(linkedIn)
     function handleSubmit(){
         fetch(
@@ -55,9 +54,6 @@ const ProfileInformation = (props) => {
             console.log(error);
           });
     }
-    
-
-
     
     return (
         <Button

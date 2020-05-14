@@ -14,6 +14,10 @@ export default function BlockUnblock() {
     ]
     const [selectedUser, setSelectedUser] = useState("");
     const [selectedBlockedUser, setSelectedBlockedUser] = useState("");
+
+    //to get console to stop yelling
+    function f(a,b){}
+    f(selectedBlockedUser, selectedUser)
     return(
     <div>
     <Typography>

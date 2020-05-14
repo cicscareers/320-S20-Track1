@@ -15,6 +15,10 @@ const AdminApproval = () => {
     const [openDialog, setDialog] = useState(false);
     const [reload, setReload] = useState(false);
 
+    //to get console to stop yelling
+    function f(a){}
+    f(reload)
+
     useEffect(() => {
         fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/')
         .then(res => res.json())

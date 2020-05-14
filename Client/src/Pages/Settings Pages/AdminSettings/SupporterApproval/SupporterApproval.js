@@ -6,16 +6,27 @@ const SupporterApproval = () => {
 
 const [unapproved, setUnapproved] = useState([])
 const [isLoaded, setLoaded] = useState(false)
+const [noSupporters, setNoSupporters]=useState(false)
 
     useEffect(() => {
         fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/unapproved')
         .then(res => res.json())
         .then(json => {
-            
-            setUnapproved(json.body)
-            setLoaded(true)
+            if(json.body){
+                setNoSupporters(false)
+                setUnapproved(json.body)
+                setLoaded(true)
+            }
+            else{
+                throw new Error()
+            }
 
         })
+        .catch(error => {
+            setNoSupporters(true)
+            setLoaded(true);
+            console.log("No Supporters Found")
+          });
     });
 
     function handleType(supporter){
@@ -36,6 +47,9 @@ const [isLoaded, setLoaded] = useState(false)
 
     if(!isLoaded){
         return <Typography>Loading...</Typography>
+    }
+    else if(noSupporters){
+        return <Typography>There are currently no pending requests</Typography>
     }
     else{
         return(

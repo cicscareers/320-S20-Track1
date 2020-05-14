@@ -6,7 +6,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { Auth, Amplify } from "aws-amplify";
+import {Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
 
@@ -18,7 +18,6 @@ if (role==='supporter'){
 }else if (role==='admin'){
   primary_color="#41273b"
 }
-console.log(primary_color)
 
 const theme = createMuiTheme({
   typography: {
