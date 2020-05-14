@@ -12,7 +12,7 @@ import cardStyles from './CardStyles'
 
 const SupporterCard = (props) => {
   //Initialize all the constants
-  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, links, supporter_id, score, filtered_tags} = props;
+  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, LinkedIn, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
   const studentID = sessionStorage.getItem("id")
@@ -28,7 +28,6 @@ const SupporterCard = (props) => {
   const has_tags=supporter_has_tags()
   const startTimes = [];
 
-  const linkedin = (links && links["LinkedIn"]!=="") ? links["LinkedIn"] : ""
   //Creates a list of tags that were both filtered by and this supporter has
   function supporter_has_tags(){
     const tag_list=[]
@@ -277,7 +276,7 @@ const SupporterCard = (props) => {
           <Grid item xs={1}>
           </Grid>
           <Grid item xs={2}>
-          {linkedin !== "" && (
+          {LinkedIn !== "" && (
             <Badge
                 overlap="circle"
                 anchorOrigin={{
@@ -285,7 +284,7 @@ const SupporterCard = (props) => {
                   horizontal: 'right',
                 }}
                 badgeContent={
-                  <Button className={classes.badgeButton} href={"//"+linkedin}>
+                  <Button className={classes.badgeButton} href={LinkedIn.includes("https") ? LinkedIn : "//"+LinkedIn}>
                     <img border={5}
                       src="https://1000logos.net/wp-content/uploads/2017/03/LinkedIn-Logo.png" 
                       className={classes.badge}/>
@@ -295,7 +294,7 @@ const SupporterCard = (props) => {
               <Avatar alt={name} src={imgsrc} className={classes.large} />
             </Badge>
           )}
-          {linkedin === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
+          {LinkedIn === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
           </Grid>
           <Grid item xs={12} align="center">
             <Button
