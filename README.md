@@ -4,6 +4,7 @@ Integration Track 1
 ## Front-End and Back-End ReadMe
 * [**READ ME : TRACK ONE- ReachOUT**](https://docs.google.com/document/d/1OTrFNN1gyGAm9CyDKZp1_24XcWziViYRIMYz7auoaWM/edit)
 * [**TRACK ONE: DEMO OR DIE SCRIPT**](https://docs.google.com/document/d/1-8gV-cjhFOYq-Ja4Lmjf3LZWX-m-pTa6ocOUW1rGFcE/edit)
+* [**How to get the front end environment running**](https://docs.google.com/document/d/1mruV53VV-SvZghEDxR4OA166OGKordl7thVHQ7-wX_Y/edit)
 
 ## ReachOUT Backlog
 * [**ReachOUT Backlog**](https://docs.google.com/document/d/1cwTi5j3vnY9b05c0IjqTyi8uznkRFSTkVO1fkJGL3Ww/edit)
