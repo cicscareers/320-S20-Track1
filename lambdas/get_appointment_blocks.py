@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     if 'supporter_id' in event:
         supporter_id = int(event['supporter_id'])
     else:
-        raise LambdaException("422: Invalid input: No supporter_id")
+        raise LambdaException("422 : Invalid input: No supporter_id")
 
     #Check if supporter exists
     sql = "SELECT supporter_id FROM supporters WHERE supporter_id= :supporter_id"
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     existing_supporter = query(sql, supporter_id_param)
 
     if(existing_supporter['records'] == []):
-        raise LambdaException("404: No existing Supporter")
+        raise LambdaException("404 : No existing Supporter")
     
     #SQL to get all appointments
     sql = """SELECT start_date, end_date, appointment_block_id, recurring_id FROM appointment_block 
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
         
     # check if supporter types successfully loaded
     if (appointment_info['records'] == []):
-        raise LambdaException("404: There are no appointment blocks for supporter")
+        raise LambdaException("404 : There are no appointment blocks for supporter")
     else:
         appointment_data = []
 
@@ -51,6 +51,6 @@ def lambda_handler(event, context):
 
     #Returns query contents in json format, success
     return {
-        'body': json.dumps(appointment_data),
+        'body': appointment_data,
         'statusCode': 200
     }

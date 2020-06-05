@@ -15,7 +15,7 @@ import json
 def get_supporter_settings(event, context):
     supporter_id = event['id']
     supporter_id = int(supporter_id)
-    #For some reason postman is sending the id as a string, need to check on that
+    #For some reason postman is sending the id as a string, need to check on tha
     block = {}
 
     #Check if supporter exists
@@ -76,48 +76,71 @@ def get_supporter_settings(event, context):
            WHERE S1.specialization_type_id = S2.specialization_type_id AND S1.supporter_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     specials = query(sql, sql_parameters)['records']
-    if(specials == []):
-        return {
-            'body': json.dumps("Supporter specialization types and duration info could not be found"),
-            'statusCode': 404
-        }
+    # if(specials == []):
+        # return {
+        #     'body': json.dumps("Supporter specialization types and duration info could not be found"),
+        #     'statusCode': 404
+        # }
     specialization_types = [] #List of specialization types
     durations = [] #List of appointment durations and type
-    for entry in specials:
-        dur = {}
-        spec = {}
-        spec['specialization_type'] = entry[2].get('stringValue')
-        dur['specialization_type'] = entry[2].get('stringValue')
-        dur['duration'] = entry[1].get('longValue')
-        dur['max_students'] = entry[0].get('longValue')
-        if(spec not in specialization_types):
-            specialization_types.append(spec)
-        if(dur not in durations):
-            durations.append(dur)
+    if(specials != []):
+        for entry in specials:
+            dur = {}
+            spec = {}
+            spec['specialization_type'] = entry[2].get('stringValue')
+            dur['specialization_type'] = entry[2].get('stringValue')
+            dur['duration'] = entry[1].get('longValue')
+            dur['max_students'] = entry[0].get('longValue')
+            if(spec not in specialization_types):
+                specialization_types.append(spec)
+            if(dur not in durations):
+                durations.append(dur)
     block['specialization_types'] = specialization_types
     block['appointment_type_info'] = durations
 
     #Execute parameterized query to get supporter preferences for students
-    sql = 'SELECT S1.grad_student, S1.hours_before_appointment, S2.major_id, Ma.major \
+    sql = 'SELECT DISTINCT S1.grad_student, S1.hours_before_appointment, S2.major_id, Ma.major \
            FROM supporter_preferences_for_students S1, supporter_major_preferences S2, major Ma \
            WHERE S1.supporter_preferences_for_student_id = S2.supporter_id AND S2.major_id = Ma.major_id \
            AND S1.supporter_preferences_for_student_id = :supporter_id;'
     sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
     prefs = query(sql, sql_parameters)['records']
-    if(prefs == []):
-        return {
-            'body': json.dumps("Supporter preference info could not be found"),
-            'statusCode': 404
-        }
+    # if(prefs == []):
+    #     return {
+    #         'body': json.dumps("Supporter preference info could not be found"),
+    #         'statusCode': 404
+    #     }
     majors = []
-    block['grad_student'] = prefs[0][0].get('booleanValue')
-    block['hours_before_appointment'] = prefs[0][1].get('longValue')
-    for entry in prefs:
-        ma_dict = {}
-        ma_dict['major_id'] = entry[2].get('longValue')
-        ma_dict['major'] = entry[3].get('stringValue')
-        majors.append(ma_dict)
+    if(prefs != []):
+        block['grad_student'] = prefs[0][0].get('booleanValue')
+        block['hours_before_appointment'] = prefs[0][1].get('longValue')
+        for entry in prefs:
+            ma_dict = {}
+            ma_dict['major_id'] = entry[2].get('longValue')
+            ma_dict['major'] = entry[3].get('stringValue')
+            majors.append(ma_dict)
     block['major_preferences'] = majors
+    
+    #Execute parameterized query to get supporter preferences for students
+    sql = 'SELECT DISTINCT S1.grad_student, S1.hours_before_appointment, S2.minor_id, Mi.minor \
+           FROM supporter_preferences_for_students S1, supporter_minor_preferences S2, minor Mi \
+           WHERE S1.supporter_preferences_for_student_id = S2.supporter_id AND S2.minor_id = Mi.minor_id \
+           AND S1.supporter_preferences_for_student_id = :supporter_id;'
+    sql_parameters = [{'name': 'supporter_id', 'value': {'longValue': supporter_id}}]
+    prefs = query(sql, sql_parameters)['records']
+    # if(prefs == []):
+    #     return {
+    #         'body': json.dumps("Supporter preference info could not be found"),
+    #         'statusCode': 404
+    #     }
+    minors = []
+    if(prefs != []):
+        for entry in prefs:
+            ma_dict = {}
+            ma_dict['minor_id'] = entry[2].get('longValue')
+            ma_dict['minor'] = entry[3].get('stringValue')
+            minors.append(ma_dict)
+    block['minor_preferences'] = minors
 
     #Execute parameterized query to get tags
     sql = 'SELECT tag_type FROM supporter_tags, tag_type WHERE \

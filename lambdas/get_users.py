@@ -57,7 +57,7 @@ def handler(event, context):
 
     for u_id, f_name, l_name, email in users:
         current_users = response['users']
-        next_user = {'user_id' : u_id['longValue'], 'first_name' : f_name['stringValue'], 'last_name' : l_name['stringValue'], 'email' : email['stringValue']}
+        next_user = {'user_id' : u_id["longValue"], 'first_name' : f_name["stringValue"], 'last_name' : l_name["stringValue"], 'email' : email["stringValue"]}
         current_users.append(next_user)
         response['users'] = current_users
 

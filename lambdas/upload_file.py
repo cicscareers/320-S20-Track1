@@ -57,7 +57,7 @@ def upload_files(event, context):
         s_3.upload_fileobj(file_obj, bucket_name, key)
 
     except Exception as e:
-        raise LambdaException("400: File failed to uploaded")
+        raise LambdaException("400: File failed to uploaded, " + str(e))
 
     # update in database
     if file_type == 'picture':

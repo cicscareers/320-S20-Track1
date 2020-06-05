@@ -27,7 +27,7 @@ def get_all_appointments(event, context):
                 AND SA.appointment_id = SFA.appointment_id \
                 AND SFA.specialization_type_id = ST.specialization_type_id \
                 AND SR.appointment_id = SA.appointment_id \
-                AND ST.specialization_type_id = SS.specialization_type_id;'
+                AND ST.specialization_type_id = SS.specialization_type_id AND SS.supporter_id = SR.supporter_id;'
     
         sql_parameters = []
         appointment_info = query(sql, sql_parameters)

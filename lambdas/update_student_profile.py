@@ -68,7 +68,7 @@ def update_student_profile(event, context):
 
     #Execute parameterized query to delete student's old colleges
     if len(college_id_list) > 0:
-        sql = 'DELETE FROM student_colleges WHERE student_id = :student_id;'
+        sql = 'DELETE FROM student_college WHERE student_id = :student_id;'
         try:
             query(sql, [student_id_param])
         except Exception as e:

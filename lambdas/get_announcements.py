@@ -17,7 +17,7 @@ def handler(event, context):
 
     for a_id, title, announce in announcements:
         curr_announces = response["announcements"]
-        next_announce = {'announcement_id' : s_id['longValue'], 'title' : title['stringValue'], 'announcement' : announce['stringValue']}
+        next_announce = {'announcement_id' : a_id['longValue'], 'title' : title['stringValue'], 'announcement' : announce['stringValue']}
         curr_announces.append(next_announce)
         response['announcements'] = curr_announces
 
