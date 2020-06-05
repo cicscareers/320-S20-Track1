@@ -1,9 +1,5 @@
-import boto3
-import json
-
-from copy import deepcopy
-from package import db_config
 from package.query_db import query
+from package.dictionary_to_list import dictionary_to_list
 from package.lambda_exception import LambdaException
 
 #Authors: Victoria Caruso and Hadley Pope
@@ -12,224 +8,241 @@ from package.lambda_exception import LambdaException
 #function updates the student profile details in the database
 def update_student_profile(event, context):
 
-    total_update = 0
+    student_id = int(event['student_id'])
+    student_id_param = {'name' : 'student_id', 'value' : {'longValue' : student_id}}
 
-    #student identifier 
-    if 'student_id' in event:
-        student_id = int(event['student_id'])
-    else:
-        raise LambdaException("Invalid input: No user Id")
+    #Check if supporter exists
+    sql = 'SELECT * FROM students WHERE student_id = :student_id;'
+    supporter_id_param = {'name': 'student_id', 'value': {'longValue': student_id}}
+    response = query(sql, [supporter_id_param])
+    if(response['records'] == []):
+        raise LambdaException("404: Student does not exist")
 
-    student_id_param = [{'name' : 'student_id', 'value' : {'longValue' : student_id}}]
 
+    link_id_list = []
+    if 'links' in event:
+        links_list = event['links']
+        
+        #Check if link_type exists, and convert to link_id
+        for link_type_list in links_list:
+            sql = 'SELECT link_id FROM link WHERE link_type = :link_type;'
+            sql_parameters = [{'name': 'link_type', 'value': {'stringValue': link_type_list[0]}}]
+            response = query(sql, sql_parameters)
+            if(response['records'] ==[]):
+                raise LambdaException("404: link_id:" + str(entry) + " does not exist")
+            else:
+                link_id_list.append((response['records'][0][0]['longValue'], link_type_list[1]))
 
-    #users table
-    updated_user_vals = ""
-
-    if 'first_name' in event:
-        first_name = event['first_name']
-    else:
-        sql = "SELECT first_name FROM users WHERE id= :student_id"
-        first_name = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "first_name='%s', " % (first_name)
-
-    if 'last_name' in event:        
-        last_name = event['last_name']
-    else:
-        sql = "SELECT last_name FROM users WHERE id= :student_id"
-        last_name = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "last_name='%s', " % (last_name)
-
-    if 'preferred_name' in event:
-        preferred_name = event['preferred_name']
-    else:
-        sql = "SELECT preferred_name FROM users WHERE id= :student_id"
-        preferred_name = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "preferred_name='%s', " % (preferred_name)
-
-    if 'picture' in event:
-        picture = event['picture']
-    else:
-        sql = "SELECT picture FROM users WHERE id= :student_id"
-        picture = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "picture='%s', " % (picture)
-
-    if 'bio' in event:
-        bio = event['bio']
-    else:
-        sql = "SELECT bio FROM users WHERE id= :student_id"
-        bio = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "bio='%s', " % (bio)
-
-    if 'pronouns' in event:
-        pronouns = event['pronouns']
-    else:
-        sql = "SELECT pronouns FROM users WHERE id= :student_id"
-        pronouns = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "pronouns='%s', " % (pronouns)
-
-    if 'phone' in event:
-        phone = event['phone']
-    else:
-        sql = "SELECT phone FROM users WHERE id= :student_id"
-        phone = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "phone='%s'" % (phone)
-
+    #User links
+    #Execute parameterized query to delete supporter's old links
+    if len(link_id_list) > 0:
+        sql = "DELETE FROM user_link WHERE user_id = :student_id;"
+        try:
+            query(sql, [student_id_param])
+        except Exception as e:
+            raise LambdaException("500: Unable to delete links" + str(e))
     
-    #students table
-    updated_student_vals = ""
-
-    if 'grad_student' in event:
-        grad_student = event['grad_student']
-    else:
-        sql = "SELECT grad_student FROM students WHERE student_id= :student_id"
-        grad_student = query(sql, student_id_param)['records'][0][0]['booleanValue']
-    updated_student_vals += "grad_student='%s', " % (grad_student)
-
-    if "job_search" in event:
-        job_search = event['job_search']
-    else:
-        sql = "SELECT job_search FROM students WHERE student_id= :student_id"
-        job_search = query(sql, student_id_param)['records'][0][0]['booleanValue']
-    updated_student_vals += "job_search='%s', " % (job_search)
-
-    if 'college' in event:
-        college = event['college']
-    else:
-        sql = "SELECT college FROM students WHERE student_id= :student_id"
-        college = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_student_vals += "college='%s', " % (college)
-
-    if 'grad_year' in event:
-        grad_year= event['grad_year']
-    else:
-        sql = "SELECT grad_year FROM students WHERE student_id= :student_id"
-        grad_year = query(sql, student_id_param)['records'][0][0]['longValue']
-    updated_student_vals += "grad_year='%s', " % (grad_year)
-
-    if 'resume' in event: 
-        resume = event['resume']
-    else:
-        sql = "SELECT resume FROM students WHERE student_id= :student_id"
-        resume = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_student_vals += "resume='%s'" % (resume)
+        #Execute parameterized queries for updating links
+        for link_id, link in link_id_list:
+            sql = 'INSERT INTO user_link (user_id, link_id, link) VALUES (:student_id, :link_id, :link);'
+            sql_parameters = [student_id_param, {'name': 'link_id', 'value': {'longValue': link_id}}, {'name': 'link', 'value': {'stringValue': link}}]
+            major_response = query(sql, sql_parameters)
+            if(major_response["numberOfRecordsUpdated"] == 0):
+                raise LambdaException("409: User links not updated")
 
 
-    #student_majors table
+    #Student Colleges
+    college_id_list = []
+    if 'colleges' in event:
+        college_list = event['colleges']
+        
+        #Check if college_id exists
+        for entry in college_list:
+            sql = 'SELECT college_id FROM college WHERE college = :college;'
+            sql_parameters = [{'name': 'college', 'value': {'stringValue': entry}}]
+            response = query(sql, sql_parameters)
+            if(response['records'] ==[]):
+                raise LambdaException("404: college_id:" + str(entry) + " does not exist")
+            else:
+                college_id_list.append(response['records'][0][0]['longValue'])
+
+    #Execute parameterized query to delete student's old colleges
+    if len(college_id_list) > 0:
+        sql = 'DELETE FROM student_college WHERE student_id = :student_id;'
+        try:
+            query(sql, [student_id_param])
+        except Exception as e:
+            raise LambdaException("500: Unable to delete student colleges, " + str(e))
     
-    #major_queries stores sql queries and their parameters as tuples
-    majors_queries = []
+        #Execute parameterized queries for updating major preferences
+        for entry in college_id_list:
+            sql = 'INSERT INTO student_college (student_id, college_id) VALUES (:student_id, :college_id);'
+            sql_parameters = [student_id_param, {'name': 'college_id', 'value': {'longValue': entry}}]
+            college_response = query(sql, sql_parameters)
+            if(college_response["numberOfRecordsUpdated"] == 0):
+                raise LambdaException("409: student_colleges not updated")      
 
+
+    #Student Majors
+    major_id_list = []
     if 'majors' in event:
-        majors = event['majors']
+        major_list = event['majors']
+        
+        #Check if major_id exists
+        for entry in major_list:
+            sql = 'SELECT major_id FROM major WHERE major = :major;'
+            sql_parameters = [{'name': 'major', 'value': {'stringValue': entry}}]
+            response = query(sql, sql_parameters)
+            if(response['records'] ==[]):
+                raise LambdaException("404: major_id: " + str(entry) + " does not exist")
+            else:
+                major_id_list.append(response['records'][0][0]['longValue'])
 
-        for major in majors:
-            major_sql = "SELECT major_id FROM major WHERE major= :major"
-            major_param = [{'name' : 'major', 'value' : {'stringValue' : major}}]
-            major_id = query(major_sql, major_param)['records'][0][0]['longValue']
-
-            major_id_sql = "INSERT INTO student_majors VALUES (:student_id, :major_id)"
-            major_id_param = deepcopy(student_id_param)
-            major_id_param.append({'name' : 'major_id', 'value' : {'longValue' : major_id}})
-            majors_queries.append((major_id_sql, major_id_param))
+    #Execute parameterized query to delete student's old majors
+    if len(major_id_list) > 0:
+        sql = 'DELETE FROM student_majors WHERE student_id = :student_id;'
+        try:
+            query(sql, [student_id_param])
+        except Exception as e:
+            raise LambdaException("500: Unable to delete student majors, " + str(e))
+    
+        #Execute parameterized queries for updating major preferences
+        for entry in major_id_list:
+            sql = 'INSERT INTO student_majors (student_id, major_id) VALUES (:student_id, :major_id);'
+            sql_parameters = [student_id_param, {'name': 'major_id', 'value': {'longValue': entry}}]
+            major_response = query(sql, sql_parameters)
+            if(major_response["numberOfRecordsUpdated"] == 0):
+                raise LambdaException("409: student_majors majors not updated")
 
     
-    #student_minors table
-    
-    #minor_queries stores sql queries and their parameters as tuples
-    minors_queries = []
-
+    #Student Minors
+    minor_id_list = []
     if 'minors' in event:
-        minors = event['minors']
+        minor_list = event['minors']
+        
+        #Check if minor_id exists
+        for entry in minor_list:
+            sql = 'SELECT minor_id FROM minor WHERE minor = :minor;'
+            sql_parameters = [{'name': 'minor', 'value': {'stringValue': entry}}]
+            response = query(sql, sql_parameters)
+            if(response['records'] ==[]):
+                raise LambdaException("404: minor_id:" + str(entry) + " does not exist")
+            else:
+                minor_id_list.append(response['records'][0][0]['longValue'])
 
-        for minor in minors:
-            minor_sql = "SELECT minor_id FROM minor WHERE minor= :minor"
-            minor_param = [{'name' : 'minor', 'value' : {'stringValue' : minor}}]
-            minor_id = query(minor_sql, minor_param)['records'][0][0]['longValue']
+    #Execute parameterized query to delete supporter's old minor preferences
+    if len(minor_id_list) > 0:
+        sql = 'DELETE FROM student_minors WHERE student_id = :student_id;'
+        try:
+            query(sql, [supporter_id_param])
+        except Exception as e:
+            raise LambdaException("500: Unable to delete student minors")
+    
+        for entry in minor_id_list:
+            sql = 'INSERT INTO student_minors (student_id, minor_id) VALUES (:student_id, :minor_id);'
+            sql_parameters = [student_id_param, {'name': 'minor_id', 'value': {'longValue': entry}}]
+            minor_response = query(sql, sql_parameters)
+            if(minor_response["numberOfRecordsUpdated"] == 0):
+                raise LambdaException("409: student_minors not updated")
 
-            minor_id_sql = "INSERT INTO student_minors VALUES (:student_id, :minor_id)" 
-            minor_id_param = deepcopy(student_id_param)
-            minor_id_param.append({'name' : 'minor_id', 'value' : {'longValue' : minor_id}})
-            minors_queries.append((minor_id_sql, minor_id_param))         
+
+    #User settings
+    user_settings = {}
+    updated_user_vals = []
+
+    if event['first_name'] != "":
+        first_name = event['first_name']
+        user_settings['first_name'] = first_name
+        updated_user_vals.append("first_name = :first_name")
+
+    if event['last_name'] != "":        
+        last_name = event['last_name']
+        user_settings['last_name'] = last_name
+        updated_user_vals.append("last_name = :last_name")
+        
+    if event['email'] != "":
+        email = event['email']
+        user_settings['email'] = email
+        updated_user_vals.append("email = :email")
+
+    if event['preferred_name'] != "":
+        preferred_name = event['preferred_name']
+        user_settings['preferred_name'] = preferred_name
+        updated_user_vals.append("preferred_name = :preferred_name")
+
+    if event['picture'] != "":
+        picture = event['picture']
+        user_settings['picture'] = picture
+        updated_user_vals.append("picture = :picture")
+
+    if event['bio'] != "":
+        bio = event['bio']
+        user_settings['bio'] = bio
+        updated_user_vals.append("bio = :bio")
+
+    if event['pronouns'] != "":
+        pronouns = event['pronouns']
+        user_settings['pronouns'] = pronouns
+        updated_user_vals.append("pronouns = :pronouns")
+        
+    if event['gender'] != "":
+        gender = event['gender']
+        user_settings['gender'] = gender
+        updated_user_vals.append("gender = :gender")
+
+    if event['phone'] != "":
+        phone = event['phone']
+        user_settings['phone'] = phone
+        updated_user_vals.append("phone = :phone")
+
+    user_settings_sql = "UPDATE users SET " + ", ".join(updated_user_vals) + " WHERE id = :student_id;"
+    user_settings_params = dictionary_to_list(user_settings) 
+    user_settings_params.append(supporter_id_param)
+
+    if len(updated_user_vals) > 0:
+        try:
+            query(user_settings_sql, user_settings_params)
+        except Exception as e:
+            raise LambdaException("500: Unable to update users table, " + str(e))
 
 
-    #Check if student exists
-    sql = "SELECT student_id FROM students WHERE student_id= :student_id"
-    existing_student = query(sql, student_id_param)
+    #Student Settings
+    student_settings = {}
+    updated_student_vals = []
 
-    sql = "SELECT id FROM users WHERE id= :student_id"
-    existing_user = query(sql, student_id_param)
+    if event['grad_student'] != "":
+        grad_student = event['grad_student'].lower()
 
-    if(existing_student['records'] == []):
-        print("No existing Student Record, checking to see if user exists")
-        if(existing_user['records'] == []):
-            print("User DNE")
-            raise LambdaException("User does not exist")
+        if grad_student == "true":
+            grad_student_bool = True
         else:
-            sql = "SELECT user_type FROM users WHERE id= :student_id"
-            user_type = query(sql, student_id_param)
-            error_message = "Not a student, user is a '%s';" % (user_type)
-            print(error_message) 
-            raise LambdaException(error_message)
+            grad_student_bool = False
 
+        student_settings['grad_student'] = grad_student_bool
+        updated_student_vals.append("grad_student = :grad_student")
 
-    #values that can not be null
-    if(first_name == None or last_name == None or job_search == None or grad_student == None):
-        raise LambdaException("Unprocessable Entity")
+    if event['grad_year'] != "":
+        grad_year = int(event['grad_year'])
+        student_settings['grad_year'] = grad_year
+        updated_student_vals.append("grad_year = :grad_year")
 
+    if event['resume'] != "":
+        resume = event['resume']
+        student_settings['resume'] = resume
+        updated_student_vals.append("resume = :resume")
 
-    update_error_messages = []
+    student_settings_sql = "UPDATE students SET " + ", ".join(updated_student_vals) + " WHERE student_id = :student_id;"
+    student_settings_params = dictionary_to_list(student_settings)
+    student_settings_params.append(student_id_param)
 
-    #sql queries to update data in each table
-    users_table_sql = (f"UPDATE users SET {updated_user_vals} WHERE id= :student_id")
-    try:
-        update_user_data = query(users_table_sql, student_id_param)['numberOfRecordsUpdated']
-    except Exception as e:
-        update_error_messages.append("User table update failed: " + str(e))
-                        
-    students_table_sql = (f"UPDATE students SET {updated_student_vals} WHERE student_id= :student_id")
-    try:
-        update_student_data = query(students_table_sql, student_id_param)['numberOfRecordsUpdated']
-    except Exception as e:
-        update_error_messages.append("Student table update failed: " + str(e))
-
-
-    #Deleting pre-existing majors, relevant majors will be re-added
-    delete_majors_sql = "DELETE FROM student_majors WHERE student_id= :student_id"
-    try:
-        deleted_majors = query(delete_majors_sql, student_id_param)
-    except Exception as e:
-        update_error_messages.append("Deletion of majors failed: " + str(e))
-
-    #Adding current majors
-    for sql, params in majors_queries:
+    if len(updated_student_vals) > 0:
         try:
-            updated_majors = query(sql, params)
+            query(student_settings_sql, student_settings_params)
         except Exception as e:
-            update_error_messages.append("Student majors update failed: " + str(e))
+            raise LambdaException("500: Failed to update students table, " + str(e))
 
-
-    #Deleting pre-existing minors, relevant minors will be re-added
-    delete_minors_sql = "DELETE FROM student_minors WHERE student_id= :student_id"
-    try:
-        deleted_minors = query(delete_minors_sql, student_id_param)
-    except Exception as e:
-        update_error_messages.append("Deletion of minors failed: " + str(e))
-
-    #Adding current minors
-    for sql, params in minors_queries:
-        try:
-            updated_minors = query(sql, params)
-        except Exception as e:
-            update_error_messages.append("Student minors update failed: " + str(e))
-
-
-    if(len(update_error_messages) > 0): 
-        print("One or more updates failed")
-        error_details = "\n".join(update_error_messages)
-        raise LambdaException(error_details)
 
     print("Updated Student Profile")
     return {
-        'statusCode': 204 #no content 
+        'body' : "Successfully updated student profile"
     }
