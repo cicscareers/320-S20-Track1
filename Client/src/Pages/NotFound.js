@@ -14,7 +14,7 @@ export default function notFound() {
         We are sorry that we couldn't find the page. Please try again.
       </Typography>
       <br/>
-      <img  height="175" width="175" src ="cicscareers_logo_3.png"></img>
+      <img  height="200" width="200" src ="cicscareers_logo_3.png"></img>
     </Container>
   );
 }
