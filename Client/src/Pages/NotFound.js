@@ -11,7 +11,7 @@ export default function notFound() {
       <br/>
       <br/>
       <Typography component="h1" variant="h5" align="center">
-        Page not found.
+        We are sorry that we couldn't find the page. Please try again.
       </Typography>
       <br/>
       <img  height="175" width="175" src ="cicscareers_logo_3.png"></img>
