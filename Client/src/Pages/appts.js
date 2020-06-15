@@ -206,6 +206,11 @@ const ResponsiveDrawer = (props) => {
     var minutes = parseInt(time.substring(14,16));
     return convertTime(hours + minutes + duration);
   }
+  //Converts date to current locale and adds weekday
+  function toLocaleDateStringWrapper(time_of_appt){
+    let locale = undefined; //TODO: change to find current locale information
+    return new Date(time_of_appt).toLocaleDateString(locale,{weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})
+  }
 
   if(!isLoaded){
     return (
@@ -272,7 +277,7 @@ const ResponsiveDrawer = (props) => {
         <br/>
         
         {filteredAppointmentList.map((appointment) => (
-                today < new Date(appointment.time_of_appt) &&
+          today < new Date(appointment.time_of_appt) &&
                 !appointment.cancelled &&
                   <Grid item lg = {12}>
                     <AppointmentCard
@@ -283,7 +288,7 @@ const ResponsiveDrawer = (props) => {
                       medium = {appointment.method}
                       start = {convertDate(appointment.time_of_appt, 0)}
                       end = {convertDate(appointment.time_of_appt, appointment.duration)}
-                      date = {appointment.time_of_appt.substring(0,10)}
+                      date = {toLocaleDateStringWrapper(appointment.time_of_appt)}
                       supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                       student = {appointment.studentFN + " " + appointment.studentLN}
                       supporterProfilePic = {appointment.supporterPic}
@@ -310,7 +315,7 @@ const ResponsiveDrawer = (props) => {
                     medium = {appointment.method}
                     start = {convertDate(appointment.time_of_appt, 0)}
                     end = {convertDate(appointment.time_of_appt, appointment.duration)}
-                    date = {appointment.time_of_appt.substring(0,10)}
+                    date = {toLocaleDateStringWrapper(appointment.time_of_appt)}
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
@@ -339,7 +344,7 @@ const ResponsiveDrawer = (props) => {
                     medium = {appointment.method}
                     start = {convertDate(appointment.time_of_appt, 0)}
                     end = {convertDate(appointment.time_of_appt, appointment.duration)}
-                    date = {appointment.time_of_appt.substring(0,10)}
+                    date = {toLocaleDateStringWrapper(appointment.time_of_appt)}
                     supporter = {appointment.supporterFN + " " + appointment.supporterLN}
                     student = {appointment.studentFN + " " + appointment.studentLN}
                     supporterProfilePic = {appointment.supporterPic}
