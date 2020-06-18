@@ -8,6 +8,7 @@ import {
   TextField,
   Grid,
 } from "@material-ui/core";
+import FileUpload from '../../../../components/fileUpload';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,17 +35,23 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     backgroundColor: "primary",
   },
+  uploadDP: {
+    width: "100%",
+    fullWidth: true,
+    marginTop: theme.spacing(2),
+    align: "center",
+  }
 }));
 
-function getLinkedIn(arr){
-  if (!arr){
-      return ""
+function getLinkedIn(arr) {
+  if (!arr) {
+    return ""
   }
-  for(let i=0;i<arr.length;i++){
-      console.log(arr[i])
-      if(arr[i].link_type === "LinkedIn"){
-          return arr[i].link
-      }
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i])
+    if (arr[i].link_type === "LinkedIn") {
+      return arr[i].link
+    }
   }
   return ""
 }
@@ -156,7 +163,7 @@ const ProfileInformation = (props) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                
+
                 label="Preferred Name"
                 multiline
                 defaultValue={prefName}
@@ -237,18 +244,8 @@ const ProfileInformation = (props) => {
             onChange={(e) => setLinkedIn(e.target.value)}
 
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-            label="Profile Image Source"
-            autoFocus
-            defaultValue={picture}
-            form className={classes.form}
-            onChange={e => setPicture(e.target.value)}
-          />
-
+          <FileUpload />
+          
           <TextField
             variant="outlined"
             margin="normal"
@@ -264,7 +261,7 @@ const ProfileInformation = (props) => {
           <Button
             margin="normal"
             form
-            className={classes.button}
+            className={classes.Button}
             variant="contained"
             color="primary"
             onClick={handleSubmit}
