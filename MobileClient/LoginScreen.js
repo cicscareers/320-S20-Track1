@@ -1,19 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import Feather from 'react-native-vector-icons/Feather';
 
 export default function LoginScreen() {
-    Icon.loadFont();
 
     return (
         <View style={styles.container}>
 
             <Image source={require('./images/reachoutLogo.png')} style={{ width: 210, height: 210 }} />
 
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry placeholderTextColor='grey' />
                 <Feather style={styles.icons}
                     name="eye-off"
                     color="grey"
