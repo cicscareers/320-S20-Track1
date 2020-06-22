@@ -1,8 +1,17 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
 
 export default function LoginScreen() {
+    Feather.loadFont();
+
+    const [entry, setEntry] = useState(true); //state for password
+    const [icon, setIcon] = useState("eye-off");
+
+    function handlePress() {
+        setIcon(entry ? "eye" : "eye-off");
+        setEntry(!entry);
+    }
 
     return (
         <View style={styles.container}>
@@ -11,12 +20,14 @@ export default function LoginScreen() {
 
             <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry placeholderTextColor='grey' />
-                <Feather style={styles.icons}
-                    name="eye-off"
-                    color="grey"
-                    size={20}
-                />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={entry} placeholderTextColor='grey' />
+                <TouchableOpacity onPress={handlePress}>
+                    <Feather style={styles.icons}
+                        name={icon}
+                        color="grey"
+                        size={20}
+                    />
+                </TouchableOpacity>
 
             </View>
             <TouchableOpacity style={styles.loginButton}>
