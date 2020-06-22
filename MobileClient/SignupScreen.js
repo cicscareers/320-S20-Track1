@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
 
 export default function SignupScreen() {
+    Feather.loadFont();
+
+    const [entryP, setEntryP] = useState(true); //state for Password
+    const [iconP, setIconP] = useState("eye-off");
+
+    const [entryC, setEntryC] = useState(true); //state for Confirm Password
+    const [iconC, setIconC] = useState("eye-off");
+
+    function handlePress_Pass() {
+        setIconP(entryP ? "eye" : "eye-off");
+        setEntryP(!entryP);
+    }
+
+    function handlePress_Confirm() {
+        setIconC(entryC ? "eye" : "eye-off");
+        setEntryC(!entryC);
+    }
 
     return (
         <View style={styles.container}>
@@ -16,20 +33,26 @@ export default function SignupScreen() {
             </View>
             <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry placeholderTextColor='grey' />
-                <Feather style={styles.icons}
-                    name="eye-off"
-                    color="grey"
-                    size={20}
-                />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={entryP} placeholderTextColor='grey' />
+                <TouchableOpacity onPress={handlePress_Pass}>
+                    <Feather style={styles.icons}
+                        name={iconP}
+                        color="grey"
+                        size={20}
+                    />
+                </TouchableOpacity>
+
 
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' />
-                <Feather style={styles.icons}
-                    name="eye-off"
-                    color="grey"
-                    size={20}
-                />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' secureTextEntry={entryC} />
+                <TouchableOpacity onPress={handlePress_Confirm}>
+                    <Feather style={styles.icons}
+                        name={iconC}
+                        color="grey"
+                        size={20}
+                    />
+                </TouchableOpacity>
+
             </View>
             <TouchableOpacity style={styles.signupButton}>
                 <Text style={styles.signupText}>
