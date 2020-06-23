@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid} from '@material-ui/core';
+import {IconButton, Toolbar, Appbar, Fab, TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid} from '@material-ui/core';
 import {Rating, Autocomplete} from '@material-ui/lab';
 import Menu from "../../../Navigation/appbar.js";
 import SupporterCard from "../SupporterPanels/supporterCards.js"
@@ -7,10 +7,13 @@ import SupporterCard from "../SupporterPanels/supporterCards.js"
 //import tagsList from "../tags.js"
 import convertTime from "../convertTime.js"
 import { DatePicker} from "@material-ui/pickers";
-import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import MenuIcon from '@material-ui/icons/Menu';
+import {isMobile} from 'react-device-detect';
+import useStyles from './MatchingStyles'
 
+const drawerWidth = (isMobile ? "100%" : "25%");
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -32,6 +35,7 @@ const ResponsiveDrawer = (props) => {
   const sortedList=[]
   const topicsList=[]
   const tagsList=[]
+  const [filtersOpen, setFiltersOpen] = React.useState(isMobile ? false : true)
 
 
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
@@ -205,11 +209,6 @@ const ResponsiveDrawer = (props) => {
     if(rating<=supporter.rating){
       supporterScore++
     }
-
-    console.log("name " + supporter.name)
-    console.log("supporter score " + supporterScore)
-    console.log("count " + count)
-    console.log("state tags and topics " + stateTopics)
     return (supporterScore/count)+0.0001*supporter.rating
   }
 
@@ -273,111 +272,131 @@ const ResponsiveDrawer = (props) => {
         <AppBar position="fixed" className={classes.appBar}>
           <Menu />
         </AppBar>
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        > 
-          {/*All of the filters*/}
-          <div>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <Typography align="center" variant="h5">Filters</Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            className={classes.inputs}
-            align="center"
-            placeholder="Search Supporter"
-            onChange={e => setName(e.target.value)}
-          />
-          <br/>
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={topicsList}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Help Needed Topics"
-              />
-            )}
-            onChange={(e,v) => setStateTopics(v)}
-          />
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={tagsList}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Supporter Specialties"
-              />
-            )}
-            onChange={(e,v) => setStateTags(v)}
-          />
-          <br/>
-          <Typography align="center">What day would you like an appointment on?</Typography>
-          <br/>
-          <Box align="center">
-            <DatePicker
-              autoOk
+        { isMobile && 
+          <AppBar position="fixed" className={classes.filtersBar}>
+            <Toolbar onClick={e => setFiltersOpen(!filtersOpen)}>
+              <IconButton color="primary">
+                <MenuIcon/>
+              </IconButton>
+              <Typography color="primary">
+                {filtersOpen ? "Hide Filters" : "Show Filters"}
+              </Typography>
+            </Toolbar>
+          </AppBar>
+        }
+        { filtersOpen &&
+          <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          > 
+            {/*All of the filters*/}
+            <div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            {isMobile &&
+              <>
+                <br/>
+                <br/>
+              </>
+            }
+            <Typography align="center" variant="h5">Filters</Typography>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
               align="center"
-              variant="inline"
-              value={selectedDate}
-              onChange={processDateChange}
+              placeholder="Search Supporter"
+              onChange={e => setName(e.target.value)}
             />
-          </Box>
-          <br/>
-          <br/>
-          <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-            What is your availability on {selectedDate.toDateString().substring(0,3)+selectedDate.toDateString().substring(3)}?
-          </Typography>
-          <Slider
-            value={sliderTime}
-            onChange={handleSliderChange}
-            step={30}
-            min={420}
-            max={1140}
-            defaultValue={[540, 1020]}
-            valueLabelDisplay="off"
-            aria-labelledby="range-slider"
-            className={classes.inputs}
-            getAriaValueText={convertTime}
-          />
-          <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-            {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
-          </Typography>
-          <br/>
-          <Typography align="center">Minimum Required Rating</Typography>
-          <br/>
-          <Box align="center">
-          <Rating 
-            className={classes.rating} 
-            name="Supporter Rating" 
-            precision={0.5} 
-            value={rating} 
-            onChange={e => setRating(e.target.value)}
-            size="large"
-          />
-          </Box>
-        </div>
-        </Drawer>
+            <br/>
+            <br/>
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={topicsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Help Needed Topics"
+                />
+              )}
+              onChange={(e,v) => setStateTopics(v)}
+            />
+            <br/>
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={tagsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Supporter Specialties"
+                />
+              )}
+              onChange={(e,v) => setStateTags(v)}
+            />
+            <br/>
+            <Typography align="center">What day would you like an appointment on?</Typography>
+            <br/>
+            <Box align="center">
+              <DatePicker
+                autoOk
+                align="center"
+                variant="inline"
+                value={selectedDate}
+                onChange={processDateChange}
+              />
+            </Box>
+            <br/>
+            <br/>
+            <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+              What is your availability on {selectedDate.toDateString().substring(0,3)+selectedDate.toDateString().substring(3)}?
+            </Typography>
+            <Slider
+              value={sliderTime}
+              onChange={handleSliderChange}
+              step={30}
+              min={420}
+              max={1140}
+              defaultValue={[540, 1020]}
+              valueLabelDisplay="off"
+              aria-labelledby="range-slider"
+              className={classes.inputs}
+              getAriaValueText={convertTime}
+            />
+            <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+              {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
+            </Typography>
+            <br/>
+            <Typography align="center">Minimum Required Rating</Typography>
+            <br/>
+            <Box align="center">
+            <Rating 
+              className={classes.rating} 
+              name="Supporter Rating" 
+              precision={0.5} 
+              value={rating} 
+              onChange={e => setRating(e.target.value)}
+              size="large"
+            />
+            </Box>
+          </div>
+          </Drawer>
+        }
         <main className={classes.content}>
           {/*The time selector*/}
-          <Grid container alignItems="center" spacing={2} justify="center">
+          <Grid container alignItems="center" justify="center">
             <Grid item>
               <Button onClick={previousDay}>
                 <NavigateBeforeIcon fontSize="large"></NavigateBeforeIcon>
@@ -399,10 +418,8 @@ const ResponsiveDrawer = (props) => {
             </Grid>
           </Grid>
           <br/>
-          <br/>
-          {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
+          {newList.length>0 && <Typography align="center" variant={isMobile ? "h6" : "h4"}>Recommended Supporters</Typography>}
           {newList.length===0 && <Typography align="center" variant="h4">We couldn't find a supporter with those attributes. Please try widening your search.</Typography>}
-          <br/>
           <br/>
           {/*Maps each supporter to a card*/}
           {sortedList.map(supporterObj => getSupporterCard(supporterObj,scores[supporterObj.supporter_id]))}

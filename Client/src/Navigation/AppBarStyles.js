@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     bar: {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
-      minHeight: 80,
+      height: 80,
     },
     logo: {
       color: primary_color,
