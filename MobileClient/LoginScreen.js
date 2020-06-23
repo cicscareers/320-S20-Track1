@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
+import { setCustomText, setCustomTextInput } from 'react-native-global-props';
 
 export default function LoginScreen() {
     Feather.loadFont();
@@ -12,6 +13,15 @@ export default function LoginScreen() {
     });
     const [icon, setIcon] = useState("eye-off");
 
+    const customTextProps = {
+        style: {
+            fontFamily: 'OpenSans-Light'
+        }
+    }
+
+    setCustomText(customTextProps);
+    setCustomTextInput(customTextProps);
+
     function handlePress() {
         setIcon(passwordVisible ? "eye" : "eye-off");
         setPasswordVisible(!passwordVisible);
@@ -19,7 +29,9 @@ export default function LoginScreen() {
 
     function loginPress() {
         if (credentials.email.length === 0 || credentials.password.length === 0) {
-            //disable the button but how?
+            return (press);
+        } else {
+            return (!press);
         }
     }
 
@@ -27,10 +39,9 @@ export default function LoginScreen() {
         <View style={styles.container}>
 
             <Image source={require('./images/reachoutLogo.png')} style={{ width: 210, height: 210 }} />
-
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' name={credentials.email} />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={passwordVisible} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={passwordVisible} placeholderTextColor='grey' name={credentials.password} />
                 <TouchableOpacity onPress={handlePress}>
                     <Feather style={styles.icons}
                         name={icon}
@@ -40,7 +51,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
             </View>
-            <TouchableOpacity style={styles.loginButton} onPress={loginPress} disabled={press}>
+            <TouchableOpacity style={styles.loginButton} onPress={loginPress}>
                 <Text style={styles.text}>
                     Login
                 </Text>
@@ -94,7 +105,6 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     input: {
-        fontFamily: 'OpenSans-Light',
         flex: 1,
         marginTop: 10,
         marginBottom: 5,
@@ -105,7 +115,6 @@ const styles = StyleSheet.create({
         color: "black"
     },
     text: {
-        fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'white',
         fontSize: 17,
@@ -120,7 +129,6 @@ const styles = StyleSheet.create({
     },
     signupText: {
         textAlign: 'left',
-        fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
         fontSize: 17,
@@ -134,7 +142,6 @@ const styles = StyleSheet.create({
     passwordText: {
         padding: 5,
         textAlign: 'right',
-        fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
         fontSize: 15,
