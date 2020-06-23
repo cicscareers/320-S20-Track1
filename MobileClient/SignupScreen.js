@@ -5,20 +5,20 @@ import Feather from 'react-native-vector-icons/Feather';
 export default function SignupScreen() {
     Feather.loadFont();
 
-    const [entryP, setEntryP] = useState(true); //state for Password
+    const [viewPassword, setViewPassword] = useState(true); //state for Password
     const [iconP, setIconP] = useState("eye-off");
 
-    const [entryC, setEntryC] = useState(true); //state for Confirm Password
+    const [confrimPassword, setConfirmPassword] = useState(true); //state for Confirm Password
     const [iconC, setIconC] = useState("eye-off");
 
-    function handlePress_Pass() {
-        setIconP(entryP ? "eye" : "eye-off");
-        setEntryP(!entryP);
+    function handlePressPass() {
+        setIconP(viewPassword ? "eye" : "eye-off");
+        setViewPassword(!viewPassword);
     }
 
-    function handlePress_Confirm() {
-        setIconC(entryC ? "eye" : "eye-off");
-        setEntryC(!entryC);
+    function handlePressConfirm() {
+        setIconC(confrimPassword ? "eye" : "eye-off");
+        setConfirmPassword(!confrimPassword);
     }
 
     return (
@@ -33,8 +33,8 @@ export default function SignupScreen() {
             </View>
             <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={entryP} placeholderTextColor='grey' />
-                <TouchableOpacity onPress={handlePress_Pass}>
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={viewPassword} placeholderTextColor='grey' />
+                <TouchableOpacity onPress={handlePressPass}>
                     <Feather style={styles.icons}
                         name={iconP}
                         color="grey"
@@ -44,8 +44,8 @@ export default function SignupScreen() {
 
 
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' secureTextEntry={entryC} />
-                <TouchableOpacity onPress={handlePress_Confirm}>
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' secureTextEntry={confrimPassword} />
+                <TouchableOpacity onPress={handlePressConfirm}>
                     <Feather style={styles.icons}
                         name={iconC}
                         color="grey"
@@ -56,7 +56,7 @@ export default function SignupScreen() {
             </View>
             <TouchableOpacity style={styles.signupButton}>
                 <Text style={styles.signupText}>
-                    CREATE ACCOUNT
+                    Create Account
                 </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity style={styles.passwordContainer}>
@@ -66,7 +66,7 @@ export default function SignupScreen() {
             </TouchableOpacity> */}
             <TouchableOpacity style={styles.supporterButton}>
                 <Text style={styles.supporterText}>
-                    REQUEST SUPPORTER ACCOUNT
+                    Request Supporter Account
                 </Text>
             </TouchableOpacity>
         </View >
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'white',
-        fontSize: 16,
+        fontSize: 17,
     },
     supporterButton: {
         marginTop: 30,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
-        fontSize: 15,
+        fontSize: 16,
 
     },
     studentText: {
