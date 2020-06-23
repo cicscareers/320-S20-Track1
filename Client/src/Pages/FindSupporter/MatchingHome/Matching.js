@@ -312,7 +312,8 @@ const ResponsiveDrawer = (props) => {
               margin="normal"
               className={classes.inputs}
               align="center"
-              placeholder="Search Supporter"
+              placeholder={"Search Supporter"}
+              value={name}
               onChange={e => setName(e.target.value)}
             />
             <br/>
@@ -322,6 +323,7 @@ const ResponsiveDrawer = (props) => {
               className={classes.inputs}
               id="tags-outlined"
               options={topicsList}
+              value={stateTopics}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -337,6 +339,7 @@ const ResponsiveDrawer = (props) => {
               className={classes.inputs}
               id="tags-outlined"
               options={tagsList}
+              value={stateTags}
               renderInput={(params) => (
                 <TextField
                   {...params}
