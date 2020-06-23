@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
+import { setCustomText, setCustomTextInput } from 'react-native-global-props';
 
 export default function SignupScreen() {
     Feather.loadFont();
@@ -10,6 +11,17 @@ export default function SignupScreen() {
 
     const [confrimPassword, setConfirmPassword] = useState(true); //state for Confirm Password
     const [iconC, setIconC] = useState("eye-off");
+
+    const customTextProps = {
+        style: {
+            fontFamily: 'OpenSans-Light'
+        }
+    }
+
+
+
+    setCustomText(customTextProps);
+    setCustomTextInput(customTextProps);
 
     function handlePressPass() {
         setIconP(viewPassword ? "eye" : "eye-off");
@@ -107,7 +119,6 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     input: {
-        fontFamily: 'OpenSans-Light',
         flex: 1,
         marginTop: 10,
         marginBottom: 5,
@@ -118,7 +129,6 @@ const styles = StyleSheet.create({
         color: "black"
     },
     signupText: {
-        fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'white',
         fontSize: 17,
@@ -133,7 +143,6 @@ const styles = StyleSheet.create({
     },
     supporterText: {
         textAlign: 'left',
-        fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
         fontSize: 16,
@@ -141,7 +150,6 @@ const styles = StyleSheet.create({
     },
     studentText: {
         padding: 20,
-        fontFamily: 'OpenSans-Light',
         fontSize: 18,
         color: 'maroon',
         fontWeight: '500'
