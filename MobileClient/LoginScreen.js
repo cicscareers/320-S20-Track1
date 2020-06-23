@@ -4,13 +4,23 @@ import Feather from 'react-native-vector-icons/Feather';
 
 export default function LoginScreen() {
     Feather.loadFont();
-
-    const [entry, setEntry] = useState(true); //state for password
+    const press = false;
+    const [passwordVisible, setPasswordVisible] = useState(true);
+    const [credentials, setCredentials] = useState({
+        email: "",
+        password: ""
+    });
     const [icon, setIcon] = useState("eye-off");
 
     function handlePress() {
-        setIcon(entry ? "eye" : "eye-off");
-        setEntry(!entry);
+        setIcon(passwordVisible ? "eye" : "eye-off");
+        setPasswordVisible(!passwordVisible);
+    }
+
+    function loginPress() {
+        if (credentials.email.length === 0 || credentials.password.length === 0) {
+            //disable the button but how?
+        }
     }
 
     return (
@@ -20,7 +30,7 @@ export default function LoginScreen() {
 
             <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={entry} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={passwordVisible} placeholderTextColor='grey' />
                 <TouchableOpacity onPress={handlePress}>
                     <Feather style={styles.icons}
                         name={icon}
@@ -30,20 +40,20 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
             </View>
-            <TouchableOpacity style={styles.loginButton}>
+            <TouchableOpacity style={styles.loginButton} onPress={loginPress} disabled={press}>
                 <Text style={styles.text}>
-                    LOGIN
+                    Login
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.passwordContainer}>
                 <Text style={styles.passwordText}>
-                    FORGOT PASSWORD
+                    Forgot Password
                 </Text>
             </TouchableOpacity>
             {/* <ForgotPass title={"Forgot Password?"} onPress={() => { }} /> */}
             <TouchableOpacity style={styles.signupButton}>
                 <Text style={styles.signupText}>
-                    DON'T HAVE AN ACCOUNT? SIGN UP?
+                    Don't have an account? Sign Up
                 </Text>
             </TouchableOpacity>
         </View >
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'white',
-        fontSize: 16,
+        fontSize: 17,
     },
     signupButton: {
         marginTop: 30,
@@ -113,7 +123,7 @@ const styles = StyleSheet.create({
         fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
-        fontSize: 14,
+        fontSize: 17,
 
     },
     passwordContainer: {
@@ -122,12 +132,12 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     passwordText: {
+        padding: 5,
         textAlign: 'right',
         fontFamily: 'OpenSans-Light',
         fontWeight: '500',
         color: 'maroon',
-        fontSize: 13,
-
+        fontSize: 15,
     }
 
 });
