@@ -10,7 +10,7 @@ import { DatePicker} from "@material-ui/pickers";
 import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-
+import levenshteinRatio from '../StringDistance';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -166,6 +166,7 @@ const ResponsiveDrawer = (props) => {
           tagsList.push(newList[i].tags[j])
         }
       }
+      
       for(var j in newList[i].topics){
         if(!topicsList.includes(j)){
           topicsList.push(j)
@@ -185,9 +186,9 @@ const ResponsiveDrawer = (props) => {
     var supporterScore=0
     var count=stateTopics.length+stateTags.length+3
 
-    if(supporter.name.toLowerCase().includes(name.toLowerCase())){
-      supporterScore++
-    }
+    // Approximate string matching using levenshtein distance.
+    supporterScore += levenshteinRatio(name.toLowerCase(), supporter.name.toLowerCase());
+    
     for(let i=0;i<stateTags.length;i++){
       if(supporter.tags.includes(stateTags[i])){
         supporterScore++
