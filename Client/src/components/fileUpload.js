@@ -32,6 +32,6 @@ export default class fileUpload extends Component {
 
     onChangeFile(e) {
         this.setState({file: e.target.value});
-        this.props.onFileChange();
+        this.props.onFileChange(e);
     }
 }
