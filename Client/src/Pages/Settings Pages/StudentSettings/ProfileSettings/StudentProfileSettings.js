@@ -94,6 +94,19 @@ const ProfileInformation = (props) => {
       ];
     }
 
+    var fr = new FileReader();
+    if(picture == "") { // No picture file selected
+      updateSettings(formatted_majors, formatted_minors, formatted_colleges, "");
+    } else {
+      fr.readAsDataURL(picture);
+      fr.onloadend = function(e) {
+        console.log(e.target.result);
+        updateSettings(formatted_majors, formatted_minors, formatted_colleges, e.target.result);
+      }
+    }
+  }
+
+  function updateSettings(formatted_majors, formatted_minors, formatted_colleges, pictureData) {
     fetch(url, {
       method: "PATCH",
       body: JSON.stringify({
@@ -108,7 +121,7 @@ const ProfileInformation = (props) => {
         majors: [],
         minors: [],
         phone: phoneNumber,
-        picture: picture,
+        picture: pictureData,
         preferred_name: prefName,
         pronouns: pronouns,
         resume: settings.resume,
@@ -123,7 +136,7 @@ const ProfileInformation = (props) => {
       .then((response) => response.json())
       .then((json) => {
         console.log(json)
-        sessionStorage.setItem("image", picture)
+        sessionStorage.setItem("image", pictureData)
         window.location.reload(false)
       });
   }
@@ -244,7 +257,9 @@ const ProfileInformation = (props) => {
             onChange={(e) => setLinkedIn(e.target.value)}
 
           />
-          <FileUpload />
+          <FileUpload
+            onFileChange={(e) => setPicture(e.target.value)}
+          />
           
           <TextField
             variant="outlined"
