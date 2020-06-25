@@ -10,9 +10,12 @@ import { DatePicker} from "@material-ui/pickers";
 import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-
+import { useAlert } from 'react-alert';
 
 const ResponsiveDrawer = (props) => {
+  // Initialize alert
+  const alert = useAlert();
+ 
   //Initialize all of the constants
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -119,10 +122,15 @@ const ResponsiveDrawer = (props) => {
 
   //Decrements day by one
   function previousDay(){
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
+    var today = new Date();
+    var newDate = new Date(today);
+    newDate.setMonth(selectedDate.getMonth());
     newDate.setDate(selectedDate.getDate() - 1);
-    processDateChange(newDate)
+    if(newDate < today) { // We can't schedule appointments in the past.
+      alert.error("You can't schedule appointments in the past");
+    } else {
+      processDateChange(newDate);
+    }
   }
 
   //Sets time based on the slider

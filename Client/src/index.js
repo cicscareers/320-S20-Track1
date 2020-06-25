@@ -9,6 +9,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import {Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
 
 const cookies = new Cookies();
 const role = cookies.get('role')
@@ -47,11 +49,19 @@ Amplify.configure({
   }
 });
 
+const AlertOptions = {
+  position: positions.BOTTOM_CENTER,
+  timeout: 3000,
+  transition: transitions.FADE,
+}
+
 ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <App />
+        <AlertProvider template={AlertTemplate} {...AlertOptions}>
+          <App />
+        </AlertProvider>
       </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,
