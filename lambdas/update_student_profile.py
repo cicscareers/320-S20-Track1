@@ -233,3 +233,15 @@ def update_student_profile(event, context):
     return {
         'statusCode': 204 #no content 
     }
+
+def upload_profile_picture(student_id, picData):
+    s_3 = boto3.client('s3')
+
+    bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
+
+    file_path = 'profile/' + str(student_id) + 'image'
+
+    try:
+        s_3.put_object(Bucket=bucket_name_images, Key=file_path, Body=picData)
+    except Exception as e:
+        raise LambdaException("400: Failed to upload file. " + str(e))
