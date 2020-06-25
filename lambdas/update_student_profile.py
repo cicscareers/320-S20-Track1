@@ -1,8 +1,4 @@
 import boto3
-import json
-
-from copy import deepcopy
-from package import db_config
 from package.query_db import query
 from package.lambda_exception import LambdaException
 
@@ -231,7 +227,7 @@ def update_student_profile(event, context):
 
     print("Updated Student Profile")
     return {
-        'statusCode': 204 #no content 
+        'body' : "Successfully updated student profile"
     }
 
 def upload_profile_picture(student_id, picData):
