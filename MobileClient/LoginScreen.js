@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
+import { Auth } from "aws-amplify";
 import { setCustomText, setCustomTextInput } from 'react-native-global-props';
 
 export default function LoginScreen() {
@@ -11,14 +12,47 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [icon, setIcon] = useState("eye-off");
 
-    const customTextProps = {
-        style: {
-            fontFamily: 'OpenSans-Light'
+    //Uncomment whenever you have added Open-Sans-Light 
+    // const customTextProps = {
+    //     style: {
+    //         fontFamily: 'OpenSans-Light'
+    //     }
+    // }
+
+    // setCustomText(customTextProps);
+    // setCustomTextInput(customTextProps);
+
+    const handleSubmit = async event => {
+        event.preventDefault();
+        var username = email;
+        try {
+            const user = await Auth.signIn(email, password);
+            console.log(user);
+            if (user.signInUserSession.accessToken !== undefined) {
+
+                var authToken = user.signInUserSession.idToken.jwtToken;
+                var base64Url = authToken.split('.')[1];
+                var json = JSON.parse(window.atob(base64Url));
+                const cookies = new Cookies();
+                sessionStorage.setItem("token", user.signInUserSession.accessToken, { path: "/" });
+                sessionStorage.setItem("email", json.email);
+                sessionStorage.setItem("firstName", json.given_name);
+                sessionStorage.setItem("lastName", json.family_name);
+                sessionStorage.setItem("role", "Student");
+                sessionStorage.setItem("id", json.preferred_username);
+                cookies.set("role", "Student", { path: "/" });
+                fetchPicture()
+            }
+        } catch (error) {
+            if (error.code == "NotAuthorizedException") {
+                setValidInfo(false);
+            }
+            else {
+                alert(error.message)
+            }
+            console.log(error);
         }
     }
-
-    setCustomText(customTextProps);
-    setCustomTextInput(customTextProps);
 
     function handlePress() {
         setIcon(passwordVisible ? "eye" : "eye-off");
@@ -45,7 +79,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
             </View>
-            <TouchableOpacity style={styles.loginButton} disabled={!validateForm()}>
+            <TouchableOpacity style={styles.loginButton} disabled={!validateForm()} onPress={handleSubmit}>
                 <Text style={styles.text}>
                     Login
                 </Text>
