@@ -12,6 +12,12 @@ export default function SignupScreen() {
     const [confrimPassword, setConfirmPassword] = useState(true); //state for Confirm Password
     const [iconC, setIconC] = useState("eye-off");
 
+    const [fName, setfName] = useState("");
+    const [lName, setlName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [cPass, setcPass] = useState("");
+
     const customTextProps = {
         style: {
             fontFamily: 'OpenSans-Light'
@@ -19,9 +25,17 @@ export default function SignupScreen() {
     }
 
 
-
     setCustomText(customTextProps);
     setCustomTextInput(customTextProps);
+
+
+    function validateForm() {
+        return email.length > 0 && fName.length > 0 && lName.length > 0 && password.length > 0 && cPass.length > 0;
+    }
+
+    function samePass() {
+        if (password !== cPass) alert("Wrong password")
+    }
 
     function handlePressPass() {
         setIconP(viewPassword ? "eye" : "eye-off");
@@ -35,17 +49,17 @@ export default function SignupScreen() {
 
     return (
         <View style={styles.container}>
-            <Image source={require('./images/reachoutLogo.png')} style={{ width: 210, height: 210 }} />
+            <Image source={require('./images/reachout.png')} style={{ width: 210, height: 210 }} />
             <Text style={styles.studentText}>
                 Student Account
             </Text>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"First Name"} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"First Name"} placeholderTextColor='grey' name={fName} onChangeText={text => (setfName(text))} onChange={validateForm} />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Last Name"} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Last Name"} placeholderTextColor='grey' name={lName} onChangeText={text => (setlName(text))} />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' name={email} onChangeText={text => (setEmail(text))} />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={viewPassword} placeholderTextColor='grey' />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={viewPassword} placeholderTextColor='grey' name={password} onChangeText={text => (setPassword(text))} />
                 <TouchableOpacity onPress={handlePressPass}>
                     <Feather style={styles.icons}
                         name={iconP}
@@ -54,9 +68,8 @@ export default function SignupScreen() {
                     />
                 </TouchableOpacity>
 
-
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' secureTextEntry={confrimPassword} />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Confirm Password"} placeholderTextColor='grey' secureTextEntry={confrimPassword} name={cPass} onChangeText={text => (setcPass(text))} />
                 <TouchableOpacity onPress={handlePressConfirm}>
                     <Feather style={styles.icons}
                         name={iconC}
@@ -66,14 +79,13 @@ export default function SignupScreen() {
                 </TouchableOpacity>
 
             </View>
-            <TouchableOpacity style={styles.signupButton}>
+            <TouchableOpacity style={styles.signupButton} disabled={!validateForm()} onPress={samePass}>
                 <Text style={styles.signupText}>
                     Create Account
                 </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity style={styles.passwordContainer}>
                 <Text style={styles.passwordText}>
-
                 </Text>
             </TouchableOpacity> */}
             <TouchableOpacity style={styles.supporterButton}>
