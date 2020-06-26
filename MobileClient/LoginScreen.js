@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import Feather from 'react-native-vector-icons/Feather';
 import { Auth } from "aws-amplify";
+import App from './App';
+import { AppRegistry } from 'react-native';
+import { name as appName } from './app.json';
 import { setCustomText, setCustomTextInput } from 'react-native-global-props';
 
 export default function LoginScreen() {
@@ -11,6 +14,7 @@ export default function LoginScreen() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [icon, setIcon] = useState("eye-off");
+    AppRegistry.registerComponent(appName, () => App);
 
     //Uncomment whenever you have added Open-Sans-Light 
     // const customTextProps = {
@@ -21,6 +25,15 @@ export default function LoginScreen() {
 
     // setCustomText(customTextProps);
     // setCustomTextInput(customTextProps);
+
+    Amplify.configure({
+        Auth: {
+            mandatorySignIn: true,
+            region: 'us-east-2',
+            userPoolId: 'us-east-2_TOeWJwIy0',
+            userPoolWebClientId: '7phnpqt6kfvfr9apoelke4hhm1'
+        }
+    });
 
     const handleSubmit = async event => {
         event.preventDefault();
