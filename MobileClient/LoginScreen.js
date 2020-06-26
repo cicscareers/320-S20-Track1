@@ -7,10 +7,8 @@ export default function LoginScreen() {
     Feather.loadFont();
     const press = false;
     const [passwordVisible, setPasswordVisible] = useState(true);
-    const [credentials, setCredentials] = useState({
-        email: "",
-        password: ""
-    });
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [icon, setIcon] = useState("eye-off");
 
     const customTextProps = {
@@ -27,21 +25,17 @@ export default function LoginScreen() {
         setPasswordVisible(!passwordVisible);
     }
 
-    function loginPress() {
-        if (credentials.email.length === 0 || credentials.password.length === 0) {
-            return (press);
-        } else {
-            return (!press);
-        }
+    function validateForm() {
+        return email.length > 0 && password.length > 0;
     }
 
     return (
         <View style={styles.container}>
 
-            <Image source={require('./images/reachoutLogo.png')} style={{ width: 210, height: 210 }} />
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' name={credentials.email} />
+            <Image source={require('./images/reachout.png')} style={{ width: 210, height: 210 }} />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Email"} keyboardType={'email-address'} placeholderTextColor='grey' name={email} autoCompleteType="email" onChangeText={text => setEmail(text)} onChange={validateForm} />
             </View>
-            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={passwordVisible} placeholderTextColor='grey' name={credentials.password} />
+            <View style={styles.action}><TextInput style={styles.input} placeholder={"Password"} secureTextEntry={passwordVisible} placeholderTextColor='grey' name={password} onChangeText={text => setPassword(text)} onChange={validateForm} />
                 <TouchableOpacity onPress={handlePress}>
                     <Feather style={styles.icons}
                         name={icon}
@@ -51,7 +45,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
             </View>
-            <TouchableOpacity style={styles.loginButton} onPress={loginPress}>
+            <TouchableOpacity style={styles.loginButton} disabled={!validateForm()}>
                 <Text style={styles.text}>
                     Login
                 </Text>
@@ -61,7 +55,6 @@ export default function LoginScreen() {
                     Forgot Password
                 </Text>
             </TouchableOpacity>
-            {/* <ForgotPass title={"Forgot Password?"} onPress={() => { }} /> */}
             <TouchableOpacity style={styles.signupButton}>
                 <Text style={styles.signupText}>
                     Don't have an account? Sign Up
