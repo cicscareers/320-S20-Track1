@@ -94,19 +94,6 @@ const ProfileInformation = (props) => {
       ];
     }
 
-    var fr = new FileReader();
-    if(picture == "") { // No picture file selected
-      updateSettings(formatted_majors, formatted_minors, formatted_colleges, "");
-    } else {
-      fr.readAsDataURL(picture);
-      fr.onloadend = function(e) {
-        console.log(e.target.result);
-        updateSettings(formatted_majors, formatted_minors, formatted_colleges, e.target.result);
-      }
-    }
-  }
-
-  function updateSettings(formatted_majors, formatted_minors, formatted_colleges, pictureData) {
     fetch(url, {
       method: "PATCH",
       body: JSON.stringify({
@@ -121,10 +108,10 @@ const ProfileInformation = (props) => {
         majors: [],
         minors: [],
         phone: phoneNumber,
-        picture: pictureData,
+        picture: picture,
         preferred_name: prefName,
         pronouns: pronouns,
-        resume: settings.resume,
+        resume: settings.resume,  
         statusCode: settings.statusCode,
         colleges: [],
         links: []
@@ -136,7 +123,7 @@ const ProfileInformation = (props) => {
       .then((response) => response.json())
       .then((json) => {
         console.log(json)
-        sessionStorage.setItem("image", pictureData)
+        sessionStorage.setItem("image", picture)
         window.location.reload(false)
       });
   }
@@ -258,7 +245,15 @@ const ProfileInformation = (props) => {
 
           />
           <FileUpload
-            onFileChange={(e) => setPicture(e.target.value)}
+            onFileChange={(e) => {
+              var fr = new FileReader();
+              fr.readAsDataURL(e.target.files[0]);
+              fr.onloadend = function(e) {
+                setPicture(e.target.result);
+              }
+            }
+            }
+            FileType="image/*"
           />
           
           <TextField

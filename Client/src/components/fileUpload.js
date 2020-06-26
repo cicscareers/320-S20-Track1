@@ -22,6 +22,7 @@ export default class fileUpload extends Component {
             Upload a Profile Picture: &nbsp;&nbsp; {this.state.file}
             <input
                 type="file"
+                accept={this.props.FileType}
                 fullWidth
                 align='right'
                 onChange={this.onChangeFile}
@@ -31,7 +32,7 @@ export default class fileUpload extends Component {
     }
 
     onChangeFile(e) {
-        this.setState({file: e.target.value});
+        this.setState({file: e.target.files[0].name});
         this.props.onFileChange(e);
     }
 }

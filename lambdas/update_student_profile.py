@@ -44,11 +44,11 @@ def update_student_profile(event, context):
     updated_user_vals += "preferred_name='%s', " % (preferred_name)
 
     if 'picture' in event:
-        picture = event['picture']
+        picture = upload_profile_picture(student_id, event['picture'])
     else:
-        sql = "SELECT picture FROM users WHERE id= :student_id"
-        picture = query(sql, student_id_param)['records'][0][0]['stringValue']
-    updated_user_vals += "picture='%s', " % (picture)
+        picture = get_profile_picture(student_id)
+    # We don't need to store picture link into SQL anymore
+    #updated_user_vals += "picture='%s', " % (picture)
 
     if 'bio' in event:
         bio = event['bio']
@@ -232,12 +232,22 @@ def update_student_profile(event, context):
 
 def upload_profile_picture(student_id, picData):
     s_3 = boto3.client('s3')
-
     bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
-
-    file_path = 'profile/' + str(student_id) + 'image'
+    file_path = 'profile/' + str(student_id) + '/image'
 
     try:
         s_3.put_object(Bucket=bucket_name_images, Key=file_path, Body=picData)
     except Exception as e:
         raise LambdaException("400: Failed to upload file. " + str(e))
+
+def get_profile_picture(student_id):
+    s_3 = boto3.client('s3')
+    bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
+    file_path = 'profile/' + str(student_id) + '/image'
+
+    try:
+        response = s_3.get_object(Bucket=bucket_name_images, Key=file_path)
+    except Exception as e:
+        raise LambdaException("400: Failed to download file." + str(e))
+
+    return response['Body'].read()
