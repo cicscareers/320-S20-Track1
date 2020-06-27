@@ -28,8 +28,6 @@ const ResponsiveDrawer = (props) => {
   nextWeek.setDate(nextWeek.getDate() + 7);
   const [beginDate, setBeginDate] = React.useState(today);
   const [endDate, setEndDate] = React.useState(nextWeek);
-  const scores = {}
-  const sortedList=[]
   const topicsList=[]
   const tagsList=[]
 
@@ -90,6 +88,7 @@ const ResponsiveDrawer = (props) => {
   //For hard filtering. Commented out code will hard filter the given fields
   var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
   supporter.day.substring(8,10)===getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
+  
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
   //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
@@ -156,20 +155,19 @@ const ResponsiveDrawer = (props) => {
   }
 
   //Generates the list of topics and tags to be used by the autocomplete filters
-  function getTagsAndTopics(){
-    if(!newList){
-      return 
-    }
-    for(let i=0;i<newList.length;i++){
-      for(let j=0;j<newList[i].tags.length;j++){
-        if(!tagsList.includes(newList[i].tags[j])){
-          tagsList.push(newList[i].tags[j])
+  function getTagsAndTopics() {
+    if(!newList) return;
+
+    for(let i = 0; i < newList.length; i++) {
+      for(let j = 0; j < newList[i].tags.length; j++) {
+        if(!tagsList.includes(newList[i].tags[j])) {
+          tagsList.push(newList[i].tags[j]);
         }
       }
       
-      for(var j in newList[i].topics){
-        if(!topicsList.includes(j)){
-          topicsList.push(j)
+      for(var j in newList[i].topics) {
+        if(!topicsList.includes(j)) {
+          topicsList.push(j);
         }
       }
     }
@@ -183,7 +181,7 @@ const ResponsiveDrawer = (props) => {
 
   //Inputs a supporter and returns their score 
   function score(supporter){
-    var supporterScore=0
+    var supporterScore = 0;
 
     // Approximate string matching.
     supporterScore += StringDistance.token_set_ratio(name, supporter.name) / 100; // (token_set_ratio gives percentage so we need to scale it)
@@ -213,40 +211,12 @@ const ResponsiveDrawer = (props) => {
     console.log("state tags and topics " + stateTopics)
     return supporterScore;
   }
-
-  //Maps every supporter / score pair to the score dictionary
-  newList.map(supporter => scores[supporter.supporter_id]=score(supporter))
-
-  //Creates an array of supporter ids
-  const supporter_array=[]
-  for(let i=0;i<newList.length;i++){
-    supporter_array.push(newList[i].supporter_id)
-  }
-
-  //Compares two objects based on their score
-  function compare(a,b) {
-    if (scores[a] < scores[b])
-      return 1;
-    if (scores[a] > scores[b])
-      return -1;
-    return 0;
-  }
   
-  //Sorts the supporter id array by score
-  supporter_array.sort(compare)
+  // Maps every supporter / score pair to the score dictionary
+  newList.forEach(supporter => supporter.score = score(supporter));
 
-  //Converts the array of ids to array of supporters
-  function returnSupporters(array){
-    for(let i=0;i<array.length;i++){
-      for(let j=0;j<newList.length;j++){
-        if(newList[j].supporter_id===array[i]){
-          sortedList.push(newList[j]);
-        }
-      }
-    }
-    return sortedList
-  }
-  returnSupporters(supporter_array)
+  // Sort the newList
+  newList = newList.sort((a, b) => b.score - a.score);
 
   /////////////////////////////////////////////////
   //end
@@ -406,7 +376,7 @@ const ResponsiveDrawer = (props) => {
           <br/>
           <br/>
           {/*Maps each supporter to a card*/}
-          {sortedList.map(supporterObj => getSupporterCard(supporterObj,scores[supporterObj.supporter_id]))}
+          {newList.map(supporterObj => getSupporterCard(supporterObj, supporterObj.score))}
         </main>
       </div>
     );
