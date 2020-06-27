@@ -6,11 +6,11 @@ import SupporterCard from "../SupporterPanels/supporterCards.js"
 //import topicsList from "../topics.js"
 //import tagsList from "../tags.js"
 import convertTime from "../convertTime.js"
-import { DatePicker} from "@material-ui/pickers";
+import { DatePicker } from "@material-ui/pickers";
 import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import levenshteinRatio from '../StringDistance';
+import { default as StringDistance } from 'fuzzball';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -184,34 +184,34 @@ const ResponsiveDrawer = (props) => {
   //Inputs a supporter and returns their score 
   function score(supporter){
     var supporterScore=0
-    var count=stateTopics.length+stateTags.length+3
 
-    // Approximate string matching using levenshtein distance.
-    supporterScore += levenshteinRatio(name.toLowerCase(), supporter.name.toLowerCase());
+    // Approximate string matching.
+    supporterScore += StringDistance.token_set_ratio(name, supporter.name) / 100; // (token_set_ratio gives percentage so we need to scale it)
+    let matches = 0;
+    for(let i = 0; i < stateTags.length; i++) {
+      if(supporter.tags.includes(stateTags[i])) {
+        matches++;
+      }
+    }
     
-    for(let i=0;i<stateTags.length;i++){
-      if(supporter.tags.includes(stateTags[i])){
-        supporterScore++
+    for(let i=0; i < stateTopics.length; i++) {
+      if(supporter.topics[stateTopics[i]]) {
+        matches++;
       }
     }
-    for(let i=0;i<stateTopics.length;i++){
-      if(supporter.topics[stateTopics[i]]){
-        supporterScore++
-      }
-    }
-    if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
-      supporterScore++
-    }
+    
+    if(stateTopics.length + stateTags.length > 0) supporterScore += matches/stateTopics.length;
+    
+    supporterScore += 0.0001 * (supporter.rating - rating)/5;
 
-    if(rating<=supporter.rating){
+    if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
       supporterScore++
     }
 
     console.log("name " + supporter.name)
     console.log("supporter score " + supporterScore)
-    console.log("count " + count)
     console.log("state tags and topics " + stateTopics)
-    return (supporterScore/count)+0.0001*supporter.rating
+    return supporterScore;
   }
 
   //Maps every supporter / score pair to the score dictionary
