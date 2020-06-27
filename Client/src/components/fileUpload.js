@@ -10,6 +10,8 @@ export default class fileUpload extends Component {
     }
 
     render() {
+        var multiple = (this.props.MultipleFile ? 'multiple' : '');
+
         return (
             <Button
                 variant="contained"
@@ -27,12 +29,16 @@ export default class fileUpload extends Component {
                 align='right'
                 onChange={this.onChangeFile}
                 style={{display: 'none'}}
+                multiple
             />
             </Button>)
     }
 
     onChangeFile(e) {
-        this.setState({file: e.target.files[0].name});
-        this.props.onFileChange(e);
+        this.setState({
+            file: [...e.target.files].map(file => file.name).join(", ")
+        });
+
+        if(this.props.onFileChange) this.props.onFileChange(e);
     }
 }

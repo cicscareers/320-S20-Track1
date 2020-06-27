@@ -245,13 +245,14 @@ const ProfileInformation = (props) => {
 
           />
           <FileUpload
-            onFileChange={(e) => {
-              var fr = new FileReader();
-              fr.readAsDataURL(e.target.files[0]);
-              fr.onloadend = function(e) {
-                setPicture(e.target.result);
+            onFileChange={
+              (e) => {
+                var fr = new FileReader();
+                fr.readAsDataURL(e.target.files[0]);
+                fr.onloadend = function(e) {
+                  setPicture(e.target.result);
+                }
               }
-            }
             }
             FileType="image/*"
           />
