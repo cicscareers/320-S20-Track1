@@ -10,7 +10,7 @@ import {Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic'
+import AlertTemplate from './ReactAlertTemplate'
 
 const cookies = new Cookies();
 const role = cookies.get('role')
