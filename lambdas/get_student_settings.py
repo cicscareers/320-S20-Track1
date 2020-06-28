@@ -232,7 +232,7 @@ def get_profile_picture(student_id):
     try:
         response = s_3.get_object(Bucket=bucket_name_images, Key=file_path)
     except Exception as e:
-        if(e.response['Error']['Code'] == "NoSuchKey")
+        if(e.response['Error']['Code'] == "NoSuchKey"):
             return ""
         else:
             raise LambdaException("400: Failed to download file." + str(e))
