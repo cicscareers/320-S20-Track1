@@ -237,4 +237,4 @@ def get_profile_picture(student_id):
         else:
             raise LambdaException("400: Failed to download file." + str(e))
 
-    return response['Body'].read()
+    return response['Body'].read().decode('utf-8')
