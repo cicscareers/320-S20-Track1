@@ -234,7 +234,7 @@ def get_profile_picture(student_id):
     except Exception as e:
         if(e.response['Error']['Code'] == "NoSuchKey")
             return ""
-        else raise LambdaException(e)
+        else:
             raise LambdaException("400: Failed to download file." + str(e))
 
     return response['Body'].read()
