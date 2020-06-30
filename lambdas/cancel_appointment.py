@@ -1,4 +1,4 @@
-import json
+gitimport json
 from package.query_db import query
 from package.dictionary_to_list import dictionary_to_list
 from package.lambda_exception import LambdaException
