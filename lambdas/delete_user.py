@@ -67,13 +67,13 @@ def delete_user(event, context):
 
     user_roles = get_user_roles(user_id_param)
 
-    if user_roles[0]['booleanValue']:
+    if user_roles['isStudent']:
         tableSet.extend(studentSet)
 
-    if user_roles[1]['booleanValue']:
+    if user_roles['isSupporter']:
         tableSet.extend(supporterSet)
 
-    if user_roles[2]['booleanValue']:
+    if user_roles['isAdmin']:
         tableSet.extend(adminSet)
 
     # Loop through tableSet and delete user_id
