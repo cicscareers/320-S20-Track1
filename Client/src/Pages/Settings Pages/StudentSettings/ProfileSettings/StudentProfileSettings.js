@@ -135,6 +135,16 @@ const ProfileInformation = (props) => {
             src={picture}
           />
           <br />
+          <Button
+            margin="normal"
+            form
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Save
+          </Button>
           <Grid container>
             <Grid item xs={3}>
               <TextField
@@ -261,16 +271,6 @@ const ProfileInformation = (props) => {
             className={classes.form}
             onChange={(e) => setBio(e.target.value)}
           />
-          <Button
-            margin="normal"
-            form
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Save
-          </Button>
         </form>
       </div>
     </Container>
