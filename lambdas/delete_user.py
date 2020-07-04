@@ -2,6 +2,7 @@ import boto3
 from package.query_db import query
 from package.lambda_exception import LambdaException
 from package.db_utils import is_user_admin, user_exists, get_user_roles
+from package.s3_utils import delete_image
 
 # Written by Ish Chhabra
 
@@ -61,6 +62,9 @@ def delete_user(event, context):
             'statusCode': 403
         }
     
+    # Delete profile picture
+    delete_image(f"profile/{user_id}/image")
+
     # List of tables to remove user from
     tableSet = []
     tableSet.extend(userSet)
@@ -82,4 +86,4 @@ def delete_user(event, context):
         try:
             query(sql, user_id_param)['records'][0]
         except Exception as e:
-            raise LambdaException(f"Unable to delete user from '{table[0]}' table: {str(e)}")
+            raise LambdaException(f"Unable to delete user from '{table[0]}' table: {e}")
