@@ -346,6 +346,7 @@ const ResponsiveDrawer = (props) => {
               variant="inline"
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
           </Box>
           <br/>
@@ -398,6 +399,7 @@ const ResponsiveDrawer = (props) => {
               variant="inline"
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
             </Grid>
             <Grid item>
