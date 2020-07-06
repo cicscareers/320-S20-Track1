@@ -9,9 +9,9 @@ from package.s3_utils import delete_image
 
 # [table, identifier]
 userSet = [
-    ['users', 'id'],
     ['notification_preferences', 'user_id'],
-    ['user_link', 'user_id']
+    ['user_link', 'user_id'],
+    ['users', 'id']
 ]
 
 studentSet = [
@@ -65,7 +65,6 @@ def delete_user(event, context):
 
     # List of tables to remove user from
     tableSet = []
-    tableSet.extend(userSet)
 
     user_roles = get_user_roles(user_id)
 
@@ -78,6 +77,8 @@ def delete_user(event, context):
     if user_roles['isAdmin']:
         tableSet.extend(adminSet)
     
+    tableSet.extend(userSet)
+
     # Loop through tableSet and delete user_id
     tranasactionID = beginTransaction()['transactionId']
     user_id_param = [{'name' : 'user_id', 'value' : {'longValue' : user_id}}]
