@@ -1,7 +1,6 @@
 import boto3
-from package.query_db import queryBatch
+from package.query_db import query
 from package.lambda_exception import LambdaException
-from package.dictionary_to_list import dictionary_to_list
 from package.db_utils import is_user_admin, user_exists, get_user_roles
 from package.s3_utils import delete_image
 
@@ -9,30 +8,30 @@ from package.s3_utils import delete_image
 
 # [table, identifier]
 userSet = [
-    {'table':'users', 'identifier': 'id'},
-    {'table': 'notification_preferences', 'identifier': 'user_id'},
-    {'table': 'user_link', 'identifier': 'user_id'}
+    ['users', 'id'],
+    ['notification_preferences', 'user_id'],
+    ['user_link', 'user_id']
 ]
 
 studentSet = [
-    {'table': 'students', 'identifier': 'user_id'},
-    {'table': 'student_majors', 'identifier': 'student_id'},
-    {'table': 'student_minors', 'identifier': 'student_id'},
-    {'table': 'student_college', 'identifier': 'student_id'}
+    ['students', 'user_id'],
+    ['student_majors', 'student_id'],
+    ['student_minors', 'student_id'],
+    ['student_college', 'student_id']
 ]
 
 supporterSet = [
-    {'table': 'supporters', 'identifier': 'supporter_id'},
-    {'table': 'supporter_type', 'identifier': 'supporter_id'},
-    {'table': 'supporter_specializations', 'identifier': 'supporter_id'},
-    {'table': 'supporter_tags', 'identifier': 'supporter_id'},
-    {'table': 'supporter_major_preferences', 'identifier': 'supporter_id'},
-    {'table': 'supporter_minor_preferences', 'identifier': 'supporter_id'},
-    {'table': 'appointment_block', 'identifier': 'supporter_id'}
+    ['supporters', 'supporter_id'],
+    ['supporter_type', 'supporter_id'],
+    ['supporter_specializations', 'supporter_id'],
+    ['supporter_tags', 'supporter_id'],
+    ['supporter_major_preferences', 'supporter_id'],
+    ['supporter_minor_preferences', 'supporter_id'],
+    ['appointment_block', 'supporter_id']
 ]
 
 adminSet = [
-    {'table': 'admins', 'idenfitifier': 'admin_id'}
+    ['admins', 'admin_id']
 ]
 
 # Params:
@@ -67,24 +66,24 @@ def delete_user(event, context):
     delete_image(f"profile/{user_id}/image")
 
     # List of tables to remove user from
-    parameterSet = []
-    parameterSet.extend(userSet)
+    tableSet = []
+    tableSet.extend(userSet)
 
     user_roles = get_user_roles(user_id_param)
 
     if user_roles['isStudent']:
-        parameterSet.extend(studentSet)
+        tableSet.extend(studentSet)
 
     if user_roles['isSupporter']:
-        parameterSet.extend(supporterSet)
+        tableSet.extend(supporterSet)
 
     if user_roles['isAdmin']:
-        parameterSet.extend(adminSet)
+        tableSet.extend(adminSet)
 
     # Loop through tableSet and delete user_id
-    for counter, parameterList in enumerate(parameterSet):
-        parameterList['user_id'] = user_id
-        parameterSet[counter] = dictionary_to_list(parameterList)
-
-    sql = "DELETE FROM :table WHERE :identifier = :user_id"
-    queryBatch(sql, parameterSet)
+    for table in tableSet:
+        sql = f"DELETE FROM {table[0]} WHERE {table[1]} = :user_id"
+        try:
+            query(sql, user_id_param)['records'][0]
+        except Exception as e:
+            raise LambdaException(f"Unable to delete user from '{table[0]}' table: {e}")
