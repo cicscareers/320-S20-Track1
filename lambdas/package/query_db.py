@@ -18,3 +18,20 @@ def query(sql_query, sql_parameters=[]):
         raise LambdaException("Invalid query: " + str(e))
 
     return result
+
+def queryBatch(sql_query, sql_parameters=[]):
+    try:
+        client = boto3.client("rds-data")
+    except:
+        raise LambdaException("Cannot connect to Database")
+
+    try:
+        transactionID = client.begin_transaction(secretArn=secretArn, database=dbName, resourceArn=arn)
+        result = client.batch_execute_statement(secretArn=secretArn, database=dbName, resourceArn=arn, sql=sql_query, parameters=sql_parameters, transactionId=transactionID)
+        client.commit_transaction(secretArn=secretArn, resourceArn=arn, transactionId=transactionID)
+        
+    except Exception as e:
+        raise LambdaException("Unable to execute the query batch: " + str(e))
+
+    return result
+    
