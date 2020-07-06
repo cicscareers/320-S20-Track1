@@ -7,6 +7,7 @@ import {
   Container,
   TextField,
   Grid,
+  Fab
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -135,16 +136,7 @@ const ProfileInformation = (props) => {
             src={picture}
           />
           <br />
-          <Button
-            margin="normal"
-            form
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Save
-          </Button>
+     
           <Grid container>
             <Grid item xs={3}>
               <TextField
@@ -271,6 +263,17 @@ const ProfileInformation = (props) => {
             className={classes.form}
             onChange={(e) => setBio(e.target.value)}
           />
+        <Fab
+            margin="normal"
+            form
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            variant= "extended"
+          >
+            Save
+          </Fab>
         </form>
       </div>
     </Container>
