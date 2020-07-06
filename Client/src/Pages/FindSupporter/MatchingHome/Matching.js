@@ -307,6 +307,7 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
             />
@@ -359,6 +360,7 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
             />
