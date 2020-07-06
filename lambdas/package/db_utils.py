@@ -36,3 +36,12 @@ def get_user_roles(user_id):
     result['isAdmin'] = queryResult[2]['booleanValue']
 
     return result
+
+# Returns user email
+def get_user_email(user_id):
+    user_id_param = [{'name' : 'user_id', 'value' : {'longValue' : user_id}}]
+    sql = "SELECT email FROM users WHERE id = :user_id"
+    try:
+        return query(sql, user_id_param)['records'][0][0]['stringValue']
+    except Exception as e:
+        raise LambdaException("Unable to get user email: " + str(e))

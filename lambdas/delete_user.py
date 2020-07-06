@@ -2,8 +2,9 @@ import boto3
 from package.query_db import query, beginTransaction, commitTransaction
 from package.lambda_exception import LambdaException
 from package.dictionary_to_list import dictionary_to_list
-from package.db_utils import is_user_admin, user_exists, get_user_roles
+from package.db_utils import is_user_admin, user_exists, get_user_roles, get_user_email
 from package.s3_utils import delete_image
+from package.cognito_utils import delete_user as cognito_delete_user
 
 # Written by Ish Chhabra
 
@@ -41,7 +42,7 @@ adminSet = [
 def delete_user(event, context):
     admin_id = int(event['admin_id'])
     user_id = int(event['user_id'])
-
+    
     if(not user_exists(user_id)):
         return {
             'body': str(user_id) + ' does not exist',
@@ -60,6 +61,9 @@ def delete_user(event, context):
             'statusCode': 403
         }
     
+    # Delete user from cognito
+    cognito_delete_user(get_user_email(user_id))
+
     # Delete profile picture
     delete_image(f"profile/{user_id}/image")
 
