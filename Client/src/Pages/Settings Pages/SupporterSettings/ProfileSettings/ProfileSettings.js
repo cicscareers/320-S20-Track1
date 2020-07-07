@@ -167,7 +167,16 @@ const ProfileInformation = (props) => {
                     form className={classes.form}
                     onChange={e => setLinkedIn(e.target.value)}
                 />
-                <FileUpload />
+                <FileUpload
+                    onFileChange={
+                        (e) => {
+                            var fr = new FileReader();
+                            fr.readAsDataURL(e.target.files[0]);
+                            fr.onloadend = (e) => setPicture(e.target.result);
+                        }
+                    }
+                    FileType="image/*"
+                />
                 
                 <TextField
                     variant="outlined"
