@@ -186,10 +186,10 @@ def get_supporter_settings(event, context):
         'statusCode': 200
     }
 
-def get_profile_picture(student_id):
+def get_profile_picture(id):
     s_3 = boto3.client('s3')
     bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
-    file_path = 'profile/' + str(student_id) + '/image'
+    file_path = 'profile/' + str(id) + '/image'
 
     try:
         response = s_3.get_object(Bucket=bucket_name_images, Key=file_path)
