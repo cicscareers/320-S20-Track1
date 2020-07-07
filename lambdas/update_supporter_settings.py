@@ -359,10 +359,10 @@ def update_supporter_settings(event, context):
         'body': "Successfully updated supporter settings"
     }
 
-def upload_profile_picture(student_id, picData):
+def upload_profile_picture(id, picData):
     s_3 = boto3.client('s3')
     bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
-    file_path = 'profile/' + str(student_id) + '/image'
+    file_path = 'profile/' + str(id) + '/image'
 
     try:
         s_3.put_object(Bucket=bucket_name_images, Key=file_path, Body=picData)
