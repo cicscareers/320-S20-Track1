@@ -3,25 +3,8 @@ import { Button, TextField, Link, Grid, Box, Typography, Container, FormControl,
 import { makeStyles } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import Cookies from "universal-cookie";
-
 import { withTranslation } from 'react-i18next';
-
-//Function that shows the copyright (will get updated to the appropiate one later)
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link
-        color="inherit"
-        href="https://www.cics.umass.edu/careers"
-      >
-        CICS Careers
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import Copyright from './Copyright';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -39,7 +22,6 @@ const useStyles = makeStyles(theme => ({
 
   },
  }));
-
 
 function SignIn({t, i18n}) {
   console.log(i18n.t('email'));
@@ -136,7 +118,7 @@ function SignIn({t, i18n}) {
             required
             fullWidth
             id="email"
-            label={t('login:email')}
+            label={t('email')}
             name="email"
             autoComplete="email"
             autoFocus
@@ -196,4 +178,4 @@ function SignIn({t, i18n}) {
   );
 }
 
-export default withTranslation('login')(SignIn);
+export default withTranslation('auth')(SignIn);

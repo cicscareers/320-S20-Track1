@@ -11,7 +11,6 @@ i18n
   .init({
     lng:'en',
     fallbackLng: 'en',
-    ns: ['login'],
     backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json'
     },
