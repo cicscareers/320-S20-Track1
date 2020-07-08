@@ -1,0 +1,8 @@
+{
+    "email": "Email Address",
+    "password": "Password",
+    "forgot-password": "Forgot password?",
+    "sign-up": "Don't have an account? Sign Up",
+    "invalid-credentials": "Incorrect username or password.",
+    "sign-in": "Sign In"
+}
