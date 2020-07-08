@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Auth } from "aws-amplify";
 import Cookies from "universal-cookie";
 
+import { withTranslation } from 'react-i18next';
+
 //Function that shows the copyright (will get updated to the appropiate one later)
 function Copyright() {
   return (
@@ -39,7 +41,9 @@ const useStyles = makeStyles(theme => ({
  }));
 
 
-export default function SignIn() {
+function SignIn({t, i18n}) {
+  console.log(i18n.t('email'));
+
   //sets styling
   const classes = useStyles();
 
@@ -132,7 +136,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={t('login:email')}
             name="email"
             autoComplete="email"
             autoFocus
@@ -145,7 +149,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t('password')}
             type="password"
             id="password"
             form className={classes.form}
@@ -162,24 +166,24 @@ export default function SignIn() {
             onClick={handleSubmit}
             disabled={!validateForm()}
           >
-            Sign In
+            {t('sign-in')}
           </Button>
           {!validInfo && (
             <FormControl className={classes.error} error>
               <FormHelperText>
-                Incorrect username or password.
+                {t('invalid-credentials')}
               </FormHelperText>
             </FormControl>
           )}
           <Grid container form className={classes.form}>
             <Grid item xs>
               <Link href="/forgot-password" variant="body2">
-                Forgot password?
+                {t('forgot-password')}
               </Link>
             </Grid>
             <Grid item>
               <Link href="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {t('sign-up')}
               </Link>
             </Grid>
           </Grid>
@@ -191,3 +195,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default withTranslation('login')(SignIn);

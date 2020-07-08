@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
@@ -6,9 +6,10 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {Amplify } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
+import './i18n';
 
 const cookies = new Cookies();
 const role = cookies.get('role')
@@ -51,7 +52,9 @@ ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <App />
+        <Suspense fallback={null}>
+          <App />
+        </Suspense>
       </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,
