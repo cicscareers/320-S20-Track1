@@ -295,6 +295,8 @@ const SupporterCard = (props) => {
             </Badge>
           )}
           {LinkedIn === "" && <Avatar alt={name} src={imgsrc} className={classes.large} />}
+	   <br />
+           <TextField placeholder="Pronouns" />
           </Grid>
           <Grid item xs={12} align="center">
             <Button
