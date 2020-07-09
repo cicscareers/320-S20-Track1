@@ -3,35 +3,16 @@ import { Typography, Button, Card, CardActions, CardContent, Grid, Dialog, Dialo
 import classes from './CardStyles';
 import convertTime from '../../../../FindSupporter/convertTime';
 import deleteAppointmentBlock from './deleteAppointmentBlock';
+import moment from 'moment';
 
 const BlockCard = (props) => {
   //Initialize all the constants
   const {appointment_block_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
 
-  const days_of_week=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-  var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
-  const Block_Date=new Date()
-  const date_strings=init_datetimes()
-  const week_day= date_strings[0]
-  const month_name = date_strings[1]
-  const day = date_strings[2]
+  const Block_Date = moment(start_date);
+  console.log(Block_Date.toISOString());
   const id = sessionStorage.getItem("id");
   const [openRecurringDeleteDialog, setOpenRecurringDeleteDialog] = useState(false);
-
-  function  init_datetimes(){
-    Block_Date.setYear(parseInt(start_date.substring(0,4)))
-    Block_Date.setMonth(parseInt(start_date.substring(5,7))-1)
-    Block_Date.setDate(parseInt(start_date.substring(8,10)))
-    const year = parseInt(start_date.substring(0,4))
-    const month = parseInt(start_date.substring(5,7))-1
-    const day = parseInt(start_date.substring(8,10))
-    Block_Date.setYear(year)
-    Block_Date.setMonth(month)
-    Block_Date.setDate(day)
-    const week_day= days_of_week[Block_Date.getDay()].toString()
-    const month_name = months[Block_Date.getMonth()].toString()
-    return [week_day, month_name, day]
-  }
 
   function specializationArrayToString(array){
     var str=""
@@ -74,8 +55,8 @@ const BlockCard = (props) => {
                     </Typography>
                 </Grid>
             </Grid>
-            {recurring_id && ( <Typography><b>Occurs every: </b>{week_day}</Typography>)}
-            {!recurring_id && ( <Typography><b>Occurs on: </b>{week_day}, {month_name} {day}</Typography>)}
+            {recurring_id && ( <Typography><b>Occurs every: </b>{Block_Date.format('dddd')}</Typography>)}
+            {!recurring_id && ( <Typography><b>Occurs on: </b>{Block_Date.format('dddd, MMM DDD')}</Typography>)}
             <Typography>
                 <b>Maximum Appointments: </b>{max_appointments}
             </Typography>

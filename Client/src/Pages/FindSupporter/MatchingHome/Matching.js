@@ -11,10 +11,11 @@ import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
+import moment from 'moment';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
-  const [selectedDate, handleDateChange] = React.useState(new Date());
+  const [selectedDate, handleDateChange] = React.useState(moment());
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
@@ -23,15 +24,11 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
   const [supporters, setSupporters] = React.useState([]);
-  var today = new Date();
-  var nextWeek = new Date();
-  nextWeek.setDate(nextWeek.getDate() + 7);
-  const [beginDate, setBeginDate] = React.useState(today);
-  const [endDate, setEndDate] = React.useState(nextWeek);
+  const [beginDate, setBeginDate] = React.useState(moment());
+  const [endDate, setEndDate] = React.useState(moment().add(7, 'days'));
   const topicsList=[]
   const tagsList=[]
-
-
+  
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
   //Calls the API to get the list of supporters
@@ -66,18 +63,16 @@ const ResponsiveDrawer = (props) => {
   }
 
   function formatFetchURL(startDate, endDate) {
-    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + formatDateForFetch(startDate) + "%2000%3A00%3A00&end_date=" + formatDateForFetch(endDate) + "%2000%3A00%3A00";
+    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + encodeURI(startDate.utc().format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.utc().format('YYYY-MM-DD HH:MM:SS'));
   }
 
   function processDateChange(date) {
-    var newDate = new Date(date);
-    if(date < beginDate || date > endDate) {
-      const newBeginDate = new Date(newDate.setDate(date.getDate() - 3));
-      setBeginDate(newBeginDate);
-      const newEndDate = new Date(newDate.setDate(date.getDate() + 7));
-      setEndDate(newEndDate);
-      fetchSupporterList(formatFetchURL(newBeginDate, newEndDate));
+    if(date.isBefore(beginDate) || date.isAfter(endDate)) {
+      setBeginDate(moment().subtract(3, 'days'));
+      setEndDate(moment().add(7, 'days'));
+      fetchSupporterList(formatFetchURL(beginDate, endDate));
     }
+
     handleDateChange(date);
   }
 
@@ -86,8 +81,7 @@ const ResponsiveDrawer = (props) => {
 
   
   //For hard filtering. Commented out code will hard filter the given fields
-  var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
-  supporter.day.substring(8,10)===getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
+  var newList = supporters.filter(supporter => moment(supporter.day).isSame(selectedDate));
   
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
@@ -95,33 +89,19 @@ const ResponsiveDrawer = (props) => {
   //supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
   //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter
   
-  //Creates a new supporter card a supporter
+  //Creates a supporter card a supporter
   const getSupporterCard = (supporterObj, s) => {
     return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags}/>;
   };
 
-  function formatDateForFetch(date) {
-    const next_week_year = date.getFullYear().toString();
-    const next_week_month = getTheMonth((date.getMonth() + 1)).toString();
-    const next_week_day = getTheMonth(date.getDate().toString());
-    const formattedDate = next_week_year + "-" + next_week_month + "-" + next_week_day;
-    return formattedDate;
-  }
-
   //Increments day by one
   function nextDay(){
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
-    newDate.setDate(selectedDate.getDate() + 1);
-    processDateChange(newDate)
+    processDateChange(moment(selectedDate).add(1, 'days'))
   }
 
   //Decrements day by one
   function previousDay(){
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
-    newDate.setDate(selectedDate.getDate() - 1);
-    processDateChange(newDate)
+    processDateChange(moment(selectedDate).subtract(1, 'days'))
   }
 
   //Sets time based on the slider
@@ -130,18 +110,8 @@ const ResponsiveDrawer = (props) => {
   };
 
   //Converts a string to minutes
-  function convertToMin(t){
+  function convertToMin(t) {
     return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
-  }
-
-  //Adds a 0 to month when month<10 because js dates are dumb
-  function getTheMonth(month){
-    if (parseInt(month)>10){
-      return month.toString();
-    }
-    else{
-      return "0".concat(month.toString());
-    }
   }
 
   //Checks if the supporter has a slot that fits in to the slider times
@@ -308,13 +278,13 @@ const ResponsiveDrawer = (props) => {
               align="center"
               variant="inline"
               value={selectedDate}
-              onChange={processDateChange}
+              onChange={(date) => processDateChange(moment(date))}
             />
           </Box>
           <br/>
           <br/>
           <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-            What is your availability on {selectedDate.toDateString().substring(0,3)+selectedDate.toDateString().substring(3)}?
+            What is your availability on {selectedDate.format('ddd  MMM D YYYY')}?
           </Typography>
           <Slider
             value={sliderTime}
@@ -360,7 +330,7 @@ const ResponsiveDrawer = (props) => {
               align="center"
               variant="inline"
               value={selectedDate}
-              onChange={processDateChange}
+              onChange={(date) => processDateChange(moment(date))}
             />
             </Grid>
             <Grid item>

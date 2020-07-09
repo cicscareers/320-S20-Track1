@@ -10,6 +10,7 @@ import {Autocomplete} from '@material-ui/lab';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import createAppointmentBlock from './CreateAppointmentBlock';
+import moment from 'moment';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -17,8 +18,8 @@ const ResponsiveDrawer = (props) => {
   const [open, setOpen]=React.useState(false);
   const [isLoaded, setLoaded] = React.useState(true);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
-  const [createBlockSelectedDate, handleCreateBlockDateChange] = React.useState(new Date());
-  const [currentViewSelectedDate, handleCurrentViewDateChange] = React.useState(new Date());
+  const [createBlockSelectedDate, handleCreateBlockDateChange] = React.useState(moment());
+  const [currentViewSelectedDate, handleCurrentViewDateChange] = React.useState(moment());
   const [isRecurring, setIsRecurring]=React.useState(false);
   const [maxAppointents, setMaxAppointents]=React.useState(1);
   const [numberOfWeeks, setNumberOfWeeks]=React.useState(1);
@@ -78,11 +79,8 @@ const ResponsiveDrawer = (props) => {
 
   function updateCurrentViewDateBlockList() {
     let currBlockList = [];
-    for(let i =0;i<blockListFromEndPoint.length;i++){
-      let currStartDate = new Date(blockListFromEndPoint[i].start_date);
-      let blockDate = new Date(currStartDate.getFullYear(), currStartDate.getMonth(), currStartDate.getDate());
-      let currDateNoTime = new Date(currentViewSelectedDate.getFullYear(), currentViewSelectedDate.getMonth(), currentViewSelectedDate.getDate());
-      if(currDateNoTime.getTime()===blockDate.getTime()) {
+    for(let i = 0; i < blockListFromEndPoint.length; i++){
+      if(moment(blockListFromEndPoint[i].start_date).startOf('day').isSame(moment(currentViewSelectedDate).startOf('day'))) {
         currBlockList.push(blockListFromEndPoint[i]);
       }
     }
@@ -114,18 +112,12 @@ const ResponsiveDrawer = (props) => {
   }
 
   function nextDay(){
-    var newDate = new Date()
-    newDate.setMonth(currentViewSelectedDate.getMonth())
-    newDate.setDate(currentViewSelectedDate.getDate() + 1);
-    handleCurrentViewDateChange(newDate)
+    handleCurrentViewDateChange(moment(currentViewSelectedDate).add(1, 'days'))
   }
 
   //Decrements day by one
   function previousDay(){
-    var newDate = new Date()
-    newDate.setMonth(currentViewSelectedDate.getMonth())
-    newDate.setDate(currentViewSelectedDate.getDate() - 1);
-    handleCurrentViewDateChange(newDate)
+    handleCurrentViewDateChange(moment(currentViewSelectedDate).subtract(1, 'days'))
   }
 
   populateUniqueBlocks(updateCurrentViewDateBlockList());
