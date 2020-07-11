@@ -9,6 +9,7 @@ import Cookies from "universal-cookie";
 import convertTime from "../convertTime.js"
 import timeToString from '../timeToString.js'
 import cardStyles from './CardStyles'
+import moment from 'moment';
 
 const SupporterCard = (props) => {
   //Initialize all the constants
@@ -253,7 +254,7 @@ const SupporterCard = (props) => {
               <br/>
               <br/>
               <Typography>Select Appointment Time:</Typography>
-              {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
+              {timeBlocks.map(block => generateMultipleTimeChips(block["start"], block["end"]))}
               {startTimes.map(st => generateTimeChip(st))}
               <Typography>Select Appointment Medium:</Typography>
               {mediums.map(med => <Chip 

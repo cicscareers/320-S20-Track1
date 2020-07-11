@@ -15,7 +15,7 @@ import moment from 'moment';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
-  const [selectedDate, handleDateChange] = React.useState(moment());
+  const [selectedDate, handleDateChange] = React.useState(moment().startOf('day'));
   const [stateTopics, setStateTopics]=React.useState([]);
   const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
@@ -24,8 +24,8 @@ const ResponsiveDrawer = (props) => {
   const [rating,setRating]=React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
   const [supporters, setSupporters] = React.useState([]);
-  const [beginDate, setBeginDate] = React.useState(moment());
-  const [endDate, setEndDate] = React.useState(moment().add(7, 'days'));
+  const [beginDate, setBeginDate] = React.useState(moment().startOf('day'));
+  const [endDate, setEndDate] = React.useState(moment().startOf('day').add(7, 'days'));
   const topicsList=[]
   const tagsList=[]
   
@@ -81,7 +81,7 @@ const ResponsiveDrawer = (props) => {
 
   
   //For hard filtering. Commented out code will hard filter the given fields
-  var newList = supporters.filter(supporter => moment(supporter.day).isSame(selectedDate));
+  var newList = supporters.filter(supporter => moment.utc(supporter.day).isSame(selectedDate, 'day'));
   
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
@@ -96,12 +96,12 @@ const ResponsiveDrawer = (props) => {
 
   //Increments day by one
   function nextDay(){
-    processDateChange(moment(selectedDate).add(1, 'days'))
+    processDateChange(selectedDate.add(1, 'days'))
   }
 
   //Decrements day by one
   function previousDay(){
-    processDateChange(moment(selectedDate).subtract(1, 'days'))
+    processDateChange(selectedDate.subtract(1, 'days'))
   }
 
   //Sets time based on the slider
