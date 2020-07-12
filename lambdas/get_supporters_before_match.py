@@ -5,7 +5,6 @@ import copy
 from package.query_db import query
 from package.lambda_exception import LambdaException
 from datetime import datetime
-from datetime import date
 from datetime import timedelta
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -178,11 +177,8 @@ def ceil_dt(dt, delta):
     return dt + (datetime.min - dt) % delta
 
 def main(event, context):
-    today = date.today()
-    date_start = event['start_date']
 
-    if (datetime.strptime(date_start, DATETIME_FORMAT).date() < today) :
-        date_start = today.strftime(DATETIME_FORMAT)
+    date_start = event['start_date']
     date_end = event['end_date']
 
     supporter_dict = generate_supporter_dict()
