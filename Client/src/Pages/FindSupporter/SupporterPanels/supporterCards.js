@@ -85,7 +85,8 @@ const SupporterCard = (props) => {
 
   //Converts a time string to minutes
   function convertToMin(t){
-    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
+    var datetime = moment.utc(t).local();
+    return datetime.hour() * 60 + datetime.minute();
   }
 
   function convertTopicsToArray(tops){
