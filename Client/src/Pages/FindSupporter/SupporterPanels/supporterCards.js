@@ -172,9 +172,9 @@ const SupporterCard = (props) => {
     let currDate = new Date(today);
     currDate.setFullYear(parseInt(day.substring(0, 4)));
     currDate.setMonth(day.substring(5, 7) - 1);
-    currDate.setDate(day.substring(7, 9));
+    currDate.setDate(day.substring(8, 10));
+    
     if(currDate > today) return false;
-
     return (st < (today.getHours() * 60 + today.getMinutes()))
   }
 
