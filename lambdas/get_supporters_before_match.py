@@ -1,197 +1,179 @@
-import json
 import boto3
-import copy
 
 from package.query_db import query
 from package.lambda_exception import LambdaException
 from package.s3_utils import get_image
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-# Creates a dictionary of scheduled appointments in the form of:
-# Key: (supporter_id, day)
-# Value: List of [start, end] datetime objects sorted by starttime
-def generate_scheduled_appt_dict(date_start, date_end):
-    taken_days = {}
-
-    scheduled_sql = "SELECT A.supporter_id, A.time_of_appt, SS.duration\
-    FROM scheduled_appointments A, specializations_for_appointment SFA, specialization_type ST, supporter_specializations SS\
-    WHERE A.appointment_id = SFA.appointment_id\
-    AND SFA.specialization_type_id = ST.specialization_type_id\
-    AND ST.specialization_type_id = SS.specialization_type_id\
-    AND NOT cancelled\
-    AND time_of_appt BETWEEN :date_start AND :date_end;"
-
-    params = [
-        {'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, 
-        {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}
-    ]
-
-    scheduled_query_data = query(scheduled_sql, params)
-
-    for entry in scheduled_query_data['records']:
-        start_datetime = datetime.strptime(entry[1]['stringValue'], DATETIME_FORMAT)
-        end_datetime = start_datetime + timedelta(minutes=entry[2]['longValue'])
-        supp_id = entry[0]['longValue']
-
-        if (supp_id, start_datetime) in taken_days:
-            taken_days[(supp_id, start_datetime)].append([start_datetime, end_datetime])
-        else:
-            taken_days[(supp_id, start_datetime)] = [[start_datetime, end_datetime]]
-
-    for start_datetime in taken_days.values():
-        start_datetime.sort(key=lambda day: day[0])
-
-    return taken_days
-
-
-
-# Generates a dictionary of supporters.
-def generate_supporter_dict():
-    # [0] = supporter_id, [1] = preferred_name, [2] = first_name, [3] = last_name, [4] = rating, [5] = employer, [6] = title, [7] = office, [8] = LinkedIn link, [9] = tag_type, [10] = grad_student, [11] = hours_before_appointment, [12] = major, [13] = max_students, [14] = duration, [15] = specialization_type, [16] = medium
-    supporters_sql = "SELECT S.supporter_id, U.preferred_name, U.first_name, U.last_name, S.rating, S.employer, S.title, S.office, (SELECT link FROM user_link WHERE user_id = U.id and link_id = (SELECT link_id FROM link WHERE link_type = 'LinkedIn')), (SELECT tag_type FROM tag_type WHERE tag_type_id = ST.tag_type_id), SPS.grad_student, SPS.hours_before_appointment, (SELECT major FROM major WHERE major_id = SMP.major_id), SS.max_students, SS.duration, (SELECT specialization_type FROM specialization_type WHERE specialization_type_id = SS.specialization_type_id), (SELECT medium FROM medium where medium_id = SM.medium_id)\
-    FROM users U, supporters S, supporter_tags ST, supporter_preferences_for_students SPS, supporter_major_preferences SMP, supporter_specializations SS, supporter_mediums SM\
-    WHERE U.id = S.user_id\
-    AND S.supporter_id = ST.supporter_id\
-    AND S.supporter_id = SPS.supporter_id\
-    AND SPS.supporter_id = SMP.supporter_id\
-    AND S.supporter_id = SS.supporter_id\
-    AND S.supporter_id = SM.supporter_id;"
-
-    supporter_query = query(supporters_sql)
-
-    supporters = {}
-    for entry in supporter_query['records']:
-        if entry[0]['longValue'] in supporters:
-            supporter = supporters[entry[0]['longValue']]
-            if entry[9]['stringValue'] not in supporter['tags']:
-                supporter['tags'].append(entry[9]['stringValue'])
-            if entry[12]['stringValue'] not in supporter['preferences']['major_prefs']:
-                supporter['preferences']['major_prefs'].append(entry[12]['stringValue'])
-            if entry[15]['stringValue'] not in supporter['topics']:
-                new_topic = {'duration': entry[14]['longValue'], 'max_students': entry[13]['longValue']}
-                supporter['topics'][entry[15]['stringValue']] = new_topic
-            if entry[16]['stringValue'] not in supporter['mediums']:
-                supporter['mediums'].append(entry[16]['stringValue'])
-        else:
-            new_supporter = {}
-            new_supporter['supporter_id'] = entry[0]['longValue']
-            if 'stringValue' in entry[1] and entry[1]['stringValue'].strip() != "":
-                new_supporter['name'] = entry[1]['stringValue']
-            else:
-                new_supporter['name'] = f"{entry[2]['stringValue']} {entry[3]['stringValue']}"
-            if 'stringValue' in entry[4]:
-                new_supporter['rating'] = entry[4]['stringValue']
-            else:
-                new_supporter['rating'] = ""
-            if 'stringValue' in entry[5]:
-                new_supporter['employer'] = entry[5]['stringValue']
-            else:
-                new_supporter['employer'] = ""
-            if 'stringValue' in entry[6]:
-                new_supporter['title'] = entry[6]['stringValue']
-            else:
-                new_supporter['title'] = ""
-            if 'stringValue' in entry[7]:
-                new_supporter['office'] = entry[7]['stringValue']
-            else:
-                new_supporter['office'] = ""
-            if 'stringValue' in entry[8]:
-                new_supporter['LinkedIn'] = entry[8]['stringValue']
-            else:
-                new_supporter["LinkedIn"] = ""
-            if 'stringValue' in entry[9]:
-                new_supporter['tags'] = [entry[9]['stringValue']]
-            else:
-                new_supporter['tags'] = []
-            if 'stringValue' in entry[5]:
-                new_supporter['employer'] = entry[5]['stringValue']
-            else:
-                new_supporter['employer'] = ""
-            
-            new_supporter['imgsrc'] = get_image(f"profile/{new_supporter['supporter_id']}/image")
-
-            new_supporter['topics'] = {entry[15]['stringValue']:{'duration':entry[14]['longValue'], 'max_students': entry[13]['longValue']}}
-            new_supporter['preferences'] = {'grad_student': entry[10]['booleanValue'], 'hours_before_appointment': entry[11]['longValue'], 'major_prefs': [entry[12]['stringValue']]}
-            new_supporter['mediums'] = [entry[16]['stringValue']]
-
-            supporters[entry[0]['longValue']] = new_supporter
-
-    return supporters
-
-def generate_block_dict(supporter_dict, scheduled_appointments, date_start, date_end):
-    blocks = {}
-
-    blocks_sql = "SELECT supporter_id, start_date, end_date, max_num_of_appts FROM appointment_block WHERE start_date BETWEEN :date_start AND :date_end;"
-
-    params = [
-        {'name' : 'date_start', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_start}}, 
-        {'name' : 'date_end', 'typeHint' : 'TIMESTAMP', 'value' : {'stringValue' : date_end}}
-    ]
-
-    block_query = query(blocks_sql, params)
-
-    for entry in block_query['records']:
-        start_datetime = datetime.strptime(entry[1]['stringValue'], DATETIME_FORMAT)
-        end_datetime = datetime.strptime(entry[2]['stringValue'], DATETIME_FORMAT)
-
-        day = start_datetime.date()
-
-        if (entry[0]['longValue'], day) in blocks:
-            new_block = blocks[(entry[0]['longValue'], day)]
-        else:
-            # print(supporter_dict.keys())
-            if entry[0]['longValue'] not in supporter_dict:
-                continue
-            new_block = copy.deepcopy(supporter_dict[entry[0]['longValue']])
-            new_block['timeBlocks'] = []
-            new_block['day'] = day.strftime(DATETIME_FORMAT)
-            blocks[(entry[0]['longValue'], day)] = new_block
-        
-        if (new_block['supporter_id'], day) in scheduled_appointments:
-            taken_times = scheduled_appointments[(new_block['supporter_id'], day)]
-        else:
-            taken_times = []
-
-        available_times = []
-        curr_latest_time = start_datetime
-
-        for time in taken_times:
-            if curr_latest_time <= time[0] < time[1] <= end_datetime:
-                if curr_latest_time != time[0]:
-                    available_times.append({'start': ceil_dt(curr_latest_time, timedelta(minutes=30)).strftime(DATETIME_FORMAT), 'end': ceil_dt(time[0], timedelta(minutes=30)).strftime(DATETIME_FORMAT)})
-                curr_latest_time = time[1]
-        
-        if curr_latest_time != end_datetime:
-            available_times.append({'start': ceil_dt(curr_latest_time, timedelta(minutes=30)).strftime(DATETIME_FORMAT), 'end': ceil_dt(end_datetime, timedelta(minutes=30)).strftime(DATETIME_FORMAT)})
-
-        new_block['timeBlocks'].extend(available_times)
-
-    block_values = blocks.values()
-
-    for block in block_values:
-        if block['timeBlocks'] == []:
-            block_values.remove(block)
+# Returns a list of already scheduled appointments.
+def get_scheduled_appointments(start_datetime, end_datetime):
+    sql = "SELECT A.supporter_id, A.time_of_appt, SS.duration\
+        FROM scheduled_appointments A, specializations_for_appointment SFA, specialization_type ST, supporter_specializations SS\
+        WHERE A.appointment_id = SFA.appointment_id\
+        AND SFA.specialization_type_id = ST.specialization_type_id\
+        AND NOT cancelled\
+        AND time_of_appt BETWEEN :start_datetime AND :end_datetime"
     
-    # print(blocks)
-    return block_values
+    params = [
+        {'name': 'start_datetime', 'typeHint': 'TIMESTAMP', 'value': {'stringValue': start_datetime}},
+        {'name': 'end_datetime', 'typeHint': 'TIMESTAMP', 'value': {'stringValue': end_datetime}}
+    ]
+
+    sql_result = query(sql, params)['records']
+
+    scheduled_appointments = {}
+
+    for record in sql_result:
+        start_datetime = datetime.strptime(record[1]['stringValue'], DATETIME_FORMAT)
+        end_datetime = start_datetime + timedelta(minutes=record[2]['longValue'])
+
+        supporter_id = record[0]['longValue']
+
+        if supporter_id in scheduled_appointments:
+            scheduled_appointments[supporter_id].append((start_datetime, end_datetime))
+        else:
+            scheduled_appointments[supporter_id] = [(start_datetime, end_datetime)]
+        
+    # Sort taken appointments by start time.
+    for scheduled_appointments_supporter in scheduled_appointments.values():
+        scheduled_appointments_supporter.sort(key = lambda start_datetime: start_datetime[0])
+    
+    return scheduled_appointments
+
+# Fills supporter profile information in the dictionary.
+def fill_supporter_information(available_supporters):
+    supporters = ["NULL"]
+    for supporter in available_supporters.keys():
+        supporters.append(str(supporter))
+
+    sql = f"""SELECT S.supporter_id, U.preferred_name, U.first_name, U.last_name, S.rating, S.employer, S.title, S.office, (SELECT link FROM user_link WHERE user_id = U.id AND link_id = (SELECT link_id FROM link WHERE link_type = 'LinkedIn')), (SELECT tag_type FROM tag_type WHERE tag_type_id = ST.tag_type_id), SPS.grad_student, SPS.hours_before_appointment, (SELECT major FROM major WHERE major_id = SMP.major_id), SS.max_students, SS.duration, (SELECT specialization_type FROM specialization_type WHERE specialization_type_id = SS.specialization_type_id), (SELECT medium FROM medium where medium_id = SM.medium_id)
+    FROM users U, supporters S, supporter_tags ST, supporter_preferences_for_students SPS, supporter_major_preferences SMP, supporter_specializations SS, supporter_mediums SM
+    WHERE U.id IN({",".join(supporters)})
+    AND U.id = S.user_id
+    AND S.supporter_id = ST.supporter_id
+    AND S.supporter_id = SPS.supporter_id
+    AND SPS.supporter_id = SMP.supporter_id
+    AND S.supporter_id = SS.supporter_id
+    AND S.supporter_id = SM.supporter_id"""
+    
+    sql_result = query(sql)['records']
+    
+    # Supporters for which basic common information is filled.
+    partial_filled_supporters = []
+
+    for record in sql_result:
+        supporter_id = record[0]['longValue']
+
+        if supporter_id not in partial_filled_supporters:
+            available_supporters[supporter_id]['supporter_id'] = supporter_id
+
+            if 'stringValue' in record[1] and record[1]['stringValue'].strip() != "":
+                available_supporters[supporter_id]['name'] = record[1]['stringValue']
+            else:
+                available_supporters[supporter_id]['name'] = f"{record[2]['stringValue']} {record[3]['stringValue']}"
+            
+            available_supporters[supporter_id]['rating'] = record[4]['stringValue'] if 'stringValue' in record[4] else ""
+            available_supporters[supporter_id]['employer'] = record[5]['stringValue'] if 'stringValue' in record[5] else ""
+            available_supporters[supporter_id]['title'] = record[6]['stringValue'] if 'stringValue' in record[6] else ""
+            available_supporters[supporter_id]['office'] = record[7]['stringValue'] if 'stringValue' in record[7] else ""
+            available_supporters[supporter_id]['LinkedIn'] = record[8]['stringValue'] if 'stringValue' in record[8] else ""
+            available_supporters[supporter_id]['imgsrc'] = get_image(f"profile/{supporter_id}/image")
+        
+            if 'stringValue' in record[9]:
+                available_supporters[supporter_id]['tags'] = [record[9]['stringValue']]
+            else:
+                available_supporters[supporter_id]['tags'] = []
+    
+            available_supporters[supporter_id]['preferences'] = {
+                'grad_student': record[10]['booleanValue'],
+                'hours_before_appointment': record[11]['longValue'],
+                'major_prefs': [record[12]['stringValue']],
+            }
+            available_supporters[supporter_id]['tags'] = [record[9]['stringValue']] if 'stringValue' in record[9] else []
+            available_supporters[supporter_id]['mediums'] = [record[16]['stringValue']]
+            available_supporters[supporter_id]['topics'] = {
+                record[15]['stringValue']: {
+                    'duration': record[14]['longValue'],
+                    'max_students': record[13]['longValue']
+                }
+            }
+
+            partial_filled_supporters.append(supporter_id)
+        else:
+            if record[9]['stringValue'] not in available_supporters[supporter_id]['tags']:
+                available_supporters[supporter_id]['tags'].append(record[9]['stringValue'])
+            
+            if record[12]['stringValue'] not in available_supporters[supporter_id]['preferences']['major_prefs']:
+                available_supporters[supporter_id]['preferences']['major_prefs'].append(record[12]['stringValue'])
+            
+            if record[15]['stringValue'] not in available_supporters[supporter_id]['topics']:
+                topic = {
+                    'duration': record[14]['longValue'],
+                    'max_students': record[13]['longValue']
+                }
+                available_supporters[supporter_id]['topics'][record[15]['stringValue']] = topic
+            
+            if record[16]['stringValue'] not in available_supporters[supporter_id]['mediums']:
+                available_supporters[supporter_id]['mediums'].append(record[16]['stringValue'])
+
+# Gets a dictionary with all available appointments by supporter.
+def get_available_appointments(start_datetime, end_datetime, scheduled_appointments):
+    appointment_blocks = {}
+
+    sql = "SELECT supporter_id, start_date, end_date FROM appointment_block WHERE start_date BETWEEN :start_datetime AND :end_datetime"
+
+    params = [
+        {'name': 'start_datetime', 'typeHint': 'TIMESTAMP', 'value': {'stringValue': start_datetime}},
+        {'name': 'end_datetime', 'typeHint': 'TIMESTAMP', 'value': {'stringValue': end_datetime}}
+    ]
+
+    sql_result = query(sql, params)['records']
+
+    for record in sql_result:
+        supporter_id = record[0]['longValue']
+        if supporter_id not in appointment_blocks:
+            appointment_blocks[supporter_id] = {}
+            appointment_blocks[supporter_id]['timeBlocks'] = []
+
+        start_datetime = datetime.strptime(record[1]['stringValue'], DATETIME_FORMAT)
+        end_datetime = datetime.strptime(record[2]['stringValue'], DATETIME_FORMAT)
+
+        # Add appointment if it isn't already used.
+        time_counter = start_datetime
+        if supporter_id in scheduled_appointments:
+            for scheduled_appointment in scheduled_appointments[supporter_id]:
+                if time_counter <= scheduled_appointment[0] < scheduled_appointment[1] <= end_datetime:
+                    if time_counter != scheduled_appointment[0]:
+                        appointment_blocks[supporter_id]['timeBlocks'].append({
+                            'start': ceil_dt(time_counter, timedelta(minutes=30)).strftime(DATETIME_FORMAT),
+                            'end': ceil_dt(scheduled_appointment[0], timedelta(minutes=30)).strftime(DATETIME_FORMAT)
+                        })
+                    time_counter = scheduled_appointment[1]
+        
+        if time_counter != end_datetime:
+            appointment_blocks[supporter_id]['timeBlocks'].append({
+                        'start': ceil_dt(time_counter, timedelta(minutes=30)).strftime(DATETIME_FORMAT),
+                        'end': ceil_dt(end_datetime, timedelta(minutes=30)).strftime(DATETIME_FORMAT)
+                    })
+    
+    for supporter__id in appointment_blocks:
+        if(appointment_blocks[supporter__id] == []):
+            appointment_blocks.pop(supporter__id)
+    
+    return appointment_blocks
 
 # Rounds the time to the next multiple of delta.
 def ceil_dt(dt, delta):
     return dt + (datetime.min - dt) % delta
 
 def main(event, context):
-    date_start = event['start_date']
-    date_end = event['end_date']
+    start_datetime = event['start_date']
+    end_datetime = event['end_date']
 
-    supporter_dict = generate_supporter_dict()
+    scheduled_appointments = get_scheduled_appointments(start_datetime, end_datetime)
+    available_supporters = get_available_appointments(start_datetime, end_datetime, scheduled_appointments)
+    fill_supporter_information(available_supporters)
 
-    scheduled_appointments = generate_scheduled_appt_dict(date_start, date_end)
-    appointment_blocks = generate_block_dict(supporter_dict, scheduled_appointments, date_start, date_end)
-
-    return {
-        'statusCode' : 200,
-        'body' : list(appointment_blocks)
-    }
+    return available_supporters
