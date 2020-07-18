@@ -78,11 +78,14 @@ const ResponsiveDrawer = (props) => {
 
   //This is temporary, will eventually be gotten from lambda
   const blockTime=30;
-
   
   //For hard filtering. Commented out code will hard filter the given fields
-  var newList = supporters.filter(supporter => moment.utc(supporter.day).isSame(selectedDate, 'day'));
-  
+  var newList = [];
+  for(let supporter of supporters) {
+    let filteredSupporter = Object.assign({}, supporter, {timeBlocks: supporter.timeBlocks.filter(timeBlock => moment.utc(timeBlock['start']).isSame(selectedDate, 'day'))});
+    if(filteredSupporter.timeBlocks.length > 0)
+      newList.push(filteredSupporter);
+  }
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
   //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
