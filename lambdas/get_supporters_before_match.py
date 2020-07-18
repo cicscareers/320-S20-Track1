@@ -176,4 +176,7 @@ def main(event, context):
     available_supporters = get_available_appointments(start_datetime, end_datetime, scheduled_appointments)
     fill_supporter_information(available_supporters)
 
-    return available_supporters
+    return {
+        'statusCode': 200,
+        'body': list(available_supporters.values())
+    }
