@@ -1,9 +1,10 @@
 import moment from 'moment';
 
+var serverTimezone = 'America/New_York'
+
 function createAppointmentBlock(id, start_date, start_time, end_time, num_repeat, max_num_of_appts, isReccuring) {
-	// Plus 1 because getMonth is 0 indexed
-	let formatted_start_date = moment(start_date).startOf('day').minutes(start_time).utc().format('YYYY-MM-DD HH:MM:SS');
-	let formatted_end_date = moment(start_date).startOf('day').minutes(end_time).utc().format('YYYY-MM-DD HH:MM:SS');
+	let formatted_start_date = moment(start_date).startOf('day').minutes(start_time).tz(serverTimezone).format('YYYY-MM-DD HH:MM:SS');
+	let formatted_end_date = moment(start_date).startOf('day').minutes(end_time).tz(serverTimezone).format('YYYY-MM-DD HH:MM:SS');
 	
 	fetch(
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/"+id+"/blocks",

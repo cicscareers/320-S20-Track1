@@ -9,7 +9,7 @@ import Cookies from "universal-cookie";
 import convertTime from "../convertTime.js"
 import timeToString from '../timeToString.js'
 import cardStyles from './CardStyles'
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const SupporterCard = (props) => {
   //Initialize all the constants
@@ -85,8 +85,7 @@ const SupporterCard = (props) => {
 
   //Converts a time string to minutes
   function convertToMin(t){
-    var datetime = moment.utc(t).local();
-    return datetime.hour() * 60 + datetime.minute();
+    return t.hour() * 60 + t.minute();
   }
 
   function convertTopicsToArray(tops){
@@ -170,10 +169,11 @@ const SupporterCard = (props) => {
 
   //Pushes all possible start times to an array to be converted to chips
   function generateMultipleTimeChips(s,e){
-    let st=convertToMin(s)
-    let et=convertToMin(e)
-    for(let i=st;i<et;i+=30){
-       startTimes.push(i);
+    var startTime = moment.tz(s, 'America/New_York').local();
+    var endTime = moment.tz(e, 'America/New_York').local();
+    while(startTime.isBefore(endTime)) {
+      startTimes.push(convertToMin(startTime));
+      startTime.add(30, 'minutes');
     }
   }
 

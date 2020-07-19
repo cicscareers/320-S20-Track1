@@ -11,7 +11,7 @@ import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const ResponsiveDrawer = (props) => {
   //Initialize all of the constants
@@ -63,7 +63,7 @@ const ResponsiveDrawer = (props) => {
   }
 
   function formatFetchURL(startDate, endDate) {
-    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + encodeURI(startDate.utc().format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.utc().format('YYYY-MM-DD HH:MM:SS'));
+    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + encodeURI(startDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS'));
   }
 
   function processDateChange(date) {
@@ -82,7 +82,7 @@ const ResponsiveDrawer = (props) => {
   //For hard filtering. Commented out code will hard filter the given fields
   var newList = [];
   for(let supporter of supporters) {
-    let filteredSupporter = Object.assign({}, supporter, {timeBlocks: supporter.timeBlocks.filter(timeBlock => moment.utc(timeBlock['start']).isSame(selectedDate, 'day'))});
+    let filteredSupporter = Object.assign({}, supporter, {timeBlocks: supporter.timeBlocks.filter(timeBlock => moment.tz(timeBlock['start'], 'America/New_York').isSame(selectedDate, 'day'))});
     if(filteredSupporter.timeBlocks.length > 0)
       newList.push(filteredSupporter);
   }

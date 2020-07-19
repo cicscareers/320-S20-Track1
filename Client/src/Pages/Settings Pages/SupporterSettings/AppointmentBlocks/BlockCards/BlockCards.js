@@ -10,7 +10,6 @@ const BlockCard = (props) => {
   const {appointment_block_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
 
   const Block_Date = moment(start_date);
-  console.log(Block_Date.toISOString());
   const id = sessionStorage.getItem("id");
   const [openRecurringDeleteDialog, setOpenRecurringDeleteDialog] = useState(false);
 

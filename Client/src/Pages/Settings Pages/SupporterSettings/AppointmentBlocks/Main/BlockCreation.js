@@ -112,12 +112,12 @@ const ResponsiveDrawer = (props) => {
   }
 
   function nextDay(){
-    handleCurrentViewDateChange(moment(currentViewSelectedDate).add(1, 'days'))
+    handleCurrentViewDateChange(currentViewSelectedDate.add(1, 'days'))
   }
 
   //Decrements day by one
   function previousDay(){
-    handleCurrentViewDateChange(moment(currentViewSelectedDate).subtract(1, 'days'))
+    handleCurrentViewDateChange(currentViewSelectedDate.subtract(1, 'days'))
   }
 
   populateUniqueBlocks(updateCurrentViewDateBlockList());
