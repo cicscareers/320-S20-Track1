@@ -3,7 +3,7 @@ import boto3
 from package.query_db import query
 from package.lambda_exception import LambdaException
 from package.s3_utils import get_image
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -169,7 +169,11 @@ def ceil_dt(dt, delta):
     return dt + (datetime.min - dt) % delta
 
 def main(event, context):
+    today = date.today()
     start_datetime = event['start_date']
+    if (datetime.strptime(start_datetime, DATETIME_FORMAT).date() < today) :
+        start_datetime = today.strftime(DATETIME_FORMAT)
+
     end_datetime = event['end_date']
 
     scheduled_appointments = get_scheduled_appointments(start_datetime, end_datetime)
