@@ -29,6 +29,9 @@ supporterSet = [
     ['supporter_tags', 'supporter_id'],
     ['supporter_major_preferences', 'supporter_id'],
     ['supporter_minor_preferences', 'supporter_id'],
+    ['supporter_preferences_for_students', 'supporter_id'],
+    ['supporter_mediums', 'supporter_id'],
+    ['scheduled_appointments', 'supporter_id'],
     ['appointment_block', 'supporter_id']
 ]
 
