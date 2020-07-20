@@ -32,7 +32,8 @@ supporterSet = [
     ['supporter_preferences_for_students', 'supporter_id'],
     ['supporter_mediums', 'supporter_id'],
     ['scheduled_appointments', 'supporter_id'],
-    ['appointment_block', 'supporter_id']
+    ['appointment_block', 'supporter_id'],
+    ['student_appointment_relation', 'supporter_id']
 ]
 
 adminSet = [
@@ -47,8 +48,7 @@ def delete_user(event, context):
     user_id = int(event['user_id'])
     
     if event['delete_comments']:
-        studentSet.append(['student_appointment_relation', 'supporter_id'])
-        userSet.append(['student_appointment_relation', 'student_id'])
+        studentSet.append(['student_appointment_relation', 'student_id'])
         
     if(not user_exists(user_id)):
         return {
