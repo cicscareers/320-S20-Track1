@@ -19,7 +19,7 @@ const SupporterCard = (props) => {
   const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [time, setTime] = React.useState("");
+  const [time, setTime] = React.useState(moment(0)); // Set the selected time to Jan 1, 1970 00:00:00.
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
@@ -56,11 +56,6 @@ const SupporterCard = (props) => {
   //Sets the appointment topic based on selected chip
   const chipFilter = (item) => { 
     setApptTopic(item);
-  }
-
-  //Sets appointment time based on selected chip
-  const chipFilterTime = (item) => { 
-    setTime(item);
   }
 
   // Opens modal 1
@@ -155,28 +150,17 @@ const SupporterCard = (props) => {
   }
 
   //Creates a single chip given a start time
-  function generateTimeChip(st){
+  function generateTimeChip(st) {
     return <Chip
       clickable 
-      value={st}
-      variant={(time === st) ? 'default' : 'outlined'}
-      disabled={isTimeChipDisabled(st)}
+      value={convertToMin(st)}
+      variant={time.isSame(st) ? 'default' : 'outlined'}
+      disabled={moment().isAfter(st)}
       color="primary" 
-      label={convertTime(st)}
+      label={st.format("hh:mm A")}
       className={classes.tagChip}
-      onClick={ () => chipFilterTime(st) }
+      onClick={() => setTime(st)}
     />
-  }
-
-  function isTimeChipDisabled(st) {
-    let today = new Date();
-    let currDate = new Date(today);
-    currDate.setFullYear(parseInt(day.substring(0, 4)));
-    currDate.setMonth(day.substring(5, 7) - 1);
-    currDate.setDate(day.substring(8, 10));
-    
-    if(currDate > today) return false;
-    return (st < (today.getHours() * 60 + today.getMinutes()))
   }
 
   //Pushes all possible start times to an array to be converted to chips
@@ -184,7 +168,7 @@ const SupporterCard = (props) => {
     var startTime = moment.tz(s, 'America/New_York').local();
     var endTime = moment.tz(e, 'America/New_York').local();
     while(startTime.isBefore(endTime)) {
-      startTimes.push(convertToMin(startTime));
+      startTimes.push(moment(startTime)); // Create new moment because add method in the next line mutates the moment object.
       startTime.add(30, 'minutes');
     }
   }
