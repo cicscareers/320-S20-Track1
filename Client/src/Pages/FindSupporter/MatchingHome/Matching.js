@@ -12,8 +12,12 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
 import moment from 'moment-timezone';
+import { useAlert } from 'react-alert';
 
 const ResponsiveDrawer = (props) => {
+  // Initialize alert
+  const alert = useAlert();
+ 
   //Initialize all of the constants
   const [selectedDate, handleDateChange] = React.useState(moment().startOf('day'));
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -26,8 +30,6 @@ const ResponsiveDrawer = (props) => {
   const [supporters, setSupporters] = React.useState([]);
   const [beginDate, setBeginDate] = React.useState(moment().startOf('day'));
   const [endDate, setEndDate] = React.useState(moment().startOf('day').add(7, 'days'));
-  const topicsList=[]
-  const tagsList=[]
   
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
@@ -48,8 +50,6 @@ const ResponsiveDrawer = (props) => {
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
         setSupporters(json.body);
-        getTagsAndTopics()
-        //setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
         setLoaded(true);
@@ -104,7 +104,11 @@ const ResponsiveDrawer = (props) => {
 
   //Decrements day by one
   function previousDay(){
-    processDateChange(selectedDate.subtract(1, 'days'))
+    if(moment().isSameOrBefore(selectedDate, 'day')) {
+      alert.error("You can't schedule appointments in the past"); // We can't schedule appointments in the past.
+    } else {
+      processDateChange(selectedDate.subtract(1, 'days'));
+    }
   }
 
   //Sets time based on the slider
@@ -126,27 +130,6 @@ const ResponsiveDrawer = (props) => {
     }
     return false
   }
-
-  //Generates the list of topics and tags to be used by the autocomplete filters
-  function getTagsAndTopics() {
-    if(!newList) return;
-
-    for(let i = 0; i < newList.length; i++) {
-      for(let j = 0; j < newList[i].tags.length; j++) {
-        if(!tagsList.includes(newList[i].tags[j])) {
-          tagsList.push(newList[i].tags[j]);
-        }
-      }
-      
-      for(var j in newList[i].topics) {
-        if(!topicsList.includes(j)) {
-          topicsList.push(j);
-        }
-      }
-    }
-  }
-
-  getTagsAndTopics()
   
   ///////////////////////////
   //This handles the sorting of the supporters
@@ -247,7 +230,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={topicsList}
+            options={Array.from(new Set(supporters.map((supporter) => supporter.topics)))}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -262,7 +245,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={tagsList}
+            options={Array.from(new Set(supporters.map((supporter) => supporter.tags)))}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -280,8 +263,10 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={(date) => processDateChange(moment(date))}
+              disablePast
             />
           </Box>
           <br/>
@@ -332,8 +317,10 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={(date) => processDateChange(moment(date))}
+              disablePast
             />
             </Grid>
             <Grid item>
