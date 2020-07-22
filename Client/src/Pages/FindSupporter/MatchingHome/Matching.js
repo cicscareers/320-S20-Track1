@@ -243,46 +243,46 @@ const ResponsiveDrawer = (props) => {
           <br/>
           <br/>
           <Typography align="center" variant="h5">Filters</Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            className={classes.inputs}
-            align="center"
-            placeholder="Search Supporter"
-            onChange={e => setName(e.target.value)}
-          />
-          <br/>
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={Array.from(new Set(supporters.map((supporter) => supporter.topics)))}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Help Needed Topics"
-              />
-            )}
-            onChange={(e,v) => setStateTopics(v)}
-          />
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={Array.from(new Set(supporters.map((supporter) => supporter.tags)))}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Supporter Specialties"
-              />
-            )}
-            onChange={(e,v) => setStateTags(v)}
-          />
-          <br/>
+              <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={topicsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Help Needed Topics"
+                />
+              )}
+              onChange={(e, v) => setStateTopics(v)}
+            />
+            <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={tagsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Supporter Specialties"
+                />
+              )}
+              onChange={(e, v) => setStateTags(v)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder="Search Supporter"
+              onChange={e => setName(e.target.value)}
+            />
+            <br />
+            <br />
           <Typography align="center">What day would you like an appointment on?</Typography>
           <br/>
           <Box align="center">
