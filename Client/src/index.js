@@ -10,6 +10,8 @@ import { Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
 import './i18n';
+import { transitions, positions, Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from './ReactAlertTemplate'
 
 const cookies = new Cookies();
 const role = cookies.get('role')
@@ -48,13 +50,21 @@ Amplify.configure({
   }
 });
 
+const AlertOptions = {
+  position: positions.BOTTOM_CENTER,
+  timeout: 3000,
+  transition: transitions.FADE,
+}
+
 ReactDOM.render(
   <Router>
     <MuiThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Suspense fallback={null}>
-          <App />
-        </Suspense>
+        <AlertProvider template={AlertTemplate} {...AlertOptions}>
+          <Suspense fallback={null}>
+            <App />
+          </Suspense>
+        </AlertProvider>
       </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   </Router>,

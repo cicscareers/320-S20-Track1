@@ -11,8 +11,12 @@ import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
+import { useAlert } from 'react-alert';
 
 const ResponsiveDrawer = (props) => {
+  // Initialize alert
+  const alert = useAlert();
+ 
   //Initialize all of the constants
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -28,9 +32,6 @@ const ResponsiveDrawer = (props) => {
   nextWeek.setDate(nextWeek.getDate() + 7);
   const [beginDate, setBeginDate] = React.useState(today);
   const [endDate, setEndDate] = React.useState(nextWeek);
-  const topicsList=[]
-  const tagsList=[]
-
 
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
@@ -51,8 +52,6 @@ const ResponsiveDrawer = (props) => {
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
         setSupporters(json.body);
-        getTagsAndTopics()
-        //setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
         setLoaded(true);
@@ -118,10 +117,15 @@ const ResponsiveDrawer = (props) => {
 
   //Decrements day by one
   function previousDay(){
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
+    var today = new Date();
+    var newDate = new Date(today);
+    newDate.setMonth(selectedDate.getMonth());
     newDate.setDate(selectedDate.getDate() - 1);
-    processDateChange(newDate)
+    if(newDate < today) { // We can't schedule appointments in the past.
+      alert.error("You can't schedule appointments in the past");
+    } else {
+      processDateChange(newDate);
+    }
   }
 
   //Sets time based on the slider
@@ -153,27 +157,6 @@ const ResponsiveDrawer = (props) => {
     }
     return false
   }
-
-  //Generates the list of topics and tags to be used by the autocomplete filters
-  function getTagsAndTopics() {
-    if(!newList) return;
-
-    for(let i = 0; i < newList.length; i++) {
-      for(let j = 0; j < newList[i].tags.length; j++) {
-        if(!tagsList.includes(newList[i].tags[j])) {
-          tagsList.push(newList[i].tags[j]);
-        }
-      }
-      
-      for(var j in newList[i].topics) {
-        if(!topicsList.includes(j)) {
-          topicsList.push(j);
-        }
-      }
-    }
-  }
-
-  getTagsAndTopics()
   
   ///////////////////////////
   //This handles the sorting of the supporters
@@ -260,46 +243,46 @@ const ResponsiveDrawer = (props) => {
           <br/>
           <br/>
           <Typography align="center" variant="h5">Filters</Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            className={classes.inputs}
-            align="center"
-            placeholder="Search Supporter"
-            onChange={e => setName(e.target.value)}
-          />
-          <br/>
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={topicsList}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Help Needed Topics"
-              />
-            )}
-            onChange={(e,v) => setStateTopics(v)}
-          />
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={tagsList}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Supporter Specialties"
-              />
-            )}
-            onChange={(e,v) => setStateTags(v)}
-          />
-          <br/>
+              <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={topicsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Help Needed Topics"
+                />
+              )}
+              onChange={(e, v) => setStateTopics(v)}
+            />
+            <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={tagsList}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Supporter Specialties"
+                />
+              )}
+              onChange={(e, v) => setStateTags(v)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder="Search Supporter"
+              onChange={e => setName(e.target.value)}
+            />
+            <br />
+            <br />
           <Typography align="center">What day would you like an appointment on?</Typography>
           <br/>
           <Box align="center">
@@ -307,8 +290,10 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
           </Box>
           <br/>
@@ -359,8 +344,10 @@ const ResponsiveDrawer = (props) => {
               autoOk
               align="center"
               variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
             </Grid>
             <Grid item>
