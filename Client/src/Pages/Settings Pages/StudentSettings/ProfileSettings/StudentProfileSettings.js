@@ -10,11 +10,15 @@ import {
   Fab
 } from "@material-ui/core";
 
+const text = {
+  marginBottom: 65
+}
+
 const button = {
   marginLeft: 20,
   marginRight: 20,
   marginTop: 20,
-  marginBottom: 0,
+  marginBottom: 20,
   width: "70%",
   top: 'auto',
   right: 10,
@@ -265,6 +269,7 @@ const ProfileInformation = (props) => {
           />
 
           <TextField
+            style = {text}
             variant="outlined"
             margin="normal"
             fullWidth
