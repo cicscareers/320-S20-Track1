@@ -32,9 +32,6 @@ const ResponsiveDrawer = (props) => {
   nextWeek.setDate(nextWeek.getDate() + 7);
   const [beginDate, setBeginDate] = React.useState(today);
   const [endDate, setEndDate] = React.useState(nextWeek);
-  const topicsList=[]
-  const tagsList=[]
-
 
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
@@ -55,8 +52,6 @@ const ResponsiveDrawer = (props) => {
     myFetch(url).then((json) => {
       if(json.body !== undefined) {
         setSupporters(json.body);
-        getTagsAndTopics()
-        //setStateTopics(topicsList ? topicsList : [])
         setLoaded(true);
       } else {
         setLoaded(true);
@@ -162,27 +157,6 @@ const ResponsiveDrawer = (props) => {
     }
     return false
   }
-
-  //Generates the list of topics and tags to be used by the autocomplete filters
-  function getTagsAndTopics() {
-    if(!newList) return;
-
-    for(let i = 0; i < newList.length; i++) {
-      for(let j = 0; j < newList[i].tags.length; j++) {
-        if(!tagsList.includes(newList[i].tags[j])) {
-          tagsList.push(newList[i].tags[j]);
-        }
-      }
-      
-      for(var j in newList[i].topics) {
-        if(!topicsList.includes(j)) {
-          topicsList.push(j);
-        }
-      }
-    }
-  }
-
-  getTagsAndTopics()
   
   ///////////////////////////
   //This handles the sorting of the supporters
@@ -283,7 +257,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={topicsList}
+            options={Array.from(new Set(supporters.map((supporter) => supporter.topics)))}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -298,7 +272,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={tagsList}
+            options={Array.from(new Set(supporters.map((supporter) => supporter.tags)))}
             renderInput={(params) => (
               <TextField
                 {...params}
