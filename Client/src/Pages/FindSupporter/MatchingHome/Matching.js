@@ -11,8 +11,12 @@ import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
+import { useAlert } from 'react-alert';
 
 const ResponsiveDrawer = (props) => {
+  // Initialize alert
+  const alert = useAlert();
+ 
   //Initialize all of the constants
   const [selectedDate, handleDateChange] = React.useState(new Date());
   const [stateTopics, setStateTopics]=React.useState([]);
@@ -112,10 +116,15 @@ const ResponsiveDrawer = (props) => {
 
   //Decrements day by one
   function previousDay(){
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
+    var today = new Date();
+    var newDate = new Date(today);
+    newDate.setMonth(selectedDate.getMonth());
     newDate.setDate(selectedDate.getDate() - 1);
-    processDateChange(newDate)
+    if(newDate < today) { // We can't schedule appointments in the past.
+      alert.error("You can't schedule appointments in the past");
+    } else {
+      processDateChange(newDate);
+    }
   }
 
   //Sets time based on the slider
@@ -233,46 +242,46 @@ const ResponsiveDrawer = (props) => {
           <br/>
           <br/>
           <Typography align="center" variant="h5">Filters</Typography>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            className={classes.inputs}
-            align="center"
-            placeholder="Search Supporter"
-            onChange={e => setName(e.target.value)}
-          />
-          <br/>
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={Array.from(new Set(supporters.flatMap((supporter) => Object.keys(supporter.topics) ?? [])))}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Help Needed Topics"
-              />
-            )}
-            onChange={(e,v) => setStateTopics(v)}
-          />
-          <br/>
-          <Autocomplete
-            multiple
-            className={classes.inputs}
-            id="tags-outlined"
-            options={Array.from(new Set(supporters.flatMap((supporter) => supporter.tags ?? [])))}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label="Supporter Specialties"
-              />
-            )}
-            onChange={(e,v) => setStateTags(v)}
-          />
-          <br/>
+              <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={Array.from(new Set(supporters.flatMap((supporter) => Object.keys(supporter.topics) ?? [])))}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Help Needed Topics"
+                />
+              )}
+              onChange={(e, v) => setStateTopics(v)}
+            />
+            <br />
+            <Autocomplete
+              multiple
+              className={classes.inputs}
+              id="tags-outlined"
+              options={Array.from(new Set(supporters.flatMap((supporter) => supporter.tags ?? [])))}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Supporter Specialties"
+                />
+              )}
+              onChange={(e, v) => setStateTags(v)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder="Search Supporter"
+              onChange={e => setName(e.target.value)}
+            />
+            <br />
+            <br />
           <Typography align="center">What day would you like an appointment on?</Typography>
           <br/>
           <Box align="center">
@@ -283,6 +292,7 @@ const ResponsiveDrawer = (props) => {
               inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
           </Box>
           <br/>
@@ -336,6 +346,7 @@ const ResponsiveDrawer = (props) => {
               inputProps={{style: {textAlign:'center'}}}
               value={selectedDate}
               onChange={processDateChange}
+              minDate={new Date()}
             />
             </Grid>
             <Grid item>
