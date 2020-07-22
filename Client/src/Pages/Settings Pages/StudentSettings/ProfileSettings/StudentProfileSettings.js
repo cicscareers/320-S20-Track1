@@ -10,6 +10,19 @@ import {
   Fab
 } from "@material-ui/core";
 
+const button = {
+  marginLeft: 20,
+  marginRight: 20,
+  marginTop: 20,
+  marginBottom: 0,
+  width: "70%",
+  top: 'auto',
+  right: 10,
+  bottom: 0,
+  left: 'auto',
+  position: 'fixed',
+}
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -264,6 +277,7 @@ const ProfileInformation = (props) => {
             onChange={(e) => setBio(e.target.value)}
           />
         <Fab
+            style={button}
             margin="normal"
             form
             className={classes.button}
