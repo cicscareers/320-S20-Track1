@@ -63,7 +63,7 @@ const ResponsiveDrawer = (props) => {
   }
 
   function formatFetchURL(startDate, endDate) {
-    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + encodeURI(startDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS'));
+    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/testmethod?start_date=" + encodeURI(startDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS'));
   }
 
   function processDateChange(date) {
