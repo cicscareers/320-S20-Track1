@@ -248,7 +248,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={Array.from(new Set(supporters.map((supporter) => supporter.topics)))}
+            options={Array.from(new Set(supporters.flatMap((supporter) => supporter.topics ?? [])))}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -263,7 +263,7 @@ const ResponsiveDrawer = (props) => {
             multiple
             className={classes.inputs}
             id="tags-outlined"
-            options={Array.from(new Set(supporters.map((supporter) => supporter.tags)))}
+            options={Array.from(new Set(supporters.flatMap((supporter) => supporter.tags ?? [])))}
             renderInput={(params) => (
               <TextField
                 {...params}
