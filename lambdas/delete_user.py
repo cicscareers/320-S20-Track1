@@ -29,7 +29,11 @@ supporterSet = [
     ['supporter_tags', 'supporter_id'],
     ['supporter_major_preferences', 'supporter_id'],
     ['supporter_minor_preferences', 'supporter_id'],
-    ['appointment_block', 'supporter_id']
+    ['supporter_preferences_for_students', 'supporter_id'],
+    ['supporter_mediums', 'supporter_id'],
+    ['scheduled_appointments', 'supporter_id'],
+    ['appointment_block', 'supporter_id'],
+    ['student_appointment_relation', 'supporter_id']
 ]
 
 adminSet = [
@@ -43,6 +47,9 @@ def delete_user(event, context):
     admin_id = int(event['admin_id'])
     user_id = int(event['user_id'])
     
+    if event['delete_comments']:
+        studentSet.append(['student_appointment_relation', 'student_id'])
+        
     if(not user_exists(user_id)):
         return {
             'body': str(user_id) + ' does not exist',

@@ -34,3 +34,7 @@ def upload_image(path, file):
 
 def get_image(path):
     return get_file(bucket_name_images, path)
+  
+bucket_name_images = 't1-s3-us-east-1-images' # s3 bucket for images
+def delete_image(path):
+    delete_file(bucket_name_images, path)
