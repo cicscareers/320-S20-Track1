@@ -99,15 +99,17 @@ const ResponsiveDrawer = (props) => {
 
   //Increments day by one
   function nextDay(){
-    processDateChange(selectedDate.add(1, 'days'))
+    // Need to create new object instead of mutating current to rerender the component.
+    processDateChange(moment(selectedDate.add(1, 'days')));
   }
 
   //Decrements day by one
   function previousDay(){
-    if(moment().isSameOrBefore(selectedDate, 'day')) {
+    if(moment().isSameOrAfter(selectedDate, 'day')) {
       alert.error("You can't schedule appointments in the past"); // We can't schedule appointments in the past.
     } else {
-      processDateChange(selectedDate.subtract(1, 'days'));
+      // Need to create new object instead of mutating current to rerender the component.
+      processDateChange(moment(selectedDate.subtract(1, 'days')));
     }
   }
 
