@@ -10,23 +10,6 @@ import {
   Fab
 } from "@material-ui/core";
 
-const text = {
-  marginBottom: 65
-}
-
-const button = {
-  marginLeft: 20,
-  marginRight: 20,
-  marginTop: 20,
-  marginBottom: 20,
-  width: "70%",
-  top: 'auto',
-  right: 10,
-  bottom: 0,
-  left: 'auto',
-  position: 'fixed',
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -84,6 +67,30 @@ const ProfileInformation = (props) => {
   const url =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
+  
+  function displaySaveButton() {
+    if (firstName.length == 0 || lastName.length == 0 || email.length == 0 || bio.length == 0) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+  const saveButtonPosition = {
+    marginBottom: 65
+  }
+  const saveButtonStyle = {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    marginBottom: 20,
+    width: "70%",
+    top: 'auto',
+    right: 10,
+    bottom: 0,
+    left: 'auto',
+    position: 'fixed',
+    opacity: displaySaveButton()
+  }
 
   function handleSubmit() {
     let formatted_majors = settings.major;
@@ -269,7 +276,7 @@ const ProfileInformation = (props) => {
           />
 
           <TextField
-            style = {text}
+            style = {saveButtonPosition}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -282,7 +289,7 @@ const ProfileInformation = (props) => {
             onChange={(e) => setBio(e.target.value)}
           />
         <Fab
-            style={button}
+            style={saveButtonStyle}
             margin="normal"
             form
             className={classes.button}
