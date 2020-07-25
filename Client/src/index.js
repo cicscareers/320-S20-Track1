@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
@@ -6,9 +6,10 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {Amplify } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import Cookies from 'universal-cookie'
 import OpenSansLight from './OpenSans-Light.ttf';
+import './i18n';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from './ReactAlertTemplate'
 
@@ -60,7 +61,9 @@ ReactDOM.render(
     <MuiThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <AlertProvider template={AlertTemplate} {...AlertOptions}>
-          <App />
+          <Suspense fallback={null}>
+            <App />
+          </Suspense>
         </AlertProvider>
       </MuiPickersUtilsProvider>
     </MuiThemeProvider>
