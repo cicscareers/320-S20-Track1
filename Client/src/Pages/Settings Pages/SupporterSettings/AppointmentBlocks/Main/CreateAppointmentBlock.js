@@ -1,12 +1,12 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 var serverTimezone = 'America/New_York'
+var serverDateTimeFormat = 'YYYY-MM-DD HH:MM:SS'
 
-function createAppointmentBlock(id, start_date, start_time, end_time, num_repeat, max_num_of_appts, isReccuring) {
-	let formatted_start_date = moment(start_date).startOf('day').minutes(start_time).tz(serverTimezone).format('YYYY-MM-DD HH:MM:SS');
-	let formatted_end_date = moment(start_date).startOf('day').minutes(end_time).tz(serverTimezone).format('YYYY-MM-DD HH:MM:SS');
-	
-	fetch(
+function createAppointmentBlock(id, start_datetime, end_datetime, num_repeat, max_num_of_appts, isReccuring) {	
+  console.log(start_datetime.format(serverDateTimeFormat) + " " + end_datetime.format(serverDateTimeFormat));
+  
+  fetch(
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/"+id+"/blocks",
     {
       method: "POST",
@@ -16,8 +16,8 @@ function createAppointmentBlock(id, start_date, start_time, end_time, num_repeat
       },
       body: JSON.stringify({
         supporter_id : id.toString(),
-	  		start_date : formatted_start_date,
-	  		end_date : formatted_end_date,
+	  		start_date : start_datetime.tz(serverTimezone).format(serverDateTimeFormat),
+	  		end_date : end_datetime.tz(serverTimezone).format(serverDateTimeFormat),
 	  		max_num_of_appts : max_num_of_appts.toString(),
 	  		isReccuring : isReccuring.toString(),
 	  		recurring_num_weeks: num_repeat.toString()
@@ -25,7 +25,6 @@ function createAppointmentBlock(id, start_date, start_time, end_time, num_repeat
     }
   )
   .then(response => {
-	console.log(response.json());
 	if (response.status >= 200 && response.status < 300) {
       return response.json();
     } else {

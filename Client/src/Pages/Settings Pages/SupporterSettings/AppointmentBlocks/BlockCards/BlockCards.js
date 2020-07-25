@@ -1,33 +1,21 @@
 import React, {useState} from 'react';
 import { Typography, Button, Card, CardActions, CardContent, Grid, Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import classes from './CardStyles';
-import convertTime from '../../../../FindSupporter/convertTime';
 import deleteAppointmentBlock from './deleteAppointmentBlock';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const BlockCard = (props) => {
   //Initialize all the constants
-  const {appointment_block_id, recurring_id,start_date,end_date,max_appointments, specializations} = props;
+  const {appointment_block_id, recurring_id, start_date, end_date, max_appointments, specializations} = props;
 
-  const Block_Date = moment(start_date);
+  var start_date_moment = moment.tz(start_date, 'America/New_York');
+  var end_date_moment = moment.tz(end_date, 'America/New_York');
+
   const id = sessionStorage.getItem("id");
   const [openRecurringDeleteDialog, setOpenRecurringDeleteDialog] = useState(false);
 
   function specializationArrayToString(array){
-    var str=""
-    for(let i=0;i<array.length;i++){
-        if(i===array.length-1){
-            str+="and " + array[i]
-        }else{
-            str+=array[i]+", "
-        }
-    }
-    return str
-  }
-
-  function convertToCorrectTimeString(t){
-    var minutes=parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
-    return convertTime(minutes)
+    return [array.slice(0, -1).join('', ''), array.slice(-1)[0]].join(array.length < 2 ? '' : ' and ')
   }
 
   function deleteAppointmentOrSurfaceDialog(id, appointment_block_id, recurring_id) {
@@ -45,17 +33,17 @@ const BlockCard = (props) => {
             <Grid container>
                 <Grid item xs={6}>
                     <Typography variant="h6" className={classes.title}gutterBottom component="h2">
-                        <b>Start Time: </b>{convertToCorrectTimeString(start_date.substring(11,16))}
+                        <b>Start Time: </b>{start_date_moment.format("hh:mm A")}
                     </Typography>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography variant="h6" className={classes.title} gutterBottom component="h2">
-                    <b>End Time: </b>{convertToCorrectTimeString(end_date.substring(11,16))}
+                    <b>End Time: </b>{end_date_moment.format("hh:mm A")}
                     </Typography>
                 </Grid>
             </Grid>
-            {recurring_id && ( <Typography><b>Occurs every: </b>{Block_Date.format('dddd')}</Typography>)}
-            {!recurring_id && ( <Typography><b>Occurs on: </b>{Block_Date.format('dddd, MMM DDD')}</Typography>)}
+            {recurring_id && ( <Typography><b>Occurs every: </b>{start_date_moment.format('dddd')}</Typography>)}
+            {!recurring_id && ( <Typography><b>Occurs on: </b>{start_date_moment.format('dddd, MMM DDD')}</Typography>)}
             <Typography>
                 <b>Maximum Appointments: </b>{max_appointments}
             </Typography>

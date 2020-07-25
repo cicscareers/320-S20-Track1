@@ -6,14 +6,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import Cookies from "universal-cookie";
-import convertTime from "../convertTime.js"
-import timeToString from '../timeToString.js'
 import cardStyles from './CardStyles'
 import moment from 'moment-timezone';
 
 const SupporterCard = (props) => {
   //Initialize all the constants
-  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, LinkedIn, supporter_id, score, filtered_tags} = props;
+  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, mediums, LinkedIn, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
   const studentID = sessionStorage.getItem("id")
@@ -25,7 +23,7 @@ const SupporterCard = (props) => {
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [medium, setMedium] = React.useState("")
-  const [dur,setDur]=React.useState(topics[apptTopic]!==undefined ? topics[apptTopic].duration : 0)
+  const [dur,setDur]=React.useState((topics !== undefined && topics[apptTopic] !== undefined) ?  topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
 
@@ -34,7 +32,6 @@ const SupporterCard = (props) => {
     const tag_list=[]
     for(let i=0;i<filtered_tags.length;i++){
       if(tags.includes(filtered_tags[i])){
-        console.log("added")
         tag_list.push(filtered_tags[i])
       }
     }
@@ -88,12 +85,11 @@ const SupporterCard = (props) => {
     for(var i in tops){
       arr.push(i)
     }
-    console.log(arr)
     return arr
   }
 
   useEffect(() => {
-    setDur(topics[apptTopic]!== undefined ? topics[apptTopic].duration : 0)
+    setDur(topics !== undefined && topics[apptTopic] !== undefined ? topics[apptTopic].duration : 0)
   });
 
   const topics_array = convertTopicsToArray(topics)
@@ -122,7 +118,7 @@ const SupporterCard = (props) => {
         body: JSON.stringify({
             "student_id": studentID.toString(),
             "supporter_id": supporter_id,
-            "time_of_appt": day+" "+timeToString(time)+":00",
+            "time_of_appt": time.format('YYYY-MM-DD HH:MM:SS'),
             "medium": medium,
             "location": office,
             "comment": comment,
@@ -134,7 +130,6 @@ const SupporterCard = (props) => {
     )
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
-        console.log(response)
         return response.json();
       } else {
         throw new Error("Server can't be reached!");
@@ -321,7 +316,7 @@ const SupporterCard = (props) => {
             Location: {office}
           </Typography>
           <Typography gutterBottom>
-            Time: {convertTime(time)} for {dur} minutes on {day}
+            Time: {time.format("hh:mm A")} for {dur} minutes on {time.format("YYYY-MM-DD")}
           </Typography>
           <Typography gutterBottom>
             Appointment Type: {apptTopic}

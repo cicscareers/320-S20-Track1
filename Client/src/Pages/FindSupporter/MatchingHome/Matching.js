@@ -163,10 +163,6 @@ const ResponsiveDrawer = (props) => {
     if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
       supporterScore++
     }
-
-    console.log("name " + supporter.name)
-    console.log("supporter score " + supporterScore)
-    console.log("state tags and topics " + stateTopics)
     return supporterScore;
   }
   
