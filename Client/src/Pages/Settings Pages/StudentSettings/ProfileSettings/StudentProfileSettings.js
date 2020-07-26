@@ -2,7 +2,6 @@ import React from "react";
 import {
   makeStyles,
   Typography,
-  Button,
   Avatar,
   Container,
   TextField,
@@ -10,7 +9,11 @@ import {
   Fab
 } from "@material-ui/core";
 
+
+
+
 const useStyles = makeStyles((theme) => ({
+
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -37,15 +40,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getLinkedIn(arr){
-  if (!arr){
-      return ""
+
+
+
+function getLinkedIn(arr) {
+  if (!arr) {
+    return ""
   }
-  for(let i=0;i<arr.length;i++){
-      console.log(arr[i])
-      if(arr[i].link_type === "LinkedIn"){
-          return arr[i].link
-      }
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i])
+    if (arr[i].link_type === "LinkedIn") {
+      return arr[i].link
+    }
   }
   return ""
 }
@@ -67,22 +73,30 @@ const ProfileInformation = (props) => {
   const url =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
-  
-  
-  function displaySaveButton() {
-    if (prefName === settings.preferred_name && picture === settings.picture && firstName === settings.first_name && lastName === settings.last_name && email === settings.email && bio === settings.bio && phoneNumber === settings.phone && picture === settings.picture && pronouns === settings.pronouns && linkedIn === getLinkedIn(settings.link)) {
-      return 0.5;
-    } else {
-      return 1;
-    }
-  }
 
   function setDisabled() {
-
-    if (displaySaveButton() === 0.5) {
+    if (prefName === settings.preferred_name &&
+      picture === settings.picture &&
+      firstName === settings.first_name &&
+      lastName === settings.last_name &&
+      email === settings.email &&
+      bio === settings.bio &&
+      phoneNumber === settings.phone &&
+      picture === settings.picture &&
+      pronouns === settings.pronouns &&
+      linkedIn === getLinkedIn(settings.link)) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  function setOpacity() {
+
+    if (setDisabled()) {
+      return 0.5;
+    } else {
+      return 1;
     }
 
   }
@@ -101,8 +115,10 @@ const ProfileInformation = (props) => {
     bottom: 0,
     left: 'auto',
     position: 'fixed',
-    opacity: displaySaveButton()
+    opacity: setOpacity()
   }
+
+
 
   function handleSubmit() {
     let formatted_majors = settings.major;
@@ -123,6 +139,8 @@ const ProfileInformation = (props) => {
         },
       ];
     }
+
+
 
     fetch(url, {
       method: "PATCH",
@@ -158,6 +176,10 @@ const ProfileInformation = (props) => {
       });
   }
 
+
+
+
+
   return (
     <Container component="main">
       <div className={classes.paper}>
@@ -172,7 +194,6 @@ const ProfileInformation = (props) => {
             src={picture}
           />
           <br />
-     
           <Grid container>
             <Grid item xs={3}>
               <TextField
@@ -194,7 +215,7 @@ const ProfileInformation = (props) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                
+
                 label="Preferred Name"
                 multiline
                 defaultValue={prefName}
@@ -288,7 +309,7 @@ const ProfileInformation = (props) => {
           />
 
           <TextField
-            style = {saveButtonPosition}
+            style={saveButtonPosition}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -300,7 +321,7 @@ const ProfileInformation = (props) => {
             className={classes.form}
             onChange={(e) => setBio(e.target.value)}
           />
-        <Fab
+          <Fab
             disabled={setDisabled()}
             style={saveButtonStyle}
             margin="normal"
@@ -309,13 +330,12 @@ const ProfileInformation = (props) => {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
-            variant= "extended"
           >
             Save
           </Fab>
         </form>
       </div>
-    </Container>
+    </Container >
   );
 };
 
