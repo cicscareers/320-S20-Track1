@@ -9,9 +9,6 @@ import {
   Fab
 } from "@material-ui/core";
 
-
-
-
 const useStyles = makeStyles((theme) => ({
 
   paper: {
@@ -39,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "primary",
   },
 }));
-
-
-
 
 function getLinkedIn(arr) {
   if (!arr) {
@@ -102,8 +96,6 @@ const ProfileInformation = (props) => {
     opacity: !isChangeMade ? 1 : 0.5
   }
 
-
-
   function handleSubmit() {
     let formatted_majors = settings.major;
     let formatted_minors = settings.minor;
@@ -123,8 +115,6 @@ const ProfileInformation = (props) => {
         },
       ];
     }
-
-
 
     fetch(url, {
       method: "PATCH",
@@ -159,10 +149,6 @@ const ProfileInformation = (props) => {
         window.location.reload(false)
       });
   }
-
-
-
-
 
   return (
     <Container component="main">
