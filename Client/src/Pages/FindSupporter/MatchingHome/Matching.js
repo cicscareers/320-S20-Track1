@@ -247,7 +247,7 @@ const ResponsiveDrawer = (props) => {
               multiple
               className={classes.inputs}
               id="tags-outlined"
-              options={Array.from(new Set(supporters.flatMap((supporter) => Object.keys(supporter.topics) ?? [])))}
+              options={Array.from(new Set(supporters.flatMap((supporter) => supporter.topics ? Object.keys(supporter.topics) : [])))}
               renderInput={(params) => (
                 <TextField
                   {...params}
