@@ -68,13 +68,25 @@ const ProfileInformation = (props) => {
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
   
+  
   function displaySaveButton() {
-    if (firstName.length == 0 || lastName.length == 0 || email.length == 0 || bio.length == 0) {
-      return 0;
+    if (prefName === settings.preferred_name && picture === settings.picture && firstName === settings.first_name && lastName === settings.last_name && email === settings.email && bio === settings.bio && phoneNumber === settings.phone && picture === settings.picture && pronouns === settings.pronouns && linkedIn === getLinkedIn(settings.link)) {
+      return 0.5;
     } else {
       return 1;
     }
   }
+
+  function setDisabled() {
+
+    if (displaySaveButton() === 0.5) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
   const saveButtonPosition = {
     marginBottom: 65
   }
@@ -289,6 +301,7 @@ const ProfileInformation = (props) => {
             onChange={(e) => setBio(e.target.value)}
           />
         <Fab
+            disabled={setDisabled()}
             style={saveButtonStyle}
             margin="normal"
             form
