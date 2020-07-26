@@ -68,7 +68,7 @@ const ProfileInformation = (props) => {
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
 
-  const isChangeMade = (prefName === settings.preferred_name &&
+  const noChangeMade = (prefName === settings.preferred_name &&
     picture === settings.picture &&
     firstName === settings.first_name &&
     lastName === settings.last_name &&
@@ -93,7 +93,7 @@ const ProfileInformation = (props) => {
     bottom: 0,
     left: 'auto',
     position: 'fixed',
-    opacity: !isChangeMade ? 1 : 0.5
+    opacity: !noChangeMade ? 1 : 0.5
   }
 
   function handleSubmit() {
@@ -292,7 +292,7 @@ const ProfileInformation = (props) => {
             onChange={(e) => setBio(e.target.value)}
           />
           <Fab
-            disabled={isChangeMade}
+            disabled={noChangeMade}
             style={saveButtonStyle}
             margin="normal"
             form
