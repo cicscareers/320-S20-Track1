@@ -23,7 +23,7 @@ const SupporterCard = (props) => {
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [medium, setMedium] = React.useState("")
-  const [dur,setDur]=React.useState((topics !== undefined && topics[apptTopic] !== undefined) ?  topics[apptTopic].duration : 0)
+  const [dur,setDur]=React.useState(topics[apptTopic] !== undefined ?  topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
 
@@ -89,7 +89,7 @@ const SupporterCard = (props) => {
   }
 
   useEffect(() => {
-    setDur(topics !== undefined && topics[apptTopic] !== undefined ? topics[apptTopic].duration : 0)
+    setDur(topics[apptTopic] !== undefined ? topics[apptTopic].duration : 0)
   });
 
   const topics_array = convertTopicsToArray(topics)
