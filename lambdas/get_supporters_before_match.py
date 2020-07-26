@@ -60,13 +60,13 @@ def fill_supporter_information(available_supporters):
     
     sql_result = query(sql)['records']
     
-    # Supporters for which basic common information is filled.
-    partial_filled_supporters = []
+    supporters.remove("NULL")
 
     for record in sql_result:
         supporter_id = record[0]['longValue']
 
-        if supporter_id not in partial_filled_supporters:
+        # Remove supporter_id from supporters when partial information is filled.
+        if str(supporter_id) in supporters:
             available_supporters[supporter_id]['supporter_id'] = supporter_id
 
             if 'stringValue' in record[1] and record[1]['stringValue'].strip() != "":
@@ -100,7 +100,7 @@ def fill_supporter_information(available_supporters):
                 }
             }
 
-            partial_filled_supporters.append(supporter_id)
+            supporters.remove(str(supporter_id))
         else:
             if record[9]['stringValue'] not in available_supporters[supporter_id]['tags']:
                 available_supporters[supporter_id]['tags'].append(record[9]['stringValue'])
@@ -117,6 +117,10 @@ def fill_supporter_information(available_supporters):
             
             if record[16]['stringValue'] not in available_supporters[supporter_id]['mediums']:
                 available_supporters[supporter_id]['mediums'].append(record[16]['stringValue'])
+    
+    # Delete all supporters with no personal information.
+    for supporter_id in supporters:
+        del available_supporters[int(supporter_id)]
 
 # Gets a dictionary with all available appointments by supporter.
 def get_available_appointments(start_datetime, end_datetime, scheduled_appointments):
