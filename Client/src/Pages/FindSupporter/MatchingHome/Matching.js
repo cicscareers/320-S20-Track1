@@ -6,16 +6,16 @@ import SupporterCard from "../SupporterPanels/supporterCards.js"
 //import topicsList from "../topics.js"
 //import tagsList from "../tags.js"
 import convertTime from "../convertTime.js"
-
 import { DatePicker} from "@material-ui/pickers";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import MenuIcon from '@material-ui/icons/Menu';
 import {isMobile} from 'react-device-detect';
 import useStyles from './MatchingStyles'
-const drawerWidth = (isMobile ? "100%" : "25%");
 import { default as StringDistance } from 'fuzzball';
 import { useAlert } from 'react-alert';
+
+const drawerWidth = (isMobile ? "100%" : "25%");
 
 const ResponsiveDrawer = (props) => {
   // Initialize alert
@@ -36,6 +36,7 @@ const ResponsiveDrawer = (props) => {
   nextWeek.setDate(nextWeek.getDate() + 7);
   const [beginDate, setBeginDate] = React.useState(today);
   const [endDate, setEndDate] = React.useState(nextWeek);
+  const [filtersOpen, setFiltersOpen] = React.useState(isMobile ? false : true)
 
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
@@ -262,31 +263,6 @@ const ResponsiveDrawer = (props) => {
               </>
             }
             <Typography align="center" variant="h5">Filters</Typography>
-
-            <TextField
-              variant="outlined"
-              margin="normal"
-              className={classes.inputs}
-              align="center"
-              placeholder={"Search Supporter"}
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-            <br />
-            <br />
-          <Typography align="center">What day would you like an appointment on?</Typography>
-          <br/>
-          <Box align="center">
-            <DatePicker
-              autoOk
-              align="center"
-              variant="inline"
-              inputProps={{style: {textAlign:'center'}}}
-              value={selectedDate}
-              onChange={processDateChange}
-              minDate={new Date()}
-            />
-            <br/>
             <br/>
             <Autocomplete
               multiple
@@ -304,7 +280,7 @@ const ResponsiveDrawer = (props) => {
               onChange={(e,v) => setStateTopics(v)}
             />
             <br/>
-           <Autocomplete
+            <Autocomplete
               multiple
               className={classes.inputs}
               id="tags-outlined"
@@ -318,6 +294,16 @@ const ResponsiveDrawer = (props) => {
               )}
               onChange={(e, v) => setStateTags(v)}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              className={classes.inputs}
+              align="center"
+              placeholder={"Search Supporter"}
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+            <br/>
             <br/>
             <Typography align="center">What day would you like an appointment on?</Typography>
             <br/>
@@ -326,8 +312,10 @@ const ResponsiveDrawer = (props) => {
                 autoOk
                 align="center"
                 variant="inline"
+                inputProps={{style: {textAlign:'center'}}}
                 value={selectedDate}
                 onChange={processDateChange}
+                minDate={new Date()}
               />
             </Box>
             <br/>
@@ -354,16 +342,17 @@ const ResponsiveDrawer = (props) => {
             <Typography align="center">Minimum Required Rating</Typography>
             <br/>
             <Box align="center">
-            <Rating 
-              className={classes.rating} 
-              name="Supporter Rating" 
-              precision={0.5} 
-              value={rating} 
-              onChange={e => setRating(e.target.value)}
-              size="large"
-            />
+              <Rating 
+                className={classes.rating} 
+                name="Supporter Rating" 
+                precision={0.5} 
+                value={rating} 
+                onChange={e => setRating(e.target.value)}
+                size="large"
+              />
             </Box>
-          </div>
+            
+            </div>
           </Drawer>
         }
         <main className={classes.content}>
