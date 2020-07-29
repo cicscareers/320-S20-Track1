@@ -109,12 +109,12 @@ class Users:
                         'Bucket': IMAGES_BUCKET,
                         'Key': f"{record[0]['longValue']}/profile/{record[1]['stringValue']}",
                     },
-                    ExpiresIn=86400 # Expire the 1 day.
+                    ExpiresIn=86400 # Expires in 1 day.
                 )
             else:
                 result[record[0]['longValue']] = "" # We could replace it with some default picture for a user.
 
-    # No need for allowing multiple user_ids because 
+    # No need for allowing multiple user_ids because a user is going to upload their profile picture only.
     @staticmethod
     def get_profile_post_url(user_id, file_name):
         """ Creates a presigned post url to be used by frontend to upload the profile picture. """
