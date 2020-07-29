@@ -31,12 +31,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   eyeIcon: {
+    height: "52px",
     Box: "none",
     border: "none",
     boxShadow: "none",
     position: "absolute",
-    left: "60%",
-    top: "48%",
+    left: "59.7%",
+    top: "46.7%",
     alignItems: "center",
   },
   rad: {},
@@ -160,21 +161,14 @@ function SignIn({ t, i18n }) {
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button className={classes.eyeIcon}>
+          <Button className={classes.eyeIcon} onClick={togglePasswordVisiblity}>
             {isPasswordVisible ? (
-              <VisibilityOffIcon
-                className="eyeSlashIcon"
-                //onClick so the user doesn't accidentally trigger it
-                onClick={togglePasswordVisiblity}
-              ></VisibilityOffIcon>
+              <VisibilityOffIcon />
             ) : (
-              <VisibilityIcon
-                className="eyeIcon"
-                onClick={togglePasswordVisiblity}
-              ></VisibilityIcon>
+              //onClick so the user doesn't accidentally trigger it
+              <VisibilityIcon />
             )}
           </Button>
-
           <Button
             type="submit" //logs in on enter
             margin="normal"
