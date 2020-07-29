@@ -11,7 +11,9 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import { Auth, Interactions } from "aws-amplify";
 import Cookies from "universal-cookie";
 import { withTranslation } from "react-i18next";
 import Copyright from "./Copyright";
@@ -26,7 +28,18 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
     marginTop: theme.spacing(2),
-    align: "center",
+    alignItems: "center",
+  },
+  eyeIcon: {
+    Box: "none",
+    border: "none",
+    boxShadow: "none",
+    MozUserFocus: "ignore",
+    outline: "none",
+    position: "absolute",
+    left: "62%",
+    top: "48%",
+    alignItems: "center",
   },
   rad: {},
 }));
@@ -42,6 +55,7 @@ function SignIn({ t, i18n }) {
   const [password, setPassword] = useState("");
   const [loginType, setLoginType] = React.useState("Student");
   const [validInfo, setValidInfo] = useState(true);
+  const [isPasswordVisible, setPasswordVisibility] = useState(false);
 
   function fetchPicture() {
     fetch(
@@ -107,12 +121,18 @@ function SignIn({ t, i18n }) {
     return email.length > 0 && password.length > 0;
   }
 
+  //hides and shows password
+  const togglePasswordVisiblity = () => {
+    setPasswordVisibility(isPasswordVisible ? false : true);
+  };
+
   //Notably here the button is disabled if the form isn't validated
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <img height="175" width="175" src="cicscareers_logo_3.png"></img>
         <br />
+
         <form className={classes.form}>
           <TextField
             variant="outlined"
@@ -135,13 +155,28 @@ function SignIn({ t, i18n }) {
             fullWidth
             name="password"
             label={t("password")}
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
             id="password"
             form
             className={classes.form}
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Button className={classes.eyeIcon}>
+            {isPasswordVisible ? (
+              <VisibilityOffIcon
+                className="eyeSlashIcon"
+                //onClick so the user doesn't accidentally trigger it
+                onClick={togglePasswordVisiblity}
+              ></VisibilityOffIcon>
+            ) : (
+              <VisibilityIcon
+                className="eyeIcon"
+                onClick={togglePasswordVisiblity}
+              ></VisibilityIcon>
+            )}
+          </Button>
+
           <Button
             type="submit" //logs in on enter
             margin="normal"
