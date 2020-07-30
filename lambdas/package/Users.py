@@ -24,8 +24,9 @@ IMAGES_BUCKET = 't1-s3-us-east-1-images'
 # However, it is expected to be supported in the near future.
 # When it becomes available, the code should be updated to use that.
 
-# Most of the methods are designed to use list of identifiers instead of single identifier (user_ids instead of user_id) 
-# because that optimizes the program to reduce the number of queries to the backend and saves computation.
+# Methods which are expected to be called multiple times in the same lambda function are designed to use list of identifiers 
+# instead of single identifier (user_ids instead of user_id) because that optimizes the program to reduce the number of queries 
+# to the backend and saves computation time.
 
 class Users:
     @staticmethod
@@ -91,6 +92,81 @@ class Users:
 
         return result
     
+    @staticmethod
+    def set_first_name(user_id, first_name):
+        """ Updates the first name of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(first_name, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'first_name', 'value': {'stringValue': first_name}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET first_name = :first_name WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+    
+    @staticmethod
+    def set_last_name(user_id, last_name):
+        """ Updates the last name of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(last_name, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'last_name', 'value': {'stringValue': last_name}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET last_name = :last_name WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
+    def set_preferred_name(user_id, preferred_name):
+        """ Updates the preferred name of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(preferred_name, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'preferred_name', 'value': {'stringValue': preferred_name}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET preferred_name = :preferred_name WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
+    def get_email(user_ids):
+        """ Returns a dictionary with user ids as key containing string values representing the email address of the users. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT id, email FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            result[record[0]['longValue']] = record[1]['stringValue']
+
+        return result
+
+    @staticmethod
+    def set_email(user_id, email):
+        """ Updates the email address of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(email, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'email', 'value': {'stringValue': email}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET email = :email WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
     @staticmethod
     def get_profile(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the presigned url of the profile picture. """
