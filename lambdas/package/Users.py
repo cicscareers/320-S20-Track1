@@ -30,6 +30,21 @@ IMAGES_BUCKET = 't1-s3-us-east-1-images'
 
 class Users:
     @staticmethod
+    def exists(user_ids):
+        """ Returns a dictionary with user ids as key containing boolean values indicating whether the user exists or not. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT supporter_id FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(user_ids, False)
+        for record in sql_result:
+            result[record[0]['longValue']] = True
+
+        return result
+        
+    @staticmethod
     def is_student(user_ids):
         """ Returns a dictionary with user ids as key containing boolean values indicating whether the user is a student or not. """
 
