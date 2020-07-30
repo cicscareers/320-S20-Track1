@@ -4,7 +4,10 @@ from package.lambda_exception import LambdaException
 import boto3
 import botocore
 
-s3 = boto3.resource('s3')
+s3 = boto3.client(
+    's3',
+    region_name='us-east-1' # Presigned URLs require region name to be specified explicitly.
+)
 
 query = partial(
     boto3.client('rds-data').execute_statement,
@@ -223,5 +226,5 @@ class Users:
 
     @staticmethod
     def __check_type(variable, type):
-        if type(variable) is not type:
+        if not isinstance(type, variable):
             raise LambdaException(f"InvalidArgumentException: Expected {type}, found {type(variable)}")
