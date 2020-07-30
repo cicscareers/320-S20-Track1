@@ -122,7 +122,7 @@ function SignIn({ t, i18n }) {
 
   //hides and shows password
   const togglePasswordVisiblity = () => {
-    setPasswordVisibility(isPasswordVisible ? false : true);
+    setPasswordVisibility(!isPasswordVisible);
   };
 
   //Notably here the button is disabled if the form isn't validated
