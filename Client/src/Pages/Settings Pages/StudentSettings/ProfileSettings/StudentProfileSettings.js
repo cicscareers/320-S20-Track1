@@ -7,7 +7,11 @@ import {
   Container,
   TextField,
   Grid,
+  Badge
 } from "@material-ui/core";
+import { FilePicker } from 'react-file-picker'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -128,12 +132,27 @@ const ProfileInformation = (props) => {
           Profile Information
         </Typography>
         <form className={classes.form}>
-          <Avatar
-            // alt={firstName}
-            color="primary"
-            className={classes.avatar}
-            src={picture}
-          />
+         <FilePicker
+            // onChange={FileObject => (/* do something with File object */)}
+            // onError={errMsg => (/* do something with err msg string */)
+            extensions={['jpeg', 'png']}
+          >
+            <Badge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              badgeContent={<PhotoCameraIcon fontSize="large" onClick={addPicture} />}
+            >
+              <Avatar
+                // alt={firstName}
+                color="primary"
+                className={classes.avatar}
+                src={picture}
+              />
+            </Badge>
+          </FilePicker>
           <br />
           <Grid container>
             <Grid item xs={3}>
@@ -237,18 +256,6 @@ const ProfileInformation = (props) => {
             onChange={(e) => setLinkedIn(e.target.value)}
 
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-            label="Profile Image Source"
-            autoFocus
-            defaultValue={picture}
-            form className={classes.form}
-            onChange={e => setPicture(e.target.value)}
-          />
-
           <TextField
             variant="outlined"
             margin="normal"
