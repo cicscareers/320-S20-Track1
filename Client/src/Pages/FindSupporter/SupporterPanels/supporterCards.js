@@ -252,7 +252,7 @@ const SupporterCard = (props) => {
               <Typography>{employer}, {title}</Typography>
               <Typography>{office}</Typography>
               <br/>
-              <Typography>Help Needed Topics:</Typography>
+              <Typography>Select Appointment Topic:</Typography>
               {topics_array.map(topic => <Chip 
                 clickable 
                 value={topic}
