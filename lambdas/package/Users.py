@@ -99,14 +99,19 @@ class Users:
         Users.__check_type(user_ids, list)
 
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
-        sql = f"SELECT id, preferred_name, first_name, last_name FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql = f"SELECT id, first_name, last_name, preferred_name FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = {}
+        result = dict.fromkeys(user_ids, {'preferred_name': ""}) # The supporters are not required to have a preferred_name, so let's prepopulate that to empty string.
         for record in sql_result:
-            if 'stringValue' in record[1]:
-                result[record[0]['longValue']] = record[1]['stringValue']
+            supporter_id = record[0]['longValue']
+            result[supporter_id]['first_name'] = record[1]['stringValue']
+            result[supporter_id]['last_name'] = record[2]['stringValue']
+            
+            if 'stringValue' in record[3]:
+                result[supporter_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
+                result[supporter_id]['preferred_name'] = record[3]['stringValue']
             else:
-                result[record[0]['longValue']] = record[2]['stringValue'] + " " + record[3]['stringValue']
+                result[supporter_id]['name'] = record[1]['stringValue'] + " " + record[2]['stringValue']
 
         return result
     
@@ -184,6 +189,66 @@ class Users:
         
         sql = f"UPDATE {USERS_TABLE} SET email = :email WHERE id = :user_id"
         query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
+    def get_bio(user_ids):
+        """ Returns a dictionary with user ids as key containing string values representing the bio of the users. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT id, bio FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            result[record[0]['longValue']] = record[1]['stringValue']
+
+        return result
+
+    @staticmethod
+    def get_pronouns(user_ids):
+        """ Returns a dictionary with user ids as key containing string values representing the pronouns of the users. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT id, pronouns FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            result[record[0]['longValue']] = record[1]['stringValue']
+
+        return result
+
+    @staticmethod
+    def get_gender(user_ids):
+        """ Returns a dictionary with user ids as key containing string values representing the gender of the users. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT id, gender FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            result[record[0]['longValue']] = record[1]['stringValue']
+
+        return result
+
+    @staticmethod
+    def get_phone(user_ids):
+        """ Returns a dictionary with user ids as key containing string values representing the phone of the users. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT id, phone FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            result[record[0]['longValue']] = record[1]['stringValue']
+
+        return result
 
     @staticmethod
     def get_profile(user_ids):
