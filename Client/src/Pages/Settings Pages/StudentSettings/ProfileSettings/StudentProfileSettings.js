@@ -255,8 +255,11 @@ const ProfileInformation = (props) => {
             onChange={(e) => setLinkedIn(e.target.value)}
 
           />
-         <FileUpload	
-            onFileChange={	
+          
+          <input
+            type="file"
+            accept="image/*"
+            onChange={	
               (e) => {	
                 var fr = new FileReader();	
                 fr.readAsDataURL(e.target.files[0]);	
@@ -264,9 +267,8 @@ const ProfileInformation = (props) => {
                   setPicture(e.target.result);	
                 }	
               }	
-            }	
-            FileType="image/*"	
-          />
+            }
+          />	
           <TextField
             variant="outlined"
             margin="normal"
