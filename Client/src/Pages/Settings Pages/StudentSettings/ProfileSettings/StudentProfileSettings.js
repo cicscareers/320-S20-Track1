@@ -12,7 +12,6 @@ import {
 import { FilePicker } from 'react-file-picker'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -38,17 +37,23 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(25),
     backgroundColor: "primary",
   },
+  uploadDP: {
+    width: "100%",
+    fullWidth: true,
+    marginTop: theme.spacing(2),
+    align: "center",
+  }
 }));
 
-function getLinkedIn(arr){
-  if (!arr){
-      return ""
+function getLinkedIn(arr) {
+  if (!arr) {
+    return ""
   }
-  for(let i=0;i<arr.length;i++){
-      console.log(arr[i])
-      if(arr[i].link_type === "LinkedIn"){
-          return arr[i].link
-      }
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i])
+    if (arr[i].link_type === "LinkedIn") {
+      return arr[i].link
+    }
   }
   return ""
 }
@@ -108,7 +113,7 @@ const ProfileInformation = (props) => {
         picture: picture,
         preferred_name: prefName,
         pronouns: pronouns,
-        resume: settings.resume,
+        resume: settings.resume,  
         statusCode: settings.statusCode,
         colleges: [],
         links: []
@@ -133,7 +138,15 @@ const ProfileInformation = (props) => {
         </Typography>
         <form className={classes.form}>
          <FilePicker
-            // onChange={FileObject => (/* do something with File object */)}
+            onChange={
+              (e) => {
+                var fr = new FileReader();
+                fr.readAsDataURL(e.target.files[0]);
+                fr.onloadend = function(e) {
+                  setPicture(e.target.result);
+                }
+              }
+            }
             // onError={errMsg => (/* do something with err msg string */)
             extensions={['jpeg', 'png']}
           >
@@ -175,7 +188,7 @@ const ProfileInformation = (props) => {
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                
+
                 label="Preferred Name"
                 multiline
                 defaultValue={prefName}
@@ -271,7 +284,7 @@ const ProfileInformation = (props) => {
           <Button
             margin="normal"
             form
-            className={classes.button}
+            className={classes.Button}
             variant="contained"
             color="primary"
             onClick={handleSubmit}
