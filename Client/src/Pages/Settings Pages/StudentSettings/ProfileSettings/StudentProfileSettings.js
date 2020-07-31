@@ -145,6 +145,20 @@ const ProfileInformation = (props) => {
               }}
               badgeContent={<PhotoCameraIcon fontSize="large" onClick={addPicture} />}
             >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={	
+                (e) => {	
+                  var fr = new FileReader();	
+                  fr.readAsDataURL(e.target.files[0]);	
+                  fr.onloadend = function(e) {	
+                    setPicture(e.target.result);	
+                  }	
+                }	
+              }
+              style={{display: 'none'}}
+            />
               <Avatar
                 // alt={firstName}
                 color="primary"
@@ -255,20 +269,6 @@ const ProfileInformation = (props) => {
             onChange={(e) => setLinkedIn(e.target.value)}
 
           />
-          
-          <input
-            type="file"
-            accept="image/*"
-            onChange={	
-              (e) => {	
-                var fr = new FileReader();	
-                fr.readAsDataURL(e.target.files[0]);	
-                fr.onloadend = function(e) {	
-                  setPicture(e.target.result);	
-                }	
-              }	
-            }
-          />	
           <TextField
             variant="outlined"
             margin="normal"
