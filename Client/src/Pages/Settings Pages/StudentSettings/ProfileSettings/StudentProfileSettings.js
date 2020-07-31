@@ -9,7 +9,7 @@ import {
   Grid,
   Badge
 } from "@material-ui/core";
-import FileUpload from '../../../../components/fileUpload';
+import { FilePicker } from 'react-file-picker'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 const useStyles = makeStyles((theme) => ({
@@ -137,28 +137,25 @@ const ProfileInformation = (props) => {
           Profile Information
         </Typography>
         <form className={classes.form}>
+         <FilePicker
+            onChange={
+              (file) => {
+                var fr = new FileReader();
+                fr.readAsDataURL(file);
+                fr.onloadend = (e) => setPicture(e.target.result);
+              }
+            }
+            // onError={errMsg => (/* do something with err msg string */)
+            extensions={['jpeg', 'png']}
+          >
             <Badge
               overlap="circle"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              badgeContent={<PhotoCameraIcon fontSize="large" onClick={addPicture} />}
+              badgeContent={<PhotoCameraIcon fontSize="large" />}
             >
-            <input
-              type="file"
-              accept="image/*"
-              onChange={	
-                (e) => {	
-                  var fr = new FileReader();	
-                  fr.readAsDataURL(e.target.files[0]);	
-                  fr.onloadend = function(e) {	
-                    setPicture(e.target.result);	
-                  }	
-                }	
-              }
-              style={{display: 'none'}}
-            />
               <Avatar
                 // alt={firstName}
                 color="primary"
@@ -166,6 +163,7 @@ const ProfileInformation = (props) => {
                 src={picture}
               />
             </Badge>
+          </FilePicker>
           <br />
           <Grid container>
             <Grid item xs={3}>
