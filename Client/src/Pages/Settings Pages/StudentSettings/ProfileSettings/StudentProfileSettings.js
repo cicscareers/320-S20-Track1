@@ -137,7 +137,14 @@ const ProfileInformation = (props) => {
           Profile Information
         </Typography>
         <form className={classes.form}>
-         <FilePicker
+            <Badge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              badgeContent={<FilePicker
+            style={{ cursor: 'pointer' }}
             onChange={
               (file) => {
                 var fr = new FileReader();
@@ -147,14 +154,7 @@ const ProfileInformation = (props) => {
             }
             // onError={errMsg => (/* do something with err msg string */)
             extensions={['jpeg', 'png']}
-          >
-            <Badge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              badgeContent={<PhotoCameraIcon fontSize="large" />}
+          ><PhotoCameraIcon fontSize="large" /> </FilePicker>}
             >
               <Avatar
                 // alt={firstName}
@@ -163,7 +163,6 @@ const ProfileInformation = (props) => {
                 src={picture}
               />
             </Badge>
-          </FilePicker>
           <br />
           <Grid container>
             <Grid item xs={3}>
