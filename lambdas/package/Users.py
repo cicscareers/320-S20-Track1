@@ -20,6 +20,8 @@ query = partial(
 USERS_TABLE = "users"
 NOTIFICATION_PREFERENCES_TABLE = "notification_preferences"
 NOTIFICATION_ID_TABLE = "notification_type"
+USER_LINKS_TABLE = "user_link"
+LINKS_TABLE = "link"
 
 # S3 CONSTANTS
 IMAGES_BUCKET = 't1-s3-us-east-1-images'
@@ -276,6 +278,27 @@ class Users:
                 
         return result
 
+    @staticmethod
+    def get_links(user_ids):
+        """ Returns a dictionary with user ids as key and containing list of dictionary values representing links of the user. """
+
+        Users.__check_type(user_ids, list)
+
+        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
+        sql = f"SELECT user_id, ult.link_id, link_type, link \
+            FROM {USER_LINKS_TABLE} ult, {LINKS_TABLE} lt\
+            WHERE id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(user_ids, []) 
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                'link_id': record[1]['longValue'],
+                'link_type': record[2]['stringValue'],
+                'link': record[3]['stringValue']
+            })
+                
+        return result
+        
     @staticmethod
     def get_profile(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the presigned url of the profile picture. """
