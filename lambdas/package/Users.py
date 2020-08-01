@@ -287,7 +287,7 @@ class Users:
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
         sql = f"SELECT user_id, ult.link_id, link_type, link \
             FROM {USER_LINKS_TABLE} ult, {LINKS_TABLE} lt\
-            WHERE id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
+            WHERE user_id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
         sql_result = query(sql=sql, parameters=param)['records']
         result = dict.fromkeys(user_ids, []) 
         for record in sql_result:
