@@ -193,8 +193,6 @@ class Supporters:
 
         return result
 
-
-        
     # Summed up all the supporter preferences into single method because I couldn't think of a single use case where only one of these would be required.
     @staticmethod
     def get_student_preferences(supporter_ids):
@@ -211,7 +209,7 @@ class Supporters:
         for record in sql_result:
             result[record[0]['longValue']]['grad_student'] = record[1]['booleanValue']
             if 'longValue' in record[2]:
-                result[record[2]['longValue']] = record[2]['longValue']
+                result[record[2]['longValue']]['hours_before_appointment'] = record[2]['longValue']
         
         return result
 
@@ -227,7 +225,7 @@ class Supporters:
         result = dict.fromkeys(supporter_ids, {})
         for record in sql_result:
             supporter_id = record[0]['longValue']
-            result[supporter_id]['profesional_stuff'] = record[1]['booleanValue']
+            result[supporter_id]['professional_staff'] = record[1]['booleanValue']
             result[supporter_id]['student_staff'] = record[2]['booleanValue']
             result[supporter_id]['alumni'] = record[3]['booleanValue']
             result[supporter_id]['faculty'] = record[4]['booleanValue']
@@ -237,5 +235,6 @@ class Supporters:
         
     @staticmethod
     def __check_type(variable, type):
+        return None # Until fixed.
         if not isinstance(variable, type):
             raise LambdaException(f"InvalidArgumentException: Expected {type}, found {type(variable)}")
