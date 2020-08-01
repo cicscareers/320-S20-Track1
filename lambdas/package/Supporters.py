@@ -20,6 +20,7 @@ MINORS_TABLE = "minor"
 SUPPORTER_STUDENT_PREFERENCES_TABLE = "supporter_preferences_for_students"
 SUPPORTER_TAG_PREFERENCES_TABLE = "supporter_tags"
 TAGS_TABLE = "tag_type"
+SUPPORTER_TYPES_TABLE = "supporter_type"
 
 # Currently executeStatement() doesn't support arrayValue.
 # So, we pass arrays as strings and then cast them to arrays (ex: :users_ids::int[])
@@ -172,23 +173,43 @@ class Supporters:
     # Summed up all the supporter preferences into single method because I couldn't think of a single use case where only one of these would be required.
     @staticmethod
     def get_student_preferences(supporter_ids):
-            """ Returns a dictionary with supporter id as key containing dictionary representing supporter preferences. """
+        """ Returns a dictionary with supporter id as key containing dictionary representing supporter preferences. """
 
-            Supporters.__check_type(supporter_ids, list)
+        Supporters.__check_type(supporter_ids, list)
 
-            param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
-            sql = f"SELECT supporter_id, grad_student, hours_before_appointment FROM {SUPPORTER_STUDENT_PREFERENCES_TABLE} WHERE supporter_id = ANY(:supporter_ids::int[])"
-            sql_result = query(sql=sql, parameters=param)['records']
-            result = dict.fromkeys(supporter_ids, { # grad_student is NOT NULL but hours_before_appointment is not.
-                'hours_before_appointment': 0 # Need to check the default value here.
-            })
-            for record in sql_result:
-                result[record[0]['longValue']]['grad_student'] = record[1]['booleanValue']
-                if 'longValue' in record[2]:
-                    result[record[2]['longValue']] = record[2]['longValue']
-            
-            return result
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, grad_student, hours_before_appointment FROM {SUPPORTER_STUDENT_PREFERENCES_TABLE} WHERE supporter_id = ANY(:supporter_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, { # grad_student is NOT NULL but hours_before_appointment is not.
+            'hours_before_appointment': 0 # Need to check the default value here.
+        })
+        for record in sql_result:
+            result[record[0]['longValue']]['grad_student'] = record[1]['booleanValue']
+            if 'longValue' in record[2]:
+                result[record[2]['longValue']] = record[2]['longValue']
+        
+        return result
 
+    @staticmethod
+    def get_supporter_type(supporter_ids):
+        """ Returns a dictionary with supporter id as key containing dictionary indicating supporter type. """
+
+        Supporters.__check_type(supporter_ids, list)
+
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, professional_staff, student_staff, alumni, faculty, other FROM {SUPPORTER_TYPES_TABLE} WHERE supporter_id = ANY(:supporter_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, {})
+        for record in sql_result:
+            supporter_id = record[0]['longValue']
+            result[supporter_id]['profesional_stuff'] = record[1]['booleanValue']
+            result[supporter_id]['student_staff'] = record[2]['booleanValue']
+            result[supporter_id]['alumni'] = record[3]['booleanValue']
+            result[supporter_id]['faculty'] = record[4]['booleanValue']
+            result[supporter_id]['other'] = record[5]['booleanValue']
+        
+        return result
+        
     @staticmethod
     def __check_type(variable, type):
         if not isinstance(variable, type):
