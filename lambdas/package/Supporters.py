@@ -20,6 +20,8 @@ MINORS_TABLE = "minor"
 SUPPORTER_STUDENT_PREFERENCES_TABLE = "supporter_preferences_for_students"
 SUPPORTER_TAG_PREFERENCES_TABLE = "supporter_tags"
 TAGS_TABLE = "tag_type"
+SUPPORTER_SPECIALIZATION_PREFERENCES_TABLE = "supporter_specializations"
+SPECIALIZATIONS_TABLE = "specialization_type"
 SUPPORTER_TYPES_TABLE = "supporter_type"
 
 # Currently executeStatement() doesn't support arrayValue.
@@ -170,6 +172,29 @@ class Supporters:
 
         return result
 
+    @staticmethod
+    def get_specialization_preferences(supporter_ids):
+        """ Returns a dictionary with supporter id as key containing list of dictionary values representing the specialization topics of the supporter. """
+
+        Supporters.__check_type(supporter_ids, list)
+
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, specialization_type, max_students, duration, sst.specialization_type_id FROM {SUPPORTER_SPECIALIZATION_PREFERENCES_TABLE} sst, {SPECIALIZATIONS_TABLE} st WHERE \
+            supporter_id = ANY(:supporter_ids::int[]) AND sst.specialization_type_id = st.specialization_type_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, [])
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                    'specialization_type': record[1]['stringValue'],
+                    'max_students': record[2]['longValue'],
+                    'duration': record[3]['longValue'],
+                    'specialization_id': record[4]['longValue'] 
+            })
+
+        return result
+
+
+        
     # Summed up all the supporter preferences into single method because I couldn't think of a single use case where only one of these would be required.
     @staticmethod
     def get_student_preferences(supporter_ids):
