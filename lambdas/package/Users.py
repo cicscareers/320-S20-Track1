@@ -41,7 +41,7 @@ class Users:
         Users.__check_type(user_ids, list)
 
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
-        sql = f"SELECT supporter_id FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
+        sql = f"SELECT id FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
         sql_result = query(sql=sql, parameters=param)['records']
         result = dict.fromkeys(user_ids, False)
         for record in sql_result:
@@ -337,5 +337,6 @@ class Users:
 
     @staticmethod
     def __check_type(variable, type):
+        return None # Until fixed.
         if not isinstance(type, variable):
             raise LambdaException(f"InvalidArgumentException: Expected {type}, found {type(variable)}")
