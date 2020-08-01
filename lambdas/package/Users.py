@@ -360,6 +360,5 @@ class Users:
 
     @staticmethod
     def __check_type(variable, type):
-        return None # Until fixed.
-        if not isinstance(type, variable):
+        if not isinstance(variable, type):
             raise LambdaException(f"InvalidArgumentException: Expected {type}, found {type(variable)}")
