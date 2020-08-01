@@ -11,6 +11,8 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { Auth, Interactions } from "aws-amplify";
@@ -31,14 +33,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   eyeIcon: {
-    height: "52px",
-    Box: "none",
-    border: "none",
-    boxShadow: "none",
     position: "absolute",
-    left: "59.7%",
-    top: "46.7%",
-    alignItems: "center",
+    left: "60.8%",
+    top: "49.9%",
   },
   rad: {},
 }));
@@ -161,14 +158,16 @@ function SignIn({ t, i18n }) {
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button className={classes.eyeIcon} onClick={togglePasswordVisiblity}>
-            {isPasswordVisible ? (
-              <VisibilityOffIcon />
-            ) : (
-              //onClick so the user doesn't accidentally trigger it
-              <VisibilityIcon />
-            )}
-          </Button>
+          <InputAdornment className={classes.eyeIcon}>
+            <IconButton onClick={togglePasswordVisiblity}>
+              {isPasswordVisible ? (
+                <VisibilityOffIcon />
+              ) : (
+                //onClick so the user doesn't accidentally trigger it
+                <VisibilityIcon />
+              )}
+            </IconButton>
+          </InputAdornment>
           <Button
             type="submit" //logs in on enter
             margin="normal"
