@@ -13,6 +13,13 @@ query = partial(
 
 # DB CONSTANTS
 SUPPORTERS_TABLE = "supporters"
+SUPPORTER_MAJOR_PREFERENCES_TABLE = "supporter_major_preferences"
+MAJORS_TABLE = "major"
+SUPPORTER_MINOR_PREFERENCES_TABLE = "supporter_minor_preferences"
+MINORS_TABLE = "minor"
+SUPPORTER_STUDENT_PREFERENCES_TABLE = "supporter_preferences_for_students"
+SUPPORTER_TAG_PREFERENCES_TABLE = "supporter_tags"
+TAGS_TABLE = "tag_type"
 
 # Currently executeStatement() doesn't support arrayValue.
 # So, we pass arrays as strings and then cast them to arrays (ex: :users_ids::int[])
@@ -104,6 +111,83 @@ class Supporters:
                 result[record[0]['longValue']] = record[1]['stringValue']
 
         return result
+
+    @staticmethod
+    def get_major_preferences(supporter_ids):
+        """ Returns a dictionary with supporter id as key containing list of dictionary values representing the major preferences of the supporter. """
+
+        Supporters.__check_type(supporter_ids, list)
+
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, major, smt.major_id FROM {SUPPORTER_MAJOR_PREFERENCES_TABLE} smt, {MAJORS_TABLE} mt WHERE \
+            supporter_id = ANY(:supporter_ids::int[]) AND smt.major_id = mt.major_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, [])
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                    'major': record[1]['stringValue'],
+                    'major_id': record[2]['longValue']
+            })
+
+        return result
+
+    @staticmethod
+    def get_minor_preferences(supporter_ids):
+        """ Returns a dictionary with supporter id as key containing list of dictionary values representing the minor preferences of the supporter. """
+
+        Supporters.__check_type(supporter_ids, list)
+
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, minor, smt.minor_id FROM {SUPPORTER_MINOR_PREFERENCES_TABLE} smt, {MINORS_TABLE} mt WHERE \
+            supporter_id = ANY(:supporter_ids::int[]) AND smt.minor_id = mt.minor_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, [])
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                    'minor': record[1]['stringValue'],
+                    'minor_id': record[2]['longValue']
+            })
+
+        return result
+
+    @staticmethod
+    def get_tag_preferences(supporter_ids):
+        """ Returns a dictionary with supporter id as key containing list of dictionary values representing the tag preferences of the supporter. """
+
+        Supporters.__check_type(supporter_ids, list)
+
+        param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+        sql = f"SELECT supporter_id, tag_type, stt.tag_type_id FROM {SUPPORTER_TAG_PREFERENCES_TABLE} stt, {TAGS_TABLE} tt WHERE \
+            supporter_id = ANY(:supporter_ids::int[]) AND stt.tag_type_id = tt.tag_type_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(supporter_ids, [])
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                    'tag': record[1]['stringValue'],
+                    'tag_id': record[2]['longValue']
+            })
+
+        return result
+
+    # Summed up all the supporter preferences into single method because I couldn't think of a single use case where only one of these would be required.
+    @staticmethod
+    def get_student_preferences(supporter_ids):
+            """ Returns a dictionary with supporter id as key containing dictionary representing supporter preferences. """
+
+            Supporters.__check_type(supporter_ids, list)
+
+            param = [{'name': 'supporter_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in supporter_ids) + '}'}}]
+            sql = f"SELECT supporter_id, grad_student, hours_before_appointment FROM {SUPPORTER_STUDENT_PREFERENCES_TABLE} WHERE supporter_id = ANY(:supporter_ids::int[])"
+            sql_result = query(sql=sql, parameters=param)['records']
+            result = dict.fromkeys(supporter_ids, { # grad_student is NOT NULL but hours_before_appointment is not.
+                'hours_before_appointment': 0 # Need to check the default value here.
+            })
+            for record in sql_result:
+                result[record[0]['longValue']]['grad_student'] = record[1]['booleanValue']
+                if 'longValue' in record[2]:
+                    result[record[2]['longValue']] = record[2]['longValue']
+            
+            return result
 
     @staticmethod
     def __check_type(variable, type):
