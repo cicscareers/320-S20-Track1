@@ -210,6 +210,21 @@ class Users:
         return result
 
     @staticmethod
+    def set_bio(user_id, bio):
+        """ Updates the bio of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(email, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'bio', 'value': {'stringValue': bio}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET bio = :bio WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
     def get_pronouns(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the pronouns of the users. """
 
@@ -223,6 +238,21 @@ class Users:
             result[record[0]['longValue']] = record[1]['stringValue']
 
         return result
+
+    @staticmethod
+    def set_pronouns(user_id, pronouns):
+        """ Updates the pronouns of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(pronouns, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'pronouns', 'value': {'stringValue': pronouns}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET pronouns = :pronouns WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
     @staticmethod
     def get_gender(user_ids):
@@ -240,6 +270,22 @@ class Users:
         return result
 
     @staticmethod
+    def set_gender(user_id, gender):
+        """ Updates the gender of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(gender, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'gender', 'value': {'stringValue': gender}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET gender = :gender WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+
+    @staticmethod
     def get_phone(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the phone of the users. """
 
@@ -253,6 +299,21 @@ class Users:
             result[record[0]['longValue']] = record[1]['stringValue']
 
         return result
+
+    @staticmethod
+    def set_phone(user_id, phone):
+        """ Updates the phone of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(phone, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'phone', 'value': {'stringValue': phone}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET phone = :phone WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
     @staticmethod
     def get_notification_preferences(user_ids):
