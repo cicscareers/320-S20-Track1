@@ -55,10 +55,76 @@ class Students:
 
         param = [
             {'name': 'student_id', 'value': {'longValue': student_id}},
-            {'name': 'grad_yr', 'value': {'stringValue': grad_yr}}
+            {'name': 'grad_yr', 'value': {'longValue': grad_yr}}
         ]
         
         sql = f"UPDATE {STUDENTS_TABLE} SET grad_yr = :grad_yr WHERE student_id = :student_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
+    def get_resume(student_ids):
+        """ Returns a dictionary with student ids as key containing string values representing the student's resume. """
+
+        Students.__check_type(student_ids, list)
+
+        param = [{'name': 'student_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in student_ids) + '}'}}]
+        sql = f"SELECT student_id, resume FROM {STUDENTS_TABLE} WHERE student_id = ANY(:student_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            if 'stringValue' in record[1]:
+                result[record[0]['longValue']] = record[1]['stringValue']
+            else:
+                result[record[0]['longValue']] = "" # Have to figure out what the frontend expects here.
+
+        return result
+
+    @staticmethod
+    def set_resume(student_id, resume):
+        """ Updates the resume link of the student with the specified student id. """
+
+        Students.__check_type(student_id, int)
+        Students.__check_type(resume, str)
+
+        param = [
+            {'name': 'student_id', 'value': {'longValue': student_id}},
+            {'name': 'resume', 'value': {'stringValue': resume}}
+        ]
+        
+        sql = f"UPDATE {STUDENTS_TABLE} SET resume = :resume WHERE student_id = :student_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
+    def get_grad_student(student_ids):
+        """ Returns a dictionary with student ids as key containing boolean values indicating whether the student is a grad student or not. """
+
+        Students.__check_type(student_ids, list)
+
+        param = [{'name': 'student_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in student_ids) + '}'}}]
+        sql = f"SELECT student_id, grad_student FROM {STUDENTS_TABLE} WHERE student_id = ANY(:student_ids::int[])"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = {}
+        for record in sql_result:
+            if 'stringValue' in record[1]:
+                result[record[0]['longValue']] = record[1]['stringValue']
+            else:
+                result[record[0]['longValue']] = "" # Have to figure out what the frontend expects here.
+
+        return result
+
+    @staticmethod
+    def set_grad_student(student_id, grad_student):
+        """ Updates the grad student property of the student with the specified student id. """
+
+        Students.__check_type(student_id, int)
+        Students.__check_type(grad_student, bool)
+
+        param = [
+            {'name': 'student_id', 'value': {'longValue': student_id}},
+            {'name': 'grad_student', 'value': {'booleanValue': grad_student}}
+        ]
+        
+        sql = f"UPDATE {STUDENTS_TABLE} SET grad_student = :grad_student WHERE student_id = :student_id"
         query(sql=sql, parameters=param, continueAfterTimeout=True)
 
     @staticmethod
