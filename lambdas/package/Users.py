@@ -214,7 +214,7 @@ class Users:
         """ Updates the bio of the user with the specified user id. """
         
         Users.__check_type(user_id, int)
-        Users.__check_type(email, str)
+        Users.__check_type(bio, str)
 
         param = [
             {'name': 'user_id', 'value': {'stringValue': user_id}},
@@ -387,7 +387,7 @@ class Users:
                     'link_id': link_id,
                     'link': link['link']
                 }
-                for link in links if (link_id := Students.get_link_id(link_type)) is not None
+                for link in links if (link_id := Users.get_link_id(link['link_type'])) is not None
             ]
         )
 
@@ -399,14 +399,14 @@ class Users:
         Users.__check_type(links, list)
 
         Users.delete_all_majors(user_id)
-        Users.insert_majors(user_id, links)
+        Users.insert_links(user_id, links)
 
     @staticmethod
     def insert_links(user_id, links):
         """ Inserts links into the links list of the user with the specified user id. """
         
         Users.__check_type(user_id, int)
-        Users.__check_type(major_ids, list)
+        Users.__check_type(links, list)
         
         param = [
             {'name': 'user_id', 'value': {'longValue': user_id}},
@@ -422,7 +422,7 @@ class Users:
         Users.__check_type(user_id, int)
 
         param = [{'name': 'user_id', 'value': {'longValue': user_id}}]
-        sql = f"DELETE FROM {STUDENT_LINKS_TABLE} WHERE user_id = :user_id"
+        sql = f"DELETE FROM {USER_LINKS_TABLE} WHERE user_id = :user_id"
         query(sql=sql, parameters=param, continueAfterTimeout=True)
         
     @staticmethod
