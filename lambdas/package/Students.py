@@ -17,6 +17,8 @@ STUDENT_MAJORS_TABLE = "student_majors"
 MAJORS_TABLE = "major"
 STUDENT_MINORS_TABLE = "student_minors"
 MINORS_TABLE = "minor"
+STUDENT_COLLEGES_TABLE = "student_college"
+COLLEGES_TABLE = "college"
 
 # Currently executeStatement() doesn't support arrayValue.
 # So, we pass arrays as strings and then cast them to arrays (ex: :users_ids::int[])
@@ -273,6 +275,79 @@ class Students:
         sql = f"DELETE FROM {STUDENT_MINORS_TABLE} WHERE student_id = :student_id"
         query(sql=sql, parameters=param, continueAfterTimeout=True)
     
+    @staticmethod
+    def get_colleges(student_ids):
+        """ Returns a dictionary with student id as key containing list of dictionary values representing the colleges of the student. """
+
+        Students.__check_type(student_ids, list)
+
+        param = [{'name': 'student_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in student_ids) + '}'}}]
+        sql = f"SELECT student_id, college, sct.college_id FROM {STUDENT_COLLEGES_TABLE} sct, {COLLEGES_TABLE} ct WHERE \
+            student_id = ANY(:student_ids::int[]) AND sct.college_id = ct.college_id"
+        sql_result = query(sql=sql, parameters=param)['records']
+        result = dict.fromkeys(student_ids, [])
+        for record in sql_result:
+            result[record[0]['longValue']].append({
+                'college': record[1]['stringValue'],
+                'college_id': record[2]['longValue']
+            })
+
+        return result
+    
+    @staticmethod
+    def get_college_id(college_name):
+        """ Returns the college id of the college with the specified college name. """
+
+        param = [{'name': 'college', 'value': {'stringValue': college_name}}]
+        sql = f"SELECT college_id FROM {COLLEGES_TABLE} WHERE college = :college"
+        sql_result = query(sql=sql, parameters=param)['records']
+        if sql_result == []:
+            return None
+        else:
+            return sql_result[0][0]['longValue']
+
+    @staticmethod
+    def set_colleges_by_name(student_id, college_names):
+        """ Updates the colleges of the student with the specified list of colleges. """
+
+        Students.__check_type(college_names, list)
+
+        Students.set_colleges_by_id(student_id, [college_id for college_name in college_names if (college_id := Students.get_college_id(college_name)) is not None])
+
+    @staticmethod
+    def set_colleges_by_id(student_id, college_ids):
+        """ Updates the colleges of the student with the specified list of colleges. """
+
+        Students.__check_type(student_id, int)
+        Students.__check_type(college_ids, list)
+
+        Students.delete_all_colleges(student_id)
+        Students.insert_colleges(student_id, college_ids)
+
+    @staticmethod
+    def insert_colleges(student_id, college_ids):
+        """ Inserts colleges into the colleges list of the student with the specified student id. """
+        
+        Students.__check_type(student_id, int)
+        Students.__check_type(college_ids, list)
+        
+        param = [
+            {'name': 'student_id', 'value': {'longValue': student_id}},
+            {'name': 'colleges', 'value': {'stringValue': ",".join([f"({student_id}, {college_id})" for college_id in college_ids])}}
+        ]
+        sql = f"INSERT INTO {STUDENT_COLLEGES_TABLE}(student_id, college_id) VALUES :colleges"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+    
+    @staticmethod
+    def delete_all_colleges(student_id):
+        """ Deletes all colleges of the student with the specified student id. """
+
+        Students.__check_type(student_id, int)
+
+        param = [{'name': 'student_id', 'value': {'longValue': student_id}}]
+        sql = f"DELETE FROM {STUDENT_COLLEGES_TABLE} WHERE student_id = :student_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
     @staticmethod
     def __check_type(variable, type):
         if not isinstance(variable, type):
