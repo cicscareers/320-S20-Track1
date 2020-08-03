@@ -130,6 +130,11 @@ const ProfileInformation = (props) => {
       });
   }
 
+  function handleProfileChange(file) {
+    var fr = new FileReader();
+    fr.readAsDataURL(file);
+    fr.onloadend = (e) => setPicture(e.target.result);
+  }
   return (
     <Container component="main">
       <div className={classes.paper}>
@@ -143,21 +148,16 @@ const ProfileInformation = (props) => {
                 vertical: 'bottom',
                 horizontal: 'right',
               }}
-              badgeContent={<FilePicker
-            style={{ cursor: 'pointer' }}
-            onChange={
-              (file) => {
-                var fr = new FileReader();
-                fr.readAsDataURL(file);
-                fr.onloadend = (e) => setPicture(e.target.result);
-              }
-            }
-            // onError={errMsg => (/* do something with err msg string */)
-            extensions={['jpeg', 'png']}
-          ><PhotoCameraIcon fontSize="large" /> </FilePicker>}
+              badgeContent={
+                <FilePicker
+                  style={{ cursor: 'pointer' }}
+                  onChange={handleProfileChange}
+                  extensions={['jpeg', 'png']}
+                >
+                  <PhotoCameraIcon fontSize="large" />
+                </FilePicker>}
             >
               <Avatar
-                // alt={firstName}
                 color="primary"
                 className={classes.avatar}
                 src={picture}
