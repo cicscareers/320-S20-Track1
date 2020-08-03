@@ -210,6 +210,21 @@ class Users:
         return result
 
     @staticmethod
+    def set_bio(user_id, bio):
+        """ Updates the bio of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(bio, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'bio', 'value': {'stringValue': bio}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET bio = :bio WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+    @staticmethod
     def get_pronouns(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the pronouns of the users. """
 
@@ -223,6 +238,21 @@ class Users:
             result[record[0]['longValue']] = record[1]['stringValue']
 
         return result
+
+    @staticmethod
+    def set_pronouns(user_id, pronouns):
+        """ Updates the pronouns of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(pronouns, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'pronouns', 'value': {'stringValue': pronouns}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET pronouns = :pronouns WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
     @staticmethod
     def get_gender(user_ids):
@@ -240,6 +270,22 @@ class Users:
         return result
 
     @staticmethod
+    def set_gender(user_id, gender):
+        """ Updates the gender of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(gender, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'gender', 'value': {'stringValue': gender}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET gender = :gender WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+
+
+    @staticmethod
     def get_phone(user_ids):
         """ Returns a dictionary with user ids as key containing string values representing the phone of the users. """
 
@@ -253,6 +299,21 @@ class Users:
             result[record[0]['longValue']] = record[1]['stringValue']
 
         return result
+
+    @staticmethod
+    def set_phone(user_id, phone):
+        """ Updates the phone of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(phone, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'phone', 'value': {'stringValue': phone}}
+        ]
+        
+        sql = f"UPDATE {USERS_TABLE} SET phone = :phone WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
     @staticmethod
     def get_notification_preferences(user_ids):
@@ -287,7 +348,7 @@ class Users:
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
         sql = f"SELECT user_id, ult.link_id, link_type, link \
             FROM {USER_LINKS_TABLE} ult, {LINKS_TABLE} lt\
-            WHERE id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
+            WHERE user_id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
         sql_result = query(sql=sql, parameters=param)['records']
         result = dict.fromkeys(user_ids, []) 
         for record in sql_result:
@@ -298,6 +359,71 @@ class Users:
             })
                 
         return result
+    
+    @staticmethod
+    def get_link_id(link_type):
+        """ Returns the link id of the link with the specified link type. """
+
+        Users.__check_type(link_type, str)
+
+        param = [{'name': 'link_type', 'value': {'stringValue': link_type}}]
+        sql = f"SELECT link_id FROM {LINKS_TABLE} WHERE link_type = :link_type"
+        sql_result = query(sql=sql, parameters=param)['records']
+        if sql_result == []:
+            return None
+        else:
+            return sql_result[0][0]['longValue']
+
+    @staticmethod
+    def set_links_by_type(user_id, links):
+        """ Updates the links of the student with the specified list of links. """
+
+        Users.__check_type(links, list)
+
+        Users.set_links_by_id(
+            user_id,
+            [
+                {
+                    'link_id': link_id,
+                    'link': link['link']
+                }
+                for link in links if (link_id := Users.get_link_id(link['link_type'])) is not None
+            ]
+        )
+
+    @staticmethod
+    def set_links_by_id(user_id, links):
+        """ Updates the links of the student with the specified list of links. """
+
+        Users.__check_type(user_id, int)
+        Users.__check_type(links, list)
+
+        Users.delete_all_majors(user_id)
+        Users.insert_links(user_id, links)
+
+    @staticmethod
+    def insert_links(user_id, links):
+        """ Inserts links into the links list of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(links, list)
+        
+        param = [
+            {'name': 'user_id', 'value': {'longValue': user_id}},
+            {'name': 'links', 'value': {'stringValue': ",".join([f"({user_id}, {link['link_id']}, {link['link']})" for link in links])}}
+        ]
+        sql = f"INSERT INTO {USER_LINKS_TABLE}(user_id, link_id, link) VALUES :links"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+    
+    @staticmethod
+    def delete_all_majors(user_id):
+        """ Deletes all majors of the student with the specified student id. """
+
+        Users.__check_type(user_id, int)
+
+        param = [{'name': 'user_id', 'value': {'longValue': user_id}}]
+        sql = f"DELETE FROM {USER_LINKS_TABLE} WHERE user_id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
         
     @staticmethod
     def get_profile(user_ids):
@@ -360,6 +486,5 @@ class Users:
 
     @staticmethod
     def __check_type(variable, type):
-        return None # Until fixed.
-        if not isinstance(type, variable):
+        if not isinstance(variable, type):
             raise LambdaException(f"InvalidArgumentException: Expected {type}, found {type(variable)}")
