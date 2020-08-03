@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { FilePicker } from 'react-file-picker'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import ConfirmImageDialog from './ConfirmImageDialog';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -70,6 +71,7 @@ const ProfileInformation = (props) => {
   const [linkedIn, setLinkedIn] = React.useState(getLinkedIn(settings.link));
   const [bio, setBio] = React.useState(settings.bio);
   const [picture, setPicture] = React.useState(settings.picture);
+  const ConfirmImageDialogRef = React.createRef();
 
   const id = sessionStorage.getItem("id")
   const url =
@@ -134,7 +136,9 @@ const ProfileInformation = (props) => {
     var fr = new FileReader();
     fr.readAsDataURL(file);
     fr.onloadend = (e) => setPicture(e.target.result);
+    ConfirmImageDialogRef.current.toggleOpen();
   }
+
   return (
     <Container component="main">
       <div className={classes.paper}>
@@ -290,6 +294,7 @@ const ProfileInformation = (props) => {
           </Button>
         </form>
       </div>
+      <ConfirmImageDialog ref={ConfirmImageDialogRef}/>
     </Container>
   );
 };
