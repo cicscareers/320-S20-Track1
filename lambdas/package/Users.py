@@ -359,6 +359,71 @@ class Users:
             })
                 
         return result
+    
+    @staticmethod
+    def get_link_id(link_type):
+        """ Returns the link id of the link with the specified link type. """
+
+        Users.__check_type(link_type, str)
+
+        param = [{'name': 'link_type', 'value': {'stringValue': link_type}}]
+        sql = f"SELECT link_id FROM {LINKS_TABLE} WHERE link_type = :link_type"
+        sql_result = query(sql=sql, parameters=param)['records']
+        if sql_result == []:
+            return None
+        else:
+            return sql_result[0][0]['longValue']
+
+    @staticmethod
+    def set_links_by_type(user_id, links):
+        """ Updates the links of the student with the specified list of links. """
+
+        Users.__check_type(links, list)
+
+        Users.set_links_by_id(
+            user_id,
+            [
+                {
+                    'link_id': link_id,
+                    'link': link['link']
+                }
+                for link in links if (link_id := Students.get_link_id(link_type)) is not None
+            ]
+        )
+
+    @staticmethod
+    def set_links_by_id(user_id, links):
+        """ Updates the links of the student with the specified list of links. """
+
+        Users.__check_type(user_id, int)
+        Users.__check_type(links, list)
+
+        Users.delete_all_majors(user_id)
+        Users.insert_majors(user_id, links)
+
+    @staticmethod
+    def insert_links(user_id, links):
+        """ Inserts links into the links list of the user with the specified user id. """
+        
+        Users.__check_type(user_id, int)
+        Users.__check_type(major_ids, list)
+        
+        param = [
+            {'name': 'user_id', 'value': {'longValue': user_id}},
+            {'name': 'links', 'value': {'stringValue': ",".join([f"({user_id}, {link['link_id']}, {link['link']})" for link in links])}}
+        ]
+        sql = f"INSERT INTO {USER_LINKS_TABLE}(user_id, link_id, link) VALUES :links"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
+    
+    @staticmethod
+    def delete_all_majors(user_id):
+        """ Deletes all majors of the student with the specified student id. """
+
+        Users.__check_type(user_id, int)
+
+        param = [{'name': 'user_id', 'value': {'longValue': user_id}}]
+        sql = f"DELETE FROM {STUDENT_LINKS_TABLE} WHERE user_id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
         
     @staticmethod
     def get_profile(user_ids):
