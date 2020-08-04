@@ -46,7 +46,7 @@ export default class ConfirmImageModal extends React.Component {
             })
             formData.append("file", file);
             fetch(presignedPostData.url, {
-                method: 'PUT',
+                method: 'POST',
                 body: formData
             })
             .then((response) => response.json())
