@@ -37,20 +37,22 @@ export default class ConfirmImageModal extends React.Component {
     }
 
     fetchPresignedPostURL = (file) => {
-        fetch(
-            'https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + sessionStorage.getItem('id') + '/picture/upload',
-        ).then((response) => response.json()).then(
-            (json) => {
-                var presignedPostData = JSON.parse(json);
-                presignedPostData.file = file
-                fetch(
-                    presignedPostData.url, {
-                        method: 'PUT',
-                        body: JSON.stringify(presignedPostData)
-                    }
-                )
-            }
-        )
+        fetch('https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/' + sessionStorage.getItem('id') + '/picture/upload')
+        .then((response) => response.json())
+        .then((presignedPostData) => {
+            const formData = new FormData();
+            Object.keys(presignedPostData.fields).forEach((field) => {
+                formData.append(field, presignedPostData.fields[field])
+            })
+            formData.append("file", file);
+            fetch(presignedPostData.url, {
+                method: 'PUT',
+                body: formData
+            })
+            .then((response) => response.json())
+            .then((json) => console.log(json))
+            .catch((error) => console.log(error))
+        })
     }
 
     render() {
