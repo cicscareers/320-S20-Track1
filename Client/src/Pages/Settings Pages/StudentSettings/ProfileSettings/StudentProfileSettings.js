@@ -70,7 +70,6 @@ const ProfileInformation = (props) => {
   const [email, setEmail] = React.useState(settings.email);
   const [linkedIn, setLinkedIn] = React.useState(getLinkedIn(settings.link));
   const [bio, setBio] = React.useState(settings.bio);
-  const [picture, setPicture] = React.useState(settings.picture);
   const ConfirmImageDialogRef = React.createRef();
 
   const id = sessionStorage.getItem("id")
@@ -112,7 +111,6 @@ const ProfileInformation = (props) => {
         majors: [],
         minors: [],
         phone: phoneNumber,
-        picture: picture,
         preferred_name: prefName,
         pronouns: pronouns,
         resume: settings.resume,  
@@ -127,16 +125,8 @@ const ProfileInformation = (props) => {
       .then((response) => response.json())
       .then((json) => {
         console.log(json)
-        sessionStorage.setItem("image", picture)
         window.location.reload(false)
       });
-  }
-
-  function handleProfileChange(file) {
-    var fr = new FileReader();
-    fr.readAsDataURL(file);
-    fr.onloadend = (e) => setPicture(e.target.result);
-    ConfirmImageDialogRef.current.toggleOpen();
   }
 
   return (
@@ -155,7 +145,7 @@ const ProfileInformation = (props) => {
               badgeContent={
                 <FilePicker
                   style={{ cursor: 'pointer' }}
-                  onChange={handleProfileChange}
+                  onChange={(file) => ConfirmImageDialogRef.current.handleProfileChange(file)}
                   extensions={['jpeg', 'png']}
                 >
                   <PhotoCameraIcon fontSize="large" />
@@ -164,7 +154,7 @@ const ProfileInformation = (props) => {
               <Avatar
                 color="primary"
                 className={classes.avatar}
-                src={picture}
+                src={settings.picture}
               />
             </Badge>
           <br />
