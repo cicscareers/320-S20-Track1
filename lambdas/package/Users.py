@@ -384,10 +384,10 @@ class Users:
             user_id,
             [
                 {
-                    'link_id': Users.get_link_id(link['link_type']),
+                    'link_id': link_id,
                     'link': link['link']
                 }
-                for link in links if Users.get_link_id(link['link_type']) is not None
+                for link in links if (link_id := Users.get_link_id(link['link_type'])) is not None
             ]
         )
 
@@ -452,14 +452,32 @@ class Users:
 
     # No need for allowing multiple user_ids because a user is going to upload their profile picture only.
     @staticmethod
-    def get_profile_post_url(user_id):
+    def get_profile_post_url(user_id, extension):
+        # TODO: Delete the profile picture before uploading new.
+        # Option 1: Add S3 trigger to be executed once the new image is uploaded.
+        #   CONS: Need to study S3 triggers.
+        # Option 2: Delete here in this method.
+        #   CONS: Leaves user with no profile picture if the picture upload was a failure.
+        # TODO: Set the extension in DB.
+        # Option 1: Set it here in the method.
+        # Option 2: Use S3 triggers.
+        # CONS: (same as above)
+
         """ Creates a presigned post url to be used by frontend to upload the profile picture. """
         
         Users.__check_type(user_id, int)
+        Users.__check_type(user_id, str)
+
+        param = [
+            {'name': 'user_id', 'value': {'stringValue': user_id}},
+            {'name': 'extension', 'value': {'stringValue': extension}}
+        ]
+        sql = f"UPDATE {USERS_TABLE} SET picture = :first_name WHERE id = :user_id"
+        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
         return s3.generate_presigned_post(
             Bucket=IMAGES_BUCKET,
-            Key=f"{user_id}/profile/pic.jpeg",
+            Key=f"{user_id}/profile/pic.{extension}", # Allowing multiple extensions (jpeg, png, ...) here to save computation on user's system of converting image to some standard format.
             Conditions=[
                 ['content-length-range', 1, 10485760] # Limit the file size from 1 bytes to 10 MB.
             ],
