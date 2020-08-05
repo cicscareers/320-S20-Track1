@@ -146,7 +146,7 @@ const ProfileInformation = (props) => {
                 <FilePicker
                   style={{ cursor: 'pointer' }}
                   onChange={(file) => ConfirmImageDialogRef.current.handleProfileChange(file)}
-                  extensions={['jpeg', 'png']}
+                  extensions={['jpg', 'jpeg', 'png']}
                 >
                   <PhotoCameraIcon fontSize="large" />
                 </FilePicker>}
