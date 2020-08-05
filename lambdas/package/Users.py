@@ -461,7 +461,8 @@ class Users:
             Bucket=IMAGES_BUCKET,
             Key=f"{user_id}/profile/pic.jpeg",
             Conditions=[
-                ['content-length-range', 1, 10485760] # Limit the file size from 1 bytes to 10 MB.
+                ['content-length-range', 1, 10485760], # Limit the file size from 1 bytes to 10 MB.
+                ['eq', '$Content-Type', 'image/jpeg']
             ],
             ExpiresIn=600 # Expires in 10 minutes
         )
