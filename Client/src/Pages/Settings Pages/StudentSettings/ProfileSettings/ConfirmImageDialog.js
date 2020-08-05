@@ -47,10 +47,7 @@ export default class ConfirmImageModal extends React.Component {
             fetch(presignedPostData.url, {
                 method: 'POST',
                 body: formData
-            })
-            // .then((response) => response.json()) 
-            .then((json) => console.log(json))
-            .catch((error) => console.log(error))
+            }) // We don't need to do any logic here for now.
         })
     }
 
