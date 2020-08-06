@@ -105,17 +105,17 @@ class Users:
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
         sql = f"SELECT id, first_name, last_name, preferred_name FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, {'preferred_name': ""}) # The supporters are not required to have a preferred_name, so let's prepopulate that to empty string.
+        result = {user_id: {'preferred_name': ""} for user_id in user_ids} # The supporters are not required to have a preferred_name, so let's prepopulate that to empty string.
         for record in sql_result:
-            supporter_id = record[0]['longValue']
-            result[supporter_id]['first_name'] = record[1]['stringValue']
-            result[supporter_id]['last_name'] = record[2]['stringValue']
+            user_id = record[0]['longValue']
+            result[user_id]['first_name'] = record[1]['stringValue']
+            result[user_id]['last_name'] = record[2]['stringValue']
             
             if 'stringValue' in record[3]:
-                result[supporter_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
-                result[supporter_id]['preferred_name'] = record[3]['stringValue']
+                result[user_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
+                result[user_id]['preferred_name'] = record[3]['stringValue']
             else:
-                result[supporter_id]['name'] = record[1]['stringValue'] + " " + record[2]['stringValue']
+                result[user_id]['name'] = record[1]['stringValue'] + " " + record[2]['stringValue']
 
         return result
     
@@ -329,7 +329,7 @@ class Users:
             FROM {NOTIFICATION_PREFERENCES_TABLE} npt, {NOTIFICATION_ID_TABLE}\
             WHERE id = ANY(:user_ids::int[]) AND npt.notification_type_id = nit.notification_type_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, {}) 
+        result = {user_id: {} for user_id in user_ids} 
         for record in sql_result:
             user_id = record[0]['longValue']
             if 'longValue' in record[1]:
@@ -350,7 +350,7 @@ class Users:
             FROM {USER_LINKS_TABLE} ult, {LINKS_TABLE} lt\
             WHERE user_id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, []) 
+        result = {user_id: [] for user_id in user_ids} 
         for record in sql_result:
             result[record[0]['longValue']].append({
                 'link_id': record[1]['longValue'],
