@@ -105,17 +105,17 @@ class Users:
         param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
         sql = f"SELECT id, first_name, last_name, preferred_name FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, {'preferred_name': ""}) # The supporters are not required to have a preferred_name, so let's prepopulate that to empty string.
+        result = {user_id: {'preferred_name': ""} for user_id in user_ids} # The supporters are not required to have a preferred_name, so let's prepopulate that to empty string.
         for record in sql_result:
-            supporter_id = record[0]['longValue']
-            result[supporter_id]['first_name'] = record[1]['stringValue']
-            result[supporter_id]['last_name'] = record[2]['stringValue']
+            user_id = record[0]['longValue']
+            result[user_id]['first_name'] = record[1]['stringValue']
+            result[user_id]['last_name'] = record[2]['stringValue']
             
             if 'stringValue' in record[3]:
-                result[supporter_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
-                result[supporter_id]['preferred_name'] = record[3]['stringValue']
+                result[user_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
+                result[user_id]['preferred_name'] = record[3]['stringValue']
             else:
-                result[supporter_id]['name'] = record[1]['stringValue'] + " " + record[2]['stringValue']
+                result[user_id]['name'] = record[1]['stringValue'] + " " + record[2]['stringValue']
 
         return result
     
@@ -329,7 +329,7 @@ class Users:
             FROM {NOTIFICATION_PREFERENCES_TABLE} npt, {NOTIFICATION_ID_TABLE}\
             WHERE id = ANY(:user_ids::int[]) AND npt.notification_type_id = nit.notification_type_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, {}) 
+        result = {user_id: {} for user_id in user_ids} 
         for record in sql_result:
             user_id = record[0]['longValue']
             if 'longValue' in record[1]:
@@ -350,7 +350,7 @@ class Users:
             FROM {USER_LINKS_TABLE} ult, {LINKS_TABLE} lt\
             WHERE user_id = ANY(:user_ids::int[]) AND ult.link_id = lt.link_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(user_ids, []) 
+        result = {user_id: [] for user_id in user_ids} 
         for record in sql_result:
             result[record[0]['longValue']].append({
                 'link_id': record[1]['longValue'],
@@ -384,10 +384,10 @@ class Users:
             user_id,
             [
                 {
-                    'link_id': link_id,
+                    'link_id': Users.get_link_id(link['link_type']),
                     'link': link['link']
                 }
-                for link in links if (link_id := Users.get_link_id(link['link_type'])) is not None
+                for link in links if Users.get_link_id(link['link_type']) is not None
             ]
         )
 
@@ -452,34 +452,17 @@ class Users:
 
     # No need for allowing multiple user_ids because a user is going to upload their profile picture only.
     @staticmethod
-    def get_profile_post_url(user_id, extension):
-        # TODO: Delete the profile picture before uploading new.
-        # Option 1: Add S3 trigger to be executed once the new image is uploaded.
-        #   CONS: Need to study S3 triggers.
-        # Option 2: Delete here in this method.
-        #   CONS: Leaves user with no profile picture if the picture upload was a failure.
-        # TODO: Set the extension in DB.
-        # Option 1: Set it here in the method.
-        # Option 2: Use S3 triggers.
-        # CONS: (same as above)
-
+    def get_profile_post_url(user_id):
         """ Creates a presigned post url to be used by frontend to upload the profile picture. """
         
         Users.__check_type(user_id, int)
-        Users.__check_type(user_id, str)
-
-        param = [
-            {'name': 'user_id', 'value': {'stringValue': user_id}},
-            {'name': 'extension', 'value': {'stringValue': extension}}
-        ]
-        sql = f"UPDATE {USERS_TABLE} SET picture = :first_name WHERE id = :user_id"
-        query(sql=sql, parameters=param, continueAfterTimeout=True)
 
         return s3.generate_presigned_post(
             Bucket=IMAGES_BUCKET,
-            Key=f"{user_id}/profile/pic.{extension}", # Allowing multiple extensions (jpeg, png, ...) here to save computation on user's system of converting image to some standard format.
+            Key=f"{user_id}/profile/pic.jpeg",
             Conditions=[
-                ['content-length-range', 1, 10485760] # Limit the file size from 1 bytes to 10 MB.
+                ['content-length-range', 1, 10485760], # Limit the file size from 1 bytes to 10 MB.
+                ['eq', '$Content-Type', 'image/jpeg']
             ],
             ExpiresIn=600 # Expires in 10 minutes
         )
