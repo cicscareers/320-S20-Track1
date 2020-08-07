@@ -3,19 +3,21 @@ from package.query_db import query
 
 
 # Written by Dat Duong
+#Edit by Junshan Zeng
 
 # Input: first_name, last_name, email, hashed_password, employer, title, supporter_types,
 # team (optional)
 # Output:
 def create_supporter(event, context):
 
-    print('OOF')
+    # print('OOF')
 
     # Users table input
-    first_name = event['first_name']
-    last_name = event['last_name']
-    email = event['email']
-    password = event['hashed_password']
+    new_id=int(event['id'])
+    # first_name = event['first_name']
+    # last_name = event['last_name']
+    # email = event['email']
+    # password = ""
 
     # Supporters table input
     employer = event['employer']
@@ -23,14 +25,10 @@ def create_supporter(event, context):
 
     # optional
     # if no input for team place empty
-    if 'team' not in event:
-        team = 'team'
-
-    else:
-        team = event['team']
+    team = event['team']
 
     # Supporters_type table input
-    supporter_types = event['supporter_types']
+    typ = event['supporter_types']
 
     # initialize supporter types
     professional_staff = False
@@ -40,61 +38,61 @@ def create_supporter(event, context):
     other = False
 
     # going through input to set supporter types
-    for typ in supporter_types:
+    # for typ in supporter_types:
 
-        if typ == 'professional_staff':
-            professional_staff = True
-        if typ == 'student_staff':
-            student_staff = True
-        if typ == 'alumni':
-            alumni = True
-        if typ == 'faculty':
-            faculty = True
-        if typ == 'other':
-            other = True
+    if typ == 'professional_staff':
+        professional_staff = True
+    if typ == 'student_staff':
+        student_staff = True
+    if typ == 'alumni':
+        alumni = True
+    if typ == 'faculty':
+        faculty = True
+    if typ == 'other':
+        other = True
 
-    # checking if user exists
-    sql = "SELECT email FROM users WHERE email = :email;"
+    # # checking if user exists
+    # sql = "SELECT email FROM users WHERE email = :email;"
 
-    sql_parameters = [{'name': 'email', 'value': {'stringValue': email}}]
+    # sql_parameters = [{'name': 'email', 'value': {'stringValue': email}}]
 
-    check_user = query(sql, sql_parameters)
+    # check_user = query(sql, sql_parameters)
 
-    if check_user['records'] != []:
-        return {
-            'body': json.dumps("This email exists already!!!"),
-            'statusCode': 404
-        }
+    # if check_user['records'] != []:
+    #     return {
+    #         'body': json.dumps("This email exists already!!!"),
+    #         'statusCode': 404
+    #     }
 
-    # creates id
-    sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
-    sql_parameters = []
-    new_id = query(sql, sql_parameters)['records'][0][0]['longValue'] + 1
+    # # creates id
+    # sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1;"
+    # sql_parameters = []
+    # new_id = query(sql, sql_parameters)['records'][0][0]['longValue'] + 1
 
-    # insert new user into users table
-    sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
-    VALUES (:new_id, :first_name, :last_name, :email,'pn','pic','bio','pro','gen','pho',false, true, :password,'salt', 'supporter')"""
+    # # insert new user into users table
+    # sql = """INSERT INTO users(id,first_name,last_name, email, preferred_name, picture, bio, pronouns, gender, phone, is_blocked,GCal_permission, hashed_password, salt_key, user_type) \
+    # VALUES (:new_id, :first_name, :last_name, :email,'pn','pic','bio','pro','gen','pho',false, true, :password,'salt', 'supporter')"""
 
-    sql_parameters = [
-        {'name': 'new_id', 'value': {'longValue': new_id}},
-        {'name': 'first_name', 'value': {'stringValue': first_name}},
-        {'name': 'last_name', 'value': {'stringValue': last_name}},
-        {'name': 'email', 'value': {'stringValue': email}},
-        {'name': 'password', 'value': {'stringValue': password}}
-    ]
+    # sql_parameters = [
+    #     {'name': 'new_id', 'value': {'longValue': new_id}},
+    #     {'name': 'first_name', 'value': {'stringValue': first_name}},
+    #     {'name': 'last_name', 'value': {'stringValue': last_name}},
+    #     {'name': 'email', 'value': {'stringValue': email}},
+    #     {'name': 'password', 'value': {'stringValue': password}}
+    # ]
 
-    new_user = query(sql, sql_parameters)
+    # new_user = query(sql, sql_parameters)
 
-    # check if user data successfully loaded
-    if new_user['numberOfRecordsUpdated'] == 0:
-        return {
-            'body': json.dumps("User was not created"),
-            'statusCode': 404
-        }
+    # # check if user data successfully loaded
+    # if new_user['numberOfRecordsUpdated'] == 0:
+    #     return {
+    #         'body': json.dumps("User was not created"),
+    #         'statusCode': 404
+    #     }
 
     # inserts user into supporters table with same user_id
-    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, team, feedback, rating, team_name) \
-            VALUES (:new_id, :new_id , :employer, :title, :team, false, 0, 'team name')"""
+    sql = """INSERT INTO supporters(supporter_id, user_id, employer, title, feedback, rating, team_name, is_pending, office) \
+            VALUES (:new_id, :new_id , :employer, :title, false, 0, :team, true,'office')"""
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
@@ -113,8 +111,8 @@ def create_supporter(event, context):
         }
 
     # inserts specific supporter types into suppoert types table with same id
-    sql = """INSERT INTO supporter_types(supporter_type_id, supporter_id, professional_staff, student_staff, alumni, faculty, other) \
-            VALUES (:new_id, :new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
+    sql = """INSERT INTO supporter_type(supporter_id, professional_staff, student_staff, alumni, faculty, other) \
+            VALUES (:new_id, :professional_staff, :student_staff, :alumni, :faculty , :other)"""
 
     sql_parameters = [
         {'name': 'new_id', 'value': {'longValue': new_id}},
@@ -137,6 +135,6 @@ def create_supporter(event, context):
 
     # finish
     return {
-        'body': json.dumps("Supporter has been created. YAY!!!"),
+        'body': "Supporter has been created",
         'statusCode': 201
     }
