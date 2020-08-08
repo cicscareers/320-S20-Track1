@@ -431,22 +431,18 @@ class Users:
 
         Users.__check_type(user_ids, list)
 
-        param = [{'name': 'user_ids', 'value': {'stringValue': '{' + ','.join(str(id) for id in user_ids) + '}'}}]
-        sql = f"SELECT id, picture FROM {USERS_TABLE} WHERE id = ANY(:user_ids::int[])"
-        sql_result = query(sql=sql, parameters=param)['records']
         result = {}
-        for record in sql_result:
-            if 'stringValue' in record[1]:
-                result[record[0]['longValue']] = s3.generate_presigned_url(
-                    'get_object',
-                    Params={
-                        'Bucket': IMAGES_BUCKET,
-                        'Key': f"{record[0]['longValue']}/profile/{record[1]['stringValue']}",
-                    },
-                    ExpiresIn=86400 # Expires in 1 day.
-                )
-            else:
-                result[record[0]['longValue']] = "" # We could replace it with some default picture for a user.
+        for user_id in user_ids:
+            result[user_id] = s3.generate_presigned_url(
+                'get_object',
+                Params={
+                    'Bucket': IMAGES_BUCKET,
+                    'Key': f"{user_id}/profile/pic.jpeg",
+                },
+                ExpiresIn=86400 # Expires in 1 day.
+            )
+            # else:
+            #     result[record[0]['longValue']] = "" # We could replace it with some default picture for a user.
         
         return result
 
