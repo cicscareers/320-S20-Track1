@@ -139,7 +139,7 @@ class Students:
         sql = f"SELECT student_id, major, smt.major_id FROM {STUDENT_MAJORS_TABLE} smt, {MAJORS_TABLE} mt WHERE \
             student_id = ANY(:student_ids::int[]) AND smt.major_id = mt.major_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(student_ids, [])
+        result = {student_id: [] for student_id in student_ids}
         for record in sql_result:
             result[record[0]['longValue']].append({
                 'major': record[1]['stringValue'],
@@ -212,7 +212,7 @@ class Students:
         sql = f"SELECT student_id, minor, smt.minor_id FROM {STUDENT_MINORS_TABLE} smt, {MINORS_TABLE} mt WHERE \
             student_id = ANY(:student_ids::int[]) AND smt.minor_id = mt.minor_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(student_ids, [])
+        result = {student_id: [] for student_id in student_ids}
         for record in sql_result:
             result[record[0]['longValue']].append({
                 'minor': record[1]['stringValue'],
@@ -285,7 +285,7 @@ class Students:
         sql = f"SELECT student_id, college, sct.college_id FROM {STUDENT_COLLEGES_TABLE} sct, {COLLEGES_TABLE} ct WHERE \
             student_id = ANY(:student_ids::int[]) AND sct.college_id = ct.college_id"
         sql_result = query(sql=sql, parameters=param)['records']
-        result = dict.fromkeys(student_ids, [])
+        result = {student_id: [] for student_id in student_ids}
         for record in sql_result:
             result[record[0]['longValue']].append({
                 'college': record[1]['stringValue'],
