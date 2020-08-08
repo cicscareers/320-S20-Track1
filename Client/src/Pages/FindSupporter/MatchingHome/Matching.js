@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import {TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid} from '@material-ui/core';
-import {Rating, Autocomplete} from '@material-ui/lab';
+import { TextField, Slider, Box, AppBar, Drawer, Typography, CssBaseline, CircularProgress, Button, Grid } from '@material-ui/core';
+import { Rating, Autocomplete } from '@material-ui/lab';
 import Menu from "../../../Navigation/appbar.js";
 import SupporterCard from "../SupporterPanels/supporterCards.js"
 //import topicsList from "../topics.js"
@@ -12,19 +12,20 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
 import { useAlert } from 'react-alert';
+import { withTranslation } from 'react-i18next';
 
-const ResponsiveDrawer = (props) => {
+function ResponsiveDrawer({ t, i18n }) {
   // Initialize alert
   const alert = useAlert();
- 
+
   //Initialize all of the constants
   const [selectedDate, handleDateChange] = React.useState(new Date());
-  const [stateTopics, setStateTopics]=React.useState([]);
-  const [stateTags, setStateTags]=React.useState([]);
+  const [stateTopics, setStateTopics] = React.useState([]);
+  const [stateTags, setStateTags] = React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
-  const [name,setName]=React.useState("");
-  const [rating,setRating]=React.useState(0);
+  const [name, setName] = React.useState("");
+  const [rating, setRating] = React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
   const [supporters, setSupporters] = React.useState([]);
   var today = new Date();
@@ -38,7 +39,7 @@ const ResponsiveDrawer = (props) => {
   //Calls the API to get the list of supporters
   useEffect(() => {
     fetchSupporterList(initial_fetch_url);
-    }, [])
+  }, [])
 
   // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
   async function myFetch(url) {
@@ -50,7 +51,7 @@ const ResponsiveDrawer = (props) => {
   function fetchSupporterList(url) {
     setLoaded(false);
     myFetch(url).then((json) => {
-      if(json.body !== undefined) {
+      if (json.body !== undefined) {
         setSupporters(json.body);
         setLoaded(true);
       } else {
@@ -58,7 +59,7 @@ const ResponsiveDrawer = (props) => {
         throw new Error();
       }
     })
-    .catch(error => {
+      .catch(error => {
         setLoaded(true);
         console.log("No Supporters Found")
       });
@@ -70,7 +71,7 @@ const ResponsiveDrawer = (props) => {
 
   function processDateChange(date) {
     var newDate = new Date(date);
-    if(date < beginDate || date > endDate) {
+    if (date < beginDate || date > endDate) {
       const newBeginDate = new Date(newDate.setDate(date.getDate() - 3));
       setBeginDate(newBeginDate);
       const newEndDate = new Date(newDate.setDate(date.getDate() + 7));
@@ -81,21 +82,21 @@ const ResponsiveDrawer = (props) => {
   }
 
   //This is temporary, will eventually be gotten from lambda
-  const blockTime=30;
-  
+  const blockTime = 30;
+
   //For hard filtering. Commented out code will hard filter the given fields
-  var newList = (supporters.filter(supporter => supporter.day.substring(0,4)===selectedDate.getFullYear().toString() && 
-  supporter.day.substring(8,10)===getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5,7)===getTheMonth(selectedDate.getMonth()+1) ));
-  
+  var newList = (supporters.filter(supporter => supporter.day.substring(0, 4) === selectedDate.getFullYear().toString() &&
+    supporter.day.substring(8, 10) === getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5, 7) === getTheMonth(selectedDate.getMonth() + 1)));
+
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
   //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
   //supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
   //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter
-  
+
   //Creates a new supporter card a supporter
   const getSupporterCard = (supporterObj, s) => {
-    return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags}/>;
+    return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags} />;
   };
 
   function formatDateForFetch(date) {
@@ -107,7 +108,7 @@ const ResponsiveDrawer = (props) => {
   }
 
   //Increments day by one
-  function nextDay(){
+  function nextDay() {
     var newDate = new Date()
     newDate.setMonth(selectedDate.getMonth())
     newDate.setDate(selectedDate.getDate() + 1);
@@ -115,12 +116,12 @@ const ResponsiveDrawer = (props) => {
   }
 
   //Decrements day by one
-  function previousDay(){
+  function previousDay() {
     var today = new Date();
     var newDate = new Date(today);
     newDate.setMonth(selectedDate.getMonth());
     newDate.setDate(selectedDate.getDate() - 1);
-    if(newDate < today) { // We can't schedule appointments in the past.
+    if (newDate < today) { // We can't schedule appointments in the past.
       alert.error("You can't schedule appointments in the past");
     } else {
       processDateChange(newDate);
@@ -133,58 +134,58 @@ const ResponsiveDrawer = (props) => {
   };
 
   //Converts a string to minutes
-  function convertToMin(t){
-    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
+  function convertToMin(t) {
+    return parseInt(t.substring(0, 2)) * 60 + parseInt(t.substring(3, 5));
   }
 
   //Adds a 0 to month when month<10 because js dates are dumb
-  function getTheMonth(month){
-    if (parseInt(month)>10){
+  function getTheMonth(month) {
+    if (parseInt(month) > 10) {
       return month.toString();
     }
-    else{
+    else {
       return "0".concat(month.toString());
     }
   }
 
   //Checks if the supporter has a slot that fits in to the slider times
-  function checkTimeInRange(start,end, timeBlockArray){
-    for(let i=0;i<timeBlockArray.length;i++){
-      if(start<(convertToMin(timeBlockArray[i]["end"]+blockTime)) && end>(convertToMin(timeBlockArray[i]["start"]+blockTime)) && start!==end){
+  function checkTimeInRange(start, end, timeBlockArray) {
+    for (let i = 0; i < timeBlockArray.length; i++) {
+      if (start < (convertToMin(timeBlockArray[i]["end"] + blockTime)) && end > (convertToMin(timeBlockArray[i]["start"] + blockTime)) && start !== end) {
         return true
       }
     }
     return false
   }
-  
+
   ///////////////////////////
   //This handles the sorting of the supporters
   ///////////////////////////
 
   //Inputs a supporter and returns their score 
-  function score(supporter){
+  function score(supporter) {
     var supporterScore = 0;
 
     // Approximate string matching.
     supporterScore += StringDistance.token_set_ratio(name, supporter.name) / 100; // (token_set_ratio gives percentage so we need to scale it)
     let matches = 0;
-    for(let i = 0; i < stateTags.length; i++) {
-      if(supporter.tags.includes(stateTags[i])) {
+    for (let i = 0; i < stateTags.length; i++) {
+      if (supporter.tags.includes(stateTags[i])) {
         matches++;
       }
     }
-    
-    for(let i=0; i < stateTopics.length; i++) {
-      if(supporter.topics[stateTopics[i]]) {
-        matches++;
-      }
-    }
-    
-    if(stateTopics.length + stateTags.length > 0) supporterScore += matches/stateTopics.length;
-    
-    supporterScore += 0.0001 * (supporter.rating - rating)/5;
 
-    if(checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)){
+    for (let i = 0; i < stateTopics.length; i++) {
+      if (supporter.topics[stateTopics[i]]) {
+        matches++;
+      }
+    }
+
+    if (stateTopics.length + stateTags.length > 0) supporterScore += matches / stateTopics.length;
+
+    supporterScore += 0.0001 * (supporter.rating - rating) / 5;
+
+    if (checkTimeInRange(sliderTime[0], sliderTime[1], supporter.timeBlocks)) {
       supporterScore++
     }
 
@@ -193,7 +194,7 @@ const ResponsiveDrawer = (props) => {
     console.log("state tags and topics " + stateTopics)
     return supporterScore;
   }
-  
+
   // Maps every supporter / score pair to the score dictionary
   newList.forEach(supporter => supporter.score = score(supporter));
 
@@ -206,11 +207,11 @@ const ResponsiveDrawer = (props) => {
 
   //Display a loading screen if the API is still being called
 
-  if(!isLoaded){
+  if (!isLoaded) {
     return (
       <div align="center">
         <br></br>
-        <Typography variant="h4">Loading...</Typography>
+        <Typography variant="h4">{t('student.6')}</Typography>
         <br></br>
         <CircularProgress />
       </div>
@@ -218,7 +219,7 @@ const ResponsiveDrawer = (props) => {
   }
 
   //If the API is loaded, show the matching page
-  else{
+  else {
     return (
       <div className={classes.root}>
         {/*Handles the appbar sizing*/}
@@ -232,17 +233,17 @@ const ResponsiveDrawer = (props) => {
           classes={{
             paper: classes.drawerPaper,
           }}
-        > 
+        >
           {/*All of the filters*/}
           <div>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <Typography align="center" variant="h5">Filters</Typography>
-              <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <Typography align="center" variant="h5">{t('student.1')}</Typography>
+            <br />
             <Autocomplete
               multiple
               className={classes.inputs}
@@ -282,53 +283,53 @@ const ResponsiveDrawer = (props) => {
             />
             <br />
             <br />
-          <Typography align="center">What day would you like an appointment on?</Typography>
-          <br/>
-          <Box align="center">
-            <DatePicker
-              autoOk
-              align="center"
-              variant="inline"
-              inputProps={{style: {textAlign:'center'}}}
-              value={selectedDate}
-              onChange={processDateChange}
-              minDate={new Date()}
+            <Typography align="center">{t('student.4')}</Typography>
+            <br />
+            <Box align="center">
+              <DatePicker
+                autoOk
+                align="center"
+                variant="inline"
+                inputProps={{ style: { textAlign: 'center' } }}
+                value={selectedDate}
+                onChange={processDateChange}
+                minDate={new Date()}
+              />
+            </Box>
+            <br />
+            <br />
+            <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+              What is your availability on {selectedDate.toDateString().substring(0, 3) + selectedDate.toDateString().substring(3)}?
+          </Typography>
+            <Slider
+              value={sliderTime}
+              onChange={handleSliderChange}
+              step={30}
+              min={420}
+              max={1140}
+              defaultValue={[540, 1020]}
+              valueLabelDisplay="off"
+              aria-labelledby="range-slider"
+              className={classes.inputs}
+              getAriaValueText={convertTime}
             />
-          </Box>
-          <br/>
-          <br/>
-          <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-            What is your availability on {selectedDate.toDateString().substring(0,3)+selectedDate.toDateString().substring(3)}?
+            <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+              {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
           </Typography>
-          <Slider
-            value={sliderTime}
-            onChange={handleSliderChange}
-            step={30}
-            min={420}
-            max={1140}
-            defaultValue={[540, 1020]}
-            valueLabelDisplay="off"
-            aria-labelledby="range-slider"
-            className={classes.inputs}
-            getAriaValueText={convertTime}
-          />
-          <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-            {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
-          </Typography>
-          <br/>
-          <Typography align="center">Minimum Required Rating</Typography>
-          <br/>
-          <Box align="center">
-          <Rating 
-            className={classes.rating} 
-            name="Supporter Rating" 
-            precision={0.5} 
-            value={rating} 
-            onChange={e => setRating(e.target.value)}
-            size="large"
-          />
-          </Box>
-        </div>
+            <br />
+            <Typography align="center">{t('student.5')}</Typography>
+            <br />
+            <Box align="center">
+              <Rating
+                className={classes.rating}
+                name="Supporter Rating"
+                precision={0.5}
+                value={rating}
+                onChange={e => setRating(e.target.value)}
+                size="large"
+              />
+            </Box>
+          </div>
         </Drawer>
         <main className={classes.content}>
           {/*The time selector*/}
@@ -340,14 +341,14 @@ const ResponsiveDrawer = (props) => {
             </Grid>
             <Grid item>
               <DatePicker
-              autoOk
-              align="center"
-              variant="inline"
-              inputProps={{style: {textAlign:'center'}}}
-              value={selectedDate}
-              onChange={processDateChange}
-              minDate={new Date()}
-            />
+                autoOk
+                align="center"
+                variant="inline"
+                inputProps={{ style: { textAlign: 'center' } }}
+                value={selectedDate}
+                onChange={processDateChange}
+                minDate={new Date()}
+              />
             </Grid>
             <Grid item>
               <Button onClick={nextDay}>
@@ -355,12 +356,12 @@ const ResponsiveDrawer = (props) => {
               </Button>
             </Grid>
           </Grid>
-          <br/>
-          <br/>
-          {newList.length>0 && <Typography align="center" variant="h4">Recommended Supporters</Typography>}
-          {newList.length===0 && <Typography align="center" variant="h4">We couldn't find a supporter with those attributes. Please try widening your search.</Typography>}
-          <br/>
-          <br/>
+          <br />
+          <br />
+          {newList.length > 0 && <Typography align="center" variant="h4">{t('student.2')}</Typography>}
+          {newList.length === 0 && <Typography align="center" variant="h4">{t('student.3')}</Typography>}
+          <br />
+          <br />
           {/*Maps each supporter to a card*/}
           {newList.map(supporterObj => getSupporterCard(supporterObj, supporterObj.score))}
         </main>
@@ -369,4 +370,4 @@ const ResponsiveDrawer = (props) => {
   }
 }
 
-export default ResponsiveDrawer;
+export default withTranslation('student')(ResponsiveDrawer);
