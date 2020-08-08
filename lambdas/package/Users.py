@@ -111,7 +111,7 @@ class Users:
             result[user_id]['first_name'] = record[1]['stringValue']
             result[user_id]['last_name'] = record[2]['stringValue']
             
-            if 'stringValue' in record[3]:
+            if 'stringValue' in record[3] and record[3]['stringValue']:
                 result[user_id]['name'] = record[3]['stringValue'] + " " + record[2]['stringValue']
                 result[user_id]['preferred_name'] = record[3]['stringValue']
             else:
@@ -384,10 +384,10 @@ class Users:
             user_id,
             [
                 {
-                    'link_id': Users.get_link_id(link['link_type']),
+                    'link_id': link_id,
                     'link': link['link']
                 }
-                for link in links if Users.get_link_id(link['link_type']) is not None
+                for link in links if (link_id := Users.get_link_id(link['link_type'])) is not None
             ]
         )
 
