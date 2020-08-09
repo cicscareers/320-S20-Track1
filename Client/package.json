@@ -46,7 +46,7 @@
   },
   "lint-staged": {
     "*.(js|html|css)": [
-      "npm run prettier",
+      "pretty-quick --staged",
       "git add"
     ],
     ".js": [
@@ -75,6 +75,7 @@
     "husky": "^1.2.1",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
+    "pretty-quick": "^2.0.1",
     "ttf-loader": "^1.0.2"
   }
 }
