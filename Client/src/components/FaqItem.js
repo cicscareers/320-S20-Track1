@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Grid } from '@material-ui/core'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import { Grid } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 export class FaqItem extends Component {
     getStyle = () => {
@@ -8,11 +8,11 @@ export class FaqItem extends Component {
             background: '#ffffff',
             padding: '10px',
             borderBottom: '1px #ccc dotted',
-        }
-    }
+        };
+    };
 
     render() {
-        const { question, answer } = this.props.faq
+        const { question, answer } = this.props.faq;
         return (
             <div style={this.getStyle()}>
                 <Grid
@@ -25,13 +25,13 @@ export class FaqItem extends Component {
                     <p>{answer}</p>
                 </Grid>
             </div>
-        )
+        );
     }
 }
 
 // PropTypes
 FaqItem.propTypes = {
     faq: PropTypes.object.isRequired,
-}
+};
 
-export default FaqItem
+export default FaqItem;

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
     Grid,
     ExpansionPanel,
     ExpansionPanelSummary,
     ExpansionPanelDetails,
     Typography,
-} from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const FaqCard = props => {
     return (
@@ -43,7 +43,7 @@ const FaqCard = props => {
                 </Grid>
             </ExpansionPanelDetails>
         </ExpansionPanel>
-    )
-}
+    );
+};
 
-export default FaqCard
+export default FaqCard;

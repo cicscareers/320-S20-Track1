@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Rating from '@material-ui/lab/Rating'
-import StarBorderIcon from '@material-ui/icons/StarBorder'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied'
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
-import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined'
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import Container from '@material-ui/core/Container'
-import { Grid, Button, TextField } from '@material-ui/core'
-import Cookies from 'universal-cookie'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Rating from '@material-ui/lab/Rating';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import Container from '@material-ui/core/Container';
+import { Grid, Button, TextField } from '@material-ui/core';
+import Cookies from 'universal-cookie';
 
 const StyledRating = withStyles({
     iconFilled: {
@@ -23,7 +23,7 @@ const StyledRating = withStyles({
     iconHover: {
         color: '#ff3d47',
     },
-})(Rating)
+})(Rating);
 
 const customIcons = {
     1: {
@@ -46,20 +46,20 @@ const customIcons = {
         icon: <SentimentVerySatisfiedIcon />,
         label: 'Very Satisfied',
     },
-}
+};
 function IconContainer(props) {
-    const { value, ...other } = props
-    return <span {...other}>{customIcons[value].icon}</span>
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
 }
 
 IconContainer.propTypes = {
     value: PropTypes.number.isRequired,
-}
+};
 
 function handleSubmitFeedback(key, feedbackRate, feedbackString) {
-    const id = parseInt(sessionStorage.getItem('id'))
+    const id = parseInt(sessionStorage.getItem('id'));
     // const id = 1;
-    console.log(key, feedbackString, feedbackRate, id)
+    console.log(key, feedbackString, feedbackRate, id);
     fetch(
         'https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/feedback',
         {
@@ -78,24 +78,24 @@ function handleSubmitFeedback(key, feedbackRate, feedbackString) {
     )
         .then(response => {
             if (response.status >= 200 && response.status < 300) {
-                console.log(response)
-                return response.json()
+                console.log(response);
+                return response.json();
             } else {
-                throw new Error("Server can't be reached!")
+                throw new Error("Server can't be reached!");
             }
         })
         .then(json => {
-            window.location.reload()
+            window.location.reload();
         })
         .catch(error => {
-            console.log(error)
-        })
+            console.log(error);
+        });
 }
 
 const Feedback = props => {
-    const supporterfed = ['Experience of meeting', 'Effectiveness of meeting']
-    const [feedbackRating, setFeedbackRating] = useState(3)
-    const [feedbackText, setFeedbackText] = useState('')
+    const supporterfed = ['Experience of meeting', 'Effectiveness of meeting'];
+    const [feedbackRating, setFeedbackRating] = useState(3);
+    const [feedbackText, setFeedbackText] = useState('');
     return (
         <Container component="main">
             <Card style={{ padding: 20, margin: 30 }}>
@@ -150,7 +150,7 @@ const Feedback = props => {
                 </Grid>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
-export default Feedback
+export default Feedback;

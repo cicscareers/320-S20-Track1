@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import {
     AppBar,
     Avatar,
@@ -10,26 +10,26 @@ import {
     Menu,
     Link,
     Dialog,
-} from '@material-ui/core'
+} from '@material-ui/core';
 // import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Slide from '@material-ui/core/Slide'
-import Cookies from 'universal-cookie'
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import Cookies from 'universal-cookie';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />
-})
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const cookies = new Cookies()
-const role = cookies.get('role')
-var primary_color = '#881c1c'
+const cookies = new Cookies();
+const role = cookies.get('role');
+var primary_color = '#881c1c';
 if (role === 'supporter') {
-    primary_color = '#003b5c'
+    primary_color = '#003b5c';
 } else if (role === 'admin') {
-    primary_color = '#41273b'
+    primary_color = '#41273b';
 }
 
 const useStyles = makeStyles(theme => ({
@@ -97,26 +97,26 @@ const useStyles = makeStyles(theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
-}))
+}));
 
 export default function MenuAppBar(props) {
-    const [PossibleRoles, SetPossibleRoles] = React.useState([])
+    const [PossibleRoles, SetPossibleRoles] = React.useState([]);
     //Gets info from the session
-    const token = sessionStorage.getItem('token')
-    const name = sessionStorage.getItem('firstName')
-    const id = sessionStorage.getItem('id')
-    const image = sessionStorage.getItem('image')
+    const token = sessionStorage.getItem('token');
+    const name = sessionStorage.getItem('firstName');
+    const id = sessionStorage.getItem('id');
+    const image = sessionStorage.getItem('image');
 
     //Sets the styling
-    const classes = useStyles()
+    const classes = useStyles();
 
     //In order to only show the toolbar when authorized
-    const [auth, setAuth] = React.useState(token !== undefined)
+    const [auth, setAuth] = React.useState(token !== undefined);
 
     //To handle the drop down menu
-    const [anchorEl, setAnchorEl] = React.useState(null)
-    const open = Boolean(anchorEl)
-    const [openModal, setOpen] = React.useState(false)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const [openModal, setOpen] = React.useState(false);
 
     useEffect(() => {
         fetch(
@@ -130,45 +130,45 @@ export default function MenuAppBar(props) {
                     'student',
                     'supporter',
                     'admin',
-                ])
+                ]);
                 //console.log(json.user_roles)
                 //console.log("setting possible roles to: " + json.user_roles);
-                SetPossibleRoles(json.user_roles)
+                SetPossibleRoles(json.user_roles);
             })
             .catch(error => {
                 //console.log(error);
                 //console.log("No Supporters Found");
-            })
-    }, [])
+            });
+    }, []);
 
     const handleModalOpen = () => {
-        setOpen(true)
-    }
+        setOpen(true);
+    };
 
     const handleModalClose = () => {
-        setOpen(false)
-    }
+        setOpen(false);
+    };
     const handleMenu = event => {
-        setAnchorEl(event.currentTarget)
-    }
+        setAnchorEl(event.currentTarget);
+    };
 
     const handleClose = () => {
-        setAnchorEl(null)
-    }
+        setAnchorEl(null);
+    };
 
     //Function that handles log out by deleting the cookie and reloading
     function logout() {
-        sessionStorage.removeItem('email')
-        sessionStorage.removeItem('firstName')
-        sessionStorage.removeItem('lastName')
-        sessionStorage.removeItem('role')
-        sessionStorage.removeItem('image')
-        cookies.remove('role')
-        sessionStorage.removeItem('token')
-        window.location.reload()
+        sessionStorage.removeItem('email');
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('lastName');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('image');
+        cookies.remove('role');
+        sessionStorage.removeItem('token');
+        window.location.reload();
     }
     function renderNavBarButtonsBasedOnRole() {
-        let RenderButtons = []
+        let RenderButtons = [];
         if (role.toLowerCase() == 'student') {
             return (
                 <div style={{ width: '40%', float: 'right' }}>
@@ -194,7 +194,7 @@ export default function MenuAppBar(props) {
                         FAQ
                     </Button>
                 </div>
-            )
+            );
         }
         return (
             <div style={{ width: '300px', float: 'right' }}>
@@ -210,32 +210,32 @@ export default function MenuAppBar(props) {
                     FAQ
                 </Button>
             </div>
-        )
+        );
     }
     const SwitchUserHandle = event => {
         if (event.currentTarget.id == 'student') {
-            cookies.set('role', 'Student')
+            cookies.set('role', 'Student');
         } else {
-            cookies.set('role', event.currentTarget.id)
+            cookies.set('role', event.currentTarget.id);
         }
         if (cookies.get('role') === 'Student') {
-            window.location.reload('/')
+            window.location.reload('/');
         }
-        window.location.reload('/appointments')
-    }
+        window.location.reload('/appointments');
+    };
     function renderRolesInModal() {
-        let RenderRoles = []
+        let RenderRoles = [];
         if (PossibleRoles.length == 1) {
-            RenderRoles = <h2>Sorry, You just have 1 role.</h2>
+            RenderRoles = <h2>Sorry, You just have 1 role.</h2>;
         } else {
             for (var i = 0; i < PossibleRoles.length; i++) {
-                var RoleName = ''
+                var RoleName = '';
                 RoleName =
                     PossibleRoles[i].charAt(0).toUpperCase() +
-                    PossibleRoles[i].slice(1)
+                    PossibleRoles[i].slice(1);
 
                 if (PossibleRoles[i] == role.toLowerCase()) {
-                    continue
+                    continue;
                 }
 
                 RenderRoles.push(
@@ -249,10 +249,10 @@ export default function MenuAppBar(props) {
                     >
                         {RoleName}
                     </Button>
-                )
+                );
             }
         }
-        return RenderRoles
+        return RenderRoles;
     }
     //First button is to link back to home. The rest is the drop down menu from the user icon, and handles the routing.
     return (
@@ -389,5 +389,5 @@ export default function MenuAppBar(props) {
                 </Toolbar>
             </AppBar>
         </div>
-    )
+    );
 }

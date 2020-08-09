@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
     Typography,
     CircularProgress,
     Grid,
     TextField,
-} from '@material-ui/core'
-import FaqCard from '../components/faqCard'
+} from '@material-ui/core';
+import FaqCard from '../components/faqCard';
 
 const FaqSettings = () => {
-    const [isLoaded, setLoaded] = useState(false)
-    const [faqList, setFaqList] = useState([])
-    const [search, setSearch] = useState('')
+    const [isLoaded, setLoaded] = useState(false);
+    const [faqList, setFaqList] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         fetch(
@@ -18,10 +18,10 @@ const FaqSettings = () => {
         )
             .then(res => res.json())
             .then(json => {
-                setFaqList(json.faqs)
-                setLoaded(true)
-            })
-    })
+                setFaqList(json.faqs);
+                setLoaded(true);
+            });
+    });
 
     if (!isLoaded) {
         return (
@@ -31,7 +31,7 @@ const FaqSettings = () => {
                 <br></br>
                 <CircularProgress />
             </div>
-        )
+        );
     } else {
         return (
             <main>
@@ -50,8 +50,8 @@ const FaqSettings = () => {
                 </Grid>
                 {faqList
                     .filter(faq => {
-                        let searchable = faq.question.toLowerCase()
-                        return searchable.indexOf(search) !== -1
+                        let searchable = faq.question.toLowerCase();
+                        return searchable.indexOf(search) !== -1;
                     })
                     .map(faq => [
                         <FaqCard
@@ -61,8 +61,8 @@ const FaqSettings = () => {
                         />,
                     ])}
             </main>
-        )
+        );
     }
-}
+};
 
-export default FaqSettings
+export default FaqSettings;

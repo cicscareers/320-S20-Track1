@@ -1,17 +1,17 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Rating from '@material-ui/lab/Rating'
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied'
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
-import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined'
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import Container from '@material-ui/core/Container'
-import { Grid } from '@material-ui/core'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Rating from '@material-ui/lab/Rating';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import Container from '@material-ui/core/Container';
+import { Grid } from '@material-ui/core';
 
 const customIcons = {
     1: {
@@ -34,18 +34,18 @@ const customIcons = {
         icon: <SentimentVerySatisfiedIcon />,
         label: 'Very Satisfied',
     },
-}
+};
 function IconContainer(props) {
-    const { value, ...other } = props
-    return <span {...other}>{customIcons[value].icon}</span>
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
 }
 
 IconContainer.propTypes = {
     value: PropTypes.number.isRequired,
-}
+};
 
 const ViewFeedback = props => {
-    const rating = props.rating === null ? 3 : props.rating
+    const rating = props.rating === null ? 3 : props.rating;
     return (
         <Container component="main">
             <Card style={{ padding: 20, margin: 30 }}>
@@ -70,7 +70,7 @@ const ViewFeedback = props => {
                 </Grid>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
-export default ViewFeedback
+export default ViewFeedback;

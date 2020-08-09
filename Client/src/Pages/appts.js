@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import AppBar from '@material-ui/core/AppBar'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import AppointmentCard from '../components/AppointmentCard'
-import Drawer from '@material-ui/core/Drawer'
-import Typography from '@material-ui/core/Typography'
+import React, { useEffect } from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppointmentCard from '../components/AppointmentCard';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
 import {
     makeStyles,
     TextField,
@@ -15,18 +15,18 @@ import {
     Button,
     Fab,
     Modal,
-} from '@material-ui/core'
-import Menu from '../Navigation/appbar.js'
-import convertTime from './FindSupporter/convertTime'
-import Cookies from 'universal-cookie'
-import CreateAppointmentModal from '../components/CreateAppointmentModal'
+} from '@material-ui/core';
+import Menu from '../Navigation/appbar.js';
+import convertTime from './FindSupporter/convertTime';
+import Cookies from 'universal-cookie';
+import CreateAppointmentModal from '../components/CreateAppointmentModal';
 
-const cookies = new Cookies()
-const role = cookies.get('role')
-const id = sessionStorage.getItem('id')
+const cookies = new Cookies();
+const role = cookies.get('role');
+const id = sessionStorage.getItem('id');
 // const id = 1;
 
-const drawerWidth = '25%'
+const drawerWidth = '25%';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -83,74 +83,74 @@ const useStyles = makeStyles(theme => ({
         bottom: theme.spacing(1) * 4,
         position: 'fixed',
     },
-}))
+}));
 
 const ResponsiveDrawer = props => {
     //Gets info from the cookies
     //get users role
 
-    const today = new Date()
-    const [sliderTime, setSliderTime] = React.useState([540, 1020])
-    const classes = useStyles()
-    const [mobileOpen, setMobileOpen] = React.useState(false)
-    const [name, setName] = React.useState('')
-    const [search, setSearch] = React.useState('')
-    const [appointments, setAppointments] = React.useState([])
-    const [isLoaded, setLoaded] = React.useState(false)
+    const today = new Date();
+    const [sliderTime, setSliderTime] = React.useState([540, 1020]);
+    const classes = useStyles();
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [name, setName] = React.useState('');
+    const [search, setSearch] = React.useState('');
+    const [appointments, setAppointments] = React.useState([]);
+    const [isLoaded, setLoaded] = React.useState(false);
     const [createAppointmentModal, setCreateAppointmentModal] = React.useState(
         false
-    )
+    );
 
-    const blockTime = 30
+    const blockTime = 30;
     if (role == 'Student') {
         if (!Array.isArray(appointments)) {
-            var filteredAppointmentList = []
+            var filteredAppointmentList = [];
         } else {
             var filteredAppointmentList = appointments.filter(appt =>
                 String(
                     (appt.supporterFN + ' ' + appt.supporterLN).toLowerCase()
                 ).includes(search.toLowerCase())
-            )
+            );
         }
     }
     if (role !== 'Student') {
         if (!Array.isArray(appointments)) {
-            var filteredAppointmentList = []
+            var filteredAppointmentList = [];
         } else {
             var filteredAppointmentList = appointments.filter(appt =>
                 String(
                     (appt.supporterFN + ' ' + appt.supporterLN).toLowerCase()
                 ).includes(search.toLowerCase())
-            )
+            );
         }
     }
 
     const handleCreateAppointmentModalToggle = () => {
-        setCreateAppointmentModal(!createAppointmentModal)
-    }
+        setCreateAppointmentModal(!createAppointmentModal);
+    };
 
     const updateList = val => {
-        setName(val)
-    }
+        setName(val);
+    };
 
     const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen)
-    }
+        setMobileOpen(!mobileOpen);
+    };
 
     const handleSliderChange = (event, newValue) => {
-        setSliderTime(newValue)
-    }
+        setSliderTime(newValue);
+    };
 
     function convertToMin(t) {
-        return parseInt(t.substring(0, 2)) * 60 + parseInt(t.substring(3, 5))
+        return parseInt(t.substring(0, 2)) * 60 + parseInt(t.substring(3, 5));
     }
 
     function getTheMonth(month) {
         if (parseInt(month) > 10) {
-            return month.toString()
+            return month.toString();
         } else {
-            console.log('0'.concat(month.toString()))
-            return '0'.concat(month.toString())
+            console.log('0'.concat(month.toString()));
+            return '0'.concat(month.toString());
         }
     }
 
@@ -161,10 +161,10 @@ const ResponsiveDrawer = props => {
                 end > convertToMin(timeBlockArray[i]['start'] + blockTime) &&
                 start !== end
             ) {
-                return true
+                return true;
             }
         }
-        return false
+        return false;
     }
 
     function OnCreateAppointment() {}
@@ -177,14 +177,14 @@ const ResponsiveDrawer = props => {
             )
                 .then(res => res.json())
                 .then(json => {
-                    console.log(json.body)
-                    setLoaded(true)
-                    setAppointments(json.body)
+                    console.log(json.body);
+                    setLoaded(true);
+                    setAppointments(json.body);
                 })
                 .catch(err => {
-                    setAppointments([])
-                    setLoaded(true)
-                })
+                    setAppointments([]);
+                    setLoaded(true);
+                });
         } else if (role == 'supporter') {
             fetch(
                 'https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments/supporters/' +
@@ -192,36 +192,36 @@ const ResponsiveDrawer = props => {
             )
                 .then(res => res.json())
                 .then(json => {
-                    setLoaded(true)
-                    setAppointments(json.body)
+                    setLoaded(true);
+                    setAppointments(json.body);
                 })
                 .catch(err => {
-                    setAppointments([])
-                    setLoaded(true)
-                })
+                    setAppointments([]);
+                    setLoaded(true);
+                });
         } else {
             fetch(
                 'https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/appointments'
             )
                 .then(res => {
-                    console.log('Got response')
-                    return res.json()
+                    console.log('Got response');
+                    return res.json();
                 })
                 .then(json => {
-                    setLoaded(true)
-                    setAppointments(json.body)
+                    setLoaded(true);
+                    setAppointments(json.body);
                 })
                 .catch(err => {
-                    setAppointments([])
-                    setLoaded(true)
-                })
+                    setAppointments([]);
+                    setLoaded(true);
+                });
         }
-    }, [])
+    }, []);
 
     function convertDate(time, duration) {
-        var hours = parseInt(time.substring(11, 13)) * 60
-        var minutes = parseInt(time.substring(14, 16))
-        return convertTime(hours + minutes + duration)
+        var hours = parseInt(time.substring(11, 13)) * 60;
+        var minutes = parseInt(time.substring(14, 16));
+        return convertTime(hours + minutes + duration);
     }
 
     if (!isLoaded) {
@@ -232,7 +232,7 @@ const ResponsiveDrawer = props => {
                 <br></br>
                 <CircularProgress />
             </div>
-        )
+        );
     } else {
         return (
             <div className={classes.root}>
@@ -481,8 +481,8 @@ const ResponsiveDrawer = props => {
                     </div>
                 )}
             </div>
-        )
+        );
     }
-}
+};
 
-export default ResponsiveDrawer
+export default ResponsiveDrawer;

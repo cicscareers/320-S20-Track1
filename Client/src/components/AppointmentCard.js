@@ -1,14 +1,14 @@
-import React from 'react'
-import { makeStyles, Modal, Button, Grid, Avatar } from '@material-ui/core'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import Cancel from './cancelAppt'
-import Feedback from './feedback'
-import ViewFeedback from './viewFeedback'
-import ViewCancelReason from './viewCancelReason.js'
+import React from 'react';
+import { makeStyles, Modal, Button, Grid, Avatar } from '@material-ui/core';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Cancel from './cancelAppt';
+import Feedback from './feedback';
+import ViewFeedback from './viewFeedback';
+import ViewCancelReason from './viewCancelReason.js';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,65 +48,65 @@ const useStyles = makeStyles(theme => ({
         width: theme.spacing(20),
         height: theme.spacing(20),
     },
-}))
+}));
 
 const PreviousAppointmentCard = props => {
     const [
         cancelAppointmentModalOpen,
         setCancelAppointmentModalOpen,
-    ] = React.useState(false)
-    const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false)
+    ] = React.useState(false);
+    const [feedbackModalOpen, setFeedbackModalOpen] = React.useState(false);
     const [viewFeedbackModalOpen, setViewFeedbackModalOpen] = React.useState(
         false
-    )
-    const [viewCancelReasonOpen, setViewCancelReason] = React.useState(false)
+    );
+    const [viewCancelReasonOpen, setViewCancelReason] = React.useState(false);
 
     const handleOpenAppointmentModal = () => {
-        setCancelAppointmentModalOpen(true)
-    }
+        setCancelAppointmentModalOpen(true);
+    };
 
     const handleCloseAppointmentModal = () => {
-        setCancelAppointmentModalOpen(false)
-    }
+        setCancelAppointmentModalOpen(false);
+    };
     const handleOpenFeedbackModal = () => {
-        setFeedbackModalOpen(true)
-    }
+        setFeedbackModalOpen(true);
+    };
 
     const handleCloseFeedbackModal = () => {
-        setFeedbackModalOpen(false)
-    }
+        setFeedbackModalOpen(false);
+    };
 
     const handleOpenViewFeedbackModal = () => {
-        setViewFeedbackModalOpen(true)
-    }
+        setViewFeedbackModalOpen(true);
+    };
 
     const handleCloseViewFeedbackModal = () => {
-        setViewFeedbackModalOpen(false)
-    }
+        setViewFeedbackModalOpen(false);
+    };
 
     const handleOpenViewCancelReason = () => {
-        setViewCancelReason(true)
-    }
+        setViewCancelReason(true);
+    };
 
     const handleCloseViewCancelReason = () => {
-        setViewCancelReason(false)
-    }
+        setViewCancelReason(false);
+    };
 
-    const classes = useStyles()
-    const [expanded, setExpanded] = React.useState(false)
-    const [date, setDate] = React.useState(15)
+    const classes = useStyles();
+    const [expanded, setExpanded] = React.useState(false);
+    const [date, setDate] = React.useState(15);
 
     const handleBack = () => {
-        setDate(date - 1)
-    }
+        setDate(date - 1);
+    };
 
     const handleNext = () => {
-        setDate(date + 1)
-    }
+        setDate(date + 1);
+    };
 
     const handleChange = panel => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false)
-    }
+        setExpanded(isExpanded ? panel : false);
+    };
     //Expansion panel for supporters view
     function supporterViewAppointmentCard() {
         return (
@@ -226,7 +226,7 @@ const PreviousAppointmentCard = props => {
                     </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
-        )
+        );
     }
     //Expansion panel for the student's view
     function studentViewAppointmentCard() {
@@ -366,7 +366,7 @@ const PreviousAppointmentCard = props => {
                     </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
-        )
+        );
     }
 
     function adminViewAppointmentCard() {
@@ -515,18 +515,18 @@ const PreviousAppointmentCard = props => {
                     </Grid>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
-        )
+        );
     }
 
     if (props.role == 'supporter') {
-        return supporterViewAppointmentCard()
+        return supporterViewAppointmentCard();
     }
     if (props.role == 'student') {
-        return studentViewAppointmentCard()
+        return studentViewAppointmentCard();
     }
     if (props.role == 'admin') {
-        return adminViewAppointmentCard()
-    } else return null
-}
+        return adminViewAppointmentCard();
+    } else return null;
+};
 
-export default PreviousAppointmentCard
+export default PreviousAppointmentCard;

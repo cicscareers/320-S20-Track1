@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import Container from '@material-ui/core/Container'
-import { Grid, Button, TextField } from '@material-ui/core'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import Container from '@material-ui/core/Container';
+import { Grid, Button, TextField } from '@material-ui/core';
 
 function handlePress(id, reason) {
-    console.log(id, reason)
+    console.log(id, reason);
     fetch(
         'https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/appointments/cancel',
         {
@@ -25,22 +25,22 @@ function handlePress(id, reason) {
     )
         .then(response => {
             if (response.status >= 200 && response.status < 300) {
-                console.log(response)
-                return response.json()
+                console.log(response);
+                return response.json();
             } else {
-                throw new Error("Server can't be reached!")
+                throw new Error("Server can't be reached!");
             }
         })
         .then(json => {
-            window.location.reload()
+            window.location.reload();
         })
         .catch(error => {
-            console.log(error)
-        })
+            console.log(error);
+        });
 }
 
 const CancelAppt = props => {
-    const [cancelReason, setCancelReason] = useState('')
+    const [cancelReason, setCancelReason] = useState('');
     return (
         <Container component="main">
             <Card style={{ padding: 20, margin: 30 }}>
@@ -84,7 +84,7 @@ const CancelAppt = props => {
                 </Grid>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
-export default CancelAppt
+export default CancelAppt;

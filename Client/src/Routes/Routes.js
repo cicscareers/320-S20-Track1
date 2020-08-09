@@ -1,27 +1,27 @@
-import React from 'react'
-import Login from '../Pages/Authentication/login.js'
-import ForgotPassword from '../Pages/Authentication/resetPass.js'
-import SignUp from '../Pages/Authentication/signup.js'
-import SignUpSupporter from '../Pages/Authentication/signUpSupporter.js'
-import tos from '../Pages/TOS.js'
-import appts from '../Pages/appts.js'
-import NotFound from '../Pages/NotFound.js'
-import StudentSettings from '../Pages/Settings Pages/StudentSettings/SettingsMain/StudentSettings.js'
-import AdminSettings from '../Pages/Settings Pages/AdminSettings/SettingsMain/AdminSettings.js'
-import SupporterSettings from '../Pages/Settings Pages/SupporterSettings/SettingsMain/SupporterSettings.js'
-import Matching from '../Pages/FindSupporter/MatchingHome/Matching.js'
-import { Route, Switch, Redirect } from 'react-router-dom'
-import UnauthenticatedRoute from './UnauthenticatedRoute'
-import AuthenticatedRoute from './AuthenticatedRoute'
-import AdminRoute from './AdminRoute'
-import Cookies from 'universal-cookie'
-import SupporterRoute from './SupporterRoute'
-import StudentRoute from './StudentRoute.js'
-import resetPassAfterEmail from '../Pages/Authentication/restPassAfterEmail'
-import FAQ from '../Pages/faq'
+import React from 'react';
+import Login from '../Pages/Authentication/login.js';
+import ForgotPassword from '../Pages/Authentication/resetPass.js';
+import SignUp from '../Pages/Authentication/signup.js';
+import SignUpSupporter from '../Pages/Authentication/signUpSupporter.js';
+import tos from '../Pages/TOS.js';
+import appts from '../Pages/appts.js';
+import NotFound from '../Pages/NotFound.js';
+import StudentSettings from '../Pages/Settings Pages/StudentSettings/SettingsMain/StudentSettings.js';
+import AdminSettings from '../Pages/Settings Pages/AdminSettings/SettingsMain/AdminSettings.js';
+import SupporterSettings from '../Pages/Settings Pages/SupporterSettings/SettingsMain/SupporterSettings.js';
+import Matching from '../Pages/FindSupporter/MatchingHome/Matching.js';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import UnauthenticatedRoute from './UnauthenticatedRoute';
+import AuthenticatedRoute from './AuthenticatedRoute';
+import AdminRoute from './AdminRoute';
+import Cookies from 'universal-cookie';
+import SupporterRoute from './SupporterRoute';
+import StudentRoute from './StudentRoute.js';
+import resetPassAfterEmail from '../Pages/Authentication/restPassAfterEmail';
+import FAQ from '../Pages/faq';
 
-const cookies = new Cookies()
-var role = cookies.get('role')
+const cookies = new Cookies();
+var role = cookies.get('role');
 
 export default function Routes() {
     return (
@@ -67,5 +67,5 @@ export default function Routes() {
             <Route path="/index.html" to="/" />
             <Route component={NotFound} />
         </Switch>
-    )
+    );
 }

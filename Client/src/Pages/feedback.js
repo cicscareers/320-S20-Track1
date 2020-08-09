@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Typography,
     Container,
@@ -8,22 +8,22 @@ import {
     Button,
     ButtonGroup,
     CardHeader,
-} from '@material-ui/core'
-import Cookies from 'universal-cookie'
+} from '@material-ui/core';
+import Cookies from 'universal-cookie';
 
-const cookies = new Cookies()
-const role = cookies.get('role')
-var primary_color = '#881c1c'
+const cookies = new Cookies();
+const role = cookies.get('role');
+var primary_color = '#881c1c';
 if (role === 'Student') {
-    primary_color = '#881c1c'
+    primary_color = '#881c1c';
 } else if (role === 'supporter') {
-    primary_color = '#003b5c'
+    primary_color = '#003b5c';
 } else if (role === 'admin') {
-    primary_color = '#41273b'
+    primary_color = '#41273b';
 }
 
 const MyApp = () => {
-    const supporterfed = ['Experience of meeting', 'Effectiveness of meeting']
+    const supporterfed = ['Experience of meeting', 'Effectiveness of meeting'];
     return (
         <Container component="main">
             <Card style={{ padding: 20, margin: 30 }}>
@@ -113,7 +113,7 @@ const MyApp = () => {
                 </Grid>
             </Card>
         </Container>
-    )
-}
+    );
+};
 
-export default MyApp
+export default MyApp;
