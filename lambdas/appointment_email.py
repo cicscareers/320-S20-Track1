@@ -1,6 +1,4 @@
 import json
-from package.query_db import query
-from package.lambda_exception import LambdaException
 import time
 import os, datetime
 import smtplib
@@ -30,12 +28,9 @@ def lambda_handler(event, context):
         requester = int(event['requester'])
     else:
         requester = None
-    
-    if len(comment) != 0 :
-        comment = "Comment: {}".format(comment)
-    else:
-        comment = "Comment: No Comment"
-    
+
+    comment = "Comment: " + (event['comment'] or "No Comment")
+
     stud_name = Users.get_name([student])[student]['name']
     stud_email = Users.get_email([student])[student]
     
