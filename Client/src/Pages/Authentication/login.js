@@ -10,9 +10,11 @@ import {
   FormControl,
   FormHelperText,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withTheme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import InputLabel from "@material-ui/core/InputLabel";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import { Auth, Interactions } from "aws-amplify";
@@ -31,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: theme.spacing(2),
     alignItems: "center",
-  },
-  eyeIcon: {
-    position: "absolute",
-    left: "60.8%",
-    top: "49.9%",
   },
   rad: {},
 }));
@@ -144,30 +141,31 @@ function SignIn({ t, i18n }) {
             className={classes.form}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label={t("password")}
-            type={isPasswordVisible ? "text" : "password"}
-            id="password"
-            form
-            className={classes.form}
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputAdornment className={classes.eyeIcon}>
-            <IconButton onClick={togglePasswordVisiblity}>
-              {isPasswordVisible ? (
-                <VisibilityOffIcon />
-              ) : (
-                //onClick so the user doesn't accidentally trigger it
-                <VisibilityIcon />
-              )}
-            </IconButton>
-          </InputAdornment>
+
+          <FormControl className={classes.form} variant="outlined" required>
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              fullWidth
+              id="password"
+              type={isPasswordVisible ? "text" : "password"}
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisiblity}>
+                    {isPasswordVisible ? (
+                      <VisibilityOffIcon />
+                    ) : (
+                      //onClick so the user doesn't accidentally trigger it
+                      <VisibilityIcon />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={75}
+            />
+          </FormControl>
+
           <Button
             type="submit" //logs in on enter
             margin="normal"
