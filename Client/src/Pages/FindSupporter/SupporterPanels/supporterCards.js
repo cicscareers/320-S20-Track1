@@ -240,7 +240,7 @@ const SupporterCard = (props) => {
               <Typography>{employer}, {title}</Typography>
               <Typography>{office}</Typography>
               <br/>
-              <Typography>Help Needed Topics:</Typography>
+              <Typography>Select Appointment Topic:</Typography>
               {topics_array.map(topic => <Chip 
                 clickable 
                 value={topic}
@@ -332,7 +332,7 @@ const SupporterCard = (props) => {
             Appointment Medium: {medium}
           </Typography>
           <Typography gutterBottom>
-            Additional Comments
+            Additional Comments: {comment}
           </Typography>
           <TextField
             id="outlined-multiline-static"
@@ -359,10 +359,10 @@ const SupporterCard = (props) => {
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Your appointment with {name} has been created
+            Your appointment with {name} has been created.
           </Typography>
           <Typography gutterBottom>
-            You will receive a verification email at {email} to remind you of your appointment
+            You will receive a verification email to remind you of your appointment.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -374,6 +374,6 @@ const SupporterCard = (props) => {
     </ExpansionPanel>
     
     );
-  }
-  
+	}
+	
 export default SupporterCard;
