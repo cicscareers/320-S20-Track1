@@ -9,6 +9,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import encoders
+from package.Users import Users
 
 def lambda_handler(event, context):
     supporter = int(event['supporter_id'])
@@ -18,9 +19,8 @@ def lambda_handler(event, context):
     location = event['location']
     appt_type = event['appointment_type']
     comment = event['comment']
-    comme = ""
-    for word in comment:
-        comme += word
+    login = os.environ['login']
+    password = os.environ['password']
         
     if 'to_cancel' in event and event['to_cancel'] == True:
         toCancel = event['to_cancel']
@@ -31,31 +31,22 @@ def lambda_handler(event, context):
     else:
         requester = None
     
-    if len(comme) != 0 :
-        comme = "Comment: " + comment
+    if len(comment) != 0 :
+        comment = "Comment: {}".format(comment)
     else:
-        comme = "Comment: No Comment"
-        
+        comment = "Comment: No Comment"
     
-    sql = "SELECT first_name, last_name, email FROM users WHERE id = :student"
-    sql_parameters = [
-        {'name': 'student', 'value': {'longValue': student}}
-    ]
-    stud_info = query(sql, sql_parameters)['records'][0]
-    stud_name = stud_info[0].get("stringValue") + " " + stud_info[1].get("stringValue")
-    stud_email = stud_info[2].get("stringValue")
+    stud_name = Users.get_name([student])[student]['name']
+    stud_email = Users.get_email([student])[student]
+    
     # studs = []
+    
     # studs.append(stud_info[0].get("stringValue") + " " + stud_info[1].get("stringValue"))
     # stud_emails = []
     # stud_emails.append(stud_info[2].get("stringValue"))
-    sql = "SELECT first_name, last_name, email from users WHERE id = :supporter"
-    sql_parameters = [
-        {'name': 'supporter', 'value': {'longValue': supporter}}
-    ]
-    supp_info = query(sql, sql_parameters)['records'][0]
-    supp = supp_info[0].get("stringValue") + " " + supp_info[1].get("stringValue")
-    supp_email = supp_info[2].get("stringValue")
     
+    supp = Users.get_name([supporter])[supporter]['name']
+    supp_email = Users.get_email([supporter])[supporter]
     
     if requester != None and requester == student:
         requester_email = stud_email
@@ -65,19 +56,18 @@ def lambda_handler(event, context):
         raise LambdaException("Requestor is not valid for this appointment")
     
     if toCancel:
-        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type, comme, toCancel=True)
-    
+        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type, comment, login, password, toCancel=True)
     elif requester != None:
-        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type,comme, requester=requester_email)
+        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type,comment, login, password, requester=requester_email)
     else:
-        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type,comme)
+        send_cal_email(supp, supp_email, stud_name, stud_email, appt_time, duration, location, appt_type,comment, login, password)
 
     return {
         'statusCode': 200,
         'body': json.dumps('Email successfully sent')
     }
 
-def send_cal_email(supp, supp_email, student, student_email, appt_time, duration, location, appt_type, comme, toCancel=False, requester=None):
+def send_cal_email(supp, supp_email, student, student_email, appt_time, duration, location, appt_type, comment, login, password, toCancel=False, requester=None):
     # supp = supporter name(str)
     # students = student name(str)
     # appt_time = appointment time (str)
@@ -89,8 +79,6 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
     # comment = comment(str) defaults None
     
     CRLF = "\r\n"
-    login = "umassreachout.dev@gmail.com"
-    password = "CS3202020"
     # attendees = ["first@gmail.com",     "second@example.com","third@hotmail.com"]
     attendees = []
     attendees.append(supp_email)
@@ -127,8 +115,7 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
         ical+= "METHOD:CANCEL"+CRLF
     else:
         ical+= "METHOD:REQUEST"+CRLF
-
-    
+        
     ical+= "BEGIN:VEVENT"+CRLF
     #ical += "ORGANIZER;CN=ReachOUT:MAILTO:umassreachout.dev@gmail.com"+CRLF
     ical+= "DTSTART:"+dtstart+CRLF
@@ -138,7 +125,7 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
     #ical+= "CREATED:"+dtstamp+CRLF+description
     ical+= "LAST-MODIFIED:"+dtstamp+CRLF
     ical+= "LOCATION:"+location+CRLF
-    ical+= "DESCRIPTION:"+appt_type+" appointment between "+supp+" and student(s) "+ ''.join(student)+". " + comme + CRLF
+    ical+= "DESCRIPTION:"+appt_type+" appointment between "+supp+" and student(s) "+ ''.join(student)+". " + comment + CRLF
   
     ical+= "SEQUENCE:0"+CRLF
     if toCancel:
@@ -147,9 +134,7 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
         ical+= "STATUS:CONFIRMED"+CRLF
     ical+= "SUMMARY:ReachOUT "+appt_type+" Appointment"+CRLF
     # ical+= ddtstart.strftime("%m/%d at %I:%M %p")+CRLF
-   
     ical+= "TRANSP:OPAQUE"+CRLF
-
     ical+= "END:VEVENT"+CRLF
     
     # ical+= "BEGIN:VALARM"+CRLF
@@ -163,15 +148,12 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
         attendees = []
         attendees.append(requester)
     if toCancel:
-        eml_body = appt_type+" appointment between "+supp+" and student "+student+" from "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p")+" has been cancelled.                                                   "
-        #eml_body = '<html><body><p> appt_type+" appointment between "+supp+" and student "+student+" from "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p")+" has been cancelled."</p>' +'<p>"Comment: "+comme </p>' + '</body></html>'
+        eml_body = appt_type+" appointment between "+supp+" and student "+student+" from "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p")+" has been cancelled."
     else:    
-        eml_body = appt_type+" appointment between "+supp+" and student "+student+" has been scheduled for "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p") + ".                                                  "
-       # eml_body = <html><body><p> appt_type+" appointment between "+supp+" and student "+student+" from "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p")+" has been cancelled."</p> + <p>"Comment: "+ comme </p> + </body></html>
-       
+        eml_body = appt_type+" appointment between "+supp+" and student "+student+" has been scheduled for "+ddtstart.strftime("%B %d, %Y from %I:%M %p")+" to "+ddtend.strftime("%I:%M %p") + ".  "
+      
     eml_body_bin = "This is the email body in binary - two steps"
     msg = MIMEMultipart('mixed')
-    
     msg['Reply-To'] = fro
     msg['Date'] = formatdate(localtime=True)
     if toCancel:
@@ -181,11 +163,9 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
     msg['From'] = fro
     msg['To'] = ",".join(attendees)
     
-    
     part_email = MIMEText(eml_body,'html','utf-8')
-    msg_content = MIMEText(comme, 'plain', 'utf-8')
+    msg_content = MIMEText(comment, 'plain', 'utf-8')
 
-    
     part_cal = MIMEText(ical,'calendar;method=REQUEST')
     msgAlternative = MIMEMultipart('alternative')
     msg.attach(msgAlternative)
@@ -202,12 +182,11 @@ def send_cal_email(supp, supp_email, student, student_email, appt_time, duration
     msgAlternative.attach(part_email)
     msg.attach(msg_content)
     msgAlternative.attach(part_cal)
- 
     
     mailServer = smtplib.SMTP('smtp.gmail.com', 587)
     mailServer.ehlo()
     mailServer.starttls()
     mailServer.ehlo()
-    mailServer.login(login, password)
+    mailServer.login(login,password)
     mailServer.sendmail(fro, attendees, msg.as_string())
     mailServer.close()
