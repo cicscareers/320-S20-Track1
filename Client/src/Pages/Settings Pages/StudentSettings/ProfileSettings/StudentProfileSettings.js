@@ -31,9 +31,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     align: "center",
   },
+  avatarContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
   avatar: {
-    marginLeft: "38%",
-    marginRight: "50%",
     width: theme.spacing(25),
     height: theme.spacing(25),
     backgroundColor: "primary",
@@ -136,6 +139,9 @@ const ProfileInformation = (props) => {
           Profile Information
         </Typography>
         <form className={classes.form}>
+          <div
+            className={classes.avatarContainer}
+          >
             <Badge
               overlap="circle"
               anchorOrigin={{
@@ -149,14 +155,16 @@ const ProfileInformation = (props) => {
                   extensions={['jpg', 'jpeg', 'png']}
                 >
                   <PhotoCameraIcon fontSize="large" />
-                </FilePicker>}
+                </FilePicker>
+              }
             >
-              <Avatar
-                color="primary"
-                className={classes.avatar}
-                src={settings.picture}
-              />
+                <Avatar
+                  color="primary"
+                  className={classes.avatar}
+                  src={settings.picture}
+                />
             </Badge>
+          </div>
           <br />
           <Grid container>
             <Grid item xs={3}>

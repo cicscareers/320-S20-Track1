@@ -109,11 +109,18 @@ export default class ConfirmImageModal extends React.Component {
                 </DialogTitle>
                 <DialogContent
                     dividers
+                    style={{ overflow: 'hidden' }}
                 >
-                    <img
-                        src={this.state.picture ? window.URL.createObjectURL(this.state.picture) : ""}
-                        // Please add styling here.
-                    />
+                    <center>
+                        <img
+                            src={this.state.picture ? window.URL.createObjectURL(this.state.picture) : ""}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '70vh', // Didn't knew the way to do this relatively to Dialog, so used absolute values. (Dialog by default uses 80vh)
+                            }}
+                            // Please add styling here.
+                        />
+                    </center>
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={this.handleImageUpload} color="primary">
