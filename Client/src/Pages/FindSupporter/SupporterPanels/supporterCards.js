@@ -6,25 +6,24 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Rating from '@material-ui/lab/Rating';
 import Cookies from "universal-cookie";
-import convertTime from "../convertTime.js"
-import timeToString from '../timeToString.js'
 import cardStyles from './CardStyles'
+import moment from 'moment-timezone';
 
 const SupporterCard = (props) => {
   //Initialize all the constants
-  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, day, mediums, LinkedIn, supporter_id, score, filtered_tags} = props;
+  const {name, rating, employer, title, office, topics, tags, imgsrc, timeBlocks, mediums, LinkedIn, supporter_id, score, filtered_tags} = props;
   const classes = cardStyles()
   const cookies = new Cookies();
   const studentID = sessionStorage.getItem("id")
   const email = cookies.get("email");
   const [apptTopic, setApptTopic] = React.useState("");
-  const [time, setTime] = React.useState("");
+  const [time, setTime] = React.useState(moment(0)); // Set the selected time to Jan 1, 1970 00:00:00.
   const [comment, setComment] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [openCreated, setOpenCreated] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [medium, setMedium] = React.useState("")
-  const [dur,setDur]=React.useState(topics[apptTopic]!==undefined ? topics[apptTopic].duration : 0)
+  const [dur,setDur]=React.useState(topics[apptTopic] !== undefined ?  topics[apptTopic].duration : 0)
   const has_tags=supporter_has_tags()
   const startTimes = [];
 
@@ -33,7 +32,6 @@ const SupporterCard = (props) => {
     const tag_list=[]
     for(let i=0;i<filtered_tags.length;i++){
       if(tags.includes(filtered_tags[i])){
-        console.log("added")
         tag_list.push(filtered_tags[i])
       }
     }
@@ -55,11 +53,6 @@ const SupporterCard = (props) => {
   //Sets the appointment topic based on selected chip
   const chipFilter = (item) => { 
     setApptTopic(item);
-  }
-
-  //Sets appointment time based on selected chip
-  const chipFilterTime = (item) => { 
-    setTime(item);
   }
 
   // Opens modal 1
@@ -84,7 +77,7 @@ const SupporterCard = (props) => {
 
   //Converts a time string to minutes
   function convertToMin(t){
-    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5))
+    return t.hour() * 60 + t.minute();
   }
 
   function convertTopicsToArray(tops){
@@ -92,12 +85,11 @@ const SupporterCard = (props) => {
     for(var i in tops){
       arr.push(i)
     }
-    console.log(arr)
     return arr
   }
 
   useEffect(() => {
-    setDur(topics[apptTopic]!== undefined ? topics[apptTopic].duration : 0)
+    setDur(topics[apptTopic] !== undefined ? topics[apptTopic].duration : 0)
   });
 
   const topics_array = convertTopicsToArray(topics)
@@ -126,7 +118,7 @@ const SupporterCard = (props) => {
         body: JSON.stringify({
             "student_id": studentID.toString(),
             "supporter_id": supporter_id,
-            "time_of_appt": day+" "+timeToString(time)+":00",
+            "time_of_appt": time.format('YYYY-MM-DD HH:MM:SS'),
             "medium": medium,
             "location": office,
             "comment": comment,
@@ -138,7 +130,6 @@ const SupporterCard = (props) => {
     )
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
-        console.log(response)
         return response.json();
       } else {
         throw new Error("Server can't be reached!");
@@ -154,36 +145,26 @@ const SupporterCard = (props) => {
   }
 
   //Creates a single chip given a start time
-  function generateTimeChip(st){
+  function generateTimeChip(st) {
     return <Chip
       clickable 
-      value={st}
-      variant={(time === st) ? 'default' : 'outlined'}
-      disabled={isTimeChipDisabled(st)}
+      value={convertToMin(st)}
+      variant={time.isSame(st) ? 'default' : 'outlined'}
+      disabled={moment().isAfter(st)}
       color="primary" 
-      label={convertTime(st)}
+      label={st.format("hh:mm A")}
       className={classes.tagChip}
-      onClick={ () => chipFilterTime(st) }
+      onClick={() => setTime(st)}
     />
-  }
-
-  function isTimeChipDisabled(st) {
-    let today = new Date();
-    let currDate = new Date(today);
-    currDate.setFullYear(parseInt(day.substring(0, 4)));
-    currDate.setMonth(day.substring(5, 7) - 1);
-    currDate.setDate(day.substring(8, 10));
-    
-    if(currDate > today) return false;
-    return (st < (today.getHours() * 60 + today.getMinutes()))
   }
 
   //Pushes all possible start times to an array to be converted to chips
   function generateMultipleTimeChips(s,e){
-    let st=convertToMin(s)
-    let et=convertToMin(e)
-    for(let i=st;i<et;i+=30){
-       startTimes.push(i);
+    var startTime = moment.tz(s, 'America/New_York').local();
+    var endTime = moment.tz(e, 'America/New_York').local();
+    while(startTime.isBefore(endTime)) {
+      startTimes.push(moment(startTime)); // Create new moment because add method in the next line mutates the moment object.
+      startTime.add(30, 'minutes');
     }
   }
 
@@ -265,7 +246,7 @@ const SupporterCard = (props) => {
               <br/>
               <br/>
               <Typography>Select Appointment Time:</Typography>
-              {timeBlocks.map(block => generateMultipleTimeChips(block["start"],block["end"]))}
+              {timeBlocks.map(block => generateMultipleTimeChips(block["start"], block["end"]))}
               {startTimes.map(st => generateTimeChip(st))}
               <Typography>Select Appointment Medium:</Typography>
               {mediums.map(med => <Chip 
@@ -335,7 +316,7 @@ const SupporterCard = (props) => {
             Location: {office}
           </Typography>
           <Typography gutterBottom>
-            Time: {convertTime(time)} for {dur} minutes on {day}
+            Time: {time.format("hh:mm A")} for {dur} minutes on {time.format("YYYY-MM-DD")}
           </Typography>
           <Typography gutterBottom>
             Appointment Type: {apptTopic}
