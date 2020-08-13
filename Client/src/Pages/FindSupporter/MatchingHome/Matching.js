@@ -211,7 +211,7 @@ function ResponsiveDrawer({ t, i18n }) {
     return (
       <div align="center">
         <br></br>
-        <Typography variant="h4">{t('student.6')}</Typography>
+        <Typography variant="h4">{t('student.loading')}</Typography>
         <br></br>
         <CircularProgress />
       </div>
@@ -242,7 +242,7 @@ function ResponsiveDrawer({ t, i18n }) {
             <br />
             <br />
             <br />
-            <Typography align="center" variant="h5">{t('student.1')}</Typography>
+            <Typography align="center" variant="h5">{t('student.findSupporter')}</Typography>
             <br />
             <Autocomplete
               multiple
@@ -283,7 +283,7 @@ function ResponsiveDrawer({ t, i18n }) {
             />
             <br />
             <br />
-            <Typography align="center">{t('student.4')}</Typography>
+            <Typography align="center">{t('student.topic')}</Typography>
             <br />
             <Box align="center">
               <DatePicker
@@ -317,7 +317,7 @@ function ResponsiveDrawer({ t, i18n }) {
               {convertTime(sliderTime[0])} - {convertTime(sliderTime[1])} EST
           </Typography>
             <br />
-            <Typography align="center">{t('student.5')}</Typography>
+            <Typography align="center">{t('student.rating')}</Typography>
             <br />
             <Box align="center">
               <Rating
@@ -358,8 +358,8 @@ function ResponsiveDrawer({ t, i18n }) {
           </Grid>
           <br />
           <br />
-          {newList.length > 0 && <Typography align="center" variant="h4">{t('student.2')}</Typography>}
-          {newList.length === 0 && <Typography align="center" variant="h4">{t('student.3')}</Typography>}
+          {newList.length > 0 && <Typography align="center" variant="h4">{t('student.appointmentSupporter')}</Typography>}
+          {newList.length === 0 && <Typography align="center" variant="h4">{t('student.notFoundSupporter')}</Typography>}
           <br />
           <br />
           {/*Maps each supporter to a card*/}
