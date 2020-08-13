@@ -113,9 +113,6 @@ const ProfileInformation = (props) => {
 
 
     //console.log(settings.specialization_types)
-    console.log(settings.appointment_type_info)
-
-    console.log(specializations)
 
     function extractMajors(m){
         if(m === undefined){

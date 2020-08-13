@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^7.2.1",
     "amazon-cognito-identity-js": "^4.2.1",
     "aws-amplify": "^3.0.10",
+    "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.4.1",

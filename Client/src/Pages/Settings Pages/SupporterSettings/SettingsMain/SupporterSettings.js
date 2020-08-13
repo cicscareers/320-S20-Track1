@@ -10,6 +10,7 @@ import Blocks from "../AppointmentBlocks/Main/BlockCreation.js"
 import Profile from "../ProfileSettings/ProfileSettings.js"
 import SupporterInfo from "../SupporterInformation/SupporterInformation.js"
 import BlockSettings from '../BlockSettings/BlockSettingsMain.js'
+import {universalFetch, appointmentListFetch} from '../../../../Functions/UniversalFetch'
 
 const drawerWidth = "25%";
 
@@ -59,36 +60,22 @@ const useStyles = makeStyles((theme) => ({
 const SupporterSettings = (props) => {
     const classes = useStyles();
     const [page, setPage]=React.useState("Profile Information")
-    const [loaded, setLoaded]=React.useState(false)
-    const [settings, setSettings]=React.useState([])
-    const [error, setError]=React.useState(false)
-    const [appointmentTypesList, setAppointmentTypesList]=React.useState([])
+    const [settings, setSettings]=React.useState({
+      data: [],
+      loading: false,
+      error: null
+    })
+    const [appointmentTypesList, setAppointmentTypesList]=React.useState({
+      data: [],
+      loading: false,
+      error: null
+    })
     const id = sessionStorage.getItem("id");
     const [btns, setBtns] = React.useState({one: "#d3d3d3", two: "#ffffff", three:'#ffffff', four: '#ffffff'})
 
     useEffect(() => {
-
-      setLoaded(false);
-      Promise.all([fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + id), 
-      fetch("https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")])
-
-      .then(([res1, res2]) => { 
-         return Promise.all([res1.json(), res2.json()]) 
-      })
-      .then(([res1, res2, res3]) => {
-        if(res1.statusCode >= 200 && res1.statusCode <400 && res2.specialization_types !== undefined){
-          setSettings(res1.body);
-          setAppointmentTypesList(res2.specialization_types);
-          setLoaded(true);
-        }else{
-          throw new Error()
-        }
-      })
-      .catch(error => {
-        setError(true)
-        setLoaded(true);
-        console.log("Error Connectting to API")
-      });
+      universalFetch(setSettings, "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/users/supporters/" + id)
+      appointmentListFetch(setAppointmentTypesList, "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/prod/table/specialization-types")
     }, [])
 
     function handleHighlight(e){
@@ -96,19 +83,19 @@ const SupporterSettings = (props) => {
       tmp[e] = '#d3d3d3'
       setBtns(tmp)
     }
-
-    if(error){
+    console.log(appointmentTypesList)
+    if(settings.error!==null || appointmentTypesList.error!==null){
       return (
         <div align="center">
           <br/>
           <br/>
           <br/>
-          <Typography variant="h4">There was an error fetching your settings</Typography>
+        <Typography variant="h4">There was an error fetching your settings.</Typography>
         </div>
       )
     }
   
-    else if(!loaded){
+    else if(settings.loading===true || appointmentTypesList.loading===true){
       return (
         <div align="center">
           <br></br>
@@ -119,7 +106,7 @@ const SupporterSettings = (props) => {
       )
     }
 
-    return (
+    else {return (
       <div className={classes.root}>
         <CssBaseline />
         <AppBar position="fixed" className={classes.appBar}>
@@ -166,13 +153,13 @@ const SupporterSettings = (props) => {
           </div>
         </Drawer>
         <main className={classes.content}>
-            {page==="Create Appointment Blocks" && (<Blocks typesList = {appointmentTypesList} settings={settings}/>)}
-            {page==="Profile Information" && (<Profile settings={settings}/>)}
-            {page==="Supporter Information" && (<SupporterInfo settings={settings}/>)}
-            {page==="Appointment Settings" && (<BlockSettings settings={settings}/>)}
+            {page==="Create Appointment Blocks" && (<Blocks typesList = {appointmentTypesList.data} settings={settings.data}/>)}
+            {page==="Profile Information" && (<Profile settings={settings.data}/>)}
+            {page==="Supporter Information" && (<SupporterInfo settings={settings.data}/>)}
+            {page==="Appointment Settings" && (<BlockSettings settings={settings.data}/>)}
         </main>
       </div>
       );
-}
+}}
 
 export default SupporterSettings
