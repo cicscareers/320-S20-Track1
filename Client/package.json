@@ -12,9 +12,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.48",
     "@material-ui/pickers": "^3.2.10",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
     "amazon-cognito-identity-js": "^4.2.1",
     "aws-amplify": "^3.0.10",
     "bcrypt": "^4.0.1",
@@ -36,7 +33,26 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier --list-different src/**/*.js",
+    "prettier:fix": "prettier --write src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "lint": "eslint src/**/*.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|html|css)": [
+      "pretty-quick --staged",
+      "git add"
+    ],
+    ".js": [
+      "npm run lint:fix",
+      "npm run lint"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +72,10 @@
   },
   "devDependencies": {
     "file-loader": "^6.0.0",
+    "husky": "^1.2.1",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "pretty-quick": "^2.0.1",
     "ttf-loader": "^1.0.2"
   }
 }
