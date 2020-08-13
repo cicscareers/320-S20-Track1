@@ -1,10 +1,10 @@
 {
     "student": {
-        "1": "Filter to Find Supporter",
-        "2": "Make an Appointment with Recommended Supporter",
-        "3": "We couldn't find a supporter with those attributes. Please try widening your search.",
-        "4": "What day would you like an appointment on?",
-        "5": "Minimum Required Rating",
-        "6": "Loading..."
+        "findSupporter": "Filter to Find Supporter",
+        "appointmentSupporter": "Make an Appointment with Recommended Supporter",
+        "notFoundSupporter": "We couldn't find a supporter with those attributes. Please try widening your search.",
+        "topic": "What day would you like an appointment on?",
+        "rating": "Minimum Required Rating",
+        "loading": "Loading..."
     }
 }
