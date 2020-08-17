@@ -11,6 +11,7 @@ import useStyles from "./MatchingStyles.js"
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
+import moment from 'moment-timezone';
 import { useAlert } from 'react-alert';
 import { withTranslation } from 'react-i18next';
 
@@ -19,21 +20,18 @@ function ResponsiveDrawer({ t, i18n }) {
   const alert = useAlert();
 
   //Initialize all of the constants
-  const [selectedDate, handleDateChange] = React.useState(new Date());
-  const [stateTopics, setStateTopics] = React.useState([]);
-  const [stateTags, setStateTags] = React.useState([]);
+  const [selectedDate, handleDateChange] = React.useState(moment().startOf('day'));
+  const [stateTopics, setStateTopics]=React.useState([]);
+  const [stateTags, setStateTags]=React.useState([]);
   const [sliderTime, setSliderTime] = React.useState([540, 1020]);
   const classes = useStyles();
   const [name, setName] = React.useState("");
   const [rating, setRating] = React.useState(0);
   const [isLoaded, setLoaded] = React.useState(false);
   const [supporters, setSupporters] = React.useState([]);
-  var today = new Date();
-  var nextWeek = new Date();
-  nextWeek.setDate(nextWeek.getDate() + 7);
-  const [beginDate, setBeginDate] = React.useState(today);
-  const [endDate, setEndDate] = React.useState(nextWeek);
-
+  const [beginDate, setBeginDate] = React.useState(moment().startOf('day'));
+  const [endDate, setEndDate] = React.useState(moment().startOf('day').add(7, 'days'));
+  
   const initial_fetch_url = formatFetchURL(beginDate, endDate);
 
   //Calls the API to get the list of supporters
@@ -66,18 +64,16 @@ function ResponsiveDrawer({ t, i18n }) {
   }
 
   function formatFetchURL(startDate, endDate) {
-    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters?start_date=" + formatDateForFetch(startDate) + "%2000%3A00%3A00&end_date=" + formatDateForFetch(endDate) + "%2000%3A00%3A00";
+    return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/testmethod?start_date=" + encodeURI(startDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS'));
   }
 
   function processDateChange(date) {
-    var newDate = new Date(date);
-    if (date < beginDate || date > endDate) {
-      const newBeginDate = new Date(newDate.setDate(date.getDate() - 3));
-      setBeginDate(newBeginDate);
-      const newEndDate = new Date(newDate.setDate(date.getDate() + 7));
-      setEndDate(newEndDate);
-      fetchSupporterList(formatFetchURL(newBeginDate, newEndDate));
+    if(date.isBefore(beginDate) || date.isAfter(endDate)) {
+      setBeginDate(moment().subtract(3, 'days'));
+      setEndDate(moment().add(7, 'days'));
+      fetchSupporterList(formatFetchURL(beginDate, endDate));
     }
+
     handleDateChange(date);
   }
 
@@ -85,46 +81,36 @@ function ResponsiveDrawer({ t, i18n }) {
   const blockTime = 30;
 
   //For hard filtering. Commented out code will hard filter the given fields
-  var newList = (supporters.filter(supporter => supporter.day.substring(0, 4) === selectedDate.getFullYear().toString() &&
-    supporter.day.substring(8, 10) === getTheMonth(selectedDate.getDate().toString()) && supporter.day.substring(5, 7) === getTheMonth(selectedDate.getMonth() + 1)));
-
+  var newList = [];
+  for(let supporter of supporters) {
+    let filteredSupporter = Object.assign({}, supporter, {timeBlocks: supporter.timeBlocks.filter(timeBlock => moment.tz(timeBlock['start'], 'America/New_York').isSame(selectedDate, 'day'))});
+    if(filteredSupporter.timeBlocks.length > 0)
+      newList.push(filteredSupporter);
+  }
   //supporter => String(supporter.name.toLowerCase()).includes(name.toLowerCase()))).filter(
   //supporter => supporter.rating>=rating).filter(
   //supporter => stateTopics.every(val => supporter.topics.includes(val))).filter(
   //supporter => stateTags.every(val => supporter.tags.includes(val))).filter(
   //supporter => checkTimeInRange(sliderTime[0],sliderTime[1],supporter.timeBlocks)).filter
 
-  //Creates a new supporter card a supporter
+  //Creates a supporter card a supporter
   const getSupporterCard = (supporterObj, s) => {
     return <SupporterCard {...supporterObj} score={s} filtered_tags={stateTags} />;
   };
 
-  function formatDateForFetch(date) {
-    const next_week_year = date.getFullYear().toString();
-    const next_week_month = getTheMonth((date.getMonth() + 1)).toString();
-    const next_week_day = getTheMonth(date.getDate().toString());
-    const formattedDate = next_week_year + "-" + next_week_month + "-" + next_week_day;
-    return formattedDate;
-  }
-
   //Increments day by one
-  function nextDay() {
-    var newDate = new Date()
-    newDate.setMonth(selectedDate.getMonth())
-    newDate.setDate(selectedDate.getDate() + 1);
-    processDateChange(newDate)
+  function nextDay(){
+    // Need to create new object instead of mutating current to rerender the component.
+    processDateChange(moment(selectedDate.add(1, 'days')));
   }
 
   //Decrements day by one
-  function previousDay() {
-    var today = new Date();
-    var newDate = new Date(today);
-    newDate.setMonth(selectedDate.getMonth());
-    newDate.setDate(selectedDate.getDate() - 1);
-    if (newDate < today) { // We can't schedule appointments in the past.
-      alert.error("You can't schedule appointments in the past");
+  function previousDay(){
+    if(moment().isSameOrAfter(selectedDate, 'day')) {
+      alert.error("You can't schedule appointments in the past"); // We can't schedule appointments in the past.
     } else {
-      processDateChange(newDate);
+      // Need to create new object instead of mutating current to rerender the component.
+      processDateChange(moment(selectedDate.subtract(1, 'days')));
     }
   }
 
@@ -135,17 +121,7 @@ function ResponsiveDrawer({ t, i18n }) {
 
   //Converts a string to minutes
   function convertToMin(t) {
-    return parseInt(t.substring(0, 2)) * 60 + parseInt(t.substring(3, 5));
-  }
-
-  //Adds a 0 to month when month<10 because js dates are dumb
-  function getTheMonth(month) {
-    if (parseInt(month) > 10) {
-      return month.toString();
-    }
-    else {
-      return "0".concat(month.toString());
-    }
+    return parseInt(t.substring(0, 2))*60+parseInt(t.substring(3,5));
   }
 
   //Checks if the supporter has a slot that fits in to the slider times
@@ -188,10 +164,6 @@ function ResponsiveDrawer({ t, i18n }) {
     if (checkTimeInRange(sliderTime[0], sliderTime[1], supporter.timeBlocks)) {
       supporterScore++
     }
-
-    console.log("name " + supporter.name)
-    console.log("supporter score " + supporterScore)
-    console.log("state tags and topics " + stateTopics)
     return supporterScore;
   }
 
@@ -283,23 +255,23 @@ function ResponsiveDrawer({ t, i18n }) {
             />
             <br />
             <br />
-            <Typography align="center">{t('student.topic')}</Typography>
-            <br />
-            <Box align="center">
-              <DatePicker
-                autoOk
-                align="center"
-                variant="inline"
-                inputProps={{ style: { textAlign: 'center' } }}
-                value={selectedDate}
-                onChange={processDateChange}
-                minDate={new Date()}
-              />
-            </Box>
-            <br />
-            <br />
-            <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
-              What is your availability on {selectedDate.toDateString().substring(0, 3) + selectedDate.toDateString().substring(3)}?
+          <Typography align="center">{t('student.topic')}</Typography>
+          <br/>
+          <Box align="center">
+            <DatePicker
+              autoOk
+              align="center"
+              variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
+              value={selectedDate}
+              onChange={(date) => processDateChange(moment(date))}
+              disablePast
+            />
+          </Box>
+          <br/>
+          <br/>
+          <Typography align="center" className={classes.inputs} id="range-slider" gutterBottom>
+            What is your availability on {selectedDate.format('ddd  MMM D YYYY')}?
           </Typography>
             <Slider
               value={sliderTime}
@@ -341,14 +313,14 @@ function ResponsiveDrawer({ t, i18n }) {
             </Grid>
             <Grid item>
               <DatePicker
-                autoOk
-                align="center"
-                variant="inline"
-                inputProps={{ style: { textAlign: 'center' } }}
-                value={selectedDate}
-                onChange={processDateChange}
-                minDate={new Date()}
-              />
+              autoOk
+              align="center"
+              variant="inline"
+              inputProps={{style: {textAlign:'center'}}}
+              value={selectedDate}
+              onChange={(date) => processDateChange(moment(date))}
+              disablePast
+            />
             </Grid>
             <Grid item>
               <Button onClick={nextDay}>
