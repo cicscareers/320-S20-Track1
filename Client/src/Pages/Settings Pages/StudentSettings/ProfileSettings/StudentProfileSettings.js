@@ -2,15 +2,16 @@ import React from "react";
 import {
   makeStyles,
   Typography,
-  Button,
   Avatar,
   Container,
   TextField,
   Grid,
+  Fab
 } from "@material-ui/core";
 import FileUpload from '../../../../components/fileUpload';
 
 const useStyles = makeStyles((theme) => ({
+
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -73,6 +74,34 @@ const ProfileInformation = (props) => {
   const url =
     "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/students/" +
     id;
+
+  const noChangeMade = (prefName === settings.preferred_name &&
+    picture === settings.picture &&
+    firstName === settings.first_name &&
+    lastName === settings.last_name &&
+    email === settings.email &&
+    bio === settings.bio &&
+    phoneNumber === settings.phone &&
+    picture === settings.picture &&
+    pronouns === settings.pronouns &&
+    linkedIn === getLinkedIn(settings.link))
+
+  const saveButtonPosition = {
+    marginBottom: 65
+  }
+  const saveButtonStyle = {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+    marginBottom: 20,
+    width: "70%",
+    top: 'auto',
+    right: 10,
+    bottom: 0,
+    left: 'auto',
+    position: 'fixed',
+    opacity: !noChangeMade ? 1 : 0.5
+  }
 
   function handleSubmit() {
     let formatted_majors = settings.major;
@@ -258,6 +287,7 @@ const ProfileInformation = (props) => {
           />
           
           <TextField
+            style={saveButtonPosition}
             variant="outlined"
             margin="normal"
             fullWidth
@@ -269,7 +299,9 @@ const ProfileInformation = (props) => {
             className={classes.form}
             onChange={(e) => setBio(e.target.value)}
           />
-          <Button
+          <Fab
+            disabled={noChangeMade}
+            style={saveButtonStyle}
             margin="normal"
             form
             className={classes.Button}
@@ -278,10 +310,10 @@ const ProfileInformation = (props) => {
             onClick={handleSubmit}
           >
             Save
-          </Button>
+          </Fab>
         </form>
       </div>
-    </Container>
+    </Container >
   );
 };
 
