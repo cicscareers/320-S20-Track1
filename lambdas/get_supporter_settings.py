@@ -4,6 +4,7 @@
 from package.Users import Users
 from package.Supporters import Supporters
 from package.query_db import query
+from package.lambda_exception import LambdaException
 
 #Function to update a supporter's settings
 #Inputs: supporter_id
@@ -18,10 +19,7 @@ def get_supporter_settings(event, context):
     supporter_id = int(event['id'])
 
     if(not Users.exists([supporter_id])[supporter_id]):
-        return {
-            'body': "404: Supporter not found.",
-            'statusCode': 404
-        }
+        raise LambdaException("404: Supporter not found.")
 
     settings = {}
     names = Users.get_name([supporter_id])
