@@ -1,5 +1,6 @@
 from package.Users import Users
 from package.Students import Students
+from package.lambda_exception import LambdaException
 
 # Authors: Victoria Caruso and Hadley Pope
 # Date: 4/9/20
@@ -10,18 +11,12 @@ from package.Students import Students
 def update_student_profile(event, context):
     # Better to send the error back to frontend rather than raising a LambdaException and not giving the frontend a chance to fix it.
     if 'student_id' not in event:
-        return {
-            'body': "400 BadRequest: No student id specified.",
-            'statusCode': 400
-        }
+        raise LambdaException("400: No student id specified.")
 
     student_id = int(event['student_id'])
 
     if (not Users.exists([student_id])[student_id]):
-        return {
-            'body': "404: Student not found.",
-            'statusCode': 404
-        }
+        raise LambdaException("404: Student not found.")
 
     # Even though we are using multiple queries over single here, that performance boost is trivial when compared to the loss in code readability.
 
