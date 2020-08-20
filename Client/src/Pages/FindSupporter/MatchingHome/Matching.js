@@ -13,6 +13,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { default as StringDistance } from 'fuzzball';
 import moment from 'moment-timezone';
 import { useAlert } from 'react-alert';
+import UniversalFetch, { universalFetch } from '../../../Functions/UniversalFetch'
 
 const ResponsiveDrawer = (props) => {
   // Initialize alert
@@ -26,8 +27,12 @@ const ResponsiveDrawer = (props) => {
   const classes = useStyles();
   const [name,setName]=React.useState("");
   const [rating,setRating]=React.useState(0);
-  const [isLoaded, setLoaded] = React.useState(false);
-  const [supporters, setSupporters] = React.useState([]);
+  //const [isLoaded, setLoaded] = React.useState(false);
+  const [supporters, setSupporters] = React.useState({
+    data : [],
+    loading : false,
+    error : null
+  });
   const [beginDate, setBeginDate] = React.useState(moment().startOf('day'));
   const [endDate, setEndDate] = React.useState(moment().startOf('day').add(7, 'days'));
   
@@ -35,32 +40,33 @@ const ResponsiveDrawer = (props) => {
 
   //Calls the API to get the list of supporters
   useEffect(() => {
-    fetchSupporterList(initial_fetch_url);
+    //fetchSupporterList(initial_fetch_url);
+    universalFetch(setSupporters, initial_fetch_url);
     }, [])
 
   // Refer to this: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
-  async function myFetch(url) {
-    let response = await fetch(url);
-    let json = await response.json();
-    return json;
-  }
+  // async function myFetch(url) {
+  //   let response = await fetch(url);
+  //   let json = await response.json();
+  //   return json;
+  // }
 
-  function fetchSupporterList(url) {
-    setLoaded(false);
-    myFetch(url).then((json) => {
-      if(json.body !== undefined) {
-        setSupporters(json.body);
-        setLoaded(true);
-      } else {
-        setLoaded(true);
-        throw new Error();
-      }
-    })
-    .catch(error => {
-        setLoaded(true);
-        console.log("No Supporters Found")
-      });
-  }
+  // function fetchSupporterList(url) {
+  //   setLoaded(false);
+  //   myFetch(url).then((json) => {
+  //     if(json.body !== undefined) {
+  //       setSupporters(json.body);
+  //       setLoaded(true);
+  //     } else {
+  //       setLoaded(true);
+  //       throw new Error();
+  //     }
+  //   })
+  //   .catch(error => {
+  //       setLoaded(true);
+  //       console.log("No Supporters Found")
+  //     });
+  // }
 
   function formatFetchURL(startDate, endDate) {
     return "https://7jdf878rej.execute-api.us-east-2.amazonaws.com/test/users/supporters/testmethod?start_date=" + encodeURI(startDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS')) + "&end_date=" + encodeURI(endDate.tz('America/New_York').format('YYYY-MM-DD HH:MM:SS'));
@@ -70,7 +76,8 @@ const ResponsiveDrawer = (props) => {
     if(date.isBefore(beginDate) || date.isAfter(endDate)) {
       setBeginDate(moment().subtract(3, 'days'));
       setEndDate(moment().add(7, 'days'));
-      fetchSupporterList(formatFetchURL(beginDate, endDate));
+      //fetchSupporterList(formatFetchURL(beginDate, endDate));
+      universalFetch(setSupporters, formatFetchURL(beginDate, endDate));
     }
 
     handleDateChange(date);
@@ -81,7 +88,9 @@ const ResponsiveDrawer = (props) => {
   
   //For hard filtering. Commented out code will hard filter the given fields
   var newList = [];
-  for(let supporter of supporters) {
+  console.log("look here --> "+supporters.data);
+  for(let supporter of supporters.data) {
+    
     let filteredSupporter = Object.assign({}, supporter, {timeBlocks: supporter.timeBlocks.filter(timeBlock => moment.tz(timeBlock['start'], 'America/New_York').isSame(selectedDate, 'day'))});
     if(filteredSupporter.timeBlocks.length > 0)
       newList.push(filteredSupporter);
@@ -178,7 +187,7 @@ const ResponsiveDrawer = (props) => {
 
   //Display a loading screen if the API is still being called
 
-  if(!isLoaded){
+  if(!supporters.loading){
     return (
       <div align="center">
         <br></br>
@@ -219,7 +228,7 @@ const ResponsiveDrawer = (props) => {
               multiple
               className={classes.inputs}
               id="tags-outlined"
-              options={Array.from(new Set(supporters.flatMap((supporter) => supporter.topics ? Object.keys(supporter.topics) : [])))}
+              options={Array.from(new Set(supporters.data.flatMap((supporter) => supporter.topics ? Object.keys(supporter.topics) : [])))}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -234,7 +243,7 @@ const ResponsiveDrawer = (props) => {
               multiple
               className={classes.inputs}
               id="tags-outlined"
-              options={Array.from(new Set(supporters.flatMap((supporter) => supporter.tags ?? [])))}
+              options={Array.from(new Set(supporters.data.flatMap((supporter) => supporter.tags ?? [])))}
               renderInput={(params) => (
                 <TextField
                   {...params}
